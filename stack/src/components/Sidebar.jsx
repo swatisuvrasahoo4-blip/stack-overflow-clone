@@ -17,11 +17,18 @@ import { Badge } from "./ui/badge";
 
 const Sidebar = ({ isopen }) => {
   return (
-    <div>
+    <div
+      className={cn(
+        "shrink-0 overflow-hidden transition-all duration-200 ease-in-out",
+        isopen ? "w-48 lg:w-64" : "w:0 md:w-48 lg:w-64"
+      )}
+    >
       <aside
         className={cn(
-          " top:53px  w-48 lg:w-64 min-h-screen bg-white shadow-sm border-r transition-transform duration-200 ease-in-out md:translate-x-0",
-          isopen ? "translate-x-0" : "-translate-x-full"
+          "h-[calc(100vh-53px)] md:h-screen bg-white shadow-sm border-r transition-transform duration-200 ease-in-out",
+          "fixed left-0 top:53px z-30 md:static md:top-auto",
+          "w-48 lg:w-64",
+          isopen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         )}
       >
         <nav className="p-2 lg:p-4">

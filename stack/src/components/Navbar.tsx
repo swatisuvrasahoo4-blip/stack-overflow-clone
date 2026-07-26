@@ -24,14 +24,6 @@ const Navbar = ({ handleslidein }: any) => {
       window.location.href = "/";
     }
   };
-  const handleDemoLogin = () => {
-    if (typeof window !== "undefined") {
-      const demo = { _id: "demo", name: "Demo User", token: "demo-token" };
-      localStorage.setItem("user", JSON.stringify(demo));
-      // reload to let AuthContext pick up stored user
-      window.location.reload();
-    }
-  };
   return (
     <div className=" top-0 z-50 w-full min-h: 53px bg-white border-t-[3px] border-[#ef8236] shadow-[0_1px_5px_#00000033] flex items-center justify-center">
       <div className="w-[90%] max-w: 1440px flex items-center justify-between mx-auto py-1">
@@ -76,12 +68,6 @@ const Navbar = ({ handleslidein }: any) => {
               >
                 Log in
               </Link>
-              <button
-                onClick={handleDemoLogin}
-                className="text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 px-3 py-1.5 rounded transition"
-              >
-                Demo
-              </button>
             </div>
           ) : (
             <>

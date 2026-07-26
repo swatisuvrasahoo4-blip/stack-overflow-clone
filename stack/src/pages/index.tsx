@@ -6,6 +6,7 @@ import axiosInstance from "../lib/axiosinstance";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useAuth } from "@/lib/AuthContext";
 
 const questions = [
   {
@@ -72,6 +73,7 @@ export default function Home() {
   const [items, setItems] = useState<any[]>(questions.map((q) => ({ ...q, id: q.id || String(q.id) })));
   const [loading, setloading] = useState(true);
   const router = useRouter();
+  const { user } = useAuth();
   const { panel } = router.query;
 
   function normalizeStoredQuestion(s: any) {
@@ -122,7 +124,14 @@ export default function Home() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
           <h1 className="text-xl lg:text-2xl font-semibold">Top Questions</h1>
           <button
-            onClick={() => router.push("/ask")}
+            onClick={() => {
+              if(user){
+                router.push("/ask")
+              }
+              else{
+                router.push("/auth")
+              }
+            }}
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium whitespace-nowrap"
           >
             Ask Question
