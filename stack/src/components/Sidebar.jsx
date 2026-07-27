@@ -10,6 +10,7 @@ import {
   Tag,
   Trophy,
   Users,
+  UsersRound,
 } from "lucide-react";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
@@ -19,8 +20,8 @@ const Sidebar = ({ isopen }) => {
   return (
     <div
       className={cn(
-        "shrink-0 overflow-hidden transition-all duration-200 ease-in-out",
-        isopen ? "w-48 lg:w-64" : "w:0 md:w-48 lg:w-64"
+        "shrink-0 overflow-hidden transition-all duration-300 ease-in-out",
+        isopen ? "w-48 lg:w-64" : "w-0"
       )}
     >
       <aside
@@ -28,7 +29,7 @@ const Sidebar = ({ isopen }) => {
           "h-[calc(100vh-53px)] md:h-screen bg-white shadow-sm border-r transition-transform duration-200 ease-in-out",
           "fixed left-0 top:53px z-30 md:static md:top-auto",
           "w-48 lg:w-64",
-          isopen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+          isopen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         <nav className="p-2 lg:p-4">
@@ -79,6 +80,15 @@ const Sidebar = ({ isopen }) => {
               >
                 <Users className="w-4 h-4 mr-2 lg:mr-3" />
                 Users
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/community"
+                className="flex items-center px-2 py-2 text-gray-700 hover:bg-gray-100 rounded text-sm"
+              >
+                <UsersRound className="w-4 h-4 mr-2 lg:mr-3" />
+                Community
               </Link>
             </li>
             <li>

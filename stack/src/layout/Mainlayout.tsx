@@ -6,16 +6,9 @@ interface MainlayoutProps {
   children: ReactNode;
 }
 const Mainlayout = ({ children }: MainlayoutProps) => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  // useEffect(() => {
-  //   if (window.innerWidth <= 768) {
-  //     setSidebarOpen(false);
-  //   }
-  // }, []);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const handleslidein = () => {
-    // if (window.innerWidth <= 768) {
       setSidebarOpen((state) => !state);
-    // }
   };
 
   return (

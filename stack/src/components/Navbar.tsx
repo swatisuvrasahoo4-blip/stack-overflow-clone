@@ -29,7 +29,7 @@ const Navbar = ({ handleslidein }: any) => {
       <div className="w-[90%] max-w: 1440px flex items-center justify-between mx-auto py-1">
         <button
           aria-label="Toggle sidebar"
-          className="sm:block md:hidden p-2 rounded hover:bg-gray-100 transition"
+          className="sm:block p-2 rounded hover:bg-gray-100 transition"
           onClick={handleslidein}
         >
           <Menu className="w-5 h-5 text-gray-800" />
