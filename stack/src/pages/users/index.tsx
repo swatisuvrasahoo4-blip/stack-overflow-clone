@@ -48,7 +48,7 @@ const index = () => {
         }
       } catch (error) {
         // backend likely not present in dev; use sample users
-        console.log("users fetch failed, using sampleUsers", error);
+        console.log(error);
         setusers(sampleUsers);
       } finally {
         setloading(false);

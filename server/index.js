@@ -9,6 +9,9 @@ import userroutes from "./routes/auth.js";
 import questionroute from "./routes/question.js";
 import answerroutes from "./routes/answer.js";
 import postroutes from "./routes/post.js";
+import bookmarkRoutes from "./routes/bookmarks.js"
+import questionBookmarkRoutes from "./routes/questionBookmark.js"
+
 const app = express();
 dotenv.config();
 app.use(express.json({ limit: "30mb", extended: true }));
@@ -21,7 +24,10 @@ app.use('/user',userroutes);
 app.use('/question',questionroute);
 app.use('/answer',answerroutes);
 app.use("/post",postroutes);
-const PORT = process.env.PORT || 5000;
+app.use("/bookmark",bookmarkRoutes)
+app.use("/question-bookmark",questionBookmarkRoutes)
+
+const PORT = process.env.PORT;
 const databaseurl = process.env.MONGODB_URL;
 
 mongoose

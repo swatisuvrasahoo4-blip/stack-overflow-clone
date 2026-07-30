@@ -12,9 +12,9 @@ const Mainlayout = ({ children }: MainlayoutProps) => {
   };
 
   return (
-    <div className="bg-[#f8f9fa] text-[#3a3a3a] min-h-screen overflow-x-hidden">
+    <div className="bg-[#f8f9fa] text-[#3a3a3a] min-h-screen flex flex-col">
       <Navbar handleslidein={handleslidein} />
-      <div className="flex max-w-full py-1 overflow-x-hidden">
+      <div className="flex flex-1 w-full pt-65px py-1">
         <Sidebar isopen={sidebarOpen} />
         <main className="flex-1 min-w-0 w-full p-4 lg:p-6 bg-white">{children}</main>
         <div className="hidden lg:block border-r border-gray-200">

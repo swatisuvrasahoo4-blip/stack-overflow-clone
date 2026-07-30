@@ -1,6 +1,8 @@
 import Mainlayout from "@/layout/Mainlayout";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
+import axiosInstance from "@/lib/axiosinstance";
+import { log } from "console";
 
 const index = () => {
   const [title, setTitle] = useState("");
@@ -43,29 +45,31 @@ const index = () => {
     }
   };
 
-  const handlePost = () => {
-    const id = String(Date.now());
-    const q = {
-      _id: id,
-      questiontitle: title || "(no title)",
-      questionbody: body || "",
-      questiontags: tagsArr,
-      noofanswer: 0,
-      answer: [],
-      userposted: "You",
-      userid: "local",
-      askedon: new Date().toISOString(),
-      upvote: [],
-      downvote: [],
-      isBookmarked: false,
-    };
-    if (typeof window !== "undefined") {
-      const existing = JSON.parse(localStorage.getItem("mockQuestions") || "[]");
-      existing.push(q);
-      localStorage.setItem("mockQuestions", JSON.stringify(existing));
-    }
-    router.push(`/questions/${id}`);
-  };
+const handlePost = async () => {
+  try {
+    const res = await axiosInstance.post("/question/ask", {
+      postquestiondata: {
+        questiontitle: title,
+        questionbody: body,
+        questiontags: tagsArr,
+        noofanswer: 0,
+        answer: [],
+        userposted: "You",
+        askedon: new Date(),
+        upvote: [],
+        downvote: [],
+      },
+    });
+
+    const createdQuestion = res.data?.data;
+    router.push(`/questions/${createdQuestion._id}`);
+  } catch (error: any) {
+    console.error(
+      "Ask Question Error:",
+      error.response?.data || error.message
+    );
+  }
+};
 
   return (
     <Mainlayout>
@@ -160,7 +164,7 @@ const index = () => {
                   ))}
                 </div>
                 <div className="flex gap-3">
-                  <button onClick={handlePost} className="bg-green-600 text-white px-4 py-2 rounded">Post question</button>
+                  <button type="button" onClick={handlePost} className="bg-green-600 text-white px-4 py-2 rounded">Post question</button>
                   <button onClick={() => setShowPreview(false)} className="px-4 py-2 rounded border">Edit</button>
                 </div>
               </div>

@@ -74,7 +74,7 @@ const index = () => {
           setusers(getUserData(String(idStr)));
         }
       } catch (error) {
-        console.log("fetch user failed, using sample", error);
+        console.log(error);
         setusers(getUserData(String(idStr)));
       } finally {
         setloading(false);

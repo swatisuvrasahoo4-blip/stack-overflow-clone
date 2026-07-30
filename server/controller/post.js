@@ -46,3 +46,310 @@ export const createPost = async (req, res) => {
     });
   }
 };
+// Get all community posts
+export const getAllPosts = async (req, res) => {
+  try {
+    const posts = await Post.find().sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      data: posts,
+    });
+  } catch (error) {
+    console.error("Get Posts Error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+// Like / Unlike post
+export const likePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.userid;
+
+    const post = await Post.findById(id);
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: "Post not found",
+      });
+    }
+
+    if (!post.likes) {
+      post.likes = [];
+    }
+
+    const alreadyLiked = post.likes.some(
+      (likedUserId) =>
+        likedUserId.toString() === userId.toString()
+    );
+
+    if (alreadyLiked) {
+      post.likes = post.likes.filter(
+        (likedUserId) =>
+          likedUserId.toString() !== userId.toString()
+      );
+    } else {
+      post.likes.push(userId);
+    }
+
+    await post.save();
+
+    return res.status(200).json({
+      success: true,
+      message: alreadyLiked
+        ? "Like removed successfully"
+        : "Post liked successfully",
+      likes: post.likes.length,
+      data: post,
+    });
+  } catch (error) {
+    console.error("Like Post Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+// Add comment to a post
+export const addComment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { text, userName } = req.body;
+
+    const post = await Post.findById(id);
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: "Post not found",
+      });
+    }
+
+    post.comments.push({
+      userId: req.userid,
+      userName,
+      text,
+    });
+
+    await post.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Comment added successfully",
+      data: post,
+    });
+  } catch (error) {
+    console.error("Add Comment Error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+// Reply to a comment
+export const replyToComment = async (req, res) => {
+  try {
+    const { id, commentId } = req.params;
+    const { text, userName } = req.body;
+
+    const post = await Post.findById(id);
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: "Post not found",
+      });
+    }
+
+    const comment = post.comments.id(commentId);
+
+    if (!comment) {
+      return res.status(404).json({
+        success: false,
+        message: "Comment not found",
+      });
+    }
+
+    comment.replies.push({
+      userId: req.userid,
+      userName,
+      text,
+    });
+
+    await post.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Reply added successfully",
+      data: post,
+    });
+  } catch (error) {
+    console.error("Reply Comment Error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+// delete a post
+export const deletePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const post = await Post.findById(id);
+
+    if (!post) {
+      return res.status(404).json({
+        message: "Post not found",
+      });
+    }
+
+    if (post.authorId.toString() !== req.userid.toString()) {
+      return res.status(403).json({
+        message: "You can only delete your own post",
+      });
+    }
+
+    await Post.findByIdAndDelete(id);
+
+    res.status(200).json({
+      message: "Post deleted successfully",
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Something went wrong while deleting the post",
+    });
+  }
+};
+// delete comment
+export const deleteComment = async (req, res) => {
+  try {
+    const { postId, commentId } = req.params;
+
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: "Post not found",
+      });
+    }
+
+    const comment = post.comments.id(commentId);
+
+    if (!comment) {
+      return res.status(404).json({
+        success: false,
+        message: "Comment not found",
+      });
+    }
+
+    if (String(comment.userId) !== String(req.userid)) {
+      return res.status(403).json({
+        success: false,
+        message: "You can only delete your own comment",
+      });
+    }
+
+    post.comments.pull(commentId);
+
+    await post.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Comment deleted successfully",
+      data: post,
+    });
+  } catch (error) {
+    console.error("Delete Comment Error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+//delete reply
+export const deleteReply = async (req, res) => {
+  try {
+    const { postId, commentId, replyId } = req.params;
+
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({
+        message: "Post not found",
+      });
+    }
+
+    const comment = post.comments.id(commentId);
+
+    if (!comment) {
+      return res.status(404).json({
+        message: "Comment not found",
+      });
+    }
+
+    const reply = comment.replies.id(replyId);
+
+    if (!reply) {
+      return res.status(404).json({
+        message: "Reply not found",
+      });
+    }
+
+    if (String(reply.userId) !== String(req.userid)) {
+      return res.status(403).json({
+        message: "Unauthorized",
+      });
+    }
+
+    comment.replies.pull(replyId);
+
+    await post.save();
+
+    res.status(200).json({
+      message: "Reply deleted successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Server Error",
+    });
+  }
+};
+export const getPostById = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        message: "Post not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: post,
+    });
+  } catch (error) {
+    console.error("Get Post Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Unable to fetch post",
+      error: error.message,
+    });
+  }
+};

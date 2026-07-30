@@ -75,10 +75,29 @@ const postSchema = new mongoose.Schema(
       default: [],
     },
 
-    comments: {
-      type: [commentSchema],
-      default: [],
+    comments: [
+  {
+    userId: String,
+    userName: String,
+    text: String,
+    createdAt: {
+      type: Date,
+      default: Date.now,
     },
+
+    replies: [
+      {
+        userId: String,
+        userName: String,
+        text: String,
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
+  },
+],
 
     shareCount: {
       type: Number,

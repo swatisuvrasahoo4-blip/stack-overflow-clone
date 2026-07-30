@@ -80,3 +80,103 @@ export const votequestion = async (req, res) => {
     return;
   }
 };
+
+export const getQuestionById = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({
+      message: "Question unavailable",
+    });
+  }
+
+  try {
+    const questionData = await question.findById(id);
+
+    if (!questionData) {
+      return res.status(404).json({
+        message: "Question not found",
+      });
+    }
+
+    return res.status(200).json({
+      data: questionData,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Something went wrong",
+    });
+  }
+};
+
+export const answerQuestion = async (req, res) => {
+  const { id } = req.params;
+  const { answerbody, useranswered, userid } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({
+      message: "Question unavailable",
+    });
+  }
+
+  try {
+    const questionData = await question.findById(id);
+
+    if (!questionData) {
+      return res.status(404).json({
+        message: "Question not found",
+      });
+    }
+
+    questionData.answer.push({
+      answerbody,
+      useranswered,
+      userid,
+    });
+
+    questionData.noofanswer = questionData.answer.length;
+
+    await questionData.save();
+
+    return res.status(200).json({
+      data: questionData,
+      message: "Answer added successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Something went wrong",
+    });
+  }
+};
+export const deleteAnswer = async (req, res) => {
+  const { questionId, answerId } = req.params;
+
+  try {
+    const questionData = await question.findById(questionId);
+
+    if (!questionData) {
+      return res.status(404).json({
+        message: "Question not found",
+      });
+    }
+
+    questionData.answer = questionData.answer.filter(
+      (answer) => String(answer._id) !== String(answerId)
+    );
+
+    questionData.noofanswer = questionData.answer.length;
+
+    await questionData.save();
+
+    return res.status(200).json({
+      message: "Answer deleted successfully",
+      question: questionData,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      message: "Failed to delete answer",
+    });
+  }
+};

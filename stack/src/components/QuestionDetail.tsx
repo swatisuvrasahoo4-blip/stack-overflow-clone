@@ -17,258 +17,10 @@ import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Textarea } from "./ui/textarea";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-// Removed unused Mainlayout import
 import { useAuth } from "@/lib/AuthContext";
-const questionData = {
-  id: 1,
-  title: "How can i block user with middleware?",
-  content: `
-## The problem
+import { submitAnswer, toggleQuestionBookmark, getQuestionById, getQuestionBookmarks } from "./services/questionService";
+import axiosInstance from "@/lib/axiosinstance";
 
-I am trying to create a complete user login form in NextJS and I want to block the user to go to other pages without a login process before. So online i found that one of the most complete solution could be the use of a middleware but i don't know how it doesn't work.
-
-## Middleware code:
-
-\`\`\`javascript
-// middleware.ts (position: root)
-const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-
-export default async function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
-  
-  const token = req.cookies.get("authToken")?.value;
-  
-  if (!token) {
-    console.log("[middleware] No token on", pathname, "-> redirect to /");
-    return NextResponse.redirect(new URL("/", req.url));
-  }
-  
-  try {
-    await jwtVerify(token, secret);
-    return NextResponse.next();
-  } catch (err) {
-    console.log("[middleware] Invalid token on", pathname, "->", err);
-    return NextResponse.redirect(new URL("/", req.url));
-  }
-}
-
-export const config = {
-  matcher: [
-    "/dashboard",
-    "/dashboard/:path*",
-    "/add-todo",
-    "/add-todo/:path*",
-    "/edit-todo",
-    "/edit-todo/:path*",
-    "/settings",
-  ]
-}
-\`\`\`
-
-What I'm expecting is that when the user tries to access protected routes without being authenticated, they should be redirected to the login page. However, the middleware doesn't seem to be working as expected.
-
-## What I tried:
-
-1. Placed the middleware.ts file in the root directory
-2. Configured the matcher to include all protected routes
-3. Used JWT verification to check token validity
-4. Added proper error handling and logging
-
-The middleware runs but the redirects don't work properly. Sometimes users can still access protected pages even without valid tokens.
-  `,
-  votes: -4,
-  answers: 2,
-  views: 38,
-  tags: ["node.js", "forms", "authentication", "next.js", "middleware"],
-  author: {
-    id: 3,
-    name: "Aledi5",
-    avatar: "A",
-  },
-  askedDate: "3 days ago",
-  modifiedDate: "3 days ago",
-  isBookmarked: false,
-  userVote: null, // null, 'up', or 'down'
-};
-
-// Mock answers data
-const answersData = [
-  {
-    id: 1,
-    content: `The issue you're experiencing is likely due to the middleware configuration and how NextJS handles redirects. Here are a few things to check:
-
-## 1. Middleware File Location
-Make sure your \`middleware.ts\` file is in the correct location - it should be in the root of your project (same level as \`pages\` or \`app\` directory).
-
-## 2. Import Statements
-You're missing some important imports in your middleware:
-
-\`\`\`javascript
-import { NextRequest, NextResponse } from 'next/server'
-import { jwtVerify } from 'jose'
-\`\`\`
-
-## 3. Updated Middleware Code
-
-\`\`\`javascript
-import { NextRequest, NextResponse } from 'next/server'
-import { jwtVerify } from 'jose'
-
-const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-
-export default async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  
-  // Get token from cookies
-  const token = request.cookies.get("authToken")?.value;
-  
-  if (!token) {
-    console.log("[middleware] No token found, redirecting to login");
-    return NextResponse.redirect(new URL('/login', request.url));
-  }
-  
-  try {
-    // Verify the JWT token
-    const { payload } = await jwtVerify(token, secret);
-    console.log("[middleware] Token verified for user:", payload.sub);
-    return NextResponse.next();
-  } catch (error) {
-    console.log("[middleware] Token verification failed:", error);
-    // Clear the invalid token
-    const response = NextResponse.redirect(new URL('/login', request.url));
-    response.cookies.delete('authToken');
-    return response;
-  }
-}
-
-export const config = {
-  matcher: [
-    '/dashboard/:path*',
-    '/add-todo/:path*',
-    '/edit-todo/:path*',
-    '/settings/:path*'
-  ]
-}
-\`\`\`
-
-## Key Changes:
-- Added proper imports
-- Redirect to \`/login\` instead of \`/\`
-- Clear invalid tokens from cookies
-- Simplified matcher patterns
-- Better error handling
-
-This should resolve your middleware issues.`,
-    votes: 5,
-    author: {
-      id: 1,
-      name: "John Doe",
-      reputation: 15420,
-      avatar: "JD",
-    },
-    answeredDate: "2 days ago",
-    isAccepted: true,
-    userVote: null,
-  },
-  {
-    id: 2,
-    content: `Another approach you might consider is using NextAuth.js which handles authentication middleware automatically:
-
-## Installation
-\`\`\`bash
-npm install next-auth
-\`\`\`
-
-## Configuration
-Create \`pages/api/auth/[...nextauth].js\`:
-
-\`\`\`javascript
-import NextAuth from 'next-auth'
-import CredentialsProvider from 'next-auth/providers/credentials'
-
-export default NextAuth({
-  providers: [
-    CredentialsProvider({
-      name: 'credentials',
-      credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' }
-      },
-      async authorize(credentials) {
-        // Add your authentication logic here
-        const user = await authenticateUser(credentials)
-        return user ? user : null
-      }
-    })
-  ],
-  pages: {
-    signIn: '/login'
-  },
-  callbacks: {
-    async jwt({ token, user }) {
-      return { ...token, ...user }
-    },
-    async session({ session, token }) {
-      return { ...session, user: token }
-    }
-  }
-})
-\`\`\`
-
-## Middleware with NextAuth
-\`\`\`javascript
-import { withAuth } from 'next-auth/middleware'
-
-export default withAuth(
-  function middleware(req) {
-    // Additional middleware logic here
-  },
-  {
-    callbacks: {
-      authorized: ({ token }) => !!token
-    }
-  }
-)
-
-export const config = {
-  matcher: ['/dashboard/:path*', '/settings/:path*']
-}
-\`\`\`
-
-This approach is more robust and handles many edge cases automatically.`,
-    votes: 2,
-    author: {
-      id: 2,
-      name: "Felix Rodriguez",
-      reputation: 799,
-      avatar: "FR",
-    },
-    answeredDate: "1 day ago",
-    isAccepted: false,
-    userVote: null,
-  },
-];
-// Local fallback that matches the component's expected shape
-const fallbackQuestion = {
-  _id: String(questionData.id),
-  questiontitle: questionData.title,
-  questionbody: questionData.content,
-  questiontags: questionData.tags,
-  noofanswer: answersData.length,
-  answer: answersData.map((a, idx) => ({
-    _id: String(idx + 1),
-    answerbody: a.content,
-    useranswered: a.author?.name || a.author?.avatar || "Anonymous",
-    userid: a.author?.id || String(idx + 1),
-    answeredon: a.answeredDate || "2020-01-01T00:00:00.000Z",
-  })),
-  userposted: questionData.author?.name || "Author",
-  userid: questionData.author?.id || "1",
-  askedon: "2020-01-01T00:00:00.000Z",
-  upvote: [],
-  downvote: [],
-  isBookmarked: false,
-};
 const QuestionDetail = ({ questionId }: any) => {
   const router = useRouter();
   const [question, setquestion] = useState<any>(null);
@@ -279,35 +31,52 @@ const QuestionDetail = ({ questionId }: any) => {
   const { user } = useAuth();
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => setHasMounted(true), []);
-  useEffect(() => {
-    // Prefer localStorage 'mockQuestions' if present, otherwise build a per-id fallback
-    const idStr = questionId ? String(questionId) : String(fallbackQuestion._id);
-    let matchedquestion: any = null;
-    if (typeof window !== "undefined") {
-      try {
-        const stored = JSON.parse(localStorage.getItem("mockQuestions") || "[]");
-        matchedquestion = stored.find((q: any) => String(q._id) === idStr) || null;
-      } catch (e) {
-        matchedquestion = null;
-      }
+ useEffect(() => {
+  const loadQuestion = async () => {
+    try {
+      setloading(true);
+
+      const realQuestion = await getQuestionById(String(questionId));
+const questionData =
+  realQuestion?.data?.question ||
+  realQuestion?.question ||
+  realQuestion?.data ||
+  realQuestion;
+      const userId = user?._id || user?.id;
+
+let isBookmarked = false;
+
+if (userId) {
+  const savedQuestions = await getQuestionBookmarks(String(userId));
+
+  isBookmarked = Array.isArray(savedQuestions)
+    ? savedQuestions.some(
+        (saved: any) =>
+          String(saved?._id || saved) ===
+          String(questionData?._id)
+      )
+    : false;
+}
+
+setquestion({
+  ...questionData,
+  isBookmarked,
+});
+
+setanswer(questionData?.answer || []);
+    } catch (error) {
+      console.error("Failed to fetch question:", error);
+      setquestion(null);
+      setanswer([]);
+    } finally {
+      setloading(false);
     }
-    if (!matchedquestion) {
-      matchedquestion = {
-        ...fallbackQuestion,
-        _id: idStr,
-        questiontitle: `${fallbackQuestion.questiontitle} (#${idStr})`,
-        askedon: new Date().toISOString(),
-        answer: (fallbackQuestion.answer || []).map((a: any, idx: number) => ({
-          ...a,
-          _id: a._id ? a._id : `${idStr}-ans-${idx + 1}`,
-          userid: a.userid || `${idx + 1}`,
-        })),
-      };
-    }
-    setanswer(matchedquestion?.answer || null);
-    setquestion(matchedquestion);
-    setloading(false);
-  }, [questionId]);
+  };
+
+  if (questionId) {
+    loadQuestion();
+  }
+}, [questionId, user?._id, user?.id]);
   if (loading) {
     return (
       <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
@@ -345,34 +114,46 @@ const QuestionDetail = ({ questionId }: any) => {
       toast.error("Failed to Vote question");
     }
   };
-  const handlebookmark = () => {
-    setquestion((prev: any) => {
-      if (!prev) return prev;
-      const updated = { ...prev, isBookmarked: !prev.isBookmarked };
-      // persist to localStorage mockQuestions
-      if (typeof window !== "undefined") {
-        try {
-          const stored = JSON.parse(localStorage.getItem("mockQuestions") || "[]");
-          const idx = stored.findIndex((q: any) => String(q._id) === String(updated._id));
-          if (idx !== -1) {
-            stored[idx] = { ...stored[idx], isBookmarked: updated.isBookmarked };
-          } else {
-            stored.push(updated);
-          }
-          localStorage.setItem("mockQuestions", JSON.stringify(stored));
-          // notify other components in this tab to refresh saved lists
-          try {
-            window.dispatchEvent(new Event("mockQuestionsUpdated"));
-          } catch (e) {
-            // ignore
-          }
-        } catch (e) {
-          // ignore storage errors
-        }
-      }
-      return updated;
-    });
-  };
+const handlebookmark = async () => {
+  const userId = user?._id || user?.id;
+
+  if (!userId) {
+    toast.info("Please login to save questions");
+    router.push("/");
+    return;
+  }
+
+  const questionId = question?._id;
+
+  if (!questionId) {
+    toast.error("Question ID not found");
+    return;
+  }
+
+  try {
+    const result = await toggleQuestionBookmark(
+      String(userId),
+      String(questionId)
+    );
+
+    const updatedBookmarks = result.questionBookmarks || [];
+
+    const isNowBookmarked = updatedBookmarks.some(
+      (id: any) => String(id) === String(questionId)
+    );
+
+    setquestion((prev: any) => ({
+      ...prev,
+      isBookmarked: isNowBookmarked,
+    }));
+
+    toast.success(result.message);
+  } catch (error: any) {
+    toast.error(
+      error?.response?.data?.message || "Unable to update bookmark"
+    );
+  }
+};
   const handleSubmitanswer = async () => {
     if(!user){
       toast.info("Please login to continue")
@@ -382,19 +163,15 @@ const QuestionDetail = ({ questionId }: any) => {
     if (!newanswer.trim()) return;
     setisSubmitting(true);
     try {
-      const newObj = {
-        _id: String(Date.now()),
-        answerbody: newanswer,
-        useranswered: user.name,
-        userid: user._id,
-        answeredon: new Date().toISOString(),
-      };
-      setquestion((prev: any) => ({
-        ...prev,
-        noofanswer: (prev.noofanswer || 0) + 1,
-        answer: [...(prev.answer || []), newObj],
-      }));
-      toast.success("Answer Uploaded (local)");
+      const result = await submitAnswer(String(question._id), {
+  answerbody: newanswer,
+  useranswered: user.name,
+  userid: user._id,
+});
+
+setquestion(result.data);
+
+toast.success("Answer uploaded successfully");
     } catch (error) {
       console.error(error);
       toast.error("Failed to Answer");
@@ -424,6 +201,7 @@ const QuestionDetail = ({ questionId }: any) => {
     if (!window.confirm("Are you sure you want to delete this answer?"))
       return;
     try {
+      await axiosInstance.delete(`/question/delete-answer/${question._id}/${id}`)
       const updateanswer = (question.answer || []).filter(
         (ans: any) => String(ans._id) !== String(id)
       );
@@ -432,13 +210,30 @@ const QuestionDetail = ({ questionId }: any) => {
         noofanswer: updateanswer.length,
         answer: updateanswer,
       }));
-      toast.success("Answer deleted (local)");
+      toast.success("Answer deleted");
     } catch (error) {
       console.error(error);
       toast.error("Failed to delete answer");
     }
   };
+const handleShare = async () => {
+  const shareUrl = window.location.href;
 
+  try {
+    if (navigator.share) {
+      await navigator.share({
+        title: question?.questiontitle || "Question",
+        text: "Check out this question on CodeQuest",
+        url: shareUrl,
+      });
+    } else {
+      await navigator.clipboard.writeText(shareUrl);
+      toast.success("Question link copied!");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
   return (
     <div className="max-w-5xl">
       {/* Question Header */}
@@ -546,6 +341,7 @@ const QuestionDetail = ({ questionId }: any) => {
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div className="flex gap-2">
                   <Button
+                    onClick={handleShare}
                     variant="ghost"
                     size="sm"
                     className="text-gray-600 hover:text-gray-800"
