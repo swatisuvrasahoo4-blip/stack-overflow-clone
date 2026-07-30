@@ -5,6 +5,8 @@ import axiosInstance from "@/lib/axiosinstance";
 import { Calendar, Search } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { FollowButton } from "@/components/community/FollowButton";
+import { useAuth } from "@/lib/AuthContext";
 const sampleUsers = [
   {
     id: 1,
@@ -86,7 +88,7 @@ const index = () => {
           {users.map((user: any) => (
             <Link key={user._id || user.id || user.username} href={`/users/${user._id || user.id || user.username}`}>
               <div className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer">
-                <div className="flex items-center mb-3">
+                <div className="flex items-start justify-between mb-3">
                   <Avatar className="w-12 h-12 mr-3">
                     <AvatarFallback className="text-lg">
                       {user.name
@@ -96,6 +98,9 @@ const index = () => {
                     </AvatarFallback>
                   </Avatar>
                   <div className="min-w-0 flex-1">
+                    <FollowButton
+                    userId={user._id || user.id}
+                    />
                     <h3 className="font-semibold text-blue-600 hover:text-blue-800 truncate">
                       {user.name}
                     </h3>
