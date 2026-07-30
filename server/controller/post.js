@@ -46,6 +46,62 @@ export const createPost = async (req, res) => {
     });
   }
 };
+// Edit an existing post
+export const editPost = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const {
+      content,
+      postType,
+      image,
+      codeSnippet,
+      hashtags,
+    } = req.body;
+
+    const post = await Post.findById(id);
+
+    if (!post) {
+      return res.status(404).json({
+        message: "Post not found",
+      });
+    }
+
+    if (post.authorId.toString() !== req.userid.toString()) {
+      return res.status(403).json({
+        message: "You can only edit your own post",
+      });
+    }
+
+    if (!content || content.trim() === "") {
+      return res.status(400).json({
+        message: "Post content is required",
+      });
+    }
+
+    post.content = content;
+    post.postType = postType || post.postType;
+    post.image = image !== undefined ? image : post.image;
+    post.codeSnippet =
+      codeSnippet !== undefined ? codeSnippet : post.codeSnippet;
+    post.hashtags = hashtags !== undefined ? hashtags : post.hashtags;
+    post.isEdited = true;
+
+    const updatedPost = await post.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Post updated successfully",
+      data: updatedPost,
+    });
+  } catch (error) {
+    console.log("Edit Post Error:", error);
+
+    res.status(500).json({
+      message: "Something went wrong while editing the post",
+    });
+  }
+};
 // Get all community posts
 export const getAllPosts = async (req, res) => {
   try {

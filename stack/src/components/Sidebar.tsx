@@ -16,7 +16,7 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { Badge } from "./ui/badge";
 
-const Sidebar = ({ isopen }) => {
+const Sidebar = ({ isopen }:any) => {
   return (
     <div
       className={cn(
@@ -158,7 +158,7 @@ function SavedList() {
     if (typeof window === "undefined") return;
     try {
       const stored = JSON.parse(localStorage.getItem("mockQuestions") || "[]");
-      const list = stored.filter((q) => q.isBookmarked);
+      const list = stored.filter((q:any) => q.isBookmarked);
       setSaved(list.slice(0, 6));
     } catch (e) {
       setSaved([]);
@@ -168,7 +168,7 @@ function SavedList() {
     const handler = () => {
       try {
         const stored = JSON.parse(localStorage.getItem("mockQuestions") || "[]");
-        const list = stored.filter((q) => q.isBookmarked);
+        const list = stored.filter((q:any) => q.isBookmarked);
         setSaved(list.slice(0, 6));
       } catch (e) {
         setSaved([]);
@@ -182,7 +182,7 @@ function SavedList() {
   }
   return (
     <ul className="mt-2 space-y-2 text-sm">
-      {saved.map((q) => (
+      {saved.map((q:any) => (
         <li key={q._id}>
           <Link href={`/questions/${q._id}`} className="text-blue-600 hover:underline">
             {q.questiontitle?.slice(0, 60) || "(no title)"}

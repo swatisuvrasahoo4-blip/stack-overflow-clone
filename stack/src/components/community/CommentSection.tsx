@@ -61,13 +61,14 @@ export default function CommentSection({
 
        <div className="flex items-center gap-3 mt-2">
   <button
-    onClick={() =>
+    onClick={(e) =>{
+      e.stopPropagation();
       setActiveReplyComment(
         activeReplyComment === comment._id
           ? null
           : comment._id
       )
-    }
+    }}
     className="text-blue-600 text-xs hover:underline"
   >
     Reply
@@ -76,7 +77,8 @@ export default function CommentSection({
   {String(user?.id || user?._id || user?.userId) ===
     String(comment.userId) && (
     <button
-      onClick={() => {
+      onClick={(e) => {
+        e.stopPropagation();
   setSelectedComment({
     postId: post._id,
     commentId: comment._id,
@@ -101,9 +103,10 @@ export default function CommentSection({
     />
 
     <button
-      onClick={() =>
+      onClick={(e) =>{
+        e.stopPropagation();
         handleReply(post._id, comment._id)
-      }
+      }}
       className="mt-2 bg-blue-600 text-white px-3 py-1 rounded-lg text-sm"
     >
       Post Reply
@@ -128,7 +131,8 @@ export default function CommentSection({
                 {String(user?.id || user?._id || user?.userId) ===
   String(reply.userId) && (
   <button
-    onClick={() => {
+    onClick={(e) => {
+      e.stopPropagation();
   setSelectedReply({
     postId: post._id,
     commentId: comment._id,

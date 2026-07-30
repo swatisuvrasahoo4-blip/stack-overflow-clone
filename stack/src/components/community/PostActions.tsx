@@ -18,7 +18,8 @@ export default function PostActions({
       {String(user?.id || user?._id || user?.userId) ===
         String(post.authorId) && (
         <button
-  onClick={() => {
+  onClick={(e) => {
+    e.stopPropagation();
     setSelectedPostId(post._id);
     setShowDeleteModal(true);
   }}

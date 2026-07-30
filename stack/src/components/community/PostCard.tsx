@@ -55,23 +55,30 @@ export default function PostCard({post,user,handleLike,handleShare,handleBookmar
       ))}
     </div>
 
-    <div className="grid grid-cols-2 gap-6 mt-5 text-gray-600 text-sm sm:grids-cols-4">
+    <div className="grid grid-cols-4 gap-6 mt-5 text-gray-600 text-sm sm:grids-cols-4">
       <button
-      onClick={() => handleLike(post._id)}>
+      onClick={(e) =>{ handleLike(post._id)
+        e.stopPropagation();
+      }}>
   👍 {post.likes?.length || 0} Like
 </button>
       <button
-  onClick={() =>
+  onClick={(e) =>{
+    e.stopPropagation();
     setActiveCommentPost(
       activeCommentPost === post._id ? null : post._id
     )
-  }
+  }}
 >
   💬 {post.comments?.length || 0} Comment
 </button>
-      <button onClick={()=> handleBookmark(post)}>🔖 Bookmark</button>
+      <button onClick={(e)=>{ 
+        e.stopPropagation();
+        handleBookmark(post)}}>🔖 Bookmark</button>
       <button
-  onClick={() => handleShare(post._id)}
+  onClick={(e) =>{
+    e.stopPropagation();
+    handleShare(post._id)}}
 >
   ↗ Share
 </button>
@@ -79,14 +86,20 @@ export default function PostCard({post,user,handleLike,handleShare,handleBookmar
     {activeCommentPost === post._id && (
   <div className="mt-4">
     <textarea
+     onClick={(e)=> e.stopPropagation()}
       value={commentText}
-      onChange={(e) => setCommentText(e.target.value)}
+      onChange={(e) =>{
+        e.stopPropagation();
+        setCommentText(e.target.value)
+      }}
       placeholder="Write a comment..."
       className="w-full border rounded-lg p-2"
     />
 
     <button
-      onClick={() => handleComment(post._id)}
+      onClick={(e) =>{ 
+        e.stopPropagation();
+        handleComment(post._id)}}
       className="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg"
     >
       Post Comment
