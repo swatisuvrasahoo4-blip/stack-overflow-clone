@@ -26,13 +26,24 @@ export const toggleQuestionBookmark = async (
 
   return res.data;
 };
-export const getQuestionBookmarks = async (userId: string) => {
-  const res = await axiosInstance.get(
-    `/question-bookmark/get/${userId}`
-  );
+export const getQuestionBookmarks = async (userId?: string) => {
+  if (!userId) return [];
 
-  return res.data.questionBookmarks;
+  try {
+    const res = await axiosInstance.get(
+      `/question-bookmark/get/${userId}`
+    );
+
+    return res.data.questionBookmarks || [];
+  } catch (error: any) {
+    if (error?.response?.status === 401) {
+      return [];
+    }
+
+    throw error;
+  }
 };
+
 export const getQuestionById = async (questionId: string) => {
   const res = await axiosInstance.get(`/question/${questionId}`);
 

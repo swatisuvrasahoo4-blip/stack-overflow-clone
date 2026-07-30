@@ -2,7 +2,7 @@ import React from "react";
 import PostActions from "./PostActions";
 import CommentSection from "./CommentSection";
 
-export default function PostCard({post,user,handleLike,handleShare,handleBookmark,handleComment,handleReply,handleDelete, activeCommentPost, setActiveCommentPost, commentText, setCommentText,expandedComments, setExpandedComments, activeReplyComment, setActiveReplyComment, replyText, setReplyText, setSelectedComment, setShowDeleteCommentModal, setSelectedReply, setShowDeleteReplyModal, setSelectedPostId, setShowDeleteModal}:any){
+export default function PostCard({post,user,handleLike,handleEdit,handleShare,handleBookmark,handleComment,handleReply,handleDelete, activeCommentPost, setActiveCommentPost, commentText, setCommentText,expandedComments, setExpandedComments, activeReplyComment, setActiveReplyComment, replyText, setReplyText, setSelectedComment, setShowDeleteCommentModal, setSelectedReply, setShowDeleteReplyModal, setSelectedPostId, setShowDeleteModal}:any){
     
   return(
         <>
@@ -16,8 +16,13 @@ export default function PostCard({post,user,handleLike,handleShare,handleBookmar
     </p>
 
     <p className="text-xs text-gray-500">
-      {new Date(post.createdAt).toLocaleString()}
-    </p>
+  {new Date(post.createdAt).toLocaleString()}
+  {post.isEdited && (
+    <span className="ml-2 italic text-gray-400">
+      Edited
+    </span>
+  )}
+</p>
   </div>
   
 
@@ -25,6 +30,7 @@ export default function PostCard({post,user,handleLike,handleShare,handleBookmar
   post={post}
   user={user}
   onDelete={handleDelete}
+  onEdit={handleEdit}
   setSelectedPostId={setSelectedPostId}
   setShowDeleteModal={setShowDeleteModal}
 />

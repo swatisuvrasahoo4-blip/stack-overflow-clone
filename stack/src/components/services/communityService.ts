@@ -12,6 +12,19 @@ export const deletePost = async (postId: string) => {
   const res = await axiosInstance.delete(`/post/${postId}`);
   return res.data;
 };
+
+export const updatePost = async (
+  postId: string,
+  postData: any
+) => {
+  const res = await axiosInstance.put(
+    `/post/${postId}`,
+    postData
+  );
+
+  return res.data.data;
+};
+
 export const createPost = async (postData: any) => {
   const res = await axiosInstance.post("/post/create", postData);
   return res.data;

@@ -5,10 +5,11 @@ import { useAuth } from "@/lib/AuthContext";
 
 import CommunityHeader from "@/components/community/CommunityHeader";
 import PostCard from "@/components/community/PostCard";
-import { getPosts, toggleLikePost, deletePost, addComment, addReply, deleteComment, deleteReply, toggleBookmarkPost } from "@/components/services/communityService"
+import { getPosts, toggleLikePost, deletePost, addComment, addReply, deleteComment, deleteReply,updatePost, toggleBookmarkPost } from "@/components/services/communityService"
 import { get } from "http";
 import { shareCommunityPost } from "@/utils/communityUtils";
 import { useRouter } from "next/router";
+import { log } from "console";
 
 export default function CommunityPage() {
   const { user } = useAuth();
@@ -44,6 +45,9 @@ const [selectedReply, setSelectedReply] = useState<{
   replyId: string;
 } | null>(null);
 
+// Edit post
+const [editingPost, setEditingPost] = useState<any>(null);
+const [editContent, setEditContent] = useState("");
 
 
 const fetchPosts = async () => {
@@ -123,8 +127,55 @@ const handleShare = async (postId: string) => {
 };
 
 
+const handleEdit = (post: any) => {
+  setEditingPost(post);
+  setEditContent(post.content || "");
+}
 
+const handleSaveEdit = async () => {
+  if (!editingPost) return;
 
+  if (!editContent.trim()) {
+    alert("Post content cannot be empty.");
+    return;
+  }
+
+  try {
+    const updatedPost = await updatePost(editingPost._id, {
+      content: editContent,
+      postType: editingPost.postType,
+      image: editingPost.image,
+      codeSnippet: editingPost.codeSnippet,
+      hashtags: editingPost.hashtags,
+    });
+
+    setPosts((previousPosts: any[]) =>
+      previousPosts.map((post) =>
+        post._id === updatedPost._id ? updatedPost : post
+      )
+    );
+
+    setEditingPost(null);
+    setEditContent("");
+  } catch (error: any) {
+    console.log("Edit Post Error:", error);
+
+    if (error?.response?.status === 401) {
+      alert("Your session has expired. Please log in again.");
+      return;
+    }
+
+    if (error?.response?.status === 403) {
+      alert("You can only edit your own post.");
+      return;
+    }
+
+    alert(
+      error?.response?.data?.message ||
+        "Something went wrong while updating the post."
+    );
+  }
+};
   
 const handleLike = async (postId: string) => {
   try {
@@ -225,11 +276,13 @@ const handleDeleteReply = async (
             onClick={()=> router.push(`/community/${post._id}`)}
             className="cursor-pointer"
           >
+            
           <PostCard
             key={post._id}
             post={post}
             user = {user}
             handleLike={handleLike}
+            handleEdit={handleEdit}
             handleShare={handleShare}
             handleBookmark={handleBookmark}
             handleComment={handleComment}
@@ -379,6 +432,42 @@ const handleDeleteReply = async (
           className="rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700"
         >
           Yes, Delete
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+{editingPost && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+    <div className="w-full max-w-lg rounded-xl bg-white p-5 shadow-xl">
+      <h2 className="mb-4 text-xl font-semibold">Edit Post</h2>
+
+      <textarea
+        value={editContent}
+        onClick={(e)=> e.stopPropagation}
+        onChange={(e) => setEditContent(e.target.value)}
+        className="min-h-160px w-full rounded-md border p-3 outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="Edit your post..."
+      />
+
+      <div className="mt-4 flex justify-end gap-3">
+        <button
+          type="button"
+          onClick={() => {
+            setEditingPost(null);
+            setEditContent("");
+          }}
+          className="rounded-md border px-4 py-2"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          onClick={handleSaveEdit}
+          className="rounded-md bg-blue-600 px-4 py-2 text-white"
+        >
+          Save Changes
         </button>
       </div>
     </div>
