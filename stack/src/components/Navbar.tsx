@@ -4,10 +4,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
-// const User = {
-//   _id: "1",
-//   name: "Alice Johnson",
-// };
 
 const Navbar = ({ handleslidein }: any) => {
   const { user, Logout } = useAuth();
@@ -72,7 +68,7 @@ const Navbar = ({ handleslidein }: any) => {
           ) : (
             <>
               <Link
-                href={`/users/${user._id}`}
+                href={`/users/${user._id || user.id}`}
                 className="flex items-center justify-center bg-orange-600 text-white text-sm font-semibold w-9 h-9 rounded-full"
               >
                 {user.name?.charAt(0).toUpperCase()}

@@ -184,7 +184,7 @@ const index = () => {
                 </h1>
               </div>
 
-              {hasMounted && user && (isOwnProfile || process.env.NODE_ENV === 'development') && (
+              {hasMounted && user && isOwnProfile  && (
                 <Dialog open={isEditing} onOpenChange={setIsEditing}>
                   <DialogTrigger>
                     <Button
