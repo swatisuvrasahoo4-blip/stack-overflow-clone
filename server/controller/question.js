@@ -88,7 +88,6 @@ export const votequestion = async (req, res) => {
 
 export const getQuestionById = async (req, res) => {
   const { id } = req.params;
-
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({
       message: "Question unavailable",
@@ -96,7 +95,13 @@ export const getQuestionById = async (req, res) => {
   }
 
   try {
-    const questionData = await question.findById(id);
+ const questionData = await question.findById(id);
+
+if (!questionData) {
+  return res.status(404).json({
+    message: "Question not found",
+  });
+}
 
     if (!questionData) {
       return res.status(404).json({
@@ -182,6 +187,70 @@ export const deleteAnswer = async (req, res) => {
 
     return res.status(500).json({
       message: "Failed to delete answer",
+    });
+  }
+};
+export const editQuestion = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const { questiontitle, questionbody, questiontags } = req.body;
+
+    const updatedQuestion = await question.findByIdAndUpdate(
+      id,
+      {
+        questiontitle,
+        questionbody,
+        questiontags,
+      },
+      { new: true }
+    );
+
+    if (!updatedQuestion) {
+      return res.status(404).json({
+        message: "Question not found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Question updated successfully",
+      question: updatedQuestion,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Something went wrong",
+    });
+  }
+};
+
+export const deleteQuestion = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const questionData = await question.findById(id);
+
+    if (!questionData) {
+      return res.status(404).json({
+        message: "Question not found",
+      });
+    }
+
+    if (questionData.userid !== req.userid) {
+      return res.status(403).json({
+        message: "You can only delete your own question",
+      });
+    }
+
+    await question.findByIdAndDelete(id);
+
+    res.status(200).json({
+      message: "Question deleted successfully",
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Something went wrong",
     });
   }
 };

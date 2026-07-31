@@ -5,37 +5,13 @@ import axiosInstance from "@/lib/axiosinstance";
 import { Calendar, Search } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { FollowButton } from "@/components/community/FollowButton";
+import { FollowButton } from "@/components/follow/FollowButton";
 import { useAuth } from "@/lib/AuthContext";
-const sampleUsers = [
-  {
-    id: 1,
-    name: "John Doe",
-    username: "johndoe",
-    joinDate: "2019-03-15",
-  },
-  {
-    id: 2,
-    name: "Felix Rodriguez",
-    username: "Felix.leg",
-    joinDate: "2020-07-22",
-  },
-  {
-    id: 3,
-    name: "Alex Smith",
-    username: "Aledi5",
-    joinDate: "2023-11-10",
-  },
-  {
-    id: 4,
-    name: "Sarah Johnson",
-    username: "PR0X",
-    joinDate: "2024-01-05",
-  },
-];
+
 const index = () => {
-  const [users, setusers] = useState<any>(sampleUsers);
+  const [users, setusers] = useState<any>([]);
   const [loading, setloading] = useState(false);
+  const { user: currentUser } = useAuth();
   useEffect(() => {
     const fetchuser = async () => {
       try {
@@ -45,13 +21,11 @@ const index = () => {
         if (data && data.length > 0) {
           setusers(data);
         } else {
-          // keep sample users if backend returns empty
-          setusers(sampleUsers);
+          setusers([]);
         }
       } catch (error) {
-        // backend likely not present in dev; use sample users
         console.log(error);
-        setusers(sampleUsers);
+        setusers([]);
       } finally {
         setloading(false);
       }
@@ -65,13 +39,14 @@ const index = () => {
       </Mainlayout>
     );
   }
-  if (!users || users.length === 0) {
+  if (!users) {
     return (
       <Mainlayout>
         <div className="text-center text-gray-500 mt-4">No users found.</div>
       </Mainlayout>
     );
   }
+  
   return (
     <Mainlayout>
       <div className="max-w-6xl">
@@ -87,7 +62,7 @@ const index = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {users.map((user: any) => (
             <Link key={user._id || user.id || user.username} href={`/users/${user._id || user.id || user.username}`}>
-              <div className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer">
+              <div className="relative border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer">
                 <div className="flex items-start justify-between mb-3">
                   <Avatar className="w-12 h-12 mr-3">
                     <AvatarFallback className="text-lg">
@@ -98,15 +73,21 @@ const index = () => {
                     </AvatarFallback>
                   </Avatar>
                   <div className="min-w-0 flex-1">
-                    <FollowButton
+                    <div className="absolute top-4 right-4">
+                      {(currentUser?._id || currentUser?.id) !== (user._id || user.id) &&(
+                      <FollowButton
                     userId={user._id || user.id}
                     />
-                    <h3 className="font-semibold text-blue-600 hover:text-blue-800 truncate">
+                    )}
+                    </div>
+                    <div className="pr-8">
+                       <h3 className="font-semibold text-blue-600 hover:text-blue-800 truncate">
                       {user.name}
                     </h3>
                     <p className="text-sm text-gray-600 truncate">
                       @{user.name}
                     </p>
+                    </div>
                   </div>
                 </div>
 

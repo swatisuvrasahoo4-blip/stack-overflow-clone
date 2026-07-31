@@ -105,9 +105,9 @@ const handlePost = async () => {
             <section className="rounded-lg border border-gray-200 bg-white sm:p-5 p-3 shadow-sm">
               <h2 className="text-xl font-medium mb-2">Tags</h2>
               <p className="text-sm text-gray-600 mb-3">Add up to 5 tags to describe what your question is about.</p>
-              <div className="flex flex-wrap flex-col sm:flex gap-2 mb-3">
+              <div className="flex flex-wrap gap-2 mb-3">
                 {tagsArr.map((t) => (
-                  <span key={t} className="inline-flex items-center bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">
+                  <span key={t} className="inline-flex items-center bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm w-fit">
                     {t}
                     <button type="button" onClick={() => removeTag(t)} className="ml-2 text-blue-600">×</button>
                   </span>

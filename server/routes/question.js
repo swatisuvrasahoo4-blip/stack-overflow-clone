@@ -6,17 +6,21 @@ import {
   votequestion,
   getQuestionById,
   answerQuestion,
-  deleteAnswer
+  deleteAnswer,
+  editQuestion,
+  deleteQuestion,
 } from "../controller/question.js";
-
-const router = express.Router();
 import auth from "../middleware/auth.js";
+const router = express.Router();
+
 router.post("/ask", auth, Askquestion);
 router.get("/getallquestion", getallquestion);
+router.patch("/edit/:id", auth, editQuestion);
+router.delete("/delete/:id", auth, deleteQuestion);
 router.post("/answer/:id",auth,answerQuestion);
 router.delete("/delete/:id", auth, deletequestion);
 router.delete("/delete-answer/:questionId/:answerId",auth,deleteAnswer);
 router.patch("/vote/:id", auth, votequestion);
 
-router.get("/:id",getQuestionById);
+router.get("/:id",auth,getQuestionById);
 export default router;

@@ -19,34 +19,24 @@ import { Calendar, Edit, Plus, X } from "lucide-react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-const getUserData = (id: string) => {
-  const users = {
-    "1": {
-      id: 1,
-      name: "John Doe",
-      joinDate: "2019-03-15",
-      about:
-        "Full-stack developer with 8+ years of experience in JavaScript, React, and Node.js. Passionate about clean code and helping others learn programming. I enjoy working on open-source projects and contributing to the developer community.",
-      tags: [
-        "javascript",
-        "react",
-        "node.js",
-        "typescript",
-        "python",
-        "mongodb",
-      ],
-    },
-  };
-  return users[id as keyof typeof users] || users["1"];
-};
+import { FollowButton } from "@/components/follow/FollowButton";
+import { FollowStats } from "@/components/follow/FollowStats";
+
 const index = () => {
   const { user } = useAuth();
   const router = useRouter();
   const { id } = router.query;
   const initialId = Array.isArray(id) ? id[0] : id || "1";
-  const [users, setusers] = useState<any>(getUserData(String(initialId)));
+  const [users, setusers] = useState<any>([]);
   const [loading, setloading] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
+    const [hasMounted, setHasMounted] = useState(false);
+    useEffect(() => setHasMounted(true), []);
+    const [isEditing, setIsEditing] = useState(false);
+     useEffect(() => {
+    if (!user) {
+      setIsEditing(false);
+    }
+  }, [user]);
   const [editForm, setEditForm] = useState({
     name: users?.name || "",
     about: users?.about || "",
@@ -64,18 +54,19 @@ const index = () => {
   useEffect(() => {
     const fetchuser = async () => {
       const idStr = Array.isArray(id) ? id[0] : id || "1";
+      setloading(true);
+      setusers([]);
       try {
         const res = await axiosInstance.get("/user/getalluser");
         const matcheduser = res?.data?.data?.find((u: any) => String(u._id) === String(idStr));
         if (matcheduser) {
           setusers(matcheduser);
         } else {
-          // no match from backend — use local sample
-          setusers(getUserData(String(idStr)));
+          setusers([]);
         }
       } catch (error) {
         console.log(error);
-        setusers(getUserData(String(idStr)));
+        setusers([]);
       } finally {
         setloading(false);
       }
@@ -133,7 +124,7 @@ const index = () => {
         // ignore storage errors
       }
       setIsEditing(false);
-      toast.success("Profile updated (local)");
+      toast.success("Profile updated");
     }
   };
 
@@ -153,14 +144,10 @@ const index = () => {
   };
 
   const currentUserId = user?._id;
-  const [hasMounted, setHasMounted] = useState(false);
-  useEffect(() => setHasMounted(true), []);
+
+  
   // Close edit dialog and update UI when auth user changes (e.g., logout)
-  useEffect(() => {
-    if (!user) {
-      setIsEditing(false);
-    }
-  }, [user]);
+ 
   const isOwnProfile = String(id) === String(currentUserId);
   return (
     <Mainlayout>
@@ -182,18 +169,23 @@ const index = () => {
                 <h1 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-1">
                   {users.name}
                 </h1>
+                {!isOwnProfile && (
+  <FollowButton userId={users._id || users.id} showText />
+)}
+<FollowStats userId={users._id || users.id} />
               </div>
 
               {hasMounted && user && isOwnProfile  && (
                 <Dialog open={isEditing} onOpenChange={setIsEditing}>
-                  <DialogTrigger>
-                    <Button
+                  <DialogTrigger
+                    render={<Button
                       variant="outline"
                       className="flex items-center gap-2 bg-transparent"
-                    >
+                    />}
+                  >
+                    
                       <Edit className="w-4 h-4" />
                       Edit Profile
-                    </Button>
                   </DialogTrigger>
                   <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white text-gray-900">
                     <DialogHeader>

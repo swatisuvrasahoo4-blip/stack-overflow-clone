@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }) => {
       });
       const { data, token } = res.data;
       localStorage.setItem("user", JSON.stringify({ ...data, token }));
-      setUser(data);
+      setUser({...data, token});
       toast.success("Login Successful");
     } catch (error) {
       const msg = error.response?.data.message || "Login failed";
