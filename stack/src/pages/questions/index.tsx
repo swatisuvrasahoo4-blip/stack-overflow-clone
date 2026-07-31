@@ -5,9 +5,11 @@ import { useRouter } from "next/router";
 import SavedList from "@/components/SavedList";
 import { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axiosinstance";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function QuestionsPage() {
   const router = useRouter();
+  const { user } = useAuth();
   const { panel } = router.query;
   const [items, setItems] = useState<any[]>([]);
 
@@ -19,8 +21,8 @@ export default function QuestionsPage() {
     const title = s.questiontitle || s.title || s.questionTitle || "(no title)";
     const content = s.questionbody || s.content || s.body || "";
     const tags = s.questiontags || s.tags || [];
-    const author = s.userposted || s.author || "You";
-    const authorId = s.userid || s.authorId || "local";
+    const author = s.userposted || s.author || "Unkonwn";
+    const authorId = s.userid || s.authorId || "";
     const timeAgo = (() => {
       try {
         const d = new Date(s.askedon || s.askedOn || s.asked || Date.now());
@@ -39,7 +41,7 @@ export default function QuestionsPage() {
     const votes = (s.upvote?.length || s.upvotes || 0) - (s.downvote?.length || s.downvotes || 0);
     const answers = s.noofanswer || s.answers || (s.answer?.length || 0) || 0;
     const views = s.views || 0;
-    return { id, title, content, tags, author, authorId, timeAgo, votes, answers, views };
+    return { id, title, content, tags, author, authorId, timeAgo, votes, answers: s.noofanswe || 0, views: s.views || 0 };
   }
 
  useEffect(() => {
@@ -56,7 +58,8 @@ export default function QuestionsPage() {
         realQuestions.map((question: any) =>
           normalizeStoredQuestion(question)
         );
-
+      console.log(normalisedQuestions);
+      
       setItems(normalisedQuestions);
     } catch (error) {
       console.error(
@@ -70,6 +73,8 @@ export default function QuestionsPage() {
 
   loadQuestions();
 }, []);
+console.log(user);
+
   return (
     <Mainlayout>
       <main className="min-w-0 p-4 lg:p-6">
@@ -98,6 +103,13 @@ export default function QuestionsPage() {
                   </div>
                 </div>
                 <p className="text-gray-700 mt-2 line-clamp-2">{question.content}</p>
+                
+                {question.authorId === user?._id && (
+                     <div className="flex gap-2 mt-3">
+                 <button className="text-blue-600 text-sm">Edit</button>
+                    <button className="text-red-600 text-sm">Delete</button>
+               </div>
+                 )}
                 <div className="mt-3 flex flex-wrap gap-2">
                   {question.tags.map((tag: string) => (
                     <Badge key={tag} variant="secondary" className="bg-blue-100 text-blue-800">

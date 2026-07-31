@@ -61,7 +61,7 @@ export default function PostCard({post,user,handleLike,handleEdit,handleShare,ha
       ))}
     </div>
 
-    <div className="grid grid-cols-4 gap-6 mt-5 text-gray-600 text-sm sm:grids-cols-4">
+   <div className="flex flex-wrap gap-4 mt-5 text-gray-600 text-sm [&>button]:w-[calc(50%-0.5rem)] md:[&>button]:w-auto md:[&>button]:flex-1">
       <button
       onClick={(e) =>{ handleLike(post._id)
         e.stopPropagation();

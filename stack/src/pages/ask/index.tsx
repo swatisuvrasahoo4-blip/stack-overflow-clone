@@ -73,14 +73,14 @@ const handlePost = async () => {
 
   return (
     <Mainlayout>
-      <div className="p-6 max-w-3xl mx-auto">
+      <div className="p-3 w-full max-w-3xl mx-auto sm:p-6">
         <div className="mb-4">
           <h1 className="text-2xl font-semibold">Ask a public question</h1>
           <p className="text-gray-600 text-sm mt-1">Other users will be able to see and answer your question.</p>
         </div>
 
         <div className="space-y-6">
-            <section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+            <section className="rounded-lg border border-gray-200 bg-white sm:p-5 p-3 shadow-sm">
               <h2 className="text-xl font-medium mb-2">Title</h2>
               <p className="text-sm text-gray-600 mb-3">Summarize your problem in a single sentence.</p>
               <input
@@ -91,7 +91,7 @@ const handlePost = async () => {
               />
             </section>
 
-            <section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+            <section className="rounded-lg border border-gray-200 bg-white sm:p-5 p-3 shadow-sm">
               <h2 className="text-xl font-medium mb-2">What are the details of your problem?</h2>
               <p className="text-sm text-gray-600 mb-3">Explain what you are trying to do and include any errors or output.</p>
               <textarea
@@ -102,10 +102,10 @@ const handlePost = async () => {
               />
             </section>
 
-            <section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+            <section className="rounded-lg border border-gray-200 bg-white sm:p-5 p-3 shadow-sm">
               <h2 className="text-xl font-medium mb-2">Tags</h2>
               <p className="text-sm text-gray-600 mb-3">Add up to 5 tags to describe what your question is about.</p>
-              <div className="flex flex-wrap gap-2 mb-3">
+              <div className="flex flex-wrap flex-col sm:flex gap-2 mb-3">
                 {tagsArr.map((t) => (
                   <span key={t} className="inline-flex items-center bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">
                     {t}
@@ -119,7 +119,7 @@ const handlePost = async () => {
                   onChange={(e) => setTagInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder="Type a tag and press Enter (e.g. javascript)"
-                  className="flex-1 border border-gray-300 px-3 py-2 rounded focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                  className="flex-1 w-full sm:flex-1 border border-gray-300 px-3 py-2 rounded focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                 />
                 <button
                   type="button"
@@ -152,7 +152,7 @@ const handlePost = async () => {
                 </button>
               </div>
             ) : (
-              <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+              <div className="rounded-lg border border-gray-200 bg-white sm:p-5 p-3 shadow-sm">
                 <h3 className="text-lg font-medium mb-3">Preview</h3>
                 <div className="mb-3">
                   <h4 className="font-semibold">{title || "(no title)"}</h4>
@@ -163,9 +163,9 @@ const handlePost = async () => {
                     <span key={t} className="inline-flex items-center bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm mr-2">{t}</span>
                   ))}
                 </div>
-                <div className="flex gap-3">
-                  <button type="button" onClick={handlePost} className="bg-green-600 text-white px-4 py-2 rounded">Post question</button>
-                  <button onClick={() => setShowPreview(false)} className="px-4 py-2 rounded border">Edit</button>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <button type="button" onClick={handlePost} className="w-full sm:w-auto bg-green-600 text-white px-4 py-2 rounded">Post question</button>
+                  <button onClick={() => setShowPreview(false)} className="w-full sm:w-auto px-4 py-2 rounded border">Edit</button>
                 </div>
               </div>
             )}

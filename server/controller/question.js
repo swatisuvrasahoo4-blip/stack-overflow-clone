@@ -1,10 +1,15 @@
 import mongoose from "mongoose";
 import question from "../models/question.js";
-
+import auth from "../models/auth.js"
 
 export const Askquestion = async (req, res) => {
   const { postquestiondata } = req.body;
-  const postques = new question({ ...postquestiondata });
+  const user = await auth.findById(req.userid);
+  const postques = new question({ 
+    ...postquestiondata,
+    userid: req.userid,
+    userposted: user.name,
+  });
   try {
     await postques.save();
     res.status(200).json({ data: postques });
