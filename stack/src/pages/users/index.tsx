@@ -74,7 +74,8 @@ const index = () => {
                   </Avatar>
                   <div className="min-w-0 flex-1">
                     <div className="absolute top-4 right-4">
-                      {(currentUser?._id || currentUser?.id) !== (user._id || user.id) &&(
+                      {(!currentUser ||
+                      (currentUser?._id || currentUser?.id) !== (user._id || user.id)) &&(
                       <FollowButton
                     userId={user._id || user.id}
                     />

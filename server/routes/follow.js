@@ -7,8 +7,8 @@ const router = express.Router();
 
 router.post("/:userId", auth, followUser);
 router.delete("/:userId",auth,unfollowUser);
-router.get("/followers/:userId",auth,getFollowers);
-router.get("/following/:userId",auth,getFollowing);
+router.get("/followers/:userId",getFollowers);
+router.get("/following/:userId",getFollowing);
 router.get("/:userId", auth, getFollowStatus);
 router.get("/count/:userId",getFollowCounts);
 

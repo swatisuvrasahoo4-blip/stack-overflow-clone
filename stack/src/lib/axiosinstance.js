@@ -27,7 +27,8 @@ axiosInstance.interceptors.response.use(
   (response) => response,
 
   (error) => {
-    if (error.response?.status === 401 && !isLoggingOut) {
+    const storedUser = localStorage.getItem("user");
+    if (error.response?.status === 401 && storedUser && !isLoggingOut) {
       isLoggingOut = true;
 
       localStorage.removeItem("user");

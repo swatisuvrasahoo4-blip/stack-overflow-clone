@@ -169,7 +169,7 @@ const index = () => {
                 <h1 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-1">
                   {users.name}
                 </h1>
-                {!isOwnProfile && (
+                {user && !isOwnProfile && (
   <FollowButton userId={users._id || users.id} showText />
 )}
 <FollowStats userId={users._id || users.id} />

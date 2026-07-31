@@ -8,10 +8,12 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/AuthContext";
 
-
 export default function Home() {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setloading] = useState(true);
+  const [activeFeed, setActiveFeed] = useState<
+  "forYou" | "questions" | "community"
+>("forYou");
   const router = useRouter();
   const { user } = useAuth();
   const { panel } = router.query;
