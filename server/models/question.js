@@ -8,6 +8,7 @@ const questionschema = mongoose.Schema(
     noofanswer: { type: Number, default: 0 },
     upvote: { type: [String], default: [] },
     downvote: { type: [String], default: [] },
+    views: { type: Number, default: 0 },
     userposted: { type: String },
     userid: { type: String },
     askedon: { type: Date, default: Date.now },

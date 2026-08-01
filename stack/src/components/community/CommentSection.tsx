@@ -97,6 +97,7 @@ export default function CommentSection({
   <div className="mt-3">
     <textarea
       value={replyText}
+      onClick={(e) => e.stopPropagation()}
       onChange={(e) => setReplyText(e.target.value)}
       placeholder="Write a reply..."
       className="w-full border rounded-lg p-2 text-sm"

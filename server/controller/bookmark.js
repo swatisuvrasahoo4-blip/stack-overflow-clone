@@ -2,6 +2,9 @@ import userModel from "../models/auth.js";
 
 export const toggleBookmark = async (req, res) => {
   const { userId, postId } = req.body;
+  console.log("Bookmark request body:", req.body);
+console.log("Backend userId:", userId);
+console.log("Backend postId:", postId);
 
   try {
     const user = await userModel.findById(userId);

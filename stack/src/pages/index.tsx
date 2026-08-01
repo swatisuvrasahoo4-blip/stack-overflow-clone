@@ -11,6 +11,7 @@ import FeedTabs from "@/components/feed/FeedTabs";
 import ContentTabs from "@/components/feed/ContentTabs";
 import QuestionFilters from "@/components/feed/QuestionFilters";
 import PostFeed from "@/components/feed/PostFeed";
+import { getFollowing } from "@/components/services/followService";
 
 export default function Home() {
   const [items, setItems] = useState<any[]>([]);
@@ -18,12 +19,48 @@ export default function Home() {
   const [activeFeed, setActiveFeed] = useState<
   "for-you" | "following" 
 >("for-you");
+  const [followingIds, setFollowingIds] = useState<string[]>([]);
+  const router = useRouter();
 const [activeContent, setActiveContent] = useState<
   "questions" | "posts"
->("questions");
-  const router = useRouter();
+>(router.query.content === "posts" ? "posts" : "questions");
+
   const { user } = useAuth();
   const { panel } = router.query;
+
+  useEffect(() => {
+    const loadHomeFeedData = async () => {
+      try {
+        const [questionsResponse, followingResponse] = await Promise.all([
+          axiosInstance.get("/question/getallquestion"),
+          user?._id || user?.id
+            ? getFollowing(user._id || user.id)
+            : Promise.resolve([]),
+        ]);
+
+        const questions = questionsResponse.data?.data || questionsResponse.data || [];
+        setItems(questions.map(normalizeStoredQuestion));
+
+        const following = Array.isArray(followingResponse)
+          ? followingResponse
+              .map((relationship: any) =>
+                relationship.following?._id || relationship.following
+              )
+              .filter(Boolean)
+              .map(String)
+          : [];
+        setFollowingIds(following);
+      } catch (error) {
+        console.error("Failed to load home feed:", error);
+        setItems([]);
+        setFollowingIds([]);
+      } finally {
+        setloading(false);
+      }
+    };
+
+    loadHomeFeedData();
+  }, [user?._id, user?.id]);
 
   function normalizeStoredQuestion(s: any) {
     const id = s._id || s.id || String(Date.now());
@@ -56,6 +93,8 @@ const [activeContent, setActiveContent] = useState<
     <Mainlayout>
       <main className="min-w-0 p-4 lg:p-6 ">
         <div className="mb-6 space-y-6">
+           {panel !== "saves" && (
+            <>
            <FeedTabs
   activeFeed={activeFeed}
   setActiveFeed={setActiveFeed}
@@ -64,7 +103,10 @@ const [activeContent, setActiveContent] = useState<
   <ContentTabs
   activeContent={activeContent}
   setActiveContent={setActiveContent}
-/></div>
+/>
+</div>
+</>
+)}
          {activeContent === "questions" &&(
           <div className="flex justify-end mt-4">
           {panel !== "saves" && (
@@ -119,7 +161,18 @@ const [activeContent, setActiveContent] = useState<
   {panel === "saves" ? (
     <SavedList />
   ) : activeContent === "questions" ? (
-    items.map((question: any) => (
+    (activeFeed === "for-you"
+      ? [...items].sort(
+          (first, second) =>
+            second.votes * 3 + second.answers * 5 + second.views -
+            (first.votes * 3 + first.answers * 5 + first.views)
+        )
+      : items
+    ).filter(
+      (question) =>
+        activeFeed === "for-you" || followingIds.includes(String(question.authorId))
+    )
+      .map((question: any) => (
       <div
         key={question.id || question._id}
         className="border-b border-gray-200 pb-4"
@@ -195,9 +248,9 @@ const [activeContent, setActiveContent] = useState<
           </div>
         </div>
       </div>
-    ))
+      ))
   ) : (
-    <PostFeed />
+    <PostFeed activeFeed={activeFeed} followingIds={followingIds} />
   )}
 </div>
         </div>

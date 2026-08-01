@@ -21,8 +21,8 @@ const Navbar = ({ handleslidein }: any) => {
     }
   };
   return (
-    <div className="top-0 z-50 w-full min-h:53px bg-white border-t-[3px] border-[#ef8236] shadow-[0_1px_5px_#00000033] flex items-center justify-center">
-      <div className="w-[90%] max-w: 1440px flex items-center justify-between mx-auto py-1">
+    <div className="fixed inset-x-0 top-0 z-50 h-[53px] w-full bg-white border-t-[3px] border-[#ef8236] shadow-[0_1px_5px_#00000033] flex items-center justify-center">
+      <div className="w-[90%] max-w-[1440px] flex items-center justify-between mx-auto py-1">
         <button
           aria-label="Toggle sidebar"
           className="sm:block p-2 rounded hover:bg-gray-100 transition"

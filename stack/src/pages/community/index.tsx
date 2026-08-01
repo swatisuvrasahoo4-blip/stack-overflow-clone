@@ -10,16 +10,20 @@ import { get } from "http";
 import { shareCommunityPost } from "@/utils/communityUtils";
 import { useRouter } from "next/router";
 import { log } from "console";
+import usePostActions from "@/hooks/usePostActions";
 
 export default function CommunityPage() {
   const { user } = useAuth();
   const router = useRouter();
   //posts
   const [posts, setPosts] = useState<any[]>([]);
+ 
   // comments
   const [commentText, setCommentText] = useState("");
 const [activeCommentPost, setActiveCommentPost] = useState<string | null>(null);
 const [expandedComments, setExpandedComments] = useState<string[]>([]);
+
+
 
   //replies
 const [replyText, setReplyText] = useState("");
@@ -48,6 +52,9 @@ const [selectedReply, setSelectedReply] = useState<{
 // Edit post
 const [editingPost, setEditingPost] = useState<any>(null);
 const [editContent, setEditContent] = useState("");
+ const { handleLike,handleBookmark, handleComment, handleShare,handleReply, handleDelete,handleDeleteComment, handleSaveEdit,handleEdit} = usePostActions({
+    posts,setPosts,user,commentText,setCommentText,setActiveCommentPost,editContent,setEditContent,editingPost,setEditingPost,replyText,setReplyText,setActiveReplyComment,
+  });
 
 
 const fetchPosts = async () => {
@@ -62,177 +69,7 @@ const fetchPosts = async () => {
 useEffect(() => {
   fetchPosts();
 }, []);
-const handleReply = async (postId: string, commentId: string) => {
-  if (!replyText.trim()) return;
 
-  try {
-    await addReply(postId, commentId, {
-  text: replyText,
-  userName: user?.name || user?.username || user?.email,
-});
-
-    const post = await getPosts();
-    setPosts(post)
-
-    setReplyText("");
-    setActiveReplyComment(null);
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const handleDelete = async (postId: string) => {
-
-  try {
-    await deletePost(postId);
-
-    setPosts((prev) =>
-      prev.filter((post) => post._id !== postId)
-    );
-
-    alert("Post deleted successfully!");
-  } catch (error: any) {
-    console.log(error);
-
-    alert(
-      error.response?.data?.message ||
-        "Unable to delete the post"
-    );
-  }
-};
-
-const handleBookmark = async (post: any) => {
-  if (!user?._id) {
-    alert("Please log in to save posts.");
-    return;
-  }
-
-  try {
-    const result = await toggleBookmarkPost(user._id, post._id);
-    alert(result.message);
-  } catch (error) {
-    alert("Unable to update bookmark");
-  }
-};
-
-const handleShare = async (postId: string) => {
-  if(!user){
-    alert("Please log in to share posts.")
-  }
-  try{
-    await shareCommunityPost(postId);
-  }catch(error){
-    console.log("Share Error:",error);
-  }
-};
-
-
-const handleEdit = (post: any) => {
-  setEditingPost(post);
-  setEditContent(post.content || "");
-}
-
-const handleSaveEdit = async () => {
-  if (!editingPost) return;
-
-  if (!editContent.trim()) {
-    alert("Post content cannot be empty.");
-    return;
-  }
-
-  try {
-    const updatedPost = await updatePost(editingPost._id, {
-      content: editContent,
-      postType: editingPost.postType,
-      image: editingPost.image,
-      codeSnippet: editingPost.codeSnippet,
-      hashtags: editingPost.hashtags,
-    });
-
-    setPosts((previousPosts: any[]) =>
-      previousPosts.map((post) =>
-        post._id === updatedPost._id ? updatedPost : post
-      )
-    );
-
-    setEditingPost(null);
-    setEditContent("");
-  } catch (error: any) {
-    console.log("Edit Post Error:", error);
-
-    if (error?.response?.status === 401) {
-      alert("Your session has expired. Please log in again.");
-      return;
-    }
-
-    if (error?.response?.status === 403) {
-      alert("You can only edit your own post.");
-      return;
-    }
-
-    alert(
-      error?.response?.data?.message ||
-        "Something went wrong while updating the post."
-    );
-  }
-};
-  
-const handleLike = async (postId: string) => {
-  try {
-    const updatedPost = await toggleLikePost(postId);
-
-    setPosts((previousPosts: any[]) =>
-      previousPosts.map((post) =>
-        post._id === postId ? updatedPost : post
-      )
-    );
-  } catch (error) {
-    console.log(error);
-  }
-};
-const handleComment = async (postId: string) => {
-  if (!commentText.trim()) return;
-
-  try {
-    await addComment(postId, {
-  text: commentText,
-  userName: user?.name || user?.username || user?.email,
-});
-   const posts = await getPosts();
-setPosts(posts);
-
-    setCommentText("");
-    setActiveCommentPost(null);
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const handleDeleteComment = async (
-  postId: string,
-  commentId: string
-) => {
-  try {
-    await deleteComment(postId, commentId)
-    setPosts((prevPosts) =>
-      prevPosts.map((post) =>
-        post._id === postId
-          ? {
-              ...post,
-              comments: post.comments.filter(
-                (comment: any) => comment._id !== commentId
-              ),
-            }
-          : post
-      )
-    );
-  } catch (error) {
-    console.error("Delete comment error:", error);
-    alert("Unable to delete comment");
-    
-    
-  }
-};
 
 const handleDeleteReply = async (
   postId: string,
@@ -293,20 +130,17 @@ const handleDeleteReply = async (
             commentText={commentText}
             setCommentText={setCommentText}
             expandedComments={expandedComments}
-  setExpandedComments={setExpandedComments}
-
-  activeReplyComment={activeReplyComment}
-  setActiveReplyComment={setActiveReplyComment}
-
-  replyText={replyText}
-  setReplyText={setReplyText}
+            setExpandedComments={setExpandedComments}
+            activeReplyComment={activeReplyComment}
+            setActiveReplyComment={setActiveReplyComment}
+            replyText={replyText}
+            setReplyText={setReplyText}
 
   setSelectedComment={setSelectedComment}
   setShowDeleteCommentModal={setShowDeleteCommentModal}
-
   setSelectedReply={setSelectedReply}
   setShowDeleteReplyModal={setShowDeleteReplyModal}
-   setSelectedPostId={setSelectedPostId}
+  setSelectedPostId={setSelectedPostId}
   setShowDeleteModal={setShowDeleteModal}
           />
         </div>

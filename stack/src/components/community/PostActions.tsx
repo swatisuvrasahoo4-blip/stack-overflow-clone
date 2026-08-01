@@ -15,10 +15,12 @@ export default function PostActions({
    setSelectedPostId,
   setShowDeleteModal,
 }: PostActionsProps) {
+  const currentUserId = user?.id || user?._id || user?.userId;
+  const postAuthorId = post.authorId || post.userId || post.userid;
+
   return (
     <>
-      {String(user?.id || user?._id || user?.userId) ===
-        String(post.authorId) && (
+      {String(currentUserId) === String(postAuthorId) && (
 
 <div className="flex gap-3">
           <button

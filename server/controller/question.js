@@ -95,7 +95,11 @@ export const getQuestionById = async (req, res) => {
   }
 
   try {
- const questionData = await question.findById(id);
+ const questionData = await question.findByIdAndUpdate(
+   id,
+   { $inc: { views: 1 } },
+   { new: true }
+ );
 
 if (!questionData) {
   return res.status(404).json({

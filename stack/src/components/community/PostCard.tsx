@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import PostActions from "./PostActions";
 import CommentSection from "./CommentSection";
+import { Bookmark } from "lucide-react";
 
-export default function PostCard({post,user,handleLike,handleEdit,handleShare,handleBookmark,handleComment,handleReply,handleDelete, activeCommentPost, setActiveCommentPost, commentText, setCommentText,expandedComments, setExpandedComments, activeReplyComment, setActiveReplyComment, replyText, setReplyText, setSelectedComment, setShowDeleteCommentModal, setSelectedReply, setShowDeleteReplyModal, setSelectedPostId, setShowDeleteModal}:any){
+export default function PostCard({post,user,handleLike,handleEdit,handleShare,handleBookmark,handleComment,handleReply,handleDelete, activeCommentPost, setActiveCommentPost, commentText, setCommentText,expandedComments, setExpandedComments, activeReplyComment, setActiveReplyComment, replyText, setReplyText, setSelectedComment, setShowDeleteCommentModal, setSelectedReply, setShowDeleteReplyModal, setSelectedPostId, setShowDeleteModal,selectedPostId,showDeleteModal,isBookmarked: initialBookmarked,}:any){
+    const [isBookmarked, setIsBookmarked] = useState(
+      initialBookmarked ??
+        post.isBookmarked ??
+        user?.bookmarks?.some((bookmarkId: any) =>
+          String(bookmarkId) === String(post._id)
+        ) ??
+        false
+    );
     
   return(
         <>
@@ -63,12 +72,14 @@ export default function PostCard({post,user,handleLike,handleEdit,handleShare,ha
 
    <div className="flex flex-wrap gap-4 mt-5 text-gray-600 text-sm [&>button]:w-[calc(50%-0.5rem)] md:[&>button]:w-auto md:[&>button]:flex-1">
       <button
+      className="cursor-pointer"
       onClick={(e) =>{ handleLike(post._id)
         e.stopPropagation();
       }}>
   👍 {post.likes?.length || 0} Like
 </button>
       <button
+      className="cursor-pointer"
   onClick={(e) =>{
     e.stopPropagation();
     setActiveCommentPost(
@@ -78,10 +89,23 @@ export default function PostCard({post,user,handleLike,handleEdit,handleShare,ha
 >
   💬 {post.comments?.length || 0} Comment
 </button>
-      <button onClick={(e)=>{ 
-        e.stopPropagation();
-        handleBookmark(post)}}>🔖 Bookmark</button>
       <button
+      type="button"
+      onClick={(e)=>{ 
+        e.stopPropagation();
+        handleBookmark(post).then((nextState: boolean | null) => {
+          if (nextState !== null) setIsBookmarked(nextState);
+        });
+      }}
+      className={`inline-flex items-center pl-10 gap-1 cursor-pointer ${isBookmarked ? "text-blue-600" : ""}`}>
+        <Bookmark
+          className="h-4 w-4"
+          fill={isBookmarked ? "currentColor" : "none"}
+        />
+        Bookmark
+      </button>
+      <button
+      className="cursor-pointer"
   onClick={(e) =>{
     e.stopPropagation();
     handleShare(post._id)}}
