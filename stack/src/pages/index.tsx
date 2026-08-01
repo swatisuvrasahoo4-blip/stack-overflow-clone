@@ -7,13 +7,20 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/AuthContext";
+import FeedTabs from "@/components/feed/FeedTabs";
+import ContentTabs from "@/components/feed/ContentTabs";
+import QuestionFilters from "@/components/feed/QuestionFilters";
+import PostFeed from "@/components/feed/PostFeed";
 
 export default function Home() {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setloading] = useState(true);
   const [activeFeed, setActiveFeed] = useState<
-  "forYou" | "questions" | "community"
->("forYou");
+  "for-you" | "following" 
+>("for-you");
+const [activeContent, setActiveContent] = useState<
+  "questions" | "posts"
+>("questions");
   const router = useRouter();
   const { user } = useAuth();
   const { panel } = router.query;
@@ -48,8 +55,18 @@ export default function Home() {
   return (
     <Mainlayout>
       <main className="min-w-0 p-4 lg:p-6 ">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-          <h1 className="text-4xl capitalize lg:text-2xl font-bold text-blue-600">{panel === "saves" ? "saves" : "Top Questions"}</h1>
+        <div className="mb-6 space-y-6">
+           <FeedTabs
+  activeFeed={activeFeed}
+  setActiveFeed={setActiveFeed}
+/>
+<div className="flex justify-center">
+  <ContentTabs
+  activeContent={activeContent}
+  setActiveContent={setActiveContent}
+/></div>
+         {activeContent === "questions" &&(
+          <div className="flex justify-end mt-4">
           {panel !== "saves" && (
           <button
             onClick={() => {
@@ -66,13 +83,14 @@ export default function Home() {
           </button>
           )}
         </div>
+        )}
+        </div>
         <div className="w-full">
           <div className="flex flex-col sm:flex-row items-start sm:items-center mb-4 text-sm gap-2 sm:gap-4">
-            {panel !== "saves" && (
+            
+            {activeContent === "questions" && panel !== "saves" && (
+            <QuestionFilters>
               <span className="text-gray-600">{items.length} questions</span>
-            )}
-            {panel !== "saves" && (
-            <div className="flex flex-wrap gap-1 sm:gap-2">
               <button className="px-2 sm:px-3 py-1 bg-gray-200 text-gray-700 rounded text-xs sm:text-sm">
                 Newest
               </button>
@@ -94,71 +112,94 @@ export default function Home() {
               <button className="px-2 sm:px-3 py-1 border border-gray-300 text-gray-600 hover:bg-gray-50 rounded ml-auto text-xs sm:text-sm">
                 🔍 Filter
               </button>
-            </div>
+            </QuestionFilters>
             )}
           </div>
           <div className="space-y-4">
-            {panel === "saves" ? (
-              <SavedList />
-            ) : (
-              items.map((question: any) => (
-                <div key={question.id || question._id} className="border-b border-gray-200 pb-4">
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <div className="flex sm:flex-col items-center sm:items-center text-sm text-gray-600 sm:w-16 lg:w-20 gap-4 sm:gap-2">
-                      <div className="text-center">
-                        <div className="font-medium">{question.votes}</div>
-                        <div className="text-xs">votes</div>
-                      </div>
-                      <div className="text-center">
-                        <div
-                          className={`font-medium ${
-                            question.answers > 0
-                              ? "text-green-600 bg-green-100 px-2 py-1 rounded"
-                              : ""
-                          }`}
-                        >
-                          {question.answers}
-                        </div>
-                        <div className="text-xs">{question.answers === 1 ? "answer" : "answers"}</div>
-                      </div>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <Link
-                        href={`/questions/${question.id}`}
-                        className="text-blue-600 hover:text-blue-800 text-base lg:text-lg font-medium mb-2 block"
-                      >
-                        {question.title}
-                      </Link>
-                      <p className="text-gray-700 text-sm mb-3 line-clamp-2">{question.content}</p>
+  {panel === "saves" ? (
+    <SavedList />
+  ) : activeContent === "questions" ? (
+    items.map((question: any) => (
+      <div
+        key={question.id || question._id}
+        className="border-b border-gray-200 pb-4"
+      >
+        <div className="flex flex-col gap-4 sm:flex-row">
+          <div className="flex items-center gap-4 text-sm text-gray-600 sm:w-16 sm:flex-col sm:items-center sm:gap-2 lg:w-20">
+            <div className="text-center">
+              <div className="font-medium">{question.votes}</div>
+              <div className="text-xs">votes</div>
+            </div>
 
-                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                        <div className="flex flex-wrap gap-1">
-                          {question.tags?.map((tag: any) => (
-                            <div key={tag}>
-                              <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-800 hover:bg-blue-200 cursor-pointer">
-                                {tag}
-                              </Badge>
-                            </div>
-                          ))}
-                        </div>
+            <div className="text-center">
+              <div
+                className={`font-medium ${
+                  question.answers > 0
+                    ? "rounded bg-green-100 px-2 py-1 text-green-600"
+                    : ""
+                }`}
+              >
+                {question.answers}
+              </div>
 
-                        <div className="flex items-center text-xs text-gray-600 flex-shrink: 0">
-                          <Link href={`/users/${question.authorId}`} className="flex items-center">
-                            <Avatar className="w-4 h-4 mr-1">
-                              <AvatarFallback className="text-xs">{question?.author?.[0]}</AvatarFallback>
-                            </Avatar>
-                            <span className="text-blue-600 hover:text-blue-800 mr-1">{question.author}</span>
-                          </Link>
-
-                          <span>asked {question.timeAgo}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))
-            )}
+              <div className="text-xs">
+                {question.answers === 1 ? "answer" : "answers"}
+              </div>
+            </div>
           </div>
+
+          <div className="min-w-0 flex-1">
+            <Link
+              href={`/questions/${question.id || question._id}`}
+              className="mb-2 block text-base font-medium text-blue-600 hover:text-blue-800 lg:text-lg"
+            >
+              {question.title}
+            </Link>
+
+            <p className="mb-3 line-clamp-2 text-sm text-gray-700">
+              {question.content}
+            </p>
+
+            <div className="flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center">
+              <div className="flex flex-wrap gap-1">
+                {question.tags?.map((tag: any) => (
+                  <Badge
+                    key={tag}
+                    variant="secondary"
+                    className="cursor-pointer bg-blue-100 text-xs text-blue-800 hover:bg-blue-200"
+                  >
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+
+              <div className="flex flex-shrink:0 items-center text-xs text-gray-600">
+                <Link
+                  href={`/users/${question.authorId}`}
+                  className="flex items-center"
+                >
+                  <Avatar className="mr-1 h-4 w-4">
+                    <AvatarFallback className="text-xs">
+                      {question?.author?.[0]}
+                    </AvatarFallback>
+                  </Avatar>
+
+                  <span className="mr-1 text-blue-600 hover:text-blue-800">
+                    {question.author}
+                  </span>
+                </Link>
+
+                <span>asked {question.timeAgo}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    ))
+  ) : (
+    <PostFeed />
+  )}
+</div>
         </div>
       </main>
     </Mainlayout>
