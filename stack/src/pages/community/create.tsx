@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useRouter } from "next/router";
 import Mainlayout from "@/layout/Mainlayout";
 import axiosInstance from "@/lib/axiosinstance";
@@ -7,16 +7,25 @@ import { createPost } from "@/components/services/communityService";
 export default function CreatePost() {
   const router = useRouter();
   const { user } = useAuth();
+  const imageInputRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
     content: "",
     postType: "Technical Update",
-    image: "",
+    image: null as File | null,
     codeSnippet: "",
     hashtags: "",
+    projectTitle:"",
+    projectLink: "",
+    achievementTitle: "",
+    achievementDescription: "",
+    codeLanguage: "javascript",
+    codeTitle:"",
   });
 
   const [loading, setLoading] = useState(false);
+  const [tagInput, setTagInput] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -28,7 +37,17 @@ export default function CreatePost() {
       [e.target.name]: e.target.value,
     });
   };
+const addTag = () => {
+  const tag = tagInput.trim();
 
+  if (!tag) return;
+
+  if (!tags.includes(tag)) {
+    setTags([...tags, tag]);
+  }
+
+  setTagInput("");
+};
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
@@ -37,18 +56,36 @@ export default function CreatePost() {
     setLoading(true);
 
     try {
-      await createPost({
-  authorId: user?._id,
-  authorName: user?.name,
-  content: form.content,
-  postType: form.postType,
-  image: form.image,
-  codeSnippet: form.codeSnippet,
-  hashtags: form.hashtags
-    .split(",")
-    .map((tag) => tag.trim())
-    .filter(Boolean),
-});
+      
+      
+      const formData = new FormData();
+      console.log("author",
+        user?.name || user?.username || user?.email
+      );
+
+formData.append("authorId", user?.id || user?._id || "");
+formData.append("authorName", user?.name || user?.username || user?.email || "");
+formData.append("content", form.content);
+formData.append("postType", form.postType);
+formData.append("codeSnippet", form.codeSnippet);
+formData.append("projectTitle", form.projectTitle);
+formData.append("projectLink", form.projectLink);
+formData.append("achievementTitle", form.achievementTitle);
+formData.append("achievementDescription", form.achievementDescription);
+
+
+
+form.hashtags
+  .split(",")
+  .map(tag => tag.trim())
+  .filter(Boolean)
+  .forEach(tag => formData.append("hashtags", tag));
+
+if (form.image instanceof File) {
+  formData.append("image", form.image);
+}
+
+await createPost(formData);
 
       alert("Post created successfully!");
      await router.push("/community");
@@ -69,7 +106,7 @@ export default function CreatePost() {
           Create Community Post
         </h1>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
 
           <textarea
             name="content"
@@ -93,32 +130,153 @@ export default function CreatePost() {
   <option value="Code Snippet">Code Snippet</option>
 </select>
 
-          <input
-            type="text"
-            name="image"
-            placeholder="Image URL (optional)"
-            value={form.image}
-            onChange={handleChange}
-            className="w-full border rounded p-2"
-          />
+          <div className="space-y-2">
 
-          <textarea
-            name="codeSnippet"
-            rows={4}
-            placeholder="Code Snippet (optional)"
-            value={form.codeSnippet}
-            onChange={handleChange}
-            className="w-full border rounded p-3 font-mono"
-          />
 
-          <input
-            type="text"
-            name="hashtags"
-            placeholder="e.g. react, nextjs, mongodb"
-            value={form.hashtags}
-            onChange={handleChange}
-            className="w-full border rounded p-2"
-          />
+  <input
+    ref={imageInputRef}
+    type="file"
+    accept="image/jpeg,image/png,image/webp"
+    className="hidden"
+    onChange={(e) => {
+      const file = e.target.files?.[0] || null;
+
+      setForm((previousForm) => ({
+        ...previousForm,
+        image: file,
+      }));
+    }}
+  />
+  {form.postType !== "Code Snippet" && (
+  <div className="flex items-center rounded border p-2">
+    <button
+      type="button"
+      className="cursor-pointer rounded bg-gray-100 px-4 py-2 hover:bg-gray-200"
+      onClick={() => imageInputRef.current?.click()}
+    >
+      Choose file
+    </button>
+
+    <span
+  className={`ml-auto truncate px-3 text-sm ${
+    form.image ? "text-gray-700" : "text-red-600"
+  }`}
+>
+  {form.image ? form.image.name : "No file chosen"}
+</span>
+
+    {form.image && (
+      <button
+        type="button"
+        className="cursor-pointer px-2 text-xl font-bold text-red-600 hover:text-red-800"
+        aria-label="Remove selected image"
+        onClick={() => {
+          setForm((previousForm) => ({
+            ...previousForm,
+            image: null,
+          }));
+
+          if (imageInputRef.current) {
+            imageInputRef.current.value = "";
+          }
+        }}
+      >
+        ×
+      </button>
+    )}
+  </div>
+  )}
+</div>
+
+{form.postType === "Project Showcase" && (
+  <>
+  <input
+    type="text"
+    name="projectTitle"
+    placeholder="Project title"
+    value={form.projectTitle}
+    onChange={handleChange}
+    className="w-full rounded border p-2"
+  />
+  <input
+      type="url"
+      name="projectLink"
+      placeholder="GitHub or Live Demo URL"
+      value={form.projectLink}
+      onChange={handleChange}
+      className="w-full rounded border p-2"
+    />
+</>
+)}
+
+{form.postType === "Learning Achievement" && (
+  <>
+    <input
+      type="text"
+      name="achievementTitle"
+      placeholder="Achievement title"
+      value={form.achievementTitle}
+      onChange={handleChange}
+      className="w-full rounded border p-2"
+    />
+
+    <textarea
+      name="achievementDescription"
+      placeholder="Describe your achievement..."
+      value={form.achievementDescription}
+      onChange={handleChange}
+      rows={3}
+      className="w-full rounded border p-2"
+    />
+  </>
+)}
+
+          {form.postType === "Code Snippet" && (
+  <textarea
+    name="codeSnippet"
+    value={form.codeSnippet}
+    onChange={handleChange}
+    placeholder="Paste your code snippet..."
+    className="min-h-40 w-full rounded border p-3 font-mono"
+  />
+)}
+
+    <div className="space-y-2">
+  <label className="block text-sm font-medium">
+    Hashtags
+  </label>
+
+  <div className="flex gap-2">
+    <input
+      type="text"
+      placeholder="e.g. react"
+      value={tagInput}
+      onChange={(e) => setTagInput(e.target.value)}
+      className="flex-1 rounded border p-2"
+    />
+
+    <button
+      type="button"
+      onClick={addTag}
+      className="rounded bg-blue-600 px-4 text-white hover:bg-blue-700"
+    >
+      +
+    </button>
+  </div>
+
+  {tags.length > 0 && (
+    <div className="flex flex-wrap gap-2">
+      {tags.map((tag) => (
+        <span
+          key={tag}
+          className="rounded bg-blue-100 px-3 py-1 text-sm text-blue-700"
+        >
+          #{tag}
+        </span>
+      ))}
+    </div>
+  )}
+</div>
 
           <button
             type="submit"

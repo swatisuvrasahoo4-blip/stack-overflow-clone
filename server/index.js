@@ -12,10 +12,12 @@ import postroutes from "./routes/post.js";
 import bookmarkRoutes from "./routes/bookmarks.js"
 import questionBookmarkRoutes from "./routes/questionBookmark.js"
 import followRoutes  from "./routes/follow.js";
+import path from "path";
 
 const app = express();
 dotenv.config();
 app.use(express.json({ limit: "30mb", extended: true }));
+app.use("/uploads",express.static(path.join(process.cwd(),"uploads")));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 app.get("/", (req, res) => {

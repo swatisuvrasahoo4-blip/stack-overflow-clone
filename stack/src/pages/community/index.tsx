@@ -102,6 +102,9 @@ const handleDeleteReply = async (
     console.log(error);
   }
 };
+useEffect(() => {
+  console.log(posts);
+}, [posts]);
   return (
     <Mainlayout>
       <main className="min-w-0 p-4 lg:p-6">
@@ -109,6 +112,8 @@ const handleDeleteReply = async (
         {/* Feed */}
         
         {posts.map((post) => (
+         
+          
           <div key ={post._id}
             onClick={()=> router.push(`/community/${post._id}`)}
             className="cursor-pointer"

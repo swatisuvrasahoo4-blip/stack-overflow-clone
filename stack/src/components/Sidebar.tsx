@@ -27,7 +27,7 @@ const Sidebar = ({ isopen }:any) => {
       <aside
         className={cn(
           "h-[calc(100vh-53px)] bg-white shadow-sm border-r transition-transform duration-200 ease-in-out",
-          "fixed left-0 top-53px z-30",
+          "fixed left-0 top-[53px] z-30",
           "w-48 lg:w-64",
           isopen ? "translate-x-0" : "-translate-x-full"
         )}

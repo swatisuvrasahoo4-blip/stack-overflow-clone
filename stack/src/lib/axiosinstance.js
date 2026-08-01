@@ -21,6 +21,11 @@ axiosInstance.interceptors.request.use((req) => {
     }
   }
 
+  // For FormData, let the browser set Content-Type automatically
+  if (req.data instanceof FormData) {
+    delete req.headers["Content-Type"];
+  }
+
   return req;
 });
 axiosInstance.interceptors.response.use(

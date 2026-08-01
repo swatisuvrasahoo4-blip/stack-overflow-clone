@@ -64,6 +64,22 @@ const postSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    projectTitle: {
+      type: String,
+      default: "",
+    },
+    projectLink: {
+      type: String,
+      default: "",
+    },
+    achievementTitle: {
+      type: String,
+      default: "",
+    },
+    achievementDescription: {
+      type: String,
+      default: "",
+    },
 
     hashtags: {
       type: [String],

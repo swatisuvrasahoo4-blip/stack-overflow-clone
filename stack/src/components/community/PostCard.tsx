@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PostActions from "./PostActions";
 import CommentSection from "./CommentSection";
-import { Bookmark } from "lucide-react";
+import { Bookmark, ThumbsUp } from "lucide-react";
 
 export default function PostCard({post,user,handleLike,handleEdit,handleShare,handleBookmark,handleComment,handleReply,handleDelete, activeCommentPost, setActiveCommentPost, commentText, setCommentText,expandedComments, setExpandedComments, activeReplyComment, setActiveReplyComment, replyText, setReplyText, setSelectedComment, setShowDeleteCommentModal, setSelectedReply, setShowDeleteReplyModal, setSelectedPostId, setShowDeleteModal,selectedPostId,showDeleteModal,isBookmarked: initialBookmarked,}:any){
     const [isBookmarked, setIsBookmarked] = useState(
@@ -12,6 +12,17 @@ export default function PostCard({post,user,handleLike,handleEdit,handleShare,ha
         ) ??
         false
     );
+
+    const [isLiked, setIsLiked] = useState(
+      post.likes?.some((likeUserId: any) =>
+        String(likeUserId) === String(user?.id || user?._id)
+      ) ?? false
+    );
+
+    const handleLikeClick = (postId: string) => {
+      setIsLiked(!isLiked);
+      handleLike(postId);
+    };
     
   return(
         <>
@@ -46,12 +57,39 @@ export default function PostCard({post,user,handleLike,handleEdit,handleShare,ha
 </div>
 
     <p className="mt-4">{post.content}</p>
+    {post.postType === "Project Showcase" && post.projectTitle && (
+      <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <h4 className="font-semibold text-blue-900">{post.projectTitle}</h4>
+        {post.projectLink && (
+          <a
+            href={post.projectLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+          >
+            View Project →
+          </a>
+        )}
+      </div>
+    )}
+    {post.postType === "Learning Achievement" && post.achievementTitle && (
+      <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+        <h4 className="font-semibold text-green-900">🏆 {post.achievementTitle}</h4>
+        {post.achievementDescription && (
+          <p className="mt-2 text-sm text-green-800">{post.achievementDescription}</p>
+        )}
+      </div>
+    )}
     {post.image && (
   <img
-    src={post.image}
-    alt="Post"
-    className="mt-4 w-full rounded-lg border max-h-96 object-cover"
-  />
+  src={
+    post.image?.startsWith("http")
+      ? post.image
+      : `http://localhost:5000${post.image}`
+  }
+  alt="Post"
+  className="mt-4 max-h-96 w-full rounded-lg object-cover"
+/>
 )}
     {post.codeSnippet && (
   <pre className="mt-4 bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm">
@@ -70,13 +108,17 @@ export default function PostCard({post,user,handleLike,handleEdit,handleShare,ha
       ))}
     </div>
 
-   <div className="flex flex-wrap gap-4 mt-5 text-gray-600 text-sm [&>button]:w-[calc(50%-0.5rem)] md:[&>button]:w-auto md:[&>button]:flex-1">
+   <div className="flex flex-wrap items-center justify-between gap-2 mt-4 text-gray-600 text-sm [&>button]:w-[calc(50%-0.25rem)] md:[&>button]:w-auto">
       <button
-      className="cursor-pointer"
-      onClick={(e) =>{ handleLike(post._id)
+      className={`inline-flex items-center gap-1 cursor-pointer ${isLiked ? "text-blue-600" : ""}`}
+      onClick={(e) =>{ handleLikeClick(post._id)
         e.stopPropagation();
       }}>
-  👍 {post.likes?.length || 0} Like
+  <ThumbsUp
+    className="h-4 w-4"
+    fill={isLiked ? "currentColor" : "none"}
+  />
+  {post.likes?.length || 0} Like
 </button>
       <button
       className="cursor-pointer"
@@ -97,7 +139,7 @@ export default function PostCard({post,user,handleLike,handleEdit,handleShare,ha
           if (nextState !== null) setIsBookmarked(nextState);
         });
       }}
-      className={`inline-flex items-center pl-10 gap-1 cursor-pointer ${isBookmarked ? "text-blue-600" : ""}`}>
+      className={`inline-flex items-center gap-1 cursor-pointer ${isBookmarked ? "text-blue-600" : ""}`}>
         <Bookmark
           className="h-4 w-4"
           fill={isBookmarked ? "currentColor" : "none"}

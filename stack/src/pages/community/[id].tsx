@@ -9,6 +9,7 @@ export default function CommunityPostDetail() {
 
   const [post, setPost] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -67,6 +68,28 @@ export default function CommunityPostDetail() {
           <p className="mt-4 text-gray-800">
             {post.content}
           </p>
+          {post.codeSnippet && (
+  <div className="relative mt-4">
+    <button
+      type="button"
+      onClick={() => {
+  navigator.clipboard.writeText(post.codeSnippet);
+  setCopied(true);
+
+  setTimeout(() => {
+    setCopied(false);
+  }, 2000);
+}}
+      className="absolute right-2 top-2 rounded bg-gray-700 px-3 py-1 text-xs text-white hover:bg-gray-600"
+    >
+      {copied ? "✅ Copied" : "📋 Copy"}
+    </button>
+
+    <pre className="overflow-x-auto rounded-lg bg-gray-900 p-4 pt-10 text-sm text-green-400">
+      <code>{post.codeSnippet}</code>
+    </pre>
+  </div>
+)}
 
           {post.createdAt && (
             <p className="text-xs text-gray-500 mt-4">

@@ -8,17 +8,24 @@ export const createPost = async (req, res) => {
       authorName,
       content,
       postType,
-      image,
       codeSnippet,
       hashtags,
+      projectTitle,
+      projectLink,
+      achievementTitle,
+      achievementDescription,
     } = req.body;
-
+    
     if (!content || content.trim() === "") {
       return res.status(400).json({
         success: false,
         message: "Post content is required.",
       });
     }
+
+    const image = req.file
+      ? `/uploads/posts/${req.file.filename}`
+      : "";
 
     const newPost = new Post({
       authorId,
@@ -28,6 +35,10 @@ export const createPost = async (req, res) => {
       image,
       codeSnippet,
       hashtags,
+      projectTitle,
+      projectLink,
+      achievementTitle,
+      achievementDescription,
     });
 
     const savedPost = await newPost.save();
@@ -42,7 +53,7 @@ export const createPost = async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: "Internal Server Error",
+      message: error.message || "Internal Server Error",
     });
   }
 };
@@ -57,6 +68,10 @@ export const editPost = async (req, res) => {
       image,
       codeSnippet,
       hashtags,
+      projectTitle,
+      projectLink,
+      achievementTitle,
+      achievementDescription,
     } = req.body;
 
     const post = await Post.findById(id);
@@ -85,6 +100,10 @@ export const editPost = async (req, res) => {
     post.codeSnippet =
       codeSnippet !== undefined ? codeSnippet : post.codeSnippet;
     post.hashtags = hashtags !== undefined ? hashtags : post.hashtags;
+    post.projectTitle = projectTitle !== undefined ? projectTitle : post.projectTitle;
+    post.projectLink = projectLink !== undefined ? projectLink : post.projectLink;
+    post.achievementTitle = achievementTitle !== undefined ? achievementTitle : post.achievementTitle;
+    post.achievementDescription = achievementDescription !== undefined ? achievementDescription : post.achievementDescription;
     post.isEdited = true;
 
     const updatedPost = await post.save();

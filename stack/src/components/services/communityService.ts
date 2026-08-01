@@ -25,7 +25,7 @@ export const updatePost = async (
   return res.data.data;
 };
 
-export const createPost = async (postData: any) => {
+export const createPost = async (postData: FormData) => {
   const res = await axiosInstance.post("/post/create", postData);
   return res.data;
 };
