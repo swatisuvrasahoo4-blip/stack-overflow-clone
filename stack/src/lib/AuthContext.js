@@ -16,18 +16,19 @@ export const AuthProvider = ({ children }) => {
   const [loading, setloading] = useState(false);
   const [error, seterror] = useState(null);
 
-  const Signup = async ({ name, email, password }) => {
+  const Signup = async ({ name, username, email, password }) => {
     setloading(true);
     seterror(null);
     try {
       const res = await axiosInstance.post("/user/signup", {
         name,
+        username,
         email,
         password,
       });
       const { data, token } = res.data;
       localStorage.setItem("user", JSON.stringify({ ...data, token }));
-      setUser(data);
+      setUser({ ...data, token });
       toast.success("Signup Successful");
     } catch (error) {
       const msg = error.response?.data.message || "Signup failed";
@@ -47,16 +48,29 @@ export const AuthProvider = ({ children }) => {
       });
       const { data, token } = res.data;
       localStorage.setItem("user", JSON.stringify({ ...data, token }));
-      setUser({...data, token});
+      setUser({ ...data, token });
       toast.success("Login Successful");
+      return true;
     } catch (error) {
       const msg = error.response?.data.message || "Login failed";
       seterror(msg);
       toast.error(msg);
+      return false;
     } finally {
       setloading(false);
     }
   };
+
+  const updateUser = (updatedUser) => {
+    const storedUser = typeof window !== "undefined" ? localStorage.getItem("user") : null;
+    const currentUser = storedUser ? JSON.parse(storedUser) : null;
+    const nextUser = currentUser ? { ...currentUser, ...updatedUser } : updatedUser;
+    if (typeof window !== "undefined") {
+      localStorage.setItem("user", JSON.stringify(nextUser));
+    }
+    setUser(nextUser);
+  };
+
   const Logout = () => {
     setUser(null);
     localStorage.removeItem("user");
@@ -64,7 +78,7 @@ export const AuthProvider = ({ children }) => {
   };
   return (
     <AuthContext.Provider
-      value={{ user, Signup, Login, Logout, loading, error }}
+      value={{ user, Signup, Login, Logout, updateUser, loading, error }}
     >
       {children}
     </AuthContext.Provider>

@@ -1,4 +1,6 @@
 import Post from "../models/post.js";
+import { extractHashtags } from "../utils/extractHashtags.js";
+import auth from "../models/auth.js";
 
 // Create a new post
 export const createPost = async (req, res) => {
@@ -14,7 +16,14 @@ export const createPost = async (req, res) => {
       projectLink,
       achievementTitle,
       achievementDescription,
+      mentions,
     } = req.body;
+
+    const normalizedHashtags = extractHashtags(content, hashtags);
+    console.log(content);
+    console.log(hashtags);
+    console.log(normalizedHashtags);
+       
     
     if (!content || content.trim() === "") {
       return res.status(400).json({
@@ -26,6 +35,34 @@ export const createPost = async (req, res) => {
     const image = req.file
       ? `/uploads/posts/${req.file.filename}`
       : "";
+    
+    let mentionUsernames = [];
+
+if (Array.isArray(mentions)) {
+  mentionUsernames = mentions;
+} else if (typeof mentions === "string") {
+  mentionUsernames = mentions.split(",");
+}
+
+mentionUsernames = [
+  ...new Set(
+    mentionUsernames
+      .map((username) =>
+        username.trim().replace(/^@/, "").toLowerCase()
+      )
+      .filter(Boolean)
+  ),
+];
+
+const mentionedUsers = await auth.find({
+  username: { $in: mentionUsernames },
+});
+
+const normalizedMentions = mentionedUsers.map((person) => ({
+  userId: person._id,
+  username: person.username,
+  name: person.name,
+}));
 
     const newPost = new Post({
       authorId,
@@ -34,14 +71,18 @@ export const createPost = async (req, res) => {
       postType,
       image,
       codeSnippet,
-      hashtags,
+      hashtags: normalizedHashtags,
+      mentions:normalizedMentions,
       projectTitle,
       projectLink,
       achievementTitle,
       achievementDescription,
+
     });
 
     const savedPost = await newPost.save();
+    console.log(savedPost.mentions);
+    
 
     res.status(201).json({
       success: true,
@@ -61,7 +102,7 @@ export const createPost = async (req, res) => {
 export const editPost = async (req, res) => {
   try {
     const { id } = req.params;
-
+    
     const {
       content,
       postType,
@@ -93,13 +134,15 @@ export const editPost = async (req, res) => {
         message: "Post content is required",
       });
     }
+    const normalizedHashtags = extractHashtags(content, hashtags);
+
 
     post.content = content;
     post.postType = postType || post.postType;
     post.image = image !== undefined ? image : post.image;
     post.codeSnippet =
-      codeSnippet !== undefined ? codeSnippet : post.codeSnippet;
-    post.hashtags = hashtags !== undefined ? hashtags : post.hashtags;
+    codeSnippet !== undefined ? codeSnippet : post.codeSnippet;
+    post.hashtags = normalizedHashtags;
     post.projectTitle = projectTitle !== undefined ? projectTitle : post.projectTitle;
     post.projectLink = projectLink !== undefined ? projectLink : post.projectLink;
     post.achievementTitle = achievementTitle !== undefined ? achievementTitle : post.achievementTitle;

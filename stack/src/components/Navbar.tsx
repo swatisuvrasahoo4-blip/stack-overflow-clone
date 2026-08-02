@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 const Navbar = ({ handleslidein }: any) => {
   const { user, Logout } = useAuth();
   const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState("");
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => {
     setHasMounted(true);
@@ -46,9 +47,19 @@ const Navbar = ({ handleslidein }: any) => {
               </Link>
             ))}
           </div>
-          <form className="hidden lg:block flex-1 relative px-3">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const query = searchTerm.trim();
+              if (!query) return;
+              router.push(`/search?q=${encodeURIComponent(query)}`);
+            }}
+            className="hidden lg:block flex-1 relative px-3"
+          >
             <input
               type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search..."
               className="w-full max-w: 600px pl-9 pr-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-300"
             />

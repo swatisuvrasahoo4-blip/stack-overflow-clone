@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -41,13 +41,19 @@ const index = () => {
     name: users?.name || "",
     about: users?.about || "",
     tags: users?.tags || [],
+    profilePhoto: users?.profilePhoto || "",
   });
+  const [profilePhotoFile, setProfilePhotoFile] = useState<File | null>(null);
+  const [profilePhotoPreview, setProfilePhotoPreview] = useState("");
+
   useEffect(() => {
     setEditForm({
       name: users?.name || "",
       about: users?.about || "",
       tags: users?.tags || [],
+      profilePhoto: users?.profilePhoto || "",
     });
+    setProfilePhotoPreview(users?.profilePhoto || "");
   }, [users]);
   const [newTag, setNewTag] = useState("");
 
@@ -84,31 +90,54 @@ const index = () => {
     return <div className="text-center text-gray-500 mt-4">No user found.</div>;
   }
 
+  const { updateUser } = useAuth();
+
   const handleSaveProfile = async () => {
     try {
-      const res = await axiosInstance.patch(`/user/update/${user?._id}`, {
-        editForm,
-      });
+      const formData = new FormData();
+      formData.append("name", editForm.name);
+      formData.append("about", editForm.about);
+      formData.append("tags", JSON.stringify(editForm.tags || []));
+
+      if (profilePhotoFile) {
+        formData.append("profilePhoto", profilePhotoFile);
+      }
+
+      const res = await axiosInstance.patch(
+        `/user/update/${user?._id}`,
+        formData
+      );
+
       if (res.data.data) {
         const updatedUser = {
           ...users,
-          name: editForm.name,
-          about: editForm.about,
-          tags: editForm.tags,
+          name: res.data.data.name,
+          about: res.data.data.about,
+          tags: res.data.data.tags,
+          profilePhoto: res.data.data.profilePhoto,
         };
 
         setusers(updatedUser);
         setIsEditing(false);
         toast.success("Profile updated successfully!");
+
+        if (isOwnProfile) {
+          updateUser({
+            name: res.data.data.name,
+            about: res.data.data.about,
+            tags: res.data.data.tags,
+            profilePhoto: res.data.data.profilePhoto,
+          });
+        }
       }
     } catch (error) {
       console.log("profile update failed, applying local fallback", error);
-      // Local fallback: update state and persist to mockUsers if present
       const updatedUser = {
         ...users,
         name: editForm.name,
         about: editForm.about,
         tags: editForm.tags,
+        profilePhoto: profilePhotoPreview,
       };
       setusers(updatedUser);
       try {
@@ -155,12 +184,16 @@ const index = () => {
         {/* User Header */}
         <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6 mb-8">
           <Avatar className="w-24 h-24 lg:w-32 lg:h-32">
-            <AvatarFallback className="text-2xl lg:text-3xl">
-              {users.name
-                .split(" ")
-                .map((n: any) => n[0])
-                .join("")}
-            </AvatarFallback>
+            {users.profilePhoto ? (
+              <AvatarImage src={users.profilePhoto} alt={`${users.name} profile`} />
+            ) : (
+              <AvatarFallback className="text-2xl lg:text-3xl">
+                {users.name
+                  .split(" ")
+                  .map((n: any) => n[0])
+                  .join("")}
+              </AvatarFallback>
+            )}
           </Avatar>
 
           <div className="flex-1 min-w-0">
@@ -169,6 +202,9 @@ const index = () => {
                 <h1 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-1">
                   {users.name}
                 </h1>
+                <p className="text-sm text-gray-500 mb-2">
+                  @{users.username}
+                </p>
                 {user && !isOwnProfile && (
   <FollowButton userId={users._id || users.id} showText />
 )}
@@ -199,6 +235,15 @@ const index = () => {
                         </h3>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div>
+                            <Label htmlFor="username">Username</Label>
+                            <Input
+                              id="username"
+                              value={users.username || ""}
+                              disabled
+                              className="bg-gray-100 border-gray-300 text-gray-600"
+                            />
+                          </div>
+                          <div>
                             <Label htmlFor="name">Display Name</Label>
                             <Input
                               id="name"
@@ -213,6 +258,34 @@ const index = () => {
                               className="bg-white border-gray-300"
                             />
                           </div>
+                        </div>
+                      </div>
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold">Profile Photo</h3>
+                        <div>
+                          <Label htmlFor="profilePhoto">Upload photo</Label>
+                          <input
+                            id="profilePhoto"
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0] || null;
+                              setProfilePhotoFile(file);
+                              if (file) {
+                                setProfilePhotoPreview(
+                                  URL.createObjectURL(file)
+                                );
+                              }
+                            }}
+                            className="mt-2"
+                          />
+                          {profilePhotoPreview && (
+                            <img
+                              src={profilePhotoPreview}
+                              alt="Profile preview"
+                              className="mt-3 h-24 w-24 rounded-full object-cover border"
+                            />
+                          )}
                         </div>
                       </div>
                       {/* About Section */}

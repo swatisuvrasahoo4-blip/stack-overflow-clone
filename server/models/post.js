@@ -85,6 +85,27 @@ const postSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    mentions: [
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
+
+    username: {
+      type: String,
+      required: true,
+      lowercase: true,
+      trim: true,
+    },
+
+    name: {
+      type: String,
+      required: true,
+    },
+  },
+],
 
     likes: {
       type: [String],

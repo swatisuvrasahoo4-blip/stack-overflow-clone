@@ -1,9 +1,11 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 import Mainlayout from "@/layout/Mainlayout";
 import axiosInstance from "@/lib/axiosinstance";
 import { useAuth } from "@/lib/AuthContext";
 import { createPost } from "@/components/services/communityService";
+import MentionText from "@/components/mentions/MentionText";
+
 export default function CreatePost() {
   const router = useRouter();
   const { user } = useAuth();
@@ -15,27 +17,49 @@ export default function CreatePost() {
     image: null as File | null,
     codeSnippet: "",
     hashtags: "",
-    projectTitle:"",
+    projectTitle: "",
     projectLink: "",
     achievementTitle: "",
     achievementDescription: "",
     codeLanguage: "javascript",
-    codeTitle:"",
+    codeTitle: "",
   });
 
+  const [mentionQuery, setMentionQuery] = useState("");
+  const [mentionMatches, setMentionMatches] = useState<string[]>([]);
+  const [allUsernames, setAllUsernames] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<string[]>([]);
+  const [selectedMentions, setSelectedMentions] = useState<string[]>([]);
 
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
-    setForm({
+    const nextForm = {
       ...form,
       [e.target.name]: e.target.value,
-    });
+    };
+
+    if (e.target.name === "content") {
+      const mentionMatch = nextForm.content.match(/(?:^|\s)@([a-zA-Z0-9_]{0,20})$/);
+      const query = mentionMatch ? mentionMatch[1] : "";
+      setMentionQuery(query);
+      if (query.length > 0) {
+        const filtered = allUsernames.filter(
+          (username) =>
+            username.toLowerCase().startsWith(query.toLowerCase()) &&
+            username !== user?.username
+        );
+        setMentionMatches(filtered.slice(0, 5));
+      } else {
+        setMentionMatches([]);
+      }
+    }
+
+    setForm(nextForm);
   };
 const addTag = () => {
   const tag = tagInput.trim();
@@ -48,6 +72,24 @@ const addTag = () => {
 
   setTagInput("");
 };
+  useEffect(() => {
+    const loadUsernames = async () => {
+      try {
+        const res = await axiosInstance.get("/user/getalluser");
+        const usernames = res.data.data
+          .map((u: any) => u.username)
+          .filter(Boolean);
+        setAllUsernames(usernames);
+      } catch (err) {
+        console.error("Failed to load usernames", err);
+      }
+    };
+
+    loadUsernames();
+  }, []);
+
+ 
+
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
   ) => {
@@ -75,11 +117,13 @@ formData.append("achievementDescription", form.achievementDescription);
 
 
 
-form.hashtags
-  .split(",")
-  .map(tag => tag.trim())
-  .filter(Boolean)
-  .forEach(tag => formData.append("hashtags", tag));
+if (tags.length > 0) {
+  formData.append("hashtags", tags.join(","));
+}
+
+if (selectedMentions.length > 0) {
+  formData.append("mentions", selectedMentions.join(","));
+}
 
 if (form.image instanceof File) {
   formData.append("image", form.image);
@@ -108,15 +152,66 @@ await createPost(formData);
 
         <form onSubmit={handleSubmit} className="space-y-6">
 
-          <textarea
-            name="content"
-            rows={5}
-            placeholder="Share something with the community..."
-            value={form.content}
-            onChange={handleChange}
-            className="w-full border rounded p-3"
-            required
-          />
+         <MentionText
+  value={form.content}
+  matches={mentionMatches}
+  onChange={(content) =>
+    setForm((previousForm) => ({
+      ...previousForm,
+      content,
+    }))
+  }
+  onSelectMention={(username) => {
+    if (!selectedMentions.includes(username)) {
+      setSelectedMentions((previousMentions) => [
+        ...previousMentions,
+        username,
+      ]);
+    }
+  }}
+  onClearSuggestions={() => {
+    setMentionQuery("");
+    setMentionMatches([]);
+  }}
+/>
+
+{selectedMentions.length > 0 && (
+  <div className="mt-3 flex flex-wrap gap-2">
+    {selectedMentions.map((username) => (
+      <span
+        key={username}
+        className="flex items-center gap-2 rounded-md bg-purple-100 px-3 py-1 text-sm text-purple-700"
+      >
+        @{username}
+
+        <button
+          type="button"
+          onClick={() => {
+  setSelectedMentions((previousMentions) =>
+    previousMentions.filter(
+      (mention) => mention !== username
+    )
+  );
+
+  setForm((previousForm) => ({
+    ...previousForm,
+    content: previousForm.content
+      .replace(
+        new RegExp(`@${username}\\b`, "gi"),
+        ""
+      )
+      .replace(/\s{2,}/g, " ")
+      .trim(),
+  }));
+}}
+          className="font-semibold hover:text-purple-900"
+        >
+          ×
+        </button>
+      </span>
+    ))}
+  </div>
+)}
 
           <select
   name="postType"

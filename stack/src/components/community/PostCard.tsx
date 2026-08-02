@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import PostActions from "./PostActions";
 import CommentSection from "./CommentSection";
 import { Bookmark, ThumbsUp } from "lucide-react";
+import MentionAvatar from "../mentions/MentionAvatar";
 
 export default function PostCard({post,user,handleLike,handleEdit,handleShare,handleBookmark,handleComment,handleReply,handleDelete, activeCommentPost, setActiveCommentPost, commentText, setCommentText,expandedComments, setExpandedComments, activeReplyComment, setActiveReplyComment, replyText, setReplyText, setSelectedComment, setShowDeleteCommentModal, setSelectedReply, setShowDeleteReplyModal, setSelectedPostId, setShowDeleteModal,selectedPostId,showDeleteModal,isBookmarked: initialBookmarked,}:any){
     const [isBookmarked, setIsBookmarked] = useState(
@@ -23,6 +24,12 @@ export default function PostCard({post,user,handleLike,handleEdit,handleShare,ha
       setIsLiked(!isLiked);
       handleLike(postId);
     };
+
+    const hashtags = Array.isArray(post.hashtags)
+      ? post.hashtags
+      : typeof post.hashtags === "string"
+      ? post.hashtags.split(",").map((tag: string) => tag.trim()).filter(Boolean)
+      : [];
     
   return(
         <>
@@ -98,12 +105,12 @@ export default function PostCard({post,user,handleLike,handleEdit,handleShare,ha
 )}
 
     <div className="flex gap-2 mt-4 flex-wrap">
-      {post.hashtags?.map((tag:string, index:number) => (
+      {hashtags.map((tag:string, index:number) => (
         <span
           key={index}
           className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs"
         >
-          #{tag}
+          #{tag.replace(/^#/, "")}
         </span>
       ))}
     </div>
@@ -114,6 +121,7 @@ export default function PostCard({post,user,handleLike,handleEdit,handleShare,ha
       onClick={(e) =>{ handleLikeClick(post._id)
         e.stopPropagation();
       }}>
+
   <ThumbsUp
     className="h-4 w-4"
     fill={isLiked ? "currentColor" : "none"}
@@ -146,6 +154,7 @@ export default function PostCard({post,user,handleLike,handleEdit,handleShare,ha
         />
         Bookmark
       </button>
+      
       <button
       className="cursor-pointer"
   onClick={(e) =>{
@@ -154,6 +163,9 @@ export default function PostCard({post,user,handleLike,handleEdit,handleShare,ha
 >
   ↗ Share
 </button>
+<MentionAvatar
+  mentions={(post.mentions || [])}
+/>
     </div>
     {activeCommentPost === post._id && (
   <div className="mt-4">

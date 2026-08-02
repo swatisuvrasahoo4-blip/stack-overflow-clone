@@ -11,29 +11,98 @@ import {
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/lib/AuthContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
+import axiosInstance from "@/lib/axiosinstance";
 
 export default function SignUpPage() {
   const router = useRouter();
   const { Signup, loading } = useAuth();
-  const [form, setform] = useState({ name: "", email: "", password: "" });
+  const [form, setform] = useState({ name: "", username:"", email: "", password: "" });
+  const [usernameStatus, setUsernameStatus] = useState<
+  "idle" | "checking" | "available" | "taken" | "invalid"
+>("idle");
+
+const [usernameMessage, setUsernameMessage] = useState("");
+const [usernameSuggestions, setUsernameSuggestions] =
+  useState<string[]>([]);
+
+useEffect(() => {
+  const username = form.username.trim().toLowerCase();
+
+  if (!username) {
+    setUsernameStatus("idle");
+    setUsernameMessage("");
+    return;
+  }
+
+  const usernamePattern = /^[a-z0-9_]{3,20}$/;
+
+  if (!usernamePattern.test(username)) {
+    setUsernameStatus("invalid");
+    setUsernameMessage(
+      "Use 3–20 letters, numbers, or underscores only"
+    );
+    return;
+  }
+
+  setUsernameStatus("checking");
+  setUsernameMessage("Checking username...");
+
+  const timer = setTimeout(async () => {
+    try {
+      const response = await axiosInstance.get(
+        "/user/check-username",
+        {
+          params: { username },
+        }
+      );
+        console.log(response.data);
+
+      if (response.data.available) {
+  setUsernameStatus("available");
+  setUsernameMessage("Username is available");
+  setUsernameSuggestions([]);
+} else {
+  setUsernameStatus("taken");
+  setUsernameMessage("Username is already taken");
+  setUsernameSuggestions(response.data.suggestions || []);
+}
+    } catch (error: any) {
+      setUsernameStatus("invalid");
+      setUsernameMessage(
+        error.response?.data?.message ||
+          "Could not check username"
+      );
+    }
+  }, 500);
+
+  
+
+  return () => clearTimeout(timer);
+}, [form.username]);
   const handleChange = (e: any) => {
     setform({ ...form, [e.target.id]: e.target.value });
+    
   };
   const handlesubmit = async (e: any) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.password) {
+    
+    if (!form.name || !form.username || !form.email || !form.password) {
       toast.error("ALL Fields are required");
       return;
     }
+    if (usernameStatus !== "available") {
+  toast.error("Please choose an available username");
+  return;
+}
     try {
       await Signup(form);
       router.push("/");
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error: any) {
+  console.log(error);
+}
   };
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -126,6 +195,57 @@ export default function SignUpPage() {
                   onChange={handleChange}
                 />
               </div>
+              <div className="space-y-2">
+  <Label htmlFor="username" className="text-sm">
+    Username
+  </Label>
+
+  <Input
+    id="username"
+    placeholder="Choose a username"
+    value={form.username}
+    onChange={handleChange}
+  />
+</div>
+
+{usernameMessage && (
+  <p
+    className={`text-sm ${
+      usernameStatus === "available"
+        ? "text-green-600"
+        : usernameStatus === "checking"
+          ? "text-gray-500"
+          : "text-red-500"
+    }`}
+  >
+    {usernameMessage}
+  </p>
+)}
+
+{usernameSuggestions.length > 0 && (
+  <div className="mt-2">
+    <p className="text-sm text-gray-600">Try one of these:</p>
+
+    <div className="mt-2 flex flex-wrap gap-2">
+      {usernameSuggestions.map((suggestion) => (
+        <button
+          key={suggestion}
+          type="button"
+          onClick={() =>
+            setform((previousForm) => ({
+              ...previousForm,
+              username: suggestion,
+            }))
+          }
+          className="rounded-md bg-blue-100 px-3 py-1 text-sm text-blue-700 hover:bg-blue-200"
+        >
+          @{suggestion}
+        </button>
+      ))}
+    </div>
+  </div>
+)}
+
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm">
                   Email

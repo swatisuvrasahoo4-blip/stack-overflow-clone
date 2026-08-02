@@ -1,44 +1,72 @@
 import Mainlayout from "@/layout/Mainlayout";
-import { Badge } from "@/components/ui/badge";
+import TagGrid from "@/components/tags/TagGrid";
+import { useEffect, useState } from "react";
+import { getPosts } from "@/components/services/communityService";
+import type { Tag } from "@/types/tag";
 
-const tags = [
-  { name: "javascript", count: 1234 },
-  { name: "reactjs", count: 987 },
-  { name: "node.js", count: 721 },
-  { name: "next.js", count: 614 },
-  { name: "typescript", count: 532 },
-  { name: "c++", count: 412 },
-  { name: "web3", count: 298 },
-  { name: "tailwind-css", count: 189 },
-];
+const normalizeHashtags = (hashtags: any) => {
+  if (Array.isArray(hashtags)) {
+    return hashtags.map((tag) => String(tag).trim()).filter(Boolean);
+  }
+  if (typeof hashtags === "string") {
+    return hashtags
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+  }
+  return [];
+};
 
 export default function TagsPage() {
+  const [tags, setTags] = useState<Tag[]>([]);
+
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const posts = await getPosts();
+        if (!Array.isArray(posts)) {
+          setTags([]);
+          return;
+        }
+
+        const tagCountMap: Record<string, number> = {};
+
+        posts.forEach((post: any) => {
+          normalizeHashtags(post.hashtags).forEach((tag) => {
+            const normalized = tag.replace(/^#/, "").toLowerCase();
+            if (!normalized) return;
+            tagCountMap[normalized] = (tagCountMap[normalized] || 0) + 1;
+          });
+        });
+
+        const sortedTags = Object.entries(tagCountMap)
+          .sort((a, b) => b[1] - a[1])
+          .map(([name, count]) => ({ name, count }));
+
+        setTags(sortedTags);
+      } catch (error) {
+        console.error("Unable to load tags:", error);
+        setTags([]);
+      }
+    };
+
+    fetchTags();
+  }, []);
+
   return (
     <Mainlayout>
-      <main className="min-w-0 p-4 lg:p-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-          <div>
-            <h1 className="text-xl lg:text-2xl font-semibold">Tags</h1>
-            <p className="text-sm text-gray-600 mt-1">
-              Explore popular tags and topics.
-            </p>
-          </div>
+      <main className="min-h-0 p-4 lg:p-6">
+        <div className="mb-6">
+          <h1 className="text-xl font-semibold text-gray-900 lg:text-2xl">
+            Tags
+          </h1>
+
+          <p className="mt-1 text-sm text-gray-600">
+            Explore popular hashtags and community topics.
+          </p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-          {tags.map((tag) => (
-            <div key={tag.name} className="rounded-lg border bg-white p-4 shadow-sm">
-              <div className="flex items-center justify-between gap-2">
-                <span className="font-medium text-gray-800">#{tag.name}</span>
-                <Badge variant="secondary" className="bg-blue-100 text-blue-800">
-                  {tag.count} questions
-                </Badge>
-              </div>
-              <p className="text-sm text-gray-600 mt-2">
-                Useful for questions about {tag.name} and related libraries.
-              </p>
-            </div>
-          ))}
-        </div>
+
+        <TagGrid tags={tags} />
       </main>
     </Mainlayout>
   );

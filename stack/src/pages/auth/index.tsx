@@ -62,6 +62,7 @@ const index = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <Button
+                type="button"
                 variant="outline"
                 className="w-full bg-transparent text-sm"
               >
@@ -86,6 +87,7 @@ const index = () => {
                 Log in with Google
               </Button>
               <Button
+                type="button"
                 variant="outline"
                 className="w-full bg-transparent text-sm"
               >
