@@ -21,9 +21,10 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { FollowButton } from "@/components/follow/FollowButton";
 import { FollowStats } from "@/components/follow/FollowStats";
+import { getImageUrl } from "@/lib/getImageUrl";
 
 const index = () => {
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const router = useRouter();
   const { id } = router.query;
   const initialId = Array.isArray(id) ? id[0] : id || "1";
@@ -89,8 +90,6 @@ const index = () => {
   if (!users || users.length === 0) {
     return <div className="text-center text-gray-500 mt-4">No user found.</div>;
   }
-
-  const { updateUser } = useAuth();
 
   const handleSaveProfile = async () => {
     try {
@@ -185,7 +184,7 @@ const index = () => {
         <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6 mb-8">
           <Avatar className="w-24 h-24 lg:w-32 lg:h-32">
             {users.profilePhoto ? (
-              <AvatarImage src={users.profilePhoto} alt={`${users.name} profile`} />
+              <AvatarImage src={getImageUrl(users.profilePhoto)} alt={`${users.name} profile`} />
             ) : (
               <AvatarFallback className="text-2xl lg:text-3xl">
                 {users.name

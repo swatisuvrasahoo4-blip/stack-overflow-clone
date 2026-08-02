@@ -1,6 +1,8 @@
 import Post from "../models/post.js";
 import { extractHashtags } from "../utils/extractHashtags.js";
 import auth from "../models/auth.js";
+import Notification from "../models/notification.js";
+import { normalizeObjectId } from "../utils/objectId.js";
 
 // Create a new post
 export const createPost = async (req, res) => {
@@ -20,9 +22,6 @@ export const createPost = async (req, res) => {
     } = req.body;
 
     const normalizedHashtags = extractHashtags(content, hashtags);
-    console.log(content);
-    console.log(hashtags);
-    console.log(normalizedHashtags);
        
     
     if (!content || content.trim() === "") {
@@ -81,15 +80,30 @@ const normalizedMentions = mentionedUsers.map((person) => ({
     });
 
     const savedPost = await newPost.save();
-    console.log(savedPost.mentions);
-    
 
-    res.status(201).json({
-      success: true,
-      message: "Post created successfully.",
-      data: savedPost,
-    });
-  } catch (error) {
+const mentionNotifications = normalizedMentions
+  .filter(
+    (mentionedUser) =>
+      mentionedUser.userId.toString() !== authorId.toString()
+  )
+  .map((mentionedUser) => ({
+    recipientId: normalizeObjectId(mentionedUser.userId),
+    senderId: normalizeObjectId(authorId),
+    postId: savedPost._id,
+    type: "mention",
+    message: "mentioned you in a post.",
+  }));
+
+if (mentionNotifications.length > 0) {
+  await Notification.insertMany(mentionNotifications);
+}
+
+return res.status(201).json({
+  success: true,
+  message: "Post created successfully.",
+  data: savedPost,
+})
+} catch (error) {
     console.error("Create Post Error:", error);
 
     res.status(500).json({
@@ -213,6 +227,24 @@ export const likePost = async (req, res) => {
       );
     } else {
       post.likes.push(userId);
+
+      if (
+        post.authorId &&
+        post.authorId.toString() !== userId.toString()
+      ) {
+        const createdNotification = await Notification.create({
+          recipientId: normalizeObjectId(post.authorId),
+          senderId: normalizeObjectId(userId),
+          postId: post._id,
+          type: "like",
+          message: "liked your post.",
+        });
+
+        console.log(
+          "Like notification created:",
+          createdNotification._id.toString()
+        );
+      }
     }
 
     await post.save();
@@ -254,6 +286,16 @@ export const addComment = async (req, res) => {
       userName,
       text,
     });
+
+    if (post.authorId.toString() !== req.userid.toString()) {
+  await Notification.create({
+    recipientId: normalizeObjectId(post.authorId),
+    senderId: normalizeObjectId(req.userid),
+    postId: post._id,
+    type: "comment",
+    message: "commented on your post.",
+  });
+}
 
     await post.save();
 
@@ -303,7 +345,17 @@ export const replyToComment = async (req, res) => {
 
     await post.save();
 
-    res.status(200).json({
+    if (comment.userId.toString() !== req.userid.toString()) {
+      await Notification.create({
+        recipientId: normalizeObjectId(comment.userId),
+        senderId: normalizeObjectId(req.userid),
+        postId: post._id,
+        type: "reply",
+        message: "replied to your comment.",
+      });
+    }
+
+    return res.status(200).json({
       success: true,
       message: "Reply added successfully",
       data: post,
@@ -311,7 +363,7 @@ export const replyToComment = async (req, res) => {
   } catch (error) {
     console.error("Reply Comment Error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Internal Server Error",
     });

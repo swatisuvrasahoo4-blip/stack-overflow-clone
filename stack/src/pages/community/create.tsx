@@ -10,6 +10,8 @@ export default function CreatePost() {
   const router = useRouter();
   const { user } = useAuth();
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const [mentionInput, setMentionInput] = useState("");
+  const [mentionInputMatches, setMentionInputMatches] = useState<string[]>([]);
 
   const [form, setForm] = useState({
     content: "",
@@ -101,9 +103,6 @@ const addTag = () => {
       
       
       const formData = new FormData();
-      console.log("author",
-        user?.name || user?.username || user?.email
-      );
 
 formData.append("authorId", user?.id || user?._id || "");
 formData.append("authorName", user?.name || user?.username || user?.email || "");
@@ -142,6 +141,29 @@ await createPost(formData);
       setLoading(false);
     }
   };
+ const handleAddMention = () => {
+  const username = mentionInput
+    .trim()
+    .replace(/^@/, "")
+    .toLowerCase();
+
+  if (!username) return;
+
+  if (!allUsernames.includes(username)) {
+    alert("User not found");
+    return;
+  }
+
+  if (!selectedMentions.includes(username)) {
+    setSelectedMentions((previousMentions) => [
+      ...previousMentions,
+      username,
+    ]);
+  }
+
+  setMentionInput("");
+  setMentionInputMatches([]);
+};
 
   return (
     <Mainlayout>
@@ -336,24 +358,91 @@ await createPost(formData);
   />
 )}
 
+
+<div className="relative space-y-2">
+  <label className="text-sm font-medium">Mention users</label>
+
+  <div className="flex gap-2">
+    <input
+      type="text"
+      value={mentionInput}
+      onChange={(e) => {
+        const value = e.target.value;
+        setMentionInput(value);
+
+        const query = value
+          .trim()
+          .replace(/^@/, "")
+          .toLowerCase();
+
+        if (!query) {
+          setMentionInputMatches([]);
+          return;
+        }
+
+        const filteredUsers = allUsernames
+  .filter((username) => {
+    const lowerUsername = username.toLowerCase();
+
+    return (
+      lowerUsername.startsWith(query) &&
+      !selectedMentions.includes(username)
+    );
+  })
+  .slice(0, 5);
+
+        setMentionInputMatches(filteredUsers);
+      }}
+      placeholder="Type a username"
+      className="w-full rounded-md border px-3 py-2"
+    />
+
+    <button
+      type="button"
+      onClick={handleAddMention}
+      className="rounded-md bg-purple-600 px-4 py-2 text-white"
+    >
+      +
+    </button>
+  </div>
+
+  {mentionInputMatches.length > 0 && (
+    <div className="absolute left-0 right-14 top-full z-50 mt-1 overflow-hidden rounded-md border bg-white shadow-lg">
+      {mentionInputMatches.map((username) => (
+        <button
+          key={username}
+          type="button"
+          onClick={() => {
+            setMentionInput(username);
+            setMentionInputMatches([]);
+          }}
+          className="block w-full px-3 py-2 text-left text-sm hover:bg-gray-100"
+        >
+          @{username}
+        </button>
+      ))}
+    </div>
+  )}
+</div>
+
     <div className="space-y-2">
   <label className="block text-sm font-medium">
     Hashtags
   </label>
 
-  <div className="flex gap-2">
+  <div className="grid w-full grid-cols-[minmax(0,1fr)_44px] gap-2">
     <input
       type="text"
       placeholder="e.g. react"
       value={tagInput}
       onChange={(e) => setTagInput(e.target.value)}
-      className="flex-1 rounded border p-2"
+      className="h-11 min-w-0 w-full rounded-md border px-3 text-sm"
     />
 
     <button
       type="button"
       onClick={addTag}
-      className="rounded bg-blue-600 px-4 text-white hover:bg-blue-700"
+      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-blue-600 text-x\ text-white hover:bg-blue-700"
     >
       +
     </button>

@@ -3,8 +3,12 @@ import PostActions from "./PostActions";
 import CommentSection from "./CommentSection";
 import { Bookmark, ThumbsUp } from "lucide-react";
 import MentionAvatar from "../mentions/MentionAvatar";
+import { getImageUrl } from "@/lib/getImageUrl";
 
-export default function PostCard({post,user,handleLike,handleEdit,handleShare,handleBookmark,handleComment,handleReply,handleDelete, activeCommentPost, setActiveCommentPost, commentText, setCommentText,expandedComments, setExpandedComments, activeReplyComment, setActiveReplyComment, replyText, setReplyText, setSelectedComment, setShowDeleteCommentModal, setSelectedReply, setShowDeleteReplyModal, setSelectedPostId, setShowDeleteModal,selectedPostId,showDeleteModal,isBookmarked: initialBookmarked,}:any){
+export default function PostCard({post,user,handleLike,handleEdit,handleShare,handleBookmark,handleComment,handleReply,
+handleDelete, activeCommentPost, setActiveCommentPost, commentText, setCommentText,expandedComments, setExpandedComments, 
+activeReplyComment, setActiveReplyComment, replyText, setReplyText, setSelectedComment, setShowDeleteCommentModal, setSelectedReply, 
+setShowDeleteReplyModal, setSelectedPostId, setShowDeleteModal,selectedPostId,showDeleteModal,isBookmarked: initialBookmarked,}:any){
     const [isBookmarked, setIsBookmarked] = useState(
       initialBookmarked ??
         post.isBookmarked ??
@@ -89,11 +93,7 @@ export default function PostCard({post,user,handleLike,handleEdit,handleShare,ha
     )}
     {post.image && (
   <img
-  src={
-    post.image?.startsWith("http")
-      ? post.image
-      : `http://localhost:5000${post.image}`
-  }
+  src={getImageUrl(post.image)}
   alt="Post"
   className="mt-4 max-h-96 w-full rounded-lg object-cover"
 />
@@ -210,6 +210,7 @@ export default function PostCard({post,user,handleLike,handleEdit,handleShare,ha
 
   setSelectedReply={setSelectedReply}
   setShowDeleteReplyModal={setShowDeleteReplyModal}
+
 />
   </div>
 

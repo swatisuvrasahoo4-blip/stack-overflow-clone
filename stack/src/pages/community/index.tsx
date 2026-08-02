@@ -103,7 +103,6 @@ const handleDeleteReply = async (
   }
 };
 useEffect(() => {
-  console.log(posts);
 }, [posts]);
   return (
     <Mainlayout>

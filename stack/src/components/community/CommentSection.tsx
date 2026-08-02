@@ -134,6 +134,12 @@ export default function CommentSection({
   <button
     onClick={(e) => {
       e.stopPropagation();
+      console.log({
+  postId: post?._id,
+  commentId: comment?._id,
+  replyId: reply?._id,
+  setSelectedReply,
+});
   setSelectedReply({
     postId: post._id,
     commentId: comment._id,
@@ -141,6 +147,7 @@ export default function CommentSection({
   });
 
   setShowDeleteReplyModal(true);
+  
 }}
     className="mt-1 text-xs text-red-600 hover:underline"
   >
@@ -160,7 +167,8 @@ export default function CommentSection({
 
     {post.comments.length > 2 && (
       <button
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           if (expandedComments.includes(post._id)) {
             setExpandedComments(
               expandedComments.filter(

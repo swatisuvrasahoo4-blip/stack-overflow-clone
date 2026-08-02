@@ -1,5 +1,7 @@
 import follow from "../models/follow.js"
 import auth from "../models/auth.js";
+import Notification from "../models/notification.js"
+import { normalizeObjectId } from "../utils/objectId.js";
 
 export const followUser = async (req, res) => {
   try {
@@ -35,11 +37,19 @@ export const followUser = async (req, res) => {
       follower: followerId,
       following: followingId,
     });
+   
+    await Notification.create({
+  recipientId: normalizeObjectId(followingId),
+  senderId: normalizeObjectId(followerId),
+  type: "follow",
+  message: "started following you.",
+});
 
     return res.status(201).json({
       message: "User followed successfully.",
       data: newFollow,
     });
+
   } catch (error) {
     console.log("Follow User Error:", error);
 

@@ -28,12 +28,12 @@ export default function MentionAvatar({
       e.stopPropagation();
       setOpen(!open);
     }}
-    className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-700 transition"
+    className="flex h-8 w-8 items-center justify-center rounded-full bg-black text-white hover:bg-blue-700 transition"
   >
     <Users size={16} />
   </button>
 
-  <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+  <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-[10px] font-bold text-white">
     {mentions.length}
   </span>
 </div>

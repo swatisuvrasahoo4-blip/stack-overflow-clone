@@ -5,6 +5,7 @@ import PostCard from "../community/PostCard";
 import { useAuth } from "@/lib/AuthContext";
 import { toast } from "react-toastify";
 import usePostActions from "@/hooks/usePostActions";
+import { deleteReply } from "@/components/services/communityService";
 
 export default function PostFeed({
   activeFeed = "for-you",
@@ -27,6 +28,13 @@ const [activeReplyComment, setActiveReplyComment] = useState<string | null>(null
 const [expandedComments, setExpandedComments] = useState<string[]>([]);
 const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
 const [showDeleteModal, setShowDeleteModal] = useState(false);
+const [selectedReply, setSelectedReply] = useState<{
+  postId: string;
+  commentId: string;
+  replyId: string;
+} | null>(null);
+
+const [showDeleteReplyModal, setShowDeleteReplyModal] = useState(false);
 const [selectedComment, setSelectedComment] = useState<{
   postId: string;
   commentId: string;
@@ -165,7 +173,10 @@ selectedComment={selectedComment}
 setSelectedComment={setSelectedComment}
 showDeleteCommentModal={showDeleteCommentModal}
 setShowDeleteCommentModal={setShowDeleteCommentModal}
+setSelectedReply={setSelectedReply}
+setShowDeleteReplyModal={setShowDeleteReplyModal}
 />
+
 
 </div>
   </div>
@@ -207,6 +218,70 @@ setShowDeleteCommentModal={setShowDeleteCommentModal}
           </div>
         </div>
       )}
+
+{showDeleteReplyModal && selectedReply && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+    <div className="w-350px rounded-xl bg-white p-6 shadow-xl">
+      <h2 className="text-lg font-semibold">Delete reply</h2>
+
+      <p className="mt-2 text-sm text-gray-600">
+        Are you sure you want to delete this reply?
+      </p>
+
+      <div className="mt-5 flex justify-end gap-3">
+        <button
+          type="button"
+          onClick={() => {
+            setShowDeleteReplyModal(false);
+            setSelectedReply(null);
+          }}
+          className="rounded-lg border px-4 py-2 text-sm"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          onClick={async () => {
+            await deleteReply(
+              selectedReply.postId,
+              selectedReply.commentId,
+              selectedReply.replyId
+            );
+
+            setPosts((previousPosts: any[]) =>
+              previousPosts.map((post: any) =>
+                post._id === selectedReply.postId
+                  ? {
+                      ...post,
+                      comments: post.comments.map((comment: any) =>
+                        comment._id === selectedReply.commentId
+                          ? {
+                              ...comment,
+                              replies: comment.replies.filter(
+                                (reply: any) =>
+                                  reply._id !== selectedReply.replyId
+                              ),
+                            }
+                          : comment
+                      ),
+                    }
+                  : post
+              )
+            );
+
+            setShowDeleteReplyModal(false);
+            setSelectedReply(null);
+          }}
+          className="rounded-lg bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
 
       {showDeleteCommentModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">

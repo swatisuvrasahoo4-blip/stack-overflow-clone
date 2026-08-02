@@ -3,7 +3,7 @@ import { Menu, Search } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-
+import NotificationBell from "./notifications/NotificationBell";
 
 const Navbar = ({ handleslidein }: any) => {
   const { user, Logout } = useAuth();
@@ -22,16 +22,17 @@ const Navbar = ({ handleslidein }: any) => {
     }
   };
   return (
-    <div className="fixed inset-x-0 top-0 z-50 h-[53px] w-full bg-white border-t-[3px] border-[#ef8236] shadow-[0_1px_5px_#00000033] flex items-center justify-center">
-      <div className="w-[90%] max-w-[1440px] flex items-center justify-between mx-auto py-1">
-        <button
+    <div className="fixed inset-x-0 top-0 z-50 h-53px w-full bg-white border-t-[3px] border-[#ef8236] shadow-[0_1px_5px_#00000033] flex items-center justify-center">
+      <div className="w-[90%] max-w-1440px]flex items-center justify-between mx-auto py-1">
+       
+          <div className="flex items-center gap-2 flex-1">
+             <button
           aria-label="Toggle sidebar"
           className="sm:block p-2 rounded hover:bg-gray-100 transition"
           onClick={handleslidein}
         >
-          <Menu className="w-5 h-5 text-gray-800" />
+          <Menu className="w-4 h-5 text-gray-800" />
         </button>
-          <div className="flex items-center gap-2 flex-1">
           <Link href="/" className="px-3 py-1">
             <img src="/logo.png" alt="Logo" className="h-6 w-auto" />
           </Link>
@@ -47,26 +48,35 @@ const Navbar = ({ handleslidein }: any) => {
               </Link>
             ))}
           </div>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              const query = searchTerm.trim();
-              if (!query) return;
-              router.push(`/search?q=${encodeURIComponent(query)}`);
-            }}
-            className="hidden lg:block flex-1 relative px-3"
-          >
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search..."
-              className="w-full max-w: 600px pl-9 pr-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-300"
-            />
-            <Search className="absolute left-4 top-2.5 h-4 w-4 text-gray-600" />
-          </form>
-        </div>
-        <div className="flex items-center gap-2">
+          <div className="hidden flex-1 items-center px-4 lg:flex">
+  <form
+    onSubmit={(e) => {
+      e.preventDefault();
+
+      const query = searchTerm.trim();
+
+      if (!query) return;
+
+      router.push(`/search?q=${encodeURIComponent(query)}`);
+    }}
+    className="relative flex-1"
+  >
+    <input
+      type="text"
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      placeholder="Search..."
+      className="w-90 rounded border border-gray-300 py-2 pl-10 pr-1 ml-0 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+    />
+
+    <Search className="absolute left-4 top-2.5 h-4 w-4 text-gray-600" />
+  </form>
+</div>
+
+<div className="flex items-center gap-7 pt-2 ">
+  <NotificationBell />
+
+   <div className="flex items-center gap-5">
           {!hasMounted ? null : !user ? (
             <div className="flex gap-2">
               <Link
@@ -87,13 +97,16 @@ const Navbar = ({ handleslidein }: any) => {
 
               <button
                 onClick={handlelogout}
-                className="text-sm font-medium text-[#454545] bg-[#e7f8fe] hover:bg-[#d3e4eb] border border-blue-500 px-4 py-1.5 rounded transition"
+                className="text-sm font-medium text-[#454545] bg-[#e7f8fe] hover:bg-[#d3e4eb] border border-blue-500 px-4 w-20 py-1.5 rounded transition"
               >
                 Log out
               </button>
             </>
           )}
         </div>
+</div>
+        </div>
+       
       </div>
     </div>
   );
