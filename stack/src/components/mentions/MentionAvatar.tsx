@@ -33,7 +33,7 @@ export default function MentionAvatar({
     <Users size={16} />
   </button>
 
-  <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-[10px] font-bold text-white">
+  <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-white text-[10px] font-bold text-black">
     {mentions.length}
   </span>
 </div>

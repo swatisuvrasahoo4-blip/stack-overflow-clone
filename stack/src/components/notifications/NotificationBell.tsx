@@ -38,8 +38,12 @@ export default function NotificationBell() {
   const { user } = useAuth();
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  
+useEffect(() => {
+    setMounted(true);
+  }, []);
   const unreadCount = useMemo(
     () => notifications.filter((notification) => !notification.isRead).length,
     [notifications]
@@ -141,7 +145,7 @@ export default function NotificationBell() {
     }
   };
 
-  if(!user){
+  if(!setMounted){
     return null;
   }
   
@@ -195,9 +199,9 @@ export default function NotificationBell() {
                   "Someone";
 
                 return (
-                  <button
+                  <div
+                    role="button"
                     key={notification._id}
-                    type="button"
                     onClick={() =>
                       handleNotificationClick(notification)
                     }
@@ -230,7 +234,7 @@ export default function NotificationBell() {
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
-                  </button>
+                  </div>
                 );
               })
             )}

@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction } from "react";
 type FeedTabsProps = {
-  activeFeed: "for-you" | "following";
+  activeFeed: "trending" | "following";
   setActiveFeed: Dispatch<
-    SetStateAction<"for-you" | "following">
+    SetStateAction<"trending" | "following">
   >;
 };
 
@@ -13,14 +13,14 @@ export default function FeedTabs({
   return (
     <div className="flex gap-2 mb-6">
       <button
-        onClick={() => setActiveFeed("for-you")}
+        onClick={() => setActiveFeed("trending")}
         className={`px-4 py-2 rounded ${
-          activeFeed === "for-you"
+          activeFeed === "trending"
             ? "bg-blue-600 text-white"
             : "bg-gray-200"
         }`}
       >
-        For You
+        Trending
       </button>
 
       <button

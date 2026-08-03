@@ -17,8 +17,8 @@ export default function Home() {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setloading] = useState(true);
   const [activeFeed, setActiveFeed] = useState<
-  "for-you" | "following" 
->("for-you");
+  "trending" | "following" 
+>("trending");
   const [followingIds, setFollowingIds] = useState<string[]>([]);
   const router = useRouter();
 const [activeContent, setActiveContent] = useState<
@@ -161,7 +161,7 @@ const [activeContent, setActiveContent] = useState<
   {panel === "saves" ? (
     <SavedList />
   ) : activeContent === "questions" ? (
-    (activeFeed === "for-you"
+    (activeFeed === "trending"
       ? [...items].sort(
           (first, second) =>
             second.votes * 3 + second.answers * 5 + second.views -
@@ -170,7 +170,7 @@ const [activeContent, setActiveContent] = useState<
       : items
     ).filter(
       (question) =>
-        activeFeed === "for-you" || followingIds.includes(String(question.authorId))
+        activeFeed === "trending" || followingIds.includes(String(question.authorId))
     )
       .map((question: any) => (
       <div

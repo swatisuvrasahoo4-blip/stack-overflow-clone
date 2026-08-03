@@ -8,10 +8,10 @@ import usePostActions from "@/hooks/usePostActions";
 import { deleteReply } from "@/components/services/communityService";
 
 export default function PostFeed({
-  activeFeed = "for-you",
+  activeFeed = "trending",
   followingIds = [],
 }: {
-  activeFeed?: "for-you" | "following";
+  activeFeed?: "trending" | "following";
   followingIds?: string[];
 }) {
     const { user } = useAuth();
@@ -84,7 +84,29 @@ const [showDeleteCommentModal, setShowDeleteCommentModal] =
     loadPosts();
   }, [activeFeed, followingIds]);
 
-  const visiblePosts = (activeFeed === "for-you"
+  useEffect(() => {
+  if (!posts || posts.length === 0) return;
+
+  const savedPosition = sessionStorage.getItem(
+    "communityScrollPosition"
+  );
+
+  if (!savedPosition) return;
+
+  const timer = setTimeout(() => {
+    window.scrollTo({
+      top: Number(savedPosition),
+      behavior: "auto",
+    });
+
+    sessionStorage.removeItem("communityScrollPosition");
+    sessionStorage.removeItem("communitySelectedPostId");
+  }, 300);
+
+  return () => clearTimeout(timer);
+}, [posts]);
+
+  const visiblePosts = (activeFeed === "trending"
     ? [...posts].sort((first, second) => {
         const score = (post: any) => {
           const replies = (post.comments || []).reduce(
@@ -106,7 +128,7 @@ const [showDeleteCommentModal, setShowDeleteCommentModal] =
     : posts
   ).filter(
     (post) =>
-      activeFeed === "for-you" || followingIds.includes(String(post.authorId))
+      activeFeed === "trending" || followingIds.includes(String(post.authorId))
   );
 
   if (loading) {
@@ -133,16 +155,50 @@ const [showDeleteCommentModal, setShowDeleteCommentModal] =
       key={post._id}
       role="button"
       tabIndex={0}
-      onClick={()=> router.push(`/community/${post._id}`)}
+      onClick={() => {
+  sessionStorage.setItem(
+    "communityScrollPosition",
+    window.scrollY.toString()
+  );
+
+  sessionStorage.setItem(
+    "communitySelectedPostId",
+    post._id
+  );
+
+  router.push(`/community/${post._id}`);
+}}
       onKeyDown={(e) => {
         if(e.key === "Enter" || e.key === " "){
-            router.push(`/community/${post._id}`)
+           sessionStorage.setItem(
+  "communityScrollPosition",
+  window.scrollY.toString()
+);
+
+sessionStorage.setItem(
+  "communitySelectedPostId",
+  post._id
+);
+
+router.push(`/community/${post._id}`);
         }
       }}
       className="cursor-pointer rounded-lg transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-200/40"
       >
     <div
-     onClick={() => router.push(`/community/${post._id}`)}
+     onClick={() => {
+  sessionStorage.setItem(
+    "communityScrollPosition",
+    window.scrollY.toString()
+  );
+
+  sessionStorage.setItem(
+    "communitySelectedPostId",
+    post._id
+  );
+
+  router.push(`/community/${post._id}`);
+}}
      className="cursor-pointer transition-all duration300 ease-out hover:-translate-y-1 hover:shadow-xl">
     <PostCard
     key={post._id}

@@ -4,6 +4,7 @@ import CommentSection from "./CommentSection";
 import { Bookmark, ThumbsUp } from "lucide-react";
 import MentionAvatar from "../mentions/MentionAvatar";
 import { getImageUrl } from "@/lib/getImageUrl";
+import Link from "next/link";
 
 export default function PostCard({post,user,handleLike,handleEdit,handleShare,handleBookmark,handleComment,handleReply,
 handleDelete, activeCommentPost, setActiveCommentPost, commentText, setCommentText,expandedComments, setExpandedComments, 
@@ -40,7 +41,13 @@ setShowDeleteReplyModal, setSelectedPostId, setShowDeleteModal,selectedPostId,sh
         <div key={post._id} className="bg-white border rounded-lg p-5 mb-4">
     <div className="flex items-start justify-between">
   <div>
-    <h3 className="font-semibold">{post.authorName}</h3>
+    <Link
+  href={`/users/${post.authorId}`}
+  className="font-semibold text-lg hover:text-blue-600 hover:underline"
+  onClick={(e) => e.stopPropagation()}
+>
+  {post.authorName}
+</Link>
 
     <p className="text-xs text-blue-600 font-medium">
       {post.postType}

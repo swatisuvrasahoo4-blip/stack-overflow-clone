@@ -13,6 +13,8 @@ const Navbar = ({ handleslidein }: any) => {
   useEffect(() => {
     setHasMounted(true);
   }, []);
+  
+
   const handlelogout = () => {
     Logout();
     try {
@@ -23,7 +25,7 @@ const Navbar = ({ handleslidein }: any) => {
   };
   return (
     <div className="fixed inset-x-0 top-0 z-50 h-53px w-full bg-white border-t-[3px] border-[#ef8236] shadow-[0_1px_5px_#00000033] flex items-center justify-center">
-      <div className="w-[90%] max-w-1440px]flex items-center justify-between mx-auto py-1">
+      <div className="mx-auto flex w-[90%] max-w-1440px items-center justify-between py-1">
        
           <div className="flex items-center gap-2 flex-1">
              <button
@@ -74,7 +76,7 @@ const Navbar = ({ handleslidein }: any) => {
 </div>
 
 <div className="flex items-center gap-7 pt-2 ">
-  <NotificationBell />
+  {hasMounted && user ? <NotificationBell /> : null}
 
    <div className="flex items-center gap-5">
           {!hasMounted ? null : !user ? (
@@ -97,7 +99,7 @@ const Navbar = ({ handleslidein }: any) => {
 
               <button
                 onClick={handlelogout}
-                className="text-sm font-medium text-[#454545] bg-[#e7f8fe] hover:bg-[#d3e4eb] border border-blue-500 px-4 w-20 py-1.5 rounded transition"
+                className="text-sm font-medium text-[#454545] bg-[#e7f8fe] hover:bg-[#d3e4eb] border border-blue-500 px-4 w-22 py-1.5 rounded transition"
               >
                 Log out
               </button>

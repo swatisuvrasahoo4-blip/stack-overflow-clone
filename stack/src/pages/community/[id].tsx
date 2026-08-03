@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axiosinstance";
 import MainLayout from "@/layout/Mainlayout";
+import Link from "next/link";
 
 export default function CommunityPostDetail() {
   const router = useRouter();
@@ -57,9 +58,12 @@ export default function CommunityPostDetail() {
     <MainLayout>
       <main className="min-w-0 p-4 lg:p-6">
         <div className="bg-white border rounded-lg p-5">
-          <h2 className="font-semibold text-lg">
-            {post.authorName || "Unknown user"}
-          </h2>
+          <Link
+  href={`/users/${post.authorId}`}
+  className="font-semibold text-lg hover:text-blue-600"
+>
+  {post.authorName || "Unknown user"}
+</Link>
 
           <p className="text-sm text-blue-600 mt-1">
             {post.postType || "Community Post"}
@@ -68,6 +72,30 @@ export default function CommunityPostDetail() {
           <p className="mt-4 text-gray-800">
             {post.content}
           </p>
+          {post.image && (
+  <img
+    src={
+  post.image.startsWith("http")
+    ? post.image
+    : `http://localhost:5000${post.image}`
+}
+    alt="Post"
+    className="mt-4 w-full max-h-500px rounded-lg object-cover"
+  />
+)}
+
+{post.hashtags?.length > 0 && (
+  <div className="mt-3 flex flex-wrap gap-2">
+    {post.hashtags.map((tag: string) => (
+      <span
+        key={tag}
+        className="rounded bg-blue-100 px-2 py-1 text-xs text-blue-700"
+      >
+        #{tag}
+      </span>
+    ))}
+  </div>
+)}
           {post.codeSnippet && (
   <div className="relative mt-4">
     <button

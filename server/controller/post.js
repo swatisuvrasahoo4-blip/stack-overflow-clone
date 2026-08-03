@@ -3,6 +3,7 @@ import { extractHashtags } from "../utils/extractHashtags.js";
 import auth from "../models/auth.js";
 import Notification from "../models/notification.js";
 import { normalizeObjectId } from "../utils/objectId.js";
+import cloudinary from "../config/cloudinary.js";
 
 // Create a new post
 export const createPost = async (req, res) => {
@@ -31,9 +32,31 @@ export const createPost = async (req, res) => {
       });
     }
 
-    const image = req.file
-      ? `/uploads/posts/${req.file.filename}`
-      : "";
+    let image = "";
+
+if (req.file) {
+  const uploadResult = await new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder: "codequest/posts",
+        resource_type: "image",
+      },
+      (error, result) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+
+        resolve(result);
+      }
+    );
+
+    uploadStream.end(req.file.buffer);
+  });
+
+  image = uploadResult.secure_url;
+}
+    
     
     let mentionUsernames = [];
 
