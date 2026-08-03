@@ -17,7 +17,7 @@ import { useAuth } from "@/lib/AuthContext";
 import axiosInstance from "@/lib/axiosinstance";
 import { Calendar, Edit, Plus, X } from "lucide-react";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { toast } from "react-toastify";
 import { FollowButton } from "@/components/follow/FollowButton";
 import { FollowStats } from "@/components/follow/FollowStats";
@@ -30,6 +30,8 @@ const index = () => {
   const initialId = Array.isArray(id) ? id[0] : id || "1";
   const [users, setusers] = useState<any>([]);
   const [loading, setloading] = useState(false);
+  const profilePhotoInputRef = useRef<HTMLInputElement>(null);
+  const [removeProfilePhoto, setRemoveProfilePhoto] = useState(false);
     const [hasMounted, setHasMounted] = useState(false);
     useEffect(() => setHasMounted(true), []);
     const [isEditing, setIsEditing] = useState(false);
@@ -46,6 +48,7 @@ const index = () => {
   });
   const [profilePhotoFile, setProfilePhotoFile] = useState<File | null>(null);
   const [profilePhotoPreview, setProfilePhotoPreview] = useState("");
+
 
   useEffect(() => {
     setEditForm({
@@ -97,6 +100,7 @@ const index = () => {
       formData.append("name", editForm.name);
       formData.append("about", editForm.about);
       formData.append("tags", JSON.stringify(editForm.tags || []));
+      formData.append("removeProfilePhoto", removeProfilePhoto.toString());
 
       if (profilePhotoFile) {
         formData.append("profilePhoto", profilePhotoFile);
@@ -264,20 +268,55 @@ const index = () => {
                         <div>
                           <Label htmlFor="profilePhoto">Upload photo</Label>
                           <input
-                            id="profilePhoto"
-                            type="file"
-                            accept="image/jpeg,image/png,image/webp"
-                            onChange={(e) => {
-                              const file = e.target.files?.[0] || null;
-                              setProfilePhotoFile(file);
-                              if (file) {
-                                setProfilePhotoPreview(
-                                  URL.createObjectURL(file)
-                                );
-                              }
-                            }}
-                            className="mt-2"
-                          />
+  ref={profilePhotoInputRef}
+  id="profilePhoto"
+  type="file"
+  accept="image/jpeg,image/png,image/webp"
+  className="hidden"
+  onChange={(e) => {
+    const file = e.target.files?.[0] || null;
+    setProfilePhotoFile(file);
+
+    if (file) {
+      setProfilePhotoPreview(URL.createObjectURL(file));
+    }
+  }}
+/>
+
+<div className="mt-2 flex items-center rounded border p-2">
+  <button
+    type="button"
+    onClick={() => profilePhotoInputRef.current?.click()}
+    className="rounded bg-gray-100 px-4 py-2 hover:bg-gray-200"
+  >
+    Choose file
+  </button>
+
+  <span
+    className={`ml-3 text-sm ${
+      profilePhotoFile ? "text-gray-700" : "text-red-600"
+    }`}
+  >
+    {profilePhotoFile ? "File selected" : "No file chosen"}
+  </span>
+
+  {profilePhotoFile && (
+    <button
+      type="button"
+      className="ml-auto text-xl font-bold text-red-600 hover:text-red-800"
+      onClick={() => {
+        setProfilePhotoFile(null);
+        setProfilePhotoPreview(users.profilePhoto || "");
+
+        if (profilePhotoInputRef.current) {
+          profilePhotoInputRef.current.value = "";
+        }
+      }}
+    >
+      ×
+    </button>
+  )}
+</div>
                           {profilePhotoPreview && (
                             <img
                               src={profilePhotoPreview}
@@ -285,6 +324,19 @@ const index = () => {
                               className="mt-3 h-24 w-24 rounded-full object-cover border"
                             />
                           )}
+                          {profilePhotoPreview && (
+  <button
+    type="button"
+    className="mt-3 rounded-md bg-red-500 px-4 py-2 text-white hover:bg-red-600"
+    onClick={() => {
+      setProfilePhotoPreview("");
+      setProfilePhotoFile(null);
+      setRemoveProfilePhoto(true);
+    }}
+  >
+    Delete Profile Photo
+  </button>
+)}
                         </div>
                       </div>
                       {/* About Section */}

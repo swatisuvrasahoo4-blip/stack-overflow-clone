@@ -34,7 +34,30 @@ const createUpload = (destination) => {
 };
 
 const upload = createUpload("uploads/posts");
-const profileUpload = createUpload("uploads/users");
+const profileUpload = multer({
+  storage: multer.memoryStorage(),
+
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+    ];
+
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(
+        new Error("Only JPG, PNG, and WEBP images are allowed."),
+        false
+      );
+    }
+  },
+
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+  },
+});
 
 export default upload;
 export { profileUpload };

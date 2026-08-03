@@ -90,12 +90,17 @@ const Navbar = ({ handleslidein }: any) => {
             </div>
           ) : (
             <>
-              <Link
-                href={`/users/${user._id || user.id}`}
-                className="flex items-center justify-center bg-orange-600 text-white text-sm font-semibold w-9 h-9 rounded-full"
-              >
-                {user.name?.charAt(0).toUpperCase()}
-              </Link>
+              {user?.profilePhoto ? (
+  <img
+    src={user.profilePhoto}
+    alt="Profile"
+    className="h-10 w-10 rounded-full object-cover"
+  />
+) : (
+  <div className="h-10 w-10 rounded-full bg-orange-600 text-white flex items-center justify-center font-semibold">
+  {user?.name?.charAt(0).toUpperCase()}
+</div>
+)}
 
               <button
                 onClick={handlelogout}

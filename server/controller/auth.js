@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import user from "../models/auth.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import cloudinary from "../config/cloudinary.js";
 export const Signup = async (req, res) => {
   const { name, username, email, password } = req.body;
   try {
@@ -173,9 +174,20 @@ export const updateprofile = async (req, res) => {
     tags: tagsArray,
   };
 
-  if (req.file && req.file.filename) {
-    updateData.profilePhoto = `/uploads/users/${req.file.filename}`;
-  }
+  if (req.body.removeProfilePhoto === "true") {
+  updateData.profilePhoto = "";
+}
+
+if (req.file) {
+  const result = await cloudinary.uploader.upload(
+    `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`,
+    {
+      folder: "codequest/users",
+    }
+  );
+
+  updateData.profilePhoto = result.secure_url;
+}
 
   try {
     const updateprofile = await user.findByIdAndUpdate(
