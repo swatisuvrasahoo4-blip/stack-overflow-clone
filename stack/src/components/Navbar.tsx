@@ -78,7 +78,7 @@ const Navbar = ({ handleslidein }: any) => {
 <div className="flex items-center gap-7 pt-2 ">
   {hasMounted && user ? <NotificationBell /> : null}
 
-   <div className="flex items-center gap-5">
+   <div className="flex items-center gap-3">
           {!hasMounted ? null : !user ? (
             <div className="flex gap-2">
               <Link

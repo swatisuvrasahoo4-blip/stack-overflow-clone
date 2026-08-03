@@ -5,6 +5,10 @@ import { Bookmark, ThumbsUp } from "lucide-react";
 import MentionAvatar from "../mentions/MentionAvatar";
 import { getImageUrl } from "@/lib/getImageUrl";
 import Link from "next/link";
+import ReportPostButton from "../reports/ReportPostButton";
+import ReportPostModal from "../reports/ReportPostModal";
+import { createReport, checkReportStatus } from "../services/reportService";
+
 
 export default function PostCard({post,user,handleLike,handleEdit,handleShare,handleBookmark,handleComment,handleReply,
 handleDelete, activeCommentPost, setActiveCommentPost, commentText, setCommentText,expandedComments, setExpandedComments, 
@@ -18,13 +22,26 @@ setShowDeleteReplyModal, setSelectedPostId, setShowDeleteModal,selectedPostId,sh
         ) ??
         false
     );
-
+const [showReportModal, setShowReportModal] = useState(false);
     const [isLiked, setIsLiked] = useState(
       post.likes?.some((likeUserId: any) =>
         String(likeUserId) === String(user?.id || user?._id)
       ) ?? false
     );
+const handleReportClick = async () => {
+  try {
+    const response = await checkReportStatus(post._id);
 
+    if (response.alreadyReported) {
+      alert("You have already reported this post.");
+      return;
+    }
+
+    setShowReportModal(true);
+  } catch (error) {
+    alert("Failed to check report status.");
+  }
+};
     const handleLikeClick = (postId: string) => {
       setIsLiked(!isLiked);
       handleLike(postId);
@@ -63,7 +80,12 @@ setShowDeleteReplyModal, setSelectedPostId, setShowDeleteModal,selectedPostId,sh
 </p>
   </div>
   
-
+{(user?._id || user?.id)?.toString() !==
+  post.authorId?.toString() && (
+  <ReportPostButton
+  onClick={handleReportClick}
+/>
+)}
 <PostActions
   post={post}
   user={user}
@@ -219,8 +241,27 @@ setShowDeleteReplyModal, setSelectedPostId, setShowDeleteModal,selectedPostId,sh
   setShowDeleteReplyModal={setShowDeleteReplyModal}
 
 />
-  </div>
+  </div><ReportPostModal
+  open={showReportModal}
+  onClose={() => setShowReportModal(false)}
+  onSubmit={async (reason, details) => {
+    try {
+      await createReport({
+        postId: post._id,
+        reason,
+        details,
+      });
 
+      alert("Post reported successfully.");
+      setShowReportModal(false);
+    } catch (error: any) {
+      alert(
+        error?.response?.data?.message ||
+          "Failed to report post."
+      );
+    }
+  }}
+/>
         </>
     )
 }

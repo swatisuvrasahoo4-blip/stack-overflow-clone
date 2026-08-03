@@ -14,6 +14,7 @@ import questionBookmarkRoutes from "./routes/questionBookmark.js"
 import followRoutes  from "./routes/follow.js";
 import path from "path";
 import notificationRoutes from "./routes/notification.js"
+import reportRoutes from "./routes/report.js"
 
 const app = express();
 dotenv.config();
@@ -32,6 +33,7 @@ app.use("/bookmark",bookmarkRoutes)
 app.use("/question-bookmark",questionBookmarkRoutes)
 app.use("/follow",followRoutes);
 app.use("/notification",notificationRoutes);
+app.use("/report",reportRoutes);
 
 const PORT = process.env.PORT;
 const databaseurl = process.env.MONGODB_URL;
