@@ -90,17 +90,23 @@ const Navbar = ({ handleslidein }: any) => {
             </div>
           ) : (
             <>
-              {user?.profilePhoto ? (
-  <img
-    src={user.profilePhoto}
-    alt="Profile"
-    className="h-10 w-10 rounded-full object-cover"
-  />
-) : (
-  <div className="h-10 w-10 rounded-full bg-orange-600 text-white flex items-center justify-center font-semibold">
-  {user?.name?.charAt(0).toUpperCase()}
-</div>
-)}
+             <button
+    type="button"
+    onClick={() => router.push(`/users/${user?._id}`)}
+    className="cursor-pointer rounded-full transition-transform duration-200 hover:scale-105"
+>
+    {user?.profilePhoto ? (
+        <img
+            src={user.profilePhoto}
+            alt="Profile"
+            className="h-10 w-10 rounded-full object-cover"
+        />
+    ) : (
+        <div className="h-10 w-10 rounded-full bg-orange-600 text-white flex items-center justify-center font-semibold">
+            {user?.name?.charAt(0).toUpperCase()}
+        </div>
+    )}
+</button>
 
               <button
                 onClick={handlelogout}

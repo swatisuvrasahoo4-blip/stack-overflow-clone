@@ -12,6 +12,14 @@ const userschema = mongoose.Schema({
   profilePhoto: { type: String },
   email: { type: String, required: true },
   password: { type: String, required: true },
+  lastForgotPasswordRequest: {
+  type: Date,
+  default: null,
+},
+isTemporaryPassword: {
+    type: Boolean,
+    default: false,
+},
   role: {
   type: String,
   enum: ["user", "admin"],
