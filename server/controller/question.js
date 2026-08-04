@@ -22,11 +22,32 @@ export const Askquestion = async (req, res) => {
 
 export const getallquestion = async (req, res) => {
   try {
-    const allquestion = await question.find().sort({ askedon: -1 });
-    res.status(200).json({ data: allquestion });
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const skip = (page - 1) * limit;
+
+    const total = await question.countDocuments();
+
+    const allquestion = await question
+      .find()
+      .sort({ askedon: -1 })
+      .skip(skip)
+      .limit(limit);
+      
+    res.status(200).json({
+      data: allquestion,
+      pagination: {
+        page,
+        limit,
+        total,
+        hasMore: skip + allquestion.length < total,
+      },
+    });
   } catch (error) {
-    res.status(500).json("something went wrong..");
-    return;
+    res.status(500).json({
+      message: "something went wrong..",
+    });
   }
 };
 export const deletequestion = async (req, res) => {

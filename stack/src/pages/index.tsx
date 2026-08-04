@@ -19,6 +19,16 @@ export default function Home() {
   const [activeFeed, setActiveFeed] = useState<
   "trending" | "following" 
 >("trending");
+useEffect(() => {
+  const savedFeed = sessionStorage.getItem("homeActiveFeed");
+
+  console.log("savedFeed =", savedFeed);
+
+  if (savedFeed === "trending" || savedFeed === "following") {
+    setActiveFeed(savedFeed);
+    console.log("restored =", savedFeed);
+  }
+}, []);
   const [followingIds, setFollowingIds] = useState<string[]>([]);
   const router = useRouter();
 const [activeContent, setActiveContent] = useState<
@@ -40,6 +50,15 @@ const [activeContent, setActiveContent] = useState<
 
         const questions = questionsResponse.data?.data || questionsResponse.data || [];
         setItems(questions.map(normalizeStoredQuestion));
+        setItems(questions.map(normalizeStoredQuestion));
+
+const savedScroll = sessionStorage.getItem("questionsScrollPosition");
+
+if (savedScroll) {
+  setTimeout(() => {
+    window.scrollTo(0, Number(savedScroll));
+  }, 100);
+}
 
         const following = Array.isArray(followingResponse)
           ? followingResponse
@@ -228,9 +247,18 @@ const [activeContent, setActiveContent] = useState<
 
               <div className="flex flex-shrink:0 items-center text-xs text-gray-600">
                 <Link
-                  href={`/users/${question.authorId}`}
-                  className="flex items-center"
-                >
+  href={`/questions/${question.id || question._id}`}
+  onClick={() => {
+    console.log("saved",activeFeed);
+    
+    sessionStorage.setItem("homeActiveFeed", activeFeed);
+    sessionStorage.setItem(
+      "questionsScrollPosition",
+      String(window.scrollY)
+    );
+  }}
+  className="mb-2 block text-base font-medium ..."
+>
                   <Avatar className="mr-1 h-4 w-4">
                     <AvatarFallback className="text-xs">
                       {question?.author?.[0]}

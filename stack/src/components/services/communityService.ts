@@ -1,8 +1,14 @@
 import axiosInstance from "@/lib/axiosinstance";
 
-export const getPosts = async () => {
-  const res = await axiosInstance.get("/post");
-  return res.data.data;
+export const getPosts = async (
+  page = 1,
+  limit = 10
+) => {
+  const res = await axiosInstance.get(
+    `/post?page=${page}&limit=${limit}`
+  );
+
+  return res.data;
 };
 export const toggleLikePost = async (postId: string) => {
   const res = await axiosInstance.put(`/post/like/${postId}`);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getPosts, toggleLikePost,toggleBookmarkPost, addComment, addReply, deletePost } from "@/components/services/communityService";
 import { useRouter } from "next/router";
 import PostCard from "../community/PostCard";
@@ -8,12 +8,15 @@ import usePostActions from "@/hooks/usePostActions";
 import { deleteReply } from "@/components/services/communityService";
 
 export default function PostFeed({
+  
   activeFeed = "trending",
   followingIds = [],
 }: {
   activeFeed?: "trending" | "following";
   followingIds?: string[];
 }) {
+  console.log("postfeed mounted");
+  
     const { user } = useAuth();
   const router = useRouter();
   const [posts, setPosts] = useState<any[]>([]);
@@ -68,21 +71,71 @@ const [showDeleteCommentModal, setShowDeleteCommentModal] =
   setActiveReplyComment,
 });
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+const [hasMore, setHasMore] = useState(true);
+const [loadingMore, setLoadingMore] = useState(false);
+const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    const loadPosts = async () => {
-      try {
-        const data = await getPosts();
-        setPosts(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
+const fetchPosts = async (pageNumber = 1) => {
+  try {
+    const response = await getPosts(pageNumber, 10);
+
+    if (pageNumber === 1) {
+      setPosts(response.data || []);
+    } else {
+      setPosts((prev) => {
+        const existingIds = new Set(prev.map((p: any) => p._id));
+
+        const newPosts = (response.data || []).filter(
+          (p: any) => !existingIds.has(p._id)
+        );
+
+        return [...prev, ...newPosts];
+      });
+    }
+
+    setHasMore(response.pagination.hasMore);
+    setPage(pageNumber);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+useEffect(() => {
+  fetchPosts(1);
+}, [activeFeed, followingIds]);
+
+useEffect(() => {
+  if (!hasMore || loadingMore) return;
+
+  const observer = new IntersectionObserver(
+    async (entries) => {
+      if (entries[0].isIntersecting && hasMore && !loadingMore) {
+        setLoadingMore(true);
+
+        await fetchPosts(page + 1);
+
+        setLoadingMore(false);
       }
-    };
+    },
+    {
+      threshold: 1,
+    }
+  );
 
-    loadPosts();
-  }, [activeFeed, followingIds]);
+  if (loadMoreRef.current) {
+    observer.observe(loadMoreRef.current);
+  }
+
+  return () => {
+    if (loadMoreRef.current) {
+      observer.unobserve(loadMoreRef.current);
+    }
+    observer.disconnect();
+  };
+}, [page, hasMore, loadingMore]);
 
   useEffect(() => {
   if (!posts || posts.length === 0) return;
@@ -377,6 +430,16 @@ setShowDeleteReplyModal={setShowDeleteReplyModal}
           </div>
         </div>
       )}
+      <div
+  ref={loadMoreRef}
+  className="h-10 flex items-center justify-center"
+>
+  {loadingMore && (
+    <p className="text-sm text-gray-500">
+      Loading more...
+    </p>
+  )}
+</div>
     </>
   );
 }

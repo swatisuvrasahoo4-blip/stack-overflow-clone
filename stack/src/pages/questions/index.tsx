@@ -20,6 +20,9 @@ const [editTitle, setEditTitle] = useState("");
 const [editContent, setEditContent] = useState("");
 const [editTags, setEditTags] = useState<string[]>([]);
 const [editTagInput, setEditTagInput] = useState("");
+const [page, setPage] = useState(1);
+const [hasMore, setHasMore] = useState(true);
+const [loadingMore, setLoadingMore] = useState(false);
 
   function normalizeStoredQuestion(s: any) {
     const id = s._id || s.id;
@@ -55,7 +58,9 @@ const [editTagInput, setEditTagInput] = useState("");
  useEffect(() => {
   const loadQuestions = async () => {
     try {
-      const res = await axiosInstance.get("/question/getallquestion");
+      const res = await axiosInstance.get(
+  `/question/getallquestion?page=${page}&limit=10`
+);
 
       const realQuestions =
         res.data?.data ||
@@ -68,7 +73,32 @@ const [editTagInput, setEditTagInput] = useState("");
         );
       console.log(normalisedQuestions);
       
-      setItems(normalisedQuestions);
+      if (page === 1) {
+  setItems(normalisedQuestions);
+} else {
+  setItems((prev) => {
+    const existingIds = new Set(
+      prev.map((q: any) => q._id || q.id)
+    );
+
+    const newQuestions = normalisedQuestions.filter(
+      (q: any) => !existingIds.has(q._id || q.id)
+    );
+
+    return [...prev, ...newQuestions];
+  });
+}
+
+setHasMore(normalisedQuestions.length === 10);
+setLoadingMore(false);
+const savedPosition = sessionStorage.getItem("questionScrollPosition");
+
+if (savedPosition) {
+  setTimeout(() => {
+    window.scrollTo(0, Number(savedPosition));
+    sessionStorage.removeItem("questionScrollPosition");
+  }, 100);
+}
     } catch (error) {
       console.error(
         "Failed to load questions:",
@@ -76,11 +106,12 @@ const [editTagInput, setEditTagInput] = useState("");
       );
 
       setItems([]);
+      setLoadingMore(false);
     }
   };
 
   loadQuestions();
-}, []);
+}, [page]);
 console.log(user);
 const handleDelete = async (questionId: string) => {
 
@@ -188,6 +219,26 @@ const handleEditTagKeyDown = (
   }
 };
 
+useEffect(() => {
+  const handleScroll = () => {
+    if (loadingMore || !hasMore) return;
+
+    const reachedBottom =
+      window.innerHeight + window.scrollY >=
+      document.body.offsetHeight - 300;
+
+    if (reachedBottom) {
+      setLoadingMore(true);
+      console.log();"loading next page"
+      
+      setPage((prev) => prev + 1);
+    }
+  };
+
+  window.addEventListener("scroll", handleScroll);
+
+  return () => window.removeEventListener("scroll", handleScroll);
+}, [loadingMore, hasMore]);
   return (
     <Mainlayout>
       <main className="min-w-0 p-4 lg:p-6">
@@ -206,9 +257,16 @@ const handleEditTagKeyDown = (
             items.map((question) => (
               <div key={question.id || question._id} className="border rounded-lg bg-white p-4 shadow-sm">
                 <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
-                  <Link  href={`/questions/${question._id || question.id}`}
-                    className="text-blue-600 hover:underline"
-                   >
+                  <Link
+  href={`/questions/${question._id || question.id}`}
+  onClick={() => {
+    sessionStorage.setItem(
+      "questionScrollPosition",
+      String(window.scrollY)
+    );
+  }}
+  className="text-blue-600 hover:underline"
+>
                 {question.questiontitle || question.title || "(no title)"}
                   </Link>
                   <div className="text-sm text-gray-600">
@@ -376,6 +434,18 @@ const handleEditTagKeyDown = (
         </button>
       </div>
     </div>
+  </div>
+  
+)}
+{loadingMore && (
+  <div className="py-6 text-center text-gray-500">
+    Loading more questions...
+  </div>
+)}
+
+{!hasMore && items.length > 0 && (
+  <div className="py-6 text-center text-gray-400">
+    No more questions
   </div>
 )}
     </Mainlayout>

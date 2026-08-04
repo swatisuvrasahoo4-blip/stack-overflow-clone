@@ -13,7 +13,10 @@ export default function FeedTabs({
   return (
     <div className="flex gap-2 mb-6">
       <button
-        onClick={() => setActiveFeed("trending")}
+        onClick={() => {
+          sessionStorage.setItem("homeActiveFeed","trending")
+          setActiveFeed("trending")}
+        }
         className={`px-4 py-2 rounded ${
           activeFeed === "trending"
             ? "bg-blue-600 text-white"
@@ -24,7 +27,15 @@ export default function FeedTabs({
       </button>
 
       <button
-        onClick={() => setActiveFeed("following")}
+        onClick={() =>{ 
+          console.log("clicked following");
+          console.log("befote clicked",activeFeed);
+          
+          
+          sessionStorage.setItem("homeActiveFeed","following")
+          console.log(sessionStorage.getItem("homeActiveFeed"));
+          
+          setActiveFeed("following")}}
         className={`px-4 py-2 rounded ${
           activeFeed === "following"
             ? "bg-blue-600 text-white"

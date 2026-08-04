@@ -1,5 +1,5 @@
 import Mainlayout from "@/layout/Mainlayout";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useAuth } from "@/lib/AuthContext";
 
 
@@ -56,20 +56,67 @@ const [editContent, setEditContent] = useState("");
     posts,setPosts,user,commentText,setCommentText,setActiveCommentPost,editContent,setEditContent,editingPost,setEditingPost,replyText,setReplyText,setActiveReplyComment,
   });
 
+  const [page, setPage] = useState(1);
+const [hasMore, setHasMore] = useState(true);
+const [loadingMore, setLoadingMore] = useState(false);
+const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
-const fetchPosts = async () => {
+const fetchPosts = async (pageNumber = 1) => {
   try {
-    const post = await getPosts();
-    setPosts(Array.isArray(post) ? post : []);
+    const response = await getPosts(pageNumber, 10);
+
+    if (pageNumber === 1) {
+      setPosts(response.data || []);
+    } else {
+      setPosts((prev) => {
+  const existingIds = new Set(prev.map((p: any) => p._id));
+
+  const newPosts = (response.data || []).filter(
+    (p: any) => !existingIds.has(p._id)
+  );
+
+  return [...prev, ...newPosts];
+});
+    }
+
+    setHasMore(response.pagination.hasMore);
+    setPage(pageNumber);
+     setLoadingMore(false)
   } catch (error) {
     console.log(error);
+    setLoadingMore(false)
   }
 };
 
 useEffect(() => {
-  fetchPosts();
+  fetchPosts(1);
 }, []);
 
+useEffect(() => {
+  if (!hasMore || loadingMore) return;
+
+  const observer = new IntersectionObserver(
+    async (entries) => {
+      if (entries[0].isIntersecting && hasMore && !loadingMore) {
+        setLoadingMore(true);
+        await fetchPosts(page + 1);
+        setLoadingMore(false);
+      }
+    },
+    { threshold: 1 }
+  );
+
+  if (loadMoreRef.current) {
+    observer.observe(loadMoreRef.current);
+  }
+
+  return () => {
+    if (loadMoreRef.current) {
+      observer.unobserve(loadMoreRef.current);
+    }
+    observer.disconnect();
+  };
+}, [hasMore, page, loadingMore]);
 
 const handleDeleteReply = async (
   postId: string,
@@ -104,6 +151,22 @@ const handleDeleteReply = async (
 };
 useEffect(() => {
 }, [posts]);
+useEffect(() => {
+  if (posts.length > 0) {
+    const savedPosition = sessionStorage.getItem("communityScrollPosition");
+
+    if (savedPosition) {
+      requestAnimationFrame(() => {
+        window.scrollTo({
+          top: Number(savedPosition),
+          behavior: "auto",
+        });
+
+        sessionStorage.removeItem("communityScrollPosition");
+      });
+    }
+  }
+}, [posts]);
   return (
     <Mainlayout>
       <main className="min-w-0 p-4 lg:p-6">
@@ -114,12 +177,18 @@ useEffect(() => {
          
           
           <div key ={post._id}
-            onClick={()=> router.push(`/community/${post._id}`)}
+            onClick={() => {
+  sessionStorage.setItem(
+    "communityScrollPosition",
+    String(window.scrollY)
+  );
+
+  router.push(`/community/${post._id}`);
+}}
             className="cursor-pointer"
           >
             
           <PostCard
-            key={post._id}
             post={post}
             user = {user}
             handleLike={handleLike}
@@ -149,6 +218,9 @@ useEffect(() => {
           />
         </div>
         ))}
+        <div ref={loadMoreRef} className="h-10 flex items-center justify-center">
+  {loadingMore && <p className="text-sm text-gray-500">Loading more...</p>}
+</div>
         
       </main>
       {showDeleteModal && (
@@ -310,6 +382,7 @@ useEffect(() => {
       </div>
     </div>
   </div>
+
 )}
     </Mainlayout>
   );
