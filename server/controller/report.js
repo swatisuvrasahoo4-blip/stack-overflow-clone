@@ -75,7 +75,10 @@ export const getReports = async (req, res) => {
   try {
     const reports = await Report.find()
       .populate("reporterId", "name username profilePhoto")
-      .populate("postAuthorId", "name username profilePhoto")
+      .populate(
+  "postAuthorId",
+  "name username profilePhoto isSuspended"
+)
       .populate("postId", "content postType image createdAt")
       .sort({ createdAt: -1 });
 
@@ -110,6 +113,57 @@ export const getReports = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Failed to check report status.",
+    });
+  }
+};
+
+export const updateReportStatus = async (req, res) => {
+  try {
+    const { reportId } = req.params;
+    const { status } = req.body;
+
+    const allowedStatuses = [
+      "pending",
+      "reviewed",
+      "dismissed",
+      "action_taken",
+    ];
+
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid report status.",
+      });
+    }
+
+    const report = await Report.findByIdAndUpdate(
+      reportId,
+      {
+        status,
+        reviewedBy: req.userid,
+        reviewedAt: new Date(),
+      },
+      { new: true }
+    );
+
+    if (!report) {
+      return res.status(404).json({
+        success: false,
+        message: "Report not found.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Report status updated successfully.",
+      report,
+    });
+  } catch (error) {
+    console.error("Update report status error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update report status.",
     });
   }
 };

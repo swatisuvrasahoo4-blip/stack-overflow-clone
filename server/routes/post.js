@@ -3,6 +3,7 @@ import auth from "../middleware/auth.js";
 import { createPost, getAllPosts, likePost, addComment, replyToComment, deletePost, deleteComment, deleteReply, getPostById, editPost  } from "../controller/post.js";
 import upload from "../middleware/upload.js";
 import cloudinaryUpload from "../middleware/cloudinaryUpload.js";
+import notSuspended from "../middleware/notSuspended.js";
 
 const router = express.Router();
 
@@ -18,13 +19,13 @@ const handleMulterError = (err, req, res, next) => {
   next();
 };
 
-router.post("/create", auth, cloudinaryUpload.single("image"), handleMulterError, createPost);
+router.post("/create", auth, notSuspended, cloudinaryUpload.single("image"), handleMulterError, createPost);
 router.get("/",getAllPosts);
 router.get("/:id",getPostById);
-router.put("/like/:id",auth,likePost);
-router.post("/comment/:id", auth, addComment);
-router.post("/reply/:id/:commentId", auth, replyToComment);
-router.put("/:id",auth,editPost);
+router.put("/like/:id",auth ,notSuspended, likePost);
+router.post("/comment/:id", auth, notSuspended, addComment);
+router.post("/reply/:id/:commentId", auth, notSuspended, replyToComment);
+router.put("/:id",auth, notSuspended, editPost);
 router.delete("/:id",auth,deletePost);
 router.delete("/:postId/comment/:commentId",auth,deleteComment);
 router.delete("/:postId/comment/:commentId/reply/:replyId",auth,deleteReply);

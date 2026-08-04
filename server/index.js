@@ -13,8 +13,9 @@ import bookmarkRoutes from "./routes/bookmarks.js"
 import questionBookmarkRoutes from "./routes/questionBookmark.js"
 import followRoutes  from "./routes/follow.js";
 import path from "path";
-import notificationRoutes from "./routes/notification.js"
-import reportRoutes from "./routes/report.js"
+import notificationRoutes from "./routes/notification.js";
+import reportRoutes from "./routes/report.js";
+import adminRoutes from "./routes/admin.js";
 
 const app = express();
 dotenv.config();
@@ -26,6 +27,7 @@ app.get("/", (req, res) => {
   res.send("Stackoverflow clone is running perfect");
 });
 app.use('/user',userroutes);
+app.use("/admin",adminRoutes);
 app.use('/question',questionroute);
 app.use('/answer',answerroutes);
 app.use("/post",postroutes);

@@ -12,6 +12,19 @@ const userschema = mongoose.Schema({
   profilePhoto: { type: String },
   email: { type: String, required: true },
   password: { type: String, required: true },
+  role: {
+  type: String,
+  enum: ["user", "admin"],
+  default: "user",
+},
+isSuspended: {
+  type: Boolean,
+  default: false,
+},
+suspensionReason: {
+  type: String,
+  default: "",
+},
   about: { type: String },
   tags: { type: [String] },
   joinDate: { type: Date, default: Date.now },
@@ -27,5 +40,6 @@ const userschema = mongoose.Schema({
       ref: "question",
     },
   ],
+
 });
 export default mongoose.model("user", userschema);

@@ -15,8 +15,11 @@ import {
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { Badge } from "./ui/badge";
+import { ShieldAlert } from "lucide-react";
+import { useAuth } from "@/lib/AuthContext";
 
 const Sidebar = ({ isopen }:any) => {
+  const { user } = useAuth();
   return (
     <div
       className={cn(
@@ -143,6 +146,17 @@ const Sidebar = ({ isopen }:any) => {
                 Companies
               </Link>
             </li>
+            {user?.role === "admin" && (
+  <li>
+    <Link
+      href="/admin/reports"
+      className="flex items-center px-2 py-2 text-gray-700 hover:bg-gray-100 rounded text-sm"
+    >
+      <ShieldAlert className="w-4 h-4 mr-2 lg:mr-3 text-red-600" />
+      Admin Reports
+    </Link>
+  </li>
+)}
           </ul>
         </nav>
       </aside>
