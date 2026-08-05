@@ -36,7 +36,7 @@ const [successMessage, setSuccessMessage] = useState("");
         setConfirmPassword("");
 
         setTimeout(() => {
-            router.push("/profile");
+            router.push(`/users/${user._id}`);
         }, 1500);
 
     } catch (error: any) {
@@ -57,7 +57,7 @@ if (!user) return null
         <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
             <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-6">
 
-                <h1 className="text-3xl font-bold text-center mb-2">
+                <h1 className="text-3xl font-bold text-center mb-2 text-black">
                     Change Password
                 </h1>
 
@@ -84,7 +84,7 @@ if (!user) return null
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
                     placeholder="Enter current password"
-                    className="w-full border rounded-lg px-4 py-3 mb-4 outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full border rounded-lg text-gray-700 px-4 py-3 mb-4 outline-none focus:ring-2 focus:ring-orange-500"
                 />
 
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -96,7 +96,7 @@ if (!user) return null
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Enter new password"
-                    className="w-full border rounded-lg px-4 py-3 mb-4 outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full border rounded-lg text-gray-700 px-4 py-3 mb-4 outline-none focus:ring-2 focus:ring-orange-500"
                 />
 
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -108,7 +108,7 @@ if (!user) return null
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Confirm new password"
-                    className="w-full border rounded-lg px-4 py-3 mb-6 outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full border rounded-lg text-gray-700 px-4 py-3 mb-6 outline-none focus:ring-2 focus:ring-orange-500"
                 />
 
                 <button

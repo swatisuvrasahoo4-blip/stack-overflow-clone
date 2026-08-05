@@ -108,7 +108,7 @@ export default function CommunityPostDetail() {
     setCopied(false);
   }, 2000);
 }}
-      className="absolute right-2 top-2 rounded bg-gray-700 px-3 py-1 text-xs text-white hover:bg-gray-600"
+      className="absolute right-2 top-2 rounded text-gray-800 bg-gray-700 px-3 py-1 text-xs hover:bg-gray-600"
     >
       {copied ? "✅ Copied" : "📋 Copy"}
     </button>

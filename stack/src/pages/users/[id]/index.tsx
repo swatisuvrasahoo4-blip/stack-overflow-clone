@@ -15,9 +15,9 @@ import { Textarea } from "@/components/ui/textarea";
 import Mainlayout from "@/layout/Mainlayout";
 import { useAuth } from "@/lib/AuthContext";
 import axiosInstance from "@/lib/axiosinstance";
-import { Calendar, Edit, Plus, X } from "lucide-react";
+import { Calendar, Lock, Edit, Plus, X } from "lucide-react";
 import { useRouter } from "next/router";
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { toast } from "react-toastify";
 import { FollowButton } from "@/components/follow/FollowButton";
 import { FollowStats } from "@/components/follow/FollowStats";
@@ -215,6 +215,7 @@ const index = () => {
               </div>
 
               {hasMounted && user && isOwnProfile  && (
+              <div className="flex flex-col gap-2 w-fit">
                 <Dialog open={isEditing} onOpenChange={setIsEditing}>
                   <DialogTrigger
                     render={<Button
@@ -230,7 +231,7 @@ const index = () => {
                     <DialogHeader>
                       <DialogTitle>Edit Profile</DialogTitle>
                     </DialogHeader>
-                    <div className="space-y-6 py-4">
+                              <div className="space-y-6 py-4">
                       {/* Basic Information */}
                       <div className="space-y-4">
                         <h3 className="text-lg font-semibold">
@@ -426,7 +427,18 @@ const index = () => {
                       </div>
                     </div>
                   </DialogContent>
+                  
                 </Dialog>
+                <Button
+    variant="outline"
+    className="flex justify-center gap-2 bg-white"
+    onClick={() => router.push("/change-password")}
+>
+    <Lock className="w-4 h-4" />
+    Change Password
+</Button>
+                 </div>
+                
               )}
             </div>
             <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
