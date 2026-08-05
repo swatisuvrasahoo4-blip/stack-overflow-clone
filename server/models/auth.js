@@ -48,6 +48,19 @@ suspensionReason: {
       ref: "question",
     },
   ],
+  subscription: {
+  type: String,
+  default: "Free",
+},
 
+subscriptionStatus: {
+  type: String,
+  default: "Active",
+},
+
+renewalDate: {
+  type: Date,
+  default: null,
+},
 });
 export default mongoose.model("user", userschema);

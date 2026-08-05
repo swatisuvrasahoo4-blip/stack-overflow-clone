@@ -17,7 +17,8 @@ import notificationRoutes from "./routes/notification.js";
 import reportRoutes from "./routes/report.js";
 import adminRoutes from "./routes/admin.js";
 import forgotPasswordRoutes from "./routes/forgotPassword.js";
-import changePasswordRoutes from "./routes/changePassword.js"
+import changePasswordRoutes from "./routes/changePassword.js";
+import subscriptionRoutes from "./routes/subscription.js";
 
 const app = express();
 dotenv.config();
@@ -40,6 +41,7 @@ app.use("/notification",notificationRoutes);
 app.use("/report",reportRoutes);
 app.use("/forgot-password",forgotPasswordRoutes);
 app.use("/change-password",changePasswordRoutes);
+app.use("/subscription",subscriptionRoutes);
 const PORT = process.env.PORT;
 const databaseurl = process.env.MONGODB_URL;
 

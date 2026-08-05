@@ -1,0 +1,58 @@
+export const subscriptionPlans = [
+  {
+    id: 1,
+    name: "Free",
+    price: "₹0/month",
+    description: "Perfect for getting started.",
+    features: [
+      "1 Question per day",
+      "Basic Search",
+    ],
+    isCurrent: true,
+    isPopular: false,
+  },
+  {
+    id: 2,
+    name: "Bronze",
+    price: "₹99/month",
+    description: "Great for regular users.",
+    features: [
+      "5 Questions per day",
+      "Bronze Profile Badge",
+      "Advanced Search Filters",
+    ],
+    isCurrent: false,
+    isPopular: false,
+  },
+  {
+    id: 3,
+    name: "Silver",
+    price: "₹299/month",
+    description: "Best for active community members.",
+    features: [
+      "15 Questions per day",
+      "Silver Profile Badge",
+      "Priority Support",
+      "Enhanced Profile Visibility",
+      "Unlimited Bookmarks",
+    ],
+    isCurrent: false,
+    isPopular: false,
+  },
+  {
+    id: 4,
+    name: "Gold",
+    price: "₹999/month",
+    description: "Unlock every premium feature.",
+    features: [
+      "Unlimited Questions",
+      "Gold Profile Badge",
+      "Highest Search Priority",
+      "Featured Profile Visibility",
+      "Priority Customer Support",
+      "Exclusive Community Features",
+    ],
+    isCurrent: false,
+    isPopular: true,
+  },
+];

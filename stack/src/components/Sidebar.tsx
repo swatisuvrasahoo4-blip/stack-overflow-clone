@@ -11,6 +11,7 @@ import {
   Trophy,
   Users,
   UsersRound,
+  Crown
 } from "lucide-react";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
@@ -146,6 +147,17 @@ const Sidebar = ({ isopen }:any) => {
                 Companies
               </Link>
             </li>
+          <li>
+  <Link
+    href="/subscription"
+    className="flex items-center px-2 py-2 text-gray-700 hover:bg-gray-100 rounded-md"
+  >
+    <Crown className="w-4 h-4 mr-2 lg:mr-3" />
+    Subscription
+  </Link>
+</li>
+
+
             {user?.role === "admin" && (
   <li>
     <Link

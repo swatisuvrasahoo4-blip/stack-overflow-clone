@@ -22,6 +22,9 @@ import { toast } from "react-toastify";
 import { FollowButton } from "@/components/follow/FollowButton";
 import { FollowStats } from "@/components/follow/FollowStats";
 import { getImageUrl } from "@/lib/getImageUrl";
+import SubscriptionDashboard from "@/components/subscription/SubscriptionDashboard";
+import { getSubscription } from "@/components/services/subscriptionService";
+import PaymentHistory from "@/components/subscription/PaymentHistory";
 
 const index = () => {
   const { user, updateUser } = useAuth();
@@ -31,6 +34,19 @@ const index = () => {
   const [users, setusers] = useState<any>([]);
   const [loading, setloading] = useState(false);
   const profilePhotoInputRef = useRef<HTMLInputElement>(null);
+  const [subscription, setSubscription] = useState<any>(null);
+useEffect(() => {
+  const loadSubscription = async () => {
+    try {
+      const response = await getSubscription();
+      setSubscription(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  loadSubscription();
+}, []);
   const [removeProfilePhoto, setRemoveProfilePhoto] = useState(false);
     const [hasMounted, setHasMounted] = useState(false);
     useEffect(() => setHasMounted(true), []);
@@ -507,6 +523,8 @@ const index = () => {
                 </div>
               </CardContent>
             </Card>
+            <SubscriptionDashboard />
+            <PaymentHistory />
           </div>
         </div>
       </div>
