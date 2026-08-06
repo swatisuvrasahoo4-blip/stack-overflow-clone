@@ -568,7 +568,7 @@ useEffect(() => {
                 </div>
               </CardContent>
             </Card>
-            {isOwnProfile && ["Bronze", "Silver", "Gold"].includes(subscription.plan) &&(
+            {isOwnProfile && subscription && ["Bronze", "Silver", "Gold"].includes(subscriptionPlan) &&(
               <>
              <SubscriptionDashboard />
             <PaymentHistory />
