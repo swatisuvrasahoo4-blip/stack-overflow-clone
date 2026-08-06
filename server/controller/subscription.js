@@ -183,3 +183,37 @@ await payment.create({
   }
 };
 
+export const getUserSubscription = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const userSubscription = await subscription.findOne({
+      userid: userId,
+      status: "Active",
+    });
+
+    if (!userSubscription) {
+      return res.status(200).json({
+        success: true,
+        data: {
+          plan: "Free",
+          status: "Active",
+        },
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        plan: userSubscription.plan,
+        status: userSubscription.status,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong.",
+    });
+  }
+};

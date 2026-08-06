@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/router";
 import SavedList from "@/components/SavedList";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import axiosInstance from "@/lib/axiosinstance";
 import { useAuth } from "@/lib/AuthContext";
 import React from "react";
@@ -91,14 +91,7 @@ const [loadingMore, setLoadingMore] = useState(false);
 
 setHasMore(normalisedQuestions.length === 10);
 setLoadingMore(false);
-const savedPosition = sessionStorage.getItem("questionScrollPosition");
 
-if (savedPosition) {
-  setTimeout(() => {
-    window.scrollTo(0, Number(savedPosition));
-    sessionStorage.removeItem("questionScrollPosition");
-  }, 100);
-}
     } catch (error) {
       console.error(
         "Failed to load questions:",
@@ -112,7 +105,52 @@ if (savedPosition) {
 
   loadQuestions();
 }, [page]);
-console.log(user);
+
+
+useEffect(() => {
+  if (items.length === 0) return;
+
+  const savedPosition = sessionStorage.getItem("questionScrollPosition");
+
+  if (savedPosition) {
+    requestAnimationFrame(() => {
+      window.scrollTo({
+        top: Number(savedPosition),
+        behavior: "auto",
+      });
+
+      sessionStorage.removeItem("questionScrollPosition");
+    });
+  }
+}, [items]);
+
+const observer = useRef<IntersectionObserver | null>(null);
+
+const lastQuestionRef = useCallback(
+  (node: HTMLDivElement | null) => {
+    if (loadingMore) return;
+
+    if (observer.current) observer.current.disconnect();
+
+    observer.current = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && hasMore) {
+        setPage((prev) => prev + 1);
+      }
+    });
+
+    if (node) observer.current.observe(node);
+  },
+  [loadingMore, hasMore]
+);
+
+useEffect(() => {
+  return () => {
+    if (observer.current) {
+      observer.current.disconnect();
+    }
+  };
+}, []);
+
 const handleDelete = async (questionId: string) => {
 
   try {
@@ -229,7 +267,6 @@ useEffect(() => {
 
     if (reachedBottom) {
       setLoadingMore(true);
-      console.log();"loading next page"
       
       setPage((prev) => prev + 1);
     }
@@ -254,8 +291,12 @@ useEffect(() => {
           {panel === "saves" ? (
             <SavedList />
           ) : (
-            items.map((question) => (
-              <div key={question.id || question._id} className="border rounded-lg bg-white p-4 shadow-sm">
+            items.map((question, index) => (
+              <div
+  key={question.id || question._id}
+  ref={index === items.length - 1 ? lastQuestionRef : null}
+  className="border rounded-lg bg-white p-4 shadow-sm"
+>
                 <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
                   <Link
   href={`/questions/${question._id || question.id}`}

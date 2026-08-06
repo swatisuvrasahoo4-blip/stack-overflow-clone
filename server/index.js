@@ -42,7 +42,7 @@ app.use("/report",reportRoutes);
 app.use("/forgot-password",forgotPasswordRoutes);
 app.use("/change-password",changePasswordRoutes);
 app.use("/subscription",subscriptionRoutes);
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 const databaseurl = process.env.MONGODB_URL;
 
 mongoose

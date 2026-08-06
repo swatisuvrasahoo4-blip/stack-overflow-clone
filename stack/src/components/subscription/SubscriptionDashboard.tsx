@@ -50,7 +50,7 @@ useEffect(() => {
         </div>
 
         <div className="flex items-center gap-3">
-          <Calendar className="text-orange-500" />
+          <Calendar className="text-purple-500" />
           <div>
             <p className="text-gray-500 text-sm">Start Date</p>
             <p className="font-semibold">{subscription?.startdate
@@ -60,7 +60,7 @@ useEffect(() => {
         </div>
 
         <div className="flex items-center gap-3">
-          <Calendar className="text-purple-500" />
+          <Calendar className="text-orange-500" />
           <div>
             <p className="text-gray-500 text-sm">Renewal Date</p>
             <p className="font-semibold">{subscription?.renewaldate

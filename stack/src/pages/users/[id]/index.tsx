@@ -15,7 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import Mainlayout from "@/layout/Mainlayout";
 import { useAuth } from "@/lib/AuthContext";
 import axiosInstance from "@/lib/axiosinstance";
-import { Calendar, Lock, Edit, Plus, X } from "lucide-react";
+import { Calendar, Lock, Edit, Plus, X, Shield, Crown, Award } from "lucide-react";
 import { useRouter } from "next/router";
 import { useEffect, useState, useRef } from "react";
 import { toast } from "react-toastify";
@@ -23,7 +23,7 @@ import { FollowButton } from "@/components/follow/FollowButton";
 import { FollowStats } from "@/components/follow/FollowStats";
 import { getImageUrl } from "@/lib/getImageUrl";
 import SubscriptionDashboard from "@/components/subscription/SubscriptionDashboard";
-import { getSubscription } from "@/components/services/subscriptionService";
+import { getUserSubscription, getSubscription } from "@/components/services/subscriptionService";
 import PaymentHistory from "@/components/subscription/PaymentHistory";
 
 const index = () => {
@@ -35,6 +35,29 @@ const index = () => {
   const [loading, setloading] = useState(false);
   const profilePhotoInputRef = useRef<HTMLInputElement>(null);
   const [subscription, setSubscription] = useState<any>(null);
+  
+  const [subscriptionPlan, setSubscriptionPlan] = useState("Free");
+  useEffect(() => {
+  const fetchSubscription = async () => {
+  try {
+    const profileUserId = users._id || users.id;
+
+    if (!profileUserId) return;
+
+    const data = await getUserSubscription(profileUserId);
+
+    if (data?.data?.status === "Active") {
+      setSubscriptionPlan(data.data.plan);
+    } else {
+      setSubscriptionPlan("Free");
+    }
+  } catch (error) {
+    setSubscriptionPlan("Free");
+  }
+};
+
+  fetchSubscription();
+}, [users._id, users.id]);
 useEffect(() => {
   const loadSubscription = async () => {
     try {
@@ -221,9 +244,31 @@ useEffect(() => {
                 <h1 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-1">
                   {users.name}
                 </h1>
-                <p className="text-sm text-gray-500 mb-2">
-                  @{users.username}
-                </p>
+                <p className="text-sm text-gray-500 mb-2 flex items-center gap-2">
+  @{users.username}
+
+  {subscriptionPlan === "Bronze" && (
+    <Shield
+      className="h-4 w-4 text-amber-600"
+      strokeWidth={2.2}
+    />
+  )}
+
+  {subscriptionPlan === "Silver" && (
+    <Award
+      className="h-4 w-4 text-slate-800"
+      strokeWidth={2.2}
+    />
+  )}
+
+  {subscriptionPlan === "Gold" && (
+    <Crown
+      className="h-4 w-4 text-yellow-500 fill-yellow-400"
+      strokeWidth={2.2}
+    />
+  )}
+</p>
+
                 {user && !isOwnProfile && (
   <FollowButton userId={users._id || users.id} showText />
 )}
@@ -523,8 +568,12 @@ useEffect(() => {
                 </div>
               </CardContent>
             </Card>
-            <SubscriptionDashboard />
+            {isOwnProfile && ["Bronze", "Silver", "Gold"].includes(subscription.plan) &&(
+              <>
+             <SubscriptionDashboard />
             <PaymentHistory />
+            </>
+          )}
           </div>
         </div>
       </div>

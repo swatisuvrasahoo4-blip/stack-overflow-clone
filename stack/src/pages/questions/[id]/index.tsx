@@ -5,11 +5,17 @@ import React from "react";
 
 const index = () => {
   const router = useRouter();
+  const handleBack = () => {
+    router.push("/questions",undefined, { scroll: false});
+  }
   const { id } = router.query;
   return (
     <Mainlayout>
       <div>
-        <QuestionDetail questionId={Array.isArray(id) ? id[0] : id} />
+       <QuestionDetail
+  questionId={Array.isArray(id) ? id[0] : id}
+  key={Array.isArray(id) ? id[0] : id}
+/>
       </div>
     </Mainlayout>
   );

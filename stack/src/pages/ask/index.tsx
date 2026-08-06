@@ -3,14 +3,17 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 import axiosInstance from "@/lib/axiosinstance";
 import { log } from "console";
+import { toast } from "react-toastify";
 
 const index = () => {
+  const router = useRouter();
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [tagsArr, setTagsArr] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
   const [showPreview, setShowPreview] = useState(false);
-  const router = useRouter();
+  const [subscriptionPlan, setSubscriptionPlan] = useState("Free");
+
 
   const addTag = (t: string) => {
     const tag = t.trim();
@@ -64,11 +67,10 @@ const handlePost = async () => {
     const createdQuestion = res.data?.data;
     router.push(`/questions/${createdQuestion._id}`);
   } catch (error: any) {
-    console.error(
-      "Ask Question Error:",
-      error.response?.data || error.message
-    );
-  }
+  toast.error(
+    error.response?.data?.message || "Something went wrong."
+  );
+}
 };
 
   return (

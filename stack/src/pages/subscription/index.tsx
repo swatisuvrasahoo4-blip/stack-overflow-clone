@@ -29,6 +29,8 @@ export default function SubscriptionPage() {
 }, []);
 
 const handleUpgrade = async (plan: string) => {
+  
+  
   try {
     const response = await createOrder(plan);
 

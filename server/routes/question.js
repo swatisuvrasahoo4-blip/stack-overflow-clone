@@ -12,9 +12,10 @@ import {
 } from "../controller/question.js";
 import auth from "../middleware/auth.js";
 import notSuspended from "../middleware/notSuspended.js";
+import questionLimit from "../middleware/questionLimit.js";
 const router = express.Router();
 
-router.post("/ask", auth, notSuspended, Askquestion);
+router.post("/ask", auth, notSuspended, questionLimit, Askquestion);
 router.get("/getallquestion", getallquestion);
 router.patch("/edit/:id", auth, editQuestion);
 router.delete("/delete/:id", auth, deleteQuestion);

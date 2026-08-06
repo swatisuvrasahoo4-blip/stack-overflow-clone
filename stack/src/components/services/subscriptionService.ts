@@ -29,3 +29,8 @@ export const verifyPayment = async (data: any) => {
 
   return response.data;
 };
+
+export const getUserSubscription = async (userId: string) => {
+  const response = await axiosInstance.get(`/subscription/user/${userId}`);
+  return response.data;
+};
