@@ -3,6 +3,8 @@ import subscription from "../models/subscription.js";
 import razorpay from "../config/razorpay.js";
 import auth from "../models/auth.js";
 import payment from "../models/payment.js";
+import transporter from "../config/email.js";
+import generateInvoice from "../utils/generateInvoice.js";
 
 export const getSubscription = async (req, res) => {
   try {
@@ -161,6 +163,8 @@ export const verifyPayment = async (req, res) => {
   renewalDate: renewalDate,
 });
 
+const currentUser = await auth.findById(req.userid);
+
 const invoiceNumber = `CQ-${Date.now()}`;
 
 await payment.create({
@@ -172,6 +176,54 @@ await payment.create({
   orderid: razorpay_order_id,
   status: "Paid",
 });
+try{
+  const invoicePdf = await generateInvoice(
+  {
+    invoiceNumber,
+    plan,
+    amount,
+    paymentId: razorpay_payment_id,
+    renewalDate,
+  },
+  currentUser
+);
+
+await transporter.sendMail({
+  from: process.env.EMAIL_USER,
+  to: currentUser.email,
+  subject: `CodeQuest - ${plan} Plan Activated`,
+  html: `
+    <h2>Subscription Activated Successfully</h2>
+
+    <p>Hello ${currentUser.name},</p>
+
+    <p>Your <strong>${plan}</strong> subscription has been activated successfully.</p>
+
+    <p><strong>Plan:</strong> ${plan}</p>
+    <p><strong>Amount Paid:</strong> ₹${amount}</p>
+    <p><strong>Invoice Number:</strong> ${invoiceNumber}</p>
+    <p><strong>Payment ID:</strong> ${razorpay_payment_id}</p>
+    <p><strong>Status:</strong> Paid</p>
+    <p><strong>Renewal Date:</strong> ${renewalDate.toLocaleDateString("en-IN")}</p>
+
+    <p>Thank you for choosing CodeQuest!</p>
+  `,
+  attachments: [
+  {
+    filename: `CodeQuest-Invoice-${invoiceNumber}.pdf`,
+    content: invoicePdf,
+    contentType: "application/pdf",
+  },
+],
+});
+console.log("Subscription confirmation sent");
+
+
+
+}catch{
+  console.error("Confirmation email failed",email);
+  
+}
 
     res.status(200).json({
       success: true,

@@ -14,6 +14,18 @@ export const toggleBookmark = async (req, res) => {
 
     const alreadyBookmarked = user.bookmarks.includes(postId);
 
+    const unlimitedPlans = ["Silver", "Gold"];
+
+if (
+  !alreadyBookmarked &&
+  !unlimitedPlans.includes(user.subscription) &&
+  user.bookmarks.length + user.questionBookmarks.length >= 10
+) {
+  return res.status(403).json({
+    message: "Bookmark limit reached. Upgrade to Silver or Gold for unlimited bookmarks.",
+  });
+}
+
     if (alreadyBookmarked) {
       user.bookmarks = user.bookmarks.filter(
         (bookmarkId) => bookmarkId.toString() !== postId

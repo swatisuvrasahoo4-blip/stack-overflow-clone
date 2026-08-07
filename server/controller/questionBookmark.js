@@ -27,6 +27,19 @@ if (!existingQuestion) {
       (id) => id.toString() === questionId
     );
 
+const unlimitedPlans = ["Silver", "Gold"];
+
+if (
+  !alreadyBookmarked &&
+  !unlimitedPlans.includes(user.subscription) &&
+  user.bookmarks.length + user.questionBookmarks.length >= 10
+) {
+  return res.status(403).json({
+    message:
+      "Bookmark limit reached. Upgrade to Silver or Gold for unlimited bookmarks.",
+  });
+}
+
     if (alreadyBookmarked) {
       user.questionBookmarks = user.questionBookmarks.filter(
         (id) => id.toString() !== questionId

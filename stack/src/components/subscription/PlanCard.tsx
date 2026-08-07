@@ -8,6 +8,7 @@ interface PlanCardProps {
   features: string[];
   isCurrent?: boolean;
   isPopular?: boolean;
+  currentPlan: string;
   onUpgrade?: (plan: string) => void;
 }
 
@@ -18,8 +19,19 @@ export default function PlanCard({
   features,
   isCurrent = false,
   isPopular = false,
+  currentPlan,
   onUpgrade,
 }: PlanCardProps) {
+
+  const planOrder: Record<string, number> = {
+  Free: 0,
+  Bronze: 1,
+  Silver: 2,
+  Gold: 3,
+};
+
+const canUpgrade =
+  planOrder[name] > planOrder[currentPlan || "Free"];
   return (
     <div
   className={`relative rounded-2xl border bg-white p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl ${
@@ -86,7 +98,7 @@ export default function PlanCard({
       <div className="mt-8">
         {isCurrent ? (
           <Button
-  disabled
+  disabled={!canUpgrade}
   className={`w-full text-white font-semibold ${
     name === "Free"
       ? "bg-purple-600 hover:bg-purple-600"
@@ -112,7 +124,7 @@ export default function PlanCard({
       : "bg-purple-600 hover:bg-purple-700"
   }`}
 >
-  Upgrade
+  {canUpgrade ? "Upgrade" : "Lower Plan"}
 </Button>
         )}
       </div>

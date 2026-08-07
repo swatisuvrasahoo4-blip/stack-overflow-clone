@@ -50,9 +50,13 @@ setActiveReplyComment: React.Dispatch<
     try {
       const result = await toggleBookmarkPost(userId, post._id);
       return result.message === "Post bookmarked";
-    } catch (error) {
-      return null;
-    }
+   } catch (error: any) {
+  alert(
+    error?.response?.data?.message ||
+      "Unable to update bookmark. Please try again."
+  );
+  return null;
+}
   };
   const handleComment = async (postId: string) => {
     if (!commentText.trim()) return;
@@ -62,8 +66,8 @@ setActiveReplyComment: React.Dispatch<
     text: commentText,
     userName: user?.name || user?.username || user?.email,
   });
-     const posts = await getPosts();
-  setPosts(posts);
+     const response = await getPosts();
+  setPosts(response.data || []);
   
       setCommentText("");
       setActiveCommentPost(null);

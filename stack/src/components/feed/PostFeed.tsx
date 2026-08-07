@@ -8,18 +8,18 @@ import usePostActions from "@/hooks/usePostActions";
 import { deleteReply } from "@/components/services/communityService";
 
 export default function PostFeed({
-  
   activeFeed = "trending",
   followingIds = [],
+  initialPosts,
 }: {
   activeFeed?: "trending" | "following";
   followingIds?: string[];
+  initialPosts?: any[];
 }) {
-  console.log("postfeed mounted");
-  
     const { user } = useAuth();
   const router = useRouter();
-  const [posts, setPosts] = useState<any[]>([]);
+  const [posts, setPosts] = useState<any[]>(initialPosts || []);
+ 
   const [commentText, setCommentText] = useState("");
 const [activeCommentPost, setActiveCommentPost] = useState<string | null>(null);
 
@@ -70,7 +70,7 @@ const [showDeleteCommentModal, setShowDeleteCommentModal] =
   setReplyText,
   setActiveReplyComment,
 });
-  const [loading, setLoading] = useState(true);
+ const [loading, setLoading] = useState(!initialPosts);
   const [page, setPage] = useState(1);
 const [hasMore, setHasMore] = useState(true);
 const [loadingMore, setLoadingMore] = useState(false);
@@ -104,11 +104,16 @@ const fetchPosts = async (pageNumber = 1) => {
 };
 
 useEffect(() => {
+  if (initialPosts) {
+    setPosts(initialPosts);
+    return;
+  }
+
   fetchPosts(1);
-}, [activeFeed, followingIds]);
+}, [activeFeed, followingIds, initialPosts]);
 
 useEffect(() => {
-  if (!hasMore || loadingMore) return;
+  if (initialPosts || !hasMore || loadingMore) return;
 
   const observer = new IntersectionObserver(
     async (entries) => {
@@ -160,7 +165,7 @@ useEffect(() => {
 }, [posts]);
 
   const visiblePosts = (activeFeed === "trending"
-    ? [...posts].sort((first, second) => {
+    ? [...(Array.isArray(posts) ? posts : [])].sort((first, second) => {
         const score = (post: any) => {
           const replies = (post.comments || []).reduce(
             (total: number, comment: any) =>

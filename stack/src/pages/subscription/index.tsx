@@ -27,6 +27,14 @@ export default function SubscriptionPage() {
 
   loadSubscription();
 }, []);
+const planOrder: Record<string, number> = {
+  Free: 0,
+  Bronze: 1,
+  Silver: 2,
+  Gold: 3,
+};
+
+const currentPlan = plans.find((plan) => plan.isCurrent)?.name || "Free";
 
 const handleUpgrade = async (plan: string) => {
   
@@ -101,6 +109,7 @@ const handleUpgrade = async (plan: string) => {
               features={plan.features}
               isCurrent={plan.isCurrent}
               isPopular={plan.isPopular}
+              currentPlan={currentPlan}
               onUpgrade={handleUpgrade}
             />
           ))}
