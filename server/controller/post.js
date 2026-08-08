@@ -19,6 +19,7 @@ export const createPost = async (req, res) => {
       projectLink,
       achievementTitle,
       achievementDescription,
+      isFeatured,
       mentions,
     } = req.body;
 
@@ -31,6 +32,21 @@ export const createPost = async (req, res) => {
         message: "Post content is required.",
       });
     }
+
+    if (isFeatured) {
+  const user = await auth.findById(authorId);
+
+  if (
+    !user ||
+    user.subscription !== "Gold" ||
+    user.subscriptionStatus !== "Active"
+  ) {
+    return res.status(403).json({
+      success: false,
+      message: "Featured posts are available only for Gold members.",
+    });
+  }
+}
 
     let image = "";
 
@@ -91,6 +107,7 @@ const normalizedMentions = mentionedUsers.map((person) => ({
       authorName,
       content,
       postType,
+      isFeatured: isFeatured === true || isFeatured === "true",
       image,
       codeSnippet,
       hashtags: normalizedHashtags,
@@ -99,7 +116,6 @@ const normalizedMentions = mentionedUsers.map((person) => ({
       projectLink,
       achievementTitle,
       achievementDescription,
-
     });
 
     const savedPost = await newPost.save();

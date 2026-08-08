@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PostActions from "./PostActions";
 import CommentSection from "./CommentSection";
-import { Bookmark, ThumbsUp } from "lucide-react";
+import { Bookmark, ThumbsUp, Star } from "lucide-react";
 import MentionAvatar from "../mentions/MentionAvatar";
 import { getImageUrl } from "@/lib/getImageUrl";
 import Link from "next/link";
@@ -22,6 +22,16 @@ setShowDeleteReplyModal, setSelectedPostId, setShowDeleteModal,selectedPostId,sh
         ) ??
         false
     );
+
+useEffect(() => {
+  const bookmarked =
+    user?.bookmarks?.some(
+      (bookmarkId: any) =>
+        String(bookmarkId) === String(post?._id)
+    ) ?? false;
+
+  setIsBookmarked(bookmarked);
+}, [user?.bookmarks, post?._id]);
 const [showReportModal, setShowReportModal] = useState(false);
     const [isLiked, setIsLiked] = useState(
       post.likes?.some((likeUserId: any) =>
@@ -55,7 +65,14 @@ const handleReportClick = async () => {
     
   return(
         <>
-        <div key={post._id} className="bg-white border rounded-lg p-5 mb-4">
+        <div
+  key={post._id}
+  className={`rounded-lg border p-5 mb-4 ${
+    post.isFeatured
+      ? "bg-yellow-50 border-yellow-300 shadow-sm"
+      : "bg-white"
+  }`}
+>
     <div className="flex items-start justify-between">
   <div>
     <Link
@@ -66,9 +83,18 @@ const handleReportClick = async () => {
   {post.authorName}
 </Link>
 
-    <p className="text-xs text-blue-600 font-medium">
-      {post.postType}
-    </p>
+    <div className="flex items-center gap-2">
+  <p className="text-xs text-blue-600 font-medium">
+    {post.postType}
+  </p>
+
+  {post.isFeatured && (
+    <span className="inline-flex items-center gap-1 rounded-full bg-yellow-100 px-2 py-1 text-xs font-semibold text-yellow-800">
+      <Star className="h-3 w-3 fill-yellow-500 text-yellow-500" />
+      Featured
+    </span>
+  )}
+</div>
 
     <p className="text-xs text-gray-500">
   {new Date(post.createdAt).toLocaleString()}

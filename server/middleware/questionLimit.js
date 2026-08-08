@@ -4,9 +4,10 @@ import Subscription from "../models/subscription.js";
 const questionLimit = async (req, res, next) => {
   try {
     const subscription = await Subscription.findOne({
-      userid: req.userid,
-      status: "Active",
-    });
+  userid: req.userid,
+  status: "Active",
+  renewaldate: { $gt: new Date() },
+});
 
     let plan = "Free";
     let limit = 1;

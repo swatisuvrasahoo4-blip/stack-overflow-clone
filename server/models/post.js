@@ -44,6 +44,11 @@ const postSchema = new mongoose.Schema(
       trim: true,
     },
 
+    isFeatured: {
+      type: Boolean,
+      default: false,
+    },
+
     postType: {
       type: String,
       enum: [

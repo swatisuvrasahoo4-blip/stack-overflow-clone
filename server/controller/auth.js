@@ -12,6 +12,16 @@ export const Signup = async (req, res) => {
   });
 }
 
+if (
+  password.length < 8 ||
+  !/[A-Za-z]/.test(password) ||
+  !/[0-9]/.test(password)
+) {
+  return res.status(400).json({
+    message: "Password must contain at least 8 characters, including at least 1 letter and 1 number",
+  });
+}
+
 const cleanUsername = username.trim().toLowerCase();
 
 const usernamePattern = /^[a-z0-9_]{3,20}$/;

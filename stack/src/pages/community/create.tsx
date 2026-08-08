@@ -5,6 +5,7 @@ import axiosInstance from "@/lib/axiosinstance";
 import { useAuth } from "@/lib/AuthContext";
 import { createPost } from "@/components/services/communityService";
 import MentionText from "@/components/mentions/MentionText";
+import { getSubscription } from "@/components/services/subscriptionService";
 
 export default function CreatePost() {
   const router = useRouter();
@@ -12,10 +13,12 @@ export default function CreatePost() {
   const imageInputRef = useRef<HTMLInputElement>(null);
   const [mentionInput, setMentionInput] = useState("");
   const [mentionInputMatches, setMentionInputMatches] = useState<string[]>([]);
+  const [isGoldUser, setIsGoldUser] = useState(false);
 
   const [form, setForm] = useState({
     content: "",
     postType: "Technical Update",
+    isFeatured: false,
     image: null as File | null,
     codeSnippet: "",
     hashtags: "",
@@ -90,6 +93,24 @@ const addTag = () => {
     loadUsernames();
   }, []);
 
+  useEffect(() => {
+  const checkSubscription = async () => {
+    if (!user) return;
+
+    try {
+      const response = await getSubscription();
+
+      setIsGoldUser(
+        response.data.plan?.toLowerCase() === "gold"
+      );
+    } catch (error) {
+      console.error("Failed to check subscription:", error);
+      setIsGoldUser(false);
+    }
+  };
+
+  checkSubscription();
+}, [user]);
  
 
   const handleSubmit = async (
@@ -108,6 +129,7 @@ formData.append("authorId", user?.id || user?._id || "");
 formData.append("authorName", user?.name || user?.username || user?.email || "");
 formData.append("content", form.content);
 formData.append("postType", form.postType);
+formData.append("isFeatured", form.isFeatured ? "true" : "false");
 formData.append("codeSnippet", form.codeSnippet);
 formData.append("projectTitle", form.projectTitle);
 formData.append("projectLink", form.projectLink);
@@ -247,6 +269,51 @@ await createPost(formData);
   <option value="Code Snippet">Code Snippet</option>
 </select>
 
+
+{isGoldUser ? (
+  <label className="flex items-center gap-3 rounded-lg border border-yellow-300 bg-yellow-50 p-3 cursor-pointer">
+    <input
+      type="checkbox"
+      checked={form.isFeatured}
+      onChange={(e) =>
+        setForm((prev) => ({
+          ...prev,
+          isFeatured: e.target.checked,
+        }))
+      }
+      className="h-4 w-4 accent-yellow-500"
+    />
+
+    <div>
+      <p className="font-medium text-yellow-800">
+        Feature this post
+      </p>
+      <p className="text-sm text-yellow-700">
+        Give this post premium visibility in the community.
+      </p>
+    </div>
+  </label>
+) : (
+  <div
+    onClick={() => router.push("/subscription")}
+    className="flex cursor-pointer items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 p-3"
+  >
+    <input
+      type="checkbox"
+      disabled
+      className="h-4 w-4 cursor-not-allowed"
+    />
+
+    <div>
+      <p className="font-medium text-gray-700">
+        Feature this post
+      </p>
+      <p className="text-sm text-gray-500">
+        Gold feature — Upgrade to Gold to feature your posts.
+      </p>
+    </div>
+  </div>
+)}
           <div className="space-y-2">
 
 

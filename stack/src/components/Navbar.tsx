@@ -87,6 +87,12 @@ const Navbar = ({ handleslidein }: any) => {
               >
                 Log in
               </Link>
+              <Link
+  href="/signup"
+  className="text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md transition-colors"
+>
+  Sign Up
+</Link>
             </div>
           ) : (
             <>

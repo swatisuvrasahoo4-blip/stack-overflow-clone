@@ -16,7 +16,7 @@ export default function PostFeed({
   followingIds?: string[];
   initialPosts?: any[];
 }) {
-    const { user } = useAuth();
+    const { user, updateUser } = useAuth();
   const router = useRouter();
   const [posts, setPosts] = useState<any[]>(initialPosts || []);
  
@@ -59,6 +59,7 @@ const [showDeleteCommentModal, setShowDeleteCommentModal] =
   posts,
   setPosts,
   user,
+  updateUser,
   commentText,
   setCommentText,
   setActiveCommentPost,
@@ -180,6 +181,13 @@ useEffect(() => {
             (post.shareCount || 0) * 4
           );
         };
+
+
+        const firstFeatured = first.isFeatured === true;
+const secondFeatured = second.isFeatured === true;
+
+if (firstFeatured && !secondFeatured) return -1;
+if (!firstFeatured && secondFeatured) return 1;
 
         return score(second) - score(first);
       })

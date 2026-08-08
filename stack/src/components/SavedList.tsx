@@ -12,7 +12,7 @@ import usePostActions from "@/hooks/usePostActions";
 
 export default function SavedList({ max = 100 }: { max?: number }) {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const [saved, setSaved] = useState<any[]>([]);
   const [savedPosts, setSavedPosts] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState("questions");
@@ -44,6 +44,7 @@ export default function SavedList({ max = 100 }: { max?: number }) {
     posts: savedPosts,
     setPosts: setSavedPosts,
     user,
+    updateUser,
     commentText,
     setCommentText,
     setActiveCommentPost,

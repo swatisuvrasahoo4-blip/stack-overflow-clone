@@ -6,11 +6,13 @@ export default function usePostActions({
   posts,
   setPosts,
   user,
+  updateUser,
   commentText,setCommentText,setActiveCommentPost,setEditingPost,editContent,setEditContent,editingPost,replyText,setReplyText,setActiveReplyComment,
 }: {
   posts: any[];
   setPosts: React.Dispatch<React.SetStateAction<any[]>>;
   user: any;
+  updateUser: (updatedUser: any) => void;
   commentText: string;
   setCommentText: React.Dispatch<React.SetStateAction<string>>;
   setActiveCommentPost: React.Dispatch<React.SetStateAction<string | null>>;
@@ -48,8 +50,21 @@ setActiveReplyComment: React.Dispatch<
     }
   
     try {
-      const result = await toggleBookmarkPost(userId, post._id);
-      return result.message === "Post bookmarked";
+     const result = await toggleBookmarkPost(userId, post._id);
+
+
+updateUser({
+  bookmarks: result.bookmarks,
+});
+if (result.message === "Post bookmarked") {
+  return true;
+}
+
+if (result.message === "Bookmark removed") {
+  return false;
+}
+
+return null;
    } catch (error: any) {
   alert(
     error?.response?.data?.message ||

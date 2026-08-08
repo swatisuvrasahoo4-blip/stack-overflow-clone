@@ -12,6 +12,23 @@ export const getSubscription = async (req, res) => {
       userid: req.userid,
     });
 
+    if (
+  data &&
+  data.plan !== "Free" &&
+  data.status === "Active" &&
+  data.renewaldate &&
+  new Date(data.renewaldate) <= new Date()
+) {
+  data.status = "Expired";
+  await data.save();
+
+  await auth.findByIdAndUpdate(req.userid, {
+    subscription: "Free",
+    subscriptionStatus: "Active",
+    renewalDate: null,
+  });
+}
+
     if (!data) {
       return res.status(200).json({
         success: true,
@@ -217,8 +234,6 @@ await transporter.sendMail({
 ],
 });
 console.log("Subscription confirmation sent");
-
-
 
 }catch{
   console.error("Confirmation email failed",email);

@@ -93,6 +93,16 @@ useEffect(() => {
       toast.error("ALL Fields are required");
       return;
     }
+    if (
+  form.password.length < 8 ||
+  !/[A-Za-z]/.test(form.password) ||
+  !/[0-9]/.test(form.password)
+) {
+  toast.error(
+    "Password must contain at least 8 characters, including at least 1 letter and 1 number"
+  );
+  return;
+}
     if (usernameStatus !== "available") {
   toast.error("Please choose an available username");
   return;

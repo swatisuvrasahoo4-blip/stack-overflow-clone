@@ -37,9 +37,17 @@ useEffect(() => {
 
         <div>
           <p className="text-gray-500 text-sm">Status</p>
-          <span className="inline-block rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
-            {subscription?.status}
-          </span>
+          <span
+  className={`inline-block rounded-full px-3 py-1 text-sm font-medium ${
+    subscription?.status === "Expired"
+      ? "bg-red-100 text-red-700"
+      : subscription?.status === "Cancelled"
+      ? "bg-gray-200 text-gray-700"
+      : "bg-green-100 text-green-700"
+  }`}
+>
+  {subscription?.status}
+</span>
         </div>
 
         <div>
