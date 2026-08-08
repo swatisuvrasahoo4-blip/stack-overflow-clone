@@ -13,7 +13,7 @@ import { log } from "console";
 import usePostActions from "@/hooks/usePostActions";
 
 export default function CommunityPage() {
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   const router = useRouter();
   //posts
   const [posts, setPosts] = useState<any[]>([]);
@@ -52,8 +52,11 @@ const [selectedReply, setSelectedReply] = useState<{
 // Edit post
 const [editingPost, setEditingPost] = useState<any>(null);
 const [editContent, setEditContent] = useState("");
- const { handleLike,handleBookmark, handleComment, handleShare,handleReply, handleDelete,handleDeleteComment, handleSaveEdit,handleEdit} = usePostActions({
-    posts,setPosts,user,commentText,setCommentText,setActiveCommentPost,editContent,setEditContent,editingPost,setEditingPost,replyText,setReplyText,setActiveReplyComment,
+ const { handleLike,handleBookmark, handleComment, handleShare,handleReply, handleDelete,handleDeleteComment,
+   handleSaveEdit,handleEdit} = 
+   usePostActions({
+    posts,setPosts,user,updateUser,commentText,setCommentText,setActiveCommentPost,editContent,setEditContent,
+    editingPost,setEditingPost,replyText,setReplyText,setActiveReplyComment,
   });
 
   const [page, setPage] = useState(1);

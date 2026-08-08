@@ -19,7 +19,7 @@ export default function TagDetailPage() {
   const [editingPost, setEditingPost] = useState<any>(null);
   const [editContent, setEditContent] = useState("");
 
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
 
   const {
     handleLike,
@@ -35,6 +35,7 @@ export default function TagDetailPage() {
     posts,
     setPosts,
     user,
+    updateUser,
     commentText,
     setCommentText,
     setActiveCommentPost,
