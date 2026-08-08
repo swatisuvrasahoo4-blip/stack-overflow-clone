@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import question from "../models/question.js";
 import auth from "../models/auth.js"
+import { updateReputation } from "../services/reputationServices.js";
 
 export const Askquestion = async (req, res) => {
   const { postquestiondata } = req.body;
@@ -172,6 +173,14 @@ export const answerQuestion = async (req, res) => {
     questionData.noofanswer = questionData.answer.length;
 
     await questionData.save();
+
+    await updateReputation({
+  userId: userid,
+  points: 5,
+  type: "answer_posted",
+  reason: "Posted an answer",
+  relatedId: id,
+});
 
     return res.status(200).json({
       data: questionData,

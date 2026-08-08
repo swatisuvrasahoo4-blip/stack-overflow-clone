@@ -18,7 +18,7 @@ import { Textarea } from "./ui/textarea";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { useAuth } from "@/lib/AuthContext";
-import { submitAnswer, toggleQuestionBookmark, getQuestionById, getQuestionBookmarks } from "./services/questionService";
+import { submitAnswer, acceptAnswer, toggleQuestionBookmark, getQuestionById, getQuestionBookmarks } from "./services/questionService";
 import axiosInstance from "@/lib/axiosinstance";
 
 const QuestionDetail = ({ questionId }: any) => {
@@ -180,6 +180,27 @@ toast.success("Answer uploaded successfully");
       setisSubmitting(false);
     }
   };
+
+  const handleAcceptAnswer = async (answerId: string) => {
+  try {
+    await acceptAnswer(String(question._id), answerId);
+
+    toast.success("Answer accepted successfully");
+
+    // Refresh question data so accepted status appears immediately
+    const updatedQuestion = await getQuestionById(String(question._id));
+
+    setquestion(updatedQuestion);
+    setanswer(updatedQuestion?.answer || []);
+  } catch (error: any) {
+    console.error(error);
+
+    toast.error(
+      error?.response?.data?.message || "Failed to accept answer"
+    );
+  }
+};
+
   const handleDelete = async () => {
     if(!user){
       toast.info("Please login to continue")
@@ -201,7 +222,9 @@ toast.success("Answer uploaded successfully");
     if (!window.confirm("Are you sure you want to delete this answer?"))
       return;
     try {
-      await axiosInstance.delete(`/question/delete-answer/${question._id}/${id}`)
+      await axiosInstance.delete(
+  `/answer/delete/${question._id}/${id}`
+);
       const updateanswer = (question.answer || []).filter(
         (ans: any) => String(ans._id) !== String(id)
       );
@@ -234,6 +257,9 @@ const handleShare = async () => {
     console.log(error);
   }
 };
+
+const hasAcceptedAnswer =
+  question?.answer?.some((ans: any) => ans.isAccepted) ?? false;
   return (
     <div className="max-w-5xl">
       {/* Question Header */}
@@ -245,7 +271,9 @@ const handleShare = async () => {
         <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
             <div className="flex items-center gap-1">
             <Clock className="w-4 h-4" />
-            <span>Asked {new Date(question.askedon).toISOString().split("T")[0]}</span>
+            <span>Asked {question.askedon
+  ? new Date(question.askedon).toLocaleDateString()
+  : "Unknown date"}</span>
           </div>
         </div>
       </div>
@@ -264,7 +292,9 @@ const handleShare = async () => {
               >
                 <ChevronUp className="w-6 h-6" />
               </Button>
-              <span>{question.upvote.length - question.downvote.length}</span>
+              <span>
+  {(question.upvote?.length || 0) - (question.downvote?.length || 0)}
+</span>
               <Button
                 variant="ghost"
                 size="sm"
@@ -303,7 +333,7 @@ const handleShare = async () => {
                 <div
                   className="text-gray-800 leading-relaxed"
                   dangerouslySetInnerHTML={{
-                    __html: question.questionbody
+                    __html: (question.questionbody || "")
                       .replace(
                         /## (.*)/g,
                         '<h3 class="text-lg font-semibold mt-6 mb-3 text-gray-900">$1</h3>'
@@ -327,7 +357,7 @@ const handleShare = async () => {
                 />
               </div>
               <div className="flex flex-wrap gap-2 mb-6">
-                {question.questiontags.map((tag: any) => (
+                {(question.questiontags || []).map((tag: any) => (
                   <Link key={tag} href={`/tags/${tag}`}>
                     <Badge
                       variant="secondary"
@@ -372,7 +402,9 @@ const handleShare = async () => {
 
                 <div className="flex items-center gap-2 text-sm">
                   <span className="text-gray-600">
-                    asked {new Date(question.askedon).toISOString().split("T")[0]}
+                    asked {question.askedon && !isNaN(new Date(question.askedon).getTime())
+  ? new Date(question.askedon).toISOString().split("T")[0]
+  : "Date unavailable"}
                   </span>
                   <Link
                     href={`/users/${question.userid}`}
@@ -380,7 +412,7 @@ const handleShare = async () => {
                   >
                     <Avatar className="w-8 h-8">
                       <AvatarFallback className="text-sm">
-                        {question.userposted[0]}
+                        {question.userposted?.[0]?.toUpperCase() || "U"}
                       </AvatarFallback>
                     </Avatar>
                     <div>
@@ -397,11 +429,11 @@ const handleShare = async () => {
       </Card>
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-6 text-gray-900">
-          {question.answer.length} Answer
-          {question.answer.length !== 1 ? "s" : ""}
+          {(question.answer || []).length} Answer
+{(question.answer || []).length !== 1 ? "s" : ""}
         </h2>
         <div className="space-y-6">
-          {question.answer.map((ans: any) => (
+          {(question.answer || []).map((ans: any) => (
             <Card key={ans._id} className={""}>
               <CardContent className="p-0">
                 <div className="flex flex-col sm:flex-row">
@@ -463,7 +495,24 @@ const handleShare = async () => {
                             Delete
                           </Button>
                         )}
+                        {String(question.userid) === String(user?._id || user?.id) && !hasAcceptedAnswer && (
+  <Button
+    variant="outline"
+    size="sm"
+    onClick={() => handleAcceptAnswer(ans._id)}
+    className="text-green-600 bg-amber-50 border-green-600 hover:bg-green-50 hover:text-black"
+  >
+    Accept Answer
+  </Button>
+)}
+
+{ans.isAccepted && (
+  <span className="text-green-600 font-semibold text-sm">
+    ✓ Accepted Answer
+  </span>
+)}
                       </div>
+
                       <div className="flex items-center gap-2 text-sm">
                         <span className="text-gray-600">
                           answered {ans.answeredon}

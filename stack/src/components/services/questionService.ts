@@ -47,5 +47,16 @@ export const getQuestionBookmarks = async (userId?: string) => {
 export const getQuestionById = async (questionId: string) => {
   const res = await axiosInstance.get(`/question/${questionId}`);
 
+  return res.data.data;
+};
+
+export const acceptAnswer = async (
+  questionId: string,
+  answerId: string
+) => {
+  const res = await axiosInstance.patch(
+    `/answer/accept/${questionId}/${answerId}`
+  );
+
   return res.data;
 };

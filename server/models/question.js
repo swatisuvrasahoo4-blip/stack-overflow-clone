@@ -17,6 +17,10 @@ const questionschema = mongoose.Schema(
         answerbody: String,
         useranswered: String,
         userid: String,
+        isAccepted: {
+          type: Boolean,
+          default: false,
+    },
         answeredon: { type: Date, default: Date.now },
       },
     ],

@@ -12,6 +12,11 @@ const userschema = mongoose.Schema({
   profilePhoto: { type: String },
   email: { type: String, required: true },
   password: { type: String, required: true },
+  reputation: {
+  type: Number,
+  default: 0,
+  min: 0,
+},
   lastForgotPasswordRequest: {
   type: Date,
   default: null,
