@@ -17,6 +17,18 @@ const questionschema = mongoose.Schema(
         answerbody: String,
         useranswered: String,
         userid: String,
+        upvote: {
+  type: [String],
+  default: [],
+},
+downvote: {
+  type: [String],
+  default: [],
+},
+fiveUpvotesRewarded: {
+  type: Boolean,
+  default: false,
+},
         isAccepted: {
           type: Boolean,
           default: false,

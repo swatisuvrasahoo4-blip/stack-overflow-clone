@@ -20,6 +20,7 @@ import { useRouter } from "next/router";
 import { useAuth } from "@/lib/AuthContext";
 import { submitAnswer, acceptAnswer, toggleQuestionBookmark, getQuestionById, getQuestionBookmarks } from "./services/questionService";
 import axiosInstance from "@/lib/axiosinstance";
+import AnswerVote from "./AnswerVote";
 
 const QuestionDetail = ({ questionId }: any) => {
   const router = useRouter();
@@ -29,6 +30,28 @@ const QuestionDetail = ({ questionId }: any) => {
   const [isSubmitting, setisSubmitting] = useState(false);
   const [loading, setloading] = useState(true);
   const { user } = useAuth();
+  const onAnswerVoteSuccess = (
+  answerId: string,
+  upvotes: string[],
+  downvotes: string[]
+) => {
+  setquestion((prev: any) => {
+    if (!prev) return prev;
+
+    return {
+      ...prev,
+      answer: prev.answer.map((ans: any) =>
+        String(ans._id) === String(answerId)
+          ? {
+              ...ans,
+              upvote: upvotes,
+              downvote: downvotes,
+            }
+          : ans
+      ),
+    };
+  });
+};
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => setHasMounted(true), []);
  useEffect(() => {
@@ -437,6 +460,15 @@ const hasAcceptedAnswer =
             <Card key={ans._id} className={""}>
               <CardContent className="p-0">
                 <div className="flex flex-col sm:flex-row">
+                  <AnswerVote
+  questionId={question._id}
+  answerId={ans._id}
+  upvotes={ans.upvote || []}
+  downvotes={ans.downvote || []}
+  currentUserId={user?._id}
+  answerUserId={ans.userid}
+  onVoteSuccess={onAnswerVoteSuccess}
+/>
                   {/* Answer Content */}
                   <div className="flex-1 p-4 sm:p-6">
                     <div className="prose max-w-none mb-6">
@@ -495,7 +527,9 @@ const hasAcceptedAnswer =
                             Delete
                           </Button>
                         )}
-                        {String(question.userid) === String(user?._id || user?.id) && !hasAcceptedAnswer && (
+                       {String(question.userid) === String(user?._id || user?.id) &&
+  String(ans.userid) !== String(user?._id || user?.id) &&
+  !hasAcceptedAnswer && (
   <Button
     variant="outline"
     size="sm"
@@ -512,7 +546,6 @@ const hasAcceptedAnswer =
   </span>
 )}
                       </div>
-
                       <div className="flex items-center gap-2 text-sm">
                         <span className="text-gray-600">
                           answered {ans.answeredon}

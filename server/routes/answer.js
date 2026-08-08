@@ -1,5 +1,5 @@
 import express from "express";
-import { Askanswer, deleteanswer, acceptAnswer } from "../controller/answer.js";
+import { Askanswer, deleteanswer, acceptAnswer, voteAnswer } from "../controller/answer.js";
 
 import auth from "../middleware/auth.js";
 
@@ -11,6 +11,11 @@ router.patch(
   "/accept/:questionId/:answerId",
   auth,
   acceptAnswer
+);
+router.patch(
+  "/vote/:questionId/:answerId",
+  auth,
+  voteAnswer
 );
 
 

@@ -133,7 +133,11 @@ if (alreadyAccepted) {
         message: "Answer not found",
       });
     }
-
+if (answer.userid.toString() === req.userid.toString()) {
+  return res.status(400).json({
+    message: "You cannot accept your own answer",
+  });
+}
     answer.isAccepted = true;
 
     await questionData.save();
@@ -152,6 +156,98 @@ if (alreadyAccepted) {
     });
   } catch (error) {
     console.log("ACCEPT ANSWER ERROR:", error);
+
+    return res.status(500).json({
+      message: "Something went wrong",
+    });
+  }
+};
+
+export const voteAnswer = async (req, res) => {
+  try {
+    const { questionId, answerId } = req.params;
+    const { voteType } = req.body;
+    const userId = req.userid;
+
+    if (
+      !mongoose.Types.ObjectId.isValid(questionId) ||
+      !mongoose.Types.ObjectId.isValid(answerId)
+    ) {
+      return res.status(400).json({
+        message: "Invalid question or answer",
+      });
+    }
+
+    if (!["upvote", "downvote"].includes(voteType)) {
+      return res.status(400).json({
+        message: "Invalid vote type",
+      });
+    }
+
+    const questionData = await question.findById(questionId);
+
+    if (!questionData) {
+      return res.status(404).json({
+        message: "Question not found",
+      });
+    }
+
+    const answer = questionData.answer.id(answerId);
+
+    if (!answer) {
+      return res.status(404).json({
+        message: "Answer not found",
+      });
+    }
+
+    // Prevent voting on your own answer
+    if (answer.userid.toString() === userId.toString()) {
+      return res.status(400).json({
+        message: "You cannot vote on your own answer",
+      });
+    }
+
+    const hasUpvoted = answer.upvote.includes(userId);
+    const hasDownvoted = answer.downvote.includes(userId);
+
+    if (voteType === "upvote") {
+      if (hasUpvoted) {
+        // Clicking upvote again removes it
+        answer.upvote.pull(userId);
+      } else {
+        // Remove previous downvote if present
+        if (hasDownvoted) {
+          answer.downvote.pull(userId);
+        }
+
+        answer.upvote.push(userId);
+      }
+    }
+
+    if (voteType === "downvote") {
+      if (hasDownvoted) {
+        // Clicking downvote again removes it
+        answer.downvote.pull(userId);
+      } else {
+        // Remove previous upvote if present
+        if (hasUpvoted) {
+          answer.upvote.pull(userId);
+        }
+
+        answer.downvote.push(userId);
+      }
+    }
+
+    await questionData.save();
+
+    return res.status(200).json({
+      message: "Answer vote updated successfully",
+      upvotes: answer.upvote.length,
+      downvotes: answer.downvote.length,
+      data: questionData,
+    });
+  } catch (error) {
+    console.log("ANSWER VOTE ERROR:", error);
 
     return res.status(500).json({
       message: "Something went wrong",
