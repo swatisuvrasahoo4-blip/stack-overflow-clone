@@ -3,6 +3,8 @@ import user from "../models/auth.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import cloudinary from "../config/cloudinary.js";
+import { updateReputation } from "../services/reputationServices.js";
+
 export const Signup = async (req, res) => {
   const { name, username, email, password } = req.body;
   try {
@@ -205,6 +207,26 @@ if (req.file) {
       { $set: updateData },
       { new: true }
     );
+    const isProfileComplete =
+  updateprofile.name?.trim() &&
+  updateprofile.about?.trim() &&
+  updateprofile.tags?.length > 0;
+
+if (
+  isProfileComplete &&
+  !updateprofile.profileCompletionRewarded
+) {
+  await updateReputation({
+    userId: updateprofile._id,
+    points: 10,
+    type: "profile_completed",
+    reason: "Completed all mandatory profile details",
+    relatedId: updateprofile._id,
+  });
+
+  updateprofile.profileCompletionRewarded = true;
+  await updateprofile.save();
+}
     res.status(200).json({ data: updateprofile });
   } catch (error) {
     console.log(error);

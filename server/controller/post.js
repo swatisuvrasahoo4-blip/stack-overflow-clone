@@ -33,7 +33,7 @@ export const createPost = async (req, res) => {
       });
     }
 
-    if (isFeatured) {
+    if (isFeatured === true || isFeatured ==="true") {
   const user = await auth.findById(authorId);
 
   if (
@@ -176,10 +176,24 @@ export const editPost = async (req, res) => {
       });
     }
 
-    if (post.authorId.toString() !== req.userid.toString()) {
-      return res.status(403).json({
-        message: "You can only edit your own post",
+    const user = await auth.findById(req.userid);
+
+    if(!user){
+      return res.status(404).json({
+        message: "User not found",
       });
+    }
+    
+    const isOwner = post.authorId.toString() === req.userid.toString();
+    if(!isOwner){
+      return res.status(403).json({
+        message: "You can only edit your own post"
+      })
+    }
+    if((user.reputation || 0) < 100){
+      return res.status(403).json({
+        message:"You need at least 100 reputation points to edit community posts"
+      })
     }
 
     if (!content || content.trim() === "") {

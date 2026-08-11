@@ -60,3 +60,27 @@ export const acceptAnswer = async (
 
   return res.data;
 };
+
+export const voteQuestion = async (
+  questionId: string,
+  value: "upvote" | "downvote",
+  userId: string
+) => {
+  const res = await axiosInstance.patch(
+    `/question/vote/${questionId}`,
+    {
+      value,
+      userid: userId,
+    }
+  );
+
+  return res.data;
+};
+
+export const checkQuestionReportStatus = async (questionId: string) => {
+  const response = await axiosInstance.get(
+    `/report/check/question/${questionId}`
+  );
+
+  return response.data;
+};

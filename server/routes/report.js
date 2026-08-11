@@ -10,7 +10,7 @@ import admin from "../middleware/admin.js";
 
 const router = express.Router();
 
-router.get("/check/:postId",auth, checkReportStatus);
+router.get("/check/:type/:contentId",auth, checkReportStatus);
 
 router.post("/", auth, createReport);
 

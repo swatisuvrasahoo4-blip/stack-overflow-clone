@@ -101,6 +101,10 @@ return null;
   }
 };
 const handleEdit = (post: any) => {
+  if((user?.reputation || 0) < 100){
+    alert("You need at least 100 reputation points to edit community posts.");
+    return;
+  }
   setEditingPost(post);
   setEditContent(post.content || "");
 }
@@ -138,7 +142,7 @@ const handleSaveEdit = async () => {
     }
 
     if (error?.response?.status === 403) {
-      alert("You can only edit your own post.");
+      alert(error?.response?.data?.message || "You can only edit your own post.");
       return;
     }
 

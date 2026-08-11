@@ -17,6 +17,10 @@ const userschema = mongoose.Schema({
   default: 0,
   min: 0,
 },
+profileCompletionRewarded: {
+  type: Boolean,
+  default: false,
+},
   lastForgotPasswordRequest: {
   type: Date,
   default: null,

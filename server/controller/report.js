@@ -1,53 +1,82 @@
 import Report from "../models/report.js";
 import Post from "../models/post.js";
+import question from "../models/question.js";
+import User from "../models/auth.js";
+import reputationActivity from "../models/reputationActivity.js";
 
 export const createReport = async (req, res) => {
   try {
     const reporterId = req.userid;
-    const { postId, reason, details = "" } = req.body;
+    const { postId, questionId, reason, details = "" } = req.body;
 
-    if (!postId || !reason) {
+    if ((!postId && !questionId) || !reason) {
       return res.status(400).json({
         success: false,
-        message: "Post and reason are required.",
+        message: "Content and reason are required.",
       });
     }
 
-    const post = await Post.findById(postId);
+    let content;
+let authorId;
 
-    if (!post) {
-      return res.status(404).json({
-        success: false,
-        message: "Post not found.",
-      });
-    }
+if (postId) {
+  content = await Post.findById(postId);
 
-    if (post.authorId.toString() === reporterId.toString()) {
-      return res.status(400).json({
-        success: false,
-        message: "You cannot report your own post.",
-      });
-    }
-
-    const existingReport = await Report.findOne({
-      reporterId,
-      postId,
+  if (!content) {
+    return res.status(404).json({
+      success: false,
+      message: "Post not found.",
     });
+  }
+
+  authorId = content.authorId;
+} else {
+  content = await question.findById(questionId);
+
+  if (!content) {
+    return res.status(404).json({
+      success: false,
+      message: "Question not found.",
+    });
+  }
+
+  authorId = content.userid;
+}
+
+if (authorId && authorId.toString() === reporterId.toString()) {
+  return res.status(400).json({
+    success: false,
+    message: `You cannot report your own ${postId ? "post" : "question"}.`,
+  });
+}
+    const existingReport = await Report.findOne({
+  reporterId,
+  ...(postId ? { postId } : { questionId }),
+});
 
     if (existingReport) {
       return res.status(409).json({
         success: false,
-        message: "You have already reported this post.",
+        message: `You have already reported this ${postId ? "post" : "question"}.`,
       });
     }
 
-    const report = await Report.create({
-      reporterId,
-      postId,
-      postAuthorId: post.authorId,
-      reason,
-      details: details.trim(),
-    });
+   const report = await Report.create({
+  reporterId,
+
+  ...(postId
+    ? {
+        postId,
+        postAuthorId: authorId,
+      }
+    : {
+        questionId,
+        questionAuthorId: authorId,
+      }),
+
+  reason,
+  details: details.trim(),
+});
 
     return res.status(201).json({
       success: true,
@@ -74,13 +103,21 @@ export const createReport = async (req, res) => {
 export const getReports = async (req, res) => {
   try {
     const reports = await Report.find()
-      .populate("reporterId", "name username profilePhoto")
-      .populate(
-  "postAuthorId",
-  "name username profilePhoto isSuspended"
-)
-      .populate("postId", "content postType image createdAt")
-      .sort({ createdAt: -1 });
+  .populate("reporterId", "name username profilePhoto")
+  .populate(
+    "postAuthorId",
+    "name username profilePhoto isSuspended"
+  )
+  .populate(
+    "questionAuthorId",
+    "name username profilePhoto isSuspended"
+  )
+  .populate("postId", "content postType image createdAt")
+  .populate(
+    "questionId",
+    "questiontitle questionbody questiontags askedon"
+  )
+  .sort({ createdAt: -1 });
 
     return res.status(200).json({
       success: true,
@@ -94,14 +131,28 @@ export const getReports = async (req, res) => {
       message: "Failed to fetch reports.",
     });
   }
-};export const checkReportStatus = async (req, res) => {
-  try {
-    const { postId } = req.params;
+};
 
-    const report = await Report.findOne({
+export const checkReportStatus = async (req, res) => {
+  try {
+    const { contentId, type } = req.params;
+
+    let query = {
       reporterId: req.userid,
-      postId,
-    });
+    };
+
+    if (type === "post") {
+      query.postId = contentId;
+    } else if (type === "question") {
+      query.questionId = contentId;
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid report type.",
+      });
+    }
+
+    const report = await Report.findOne(query);
 
     return res.status(200).json({
       success: true,
@@ -136,6 +187,15 @@ export const updateReportStatus = async (req, res) => {
       });
     }
 
+     const existingReport = await Report.findById(reportId);
+
+if (!existingReport) {
+  return res.status(404).json({
+    success: false,
+    message: "Report not found.",
+  });
+}
+
     const report = await Report.findByIdAndUpdate(
       reportId,
       {
@@ -152,6 +212,49 @@ export const updateReportStatus = async (req, res) => {
         message: "Report not found.",
       });
     }
+
+    if (
+  status === "action_taken" &&
+  !existingReport.adminReputationDeducted
+) {
+  const authorId =
+    existingReport.questionAuthorId ||
+    existingReport.postAuthorId;
+
+  if (authorId) {
+    const user = await User.findById(authorId);
+
+    if (user) {
+      const deduction = Math.min(10, user.reputation);
+
+      user.reputation = Math.max(0, user.reputation - 10);
+
+      await user.save();
+
+      if (deduction > 0) {
+        await reputationActivity.create({
+          userId: authorId,
+          points: -deduction,
+          type: "admin_content_removed",
+          reason: "Content removed by admin for guideline violation",
+        });
+      }
+
+      report.adminReputationDeducted = true;
+      await report.save();
+    }
+  }
+}
+
+if (status === "action_taken") {
+  if (existingReport.questionId) {
+    await question.findByIdAndDelete(existingReport.questionId);
+  }
+
+  if (existingReport.postId) {
+    await Post.findByIdAndDelete(existingReport.postId);
+  }
+}
 
     return res.status(200).json({
       success: true,

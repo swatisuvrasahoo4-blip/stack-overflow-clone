@@ -11,14 +11,25 @@ const reportSchema = new mongoose.Schema(
     postId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Post",
-      required: true,
+      default: null,
     },
 
     postAuthorId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
-      required: true,
+     default: null,
     },
+    questionId: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "question",
+  default: null,
+},
+
+questionAuthorId: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: "user",
+  default: null,
+},
 
     reason: {
       type: String,
@@ -56,19 +67,31 @@ const reportSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    adminReputationDeducted: {
+  type: Boolean,
+  default: false,
+},
   },
   {
     timestamps: true,
   }
 );
 
+// One report per user per community post
 reportSchema.index(
-  {
-    reporterId: 1,
-    postId: 1,
-  },
+  { reporterId: 1, postId: 1 },
   {
     unique: true,
+    partialFilterExpression: { postId: { $type: "objectId" } },
+  }
+);
+
+// One report per user per question
+reportSchema.index(
+  { reporterId: 1, questionId: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { questionId: { $type: "objectId" } },
   }
 );
 

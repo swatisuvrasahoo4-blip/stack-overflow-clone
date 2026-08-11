@@ -18,9 +18,11 @@ import { Textarea } from "./ui/textarea";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { useAuth } from "@/lib/AuthContext";
-import { submitAnswer, acceptAnswer, toggleQuestionBookmark, getQuestionById, getQuestionBookmarks } from "./services/questionService";
+import { submitAnswer, acceptAnswer, toggleQuestionBookmark, getQuestionById, getQuestionBookmarks, voteQuestion } from "./services/questionService";
 import axiosInstance from "@/lib/axiosinstance";
 import AnswerVote from "./AnswerVote";
+import ReportQuestionButton from "./reports/ReportQuestionButton";
+import VoteToClose from "./question/close-vote/VoteToClose";
 
 const QuestionDetail = ({ questionId }: any) => {
   const router = useRouter();
@@ -87,8 +89,10 @@ setquestion({
 });
 
 setanswer(questionData?.answer || []);
-    } catch (error) {
+    } catch (error: any) {
+     if(error?.response?.status !== 404) {
       console.error("Failed to fetch question:", error);
+    }
       setquestion(null);
       setanswer([]);
     } finally {
@@ -111,32 +115,30 @@ setanswer(questionData?.answer || []);
     );
   }
 
-  const handleVote = async (vote: String) => {
-    if(!user){
-      toast.info("Please login to continue")
-      router.push("/")
-      return
-    }
-    try {
-      setquestion((prev: any) => {
-        if (!prev) return prev;
-        const up = new Set(prev.upvote || []);
-        const down = new Set(prev.downvote || []);
-        if (vote === "upvote") {
-          up.add(user._id);
-          down.delete(user._id);
-        } else {
-          down.add(user._id);
-          up.delete(user._id);
-        }
-        return { ...prev, upvote: Array.from(up), downvote: Array.from(down) };
-      });
-      toast.success("Vote Updated (local)");
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to Vote question");
-    }
-  };
+  const handleVote = async (vote: string) => {
+  if (!user) {
+    toast.info("Please login to continue");
+    router.push("/");
+    return;
+  }
+
+  try {
+    const userId = user._id || user.id;
+
+    const response = await voteQuestion(
+      questionId,
+      vote as "upvote" | "downvote",
+      userId
+    );
+
+    setquestion(response.data);
+
+    toast.success("Vote updated");
+  } catch (error) {
+    console.error(error);
+    toast.error("Failed to vote question");
+  }
+};
 const handlebookmark = async () => {
   const userId = user?._id || user?.id;
 
@@ -310,7 +312,11 @@ const hasAcceptedAnswer =
               <Button
                 variant="ghost"
                 size="sm"
-                className={`p-2 ${"text-gray-600 hover:text-orange-500"}`}
+                className={`p-2 ${
+  question?.upvote?.includes(user?._id)
+    ? "text-orange-500 bg-orange-50"
+    : "text-gray-600 hover:text-orange-500"
+}`}
                 onClick={() => handleVote("upvote")}
               >
                 <ChevronUp className="w-6 h-6" />
@@ -321,7 +327,11 @@ const hasAcceptedAnswer =
               <Button
                 variant="ghost"
                 size="sm"
-                className={`p-2 ${"text-gray-600 hover:text-orange-500"}`}
+                className={`p-2 ${
+  question?.downvote?.includes(user?._id)
+    ? "text-orange-500 bg-orange-50"
+    : "text-gray-600 hover:text-orange-500"
+}`}
                 onClick={() => handleVote("downvote")}
               >
                 <ChevronDown className="w-6 h-6" />
@@ -350,6 +360,11 @@ const hasAcceptedAnswer =
                   <History className="w-5 h-5" />
                 </Button>
               </div>
+              <VoteToClose
+  question={question}
+  user={user}
+  onQuestionUpdate={setquestion}
+/>
             </div>
             <div className="flex-1 p-4 sm:p-6">
               <div className="prose max-w-none mb-6">
@@ -402,14 +417,9 @@ const hasAcceptedAnswer =
                     <Share className="w-4 h-4 mr-1" />
                     Share
                   </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-gray-600 hover:text-gray-800"
-                  >
-                    <Flag className="w-4 h-4 mr-1" />
-                    Flag
-                  </Button>
+                  <ReportQuestionButton
+  questionId={question._id}
+/>
                   {hasMounted && question.userid === user?._id && (
                     <Button
                       variant="ghost"
@@ -607,6 +617,7 @@ const hasAcceptedAnswer =
           </div>
         </CardContent>
       </Card>
+      
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 
 interface ReportPostModalProps {
@@ -14,6 +14,7 @@ export default function ReportPostModal({
 }: ReportPostModalProps) {
     const [reason, setReason] = useState("");
 const [details, setDetails] = useState("");
+
   if (!open) return null;
 
   return (
@@ -22,7 +23,7 @@ const [details, setDetails] = useState("");
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl"
+       className="w-full max-w-md max-h-[85vh] overflow-y-auto rounded-lg bg-white p-6 shadow-xl"
         onClick={(event) => event.stopPropagation()}
       >
         <h2 className="text-lg font-semibold">Report Post</h2>

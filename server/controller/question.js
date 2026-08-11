@@ -79,10 +79,18 @@ export const votequestion = async (req, res) => {
     );
     if (value === "upvote") {
       if (downindex !== -1) {
-        questionDoc.downvote = questionDoc.downvote.filter(
-          (id) => id !== String(userid)
-        );
-      }
+  questionDoc.downvote = questionDoc.downvote.filter(
+    (id) => id !== String(userid)
+  );
+
+  await updateReputation({
+    userId: questionDoc.userid,
+    points: 2,
+    type: "downvote",
+    reason: "Question downvote removed",
+    relatedId: questionDoc._id,
+  });
+}
       if (upindex === -1) {
         questionDoc.upvote.push(userid);
       } else {
@@ -93,14 +101,47 @@ export const votequestion = async (req, res) => {
         questionDoc.upvote = questionDoc.upvote.filter((id) => id !== String(userid));
       }
       if (downindex === -1) {
-        questionDoc.downvote.push(userid);
-      } else {
-        questionDoc.downvote = questionDoc.downvote.filter(
-          (id) => id !== String(userid)
-        );
-      }
+  questionDoc.downvote.push(userid);
+
+  await updateReputation({
+    userId: questionDoc.userid,
+    points: -2,
+    type: "downvote",
+    reason: "Question received a downvote",
+    relatedId: questionDoc._id,
+  });
+} else {
+  questionDoc.downvote = questionDoc.downvote.filter(
+    (id) => id !== String(userid)
+  );
+
+  await updateReputation({
+    userId: questionDoc.userid,
+    points: 2,
+    type: "downvote",
+    reason: "Question downvote removed",
+    relatedId: questionDoc._id,
+  });
+}
     }
+    // Give +2 reputation once when question reaches 10 upvotes
+if (
+  questionDoc.upvote.length >= 10 &&
+  !questionDoc.tenUpvotesRewarded
+) {
+  await updateReputation({
+    userId: questionDoc.userid,
+    points: 2,
+    type: "question_upvotes",
+    reason: "Question received 10 upvotes",
+    relatedId: questionDoc._id,
+  });
+
+  questionDoc.tenUpvotesRewarded = true;
+}
+
     const questionvote = await question.findByIdAndUpdate(_id, questionDoc, { new: true });
+
     res.status(200).json({ data: questionvote });
   } catch (error) {
     res.status(500).json("something went wrong..");

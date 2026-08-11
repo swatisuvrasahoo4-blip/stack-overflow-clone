@@ -32,3 +32,23 @@ export const checkReportStatus = async (postId: string) => {
 
   return response.data;
 };
+
+interface CreateQuestionReportPayload {
+  questionId: string;
+  reason: string;
+  details?: string;
+}
+
+export const createQuestionReport = async ({
+  questionId,
+  reason,
+  details = "",
+}: CreateQuestionReportPayload) => {
+  const response = await axiosInstance.post("/report", {
+    questionId,
+    reason,
+    details,
+  });
+
+  return response.data;
+};

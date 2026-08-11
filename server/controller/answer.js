@@ -216,27 +216,70 @@ export const voteAnswer = async (req, res) => {
         answer.upvote.pull(userId);
       } else {
         // Remove previous downvote if present
-        if (hasDownvoted) {
-          answer.downvote.pull(userId);
-        }
+       if (hasDownvoted) {
+  answer.downvote.pull(userId);
+
+  // Restore reputation because the previous downvote was removed
+  await updateReputation({
+    userId: answer.userid,
+    points: 2,
+    type: "downvote",
+    reason: "Downvote removed from answer",
+    relatedId: answer._id,
+  });
+}
 
         answer.upvote.push(userId);
       }
     }
 
     if (voteType === "downvote") {
-      if (hasDownvoted) {
-        // Clicking downvote again removes it
-        answer.downvote.pull(userId);
-      } else {
-        // Remove previous upvote if present
-        if (hasUpvoted) {
-          answer.upvote.pull(userId);
-        }
+  if (hasDownvoted) {
+    // Clicking downvote again removes it
+    answer.downvote.pull(userId);
 
-        answer.downvote.push(userId);
-      }
+    // Restore the 2 reputation points
+    await updateReputation({
+      userId: answer.userid,
+      points: 2,
+      type: "downvote",
+      reason: "Downvote removed from answer",
+      relatedId: answer._id,
+    });
+  } else {
+    // Remove previous upvote if present
+    if (hasUpvoted) {
+      answer.upvote.pull(userId);
     }
+
+    answer.downvote.push(userId);
+
+    // -2 reputation for receiving a downvote
+    await updateReputation({
+      userId: answer.userid,
+      points: -2,
+      type: "downvote",
+      reason: "Answer received a downvote",
+      relatedId: answer._id,
+    });
+  }
+}
+
+    // +5 reputation when answer reaches 5 upvotes
+if (
+  answer.upvote.length >= 5 &&
+  !answer.fiveUpvotesRewarded
+) {
+  await updateReputation({
+    userId: answer.userid,
+    points: 5,
+    type: "answer_upvotes",
+    reason: "Answer received 5 upvotes",
+    relatedId: answer._id,
+  });
+
+  answer.fiveUpvotesRewarded = true;
+}
 
     await questionData.save();
 

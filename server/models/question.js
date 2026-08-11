@@ -8,6 +8,10 @@ const questionschema = mongoose.Schema(
     noofanswer: { type: Number, default: 0 },
     upvote: { type: [String], default: [] },
     downvote: { type: [String], default: [] },
+    tenUpvotesRewarded: {
+  type: Boolean,
+  default: false,
+},
     views: { type: Number, default: 0 },
     userposted: { type: String },
     userid: { type: String },
@@ -25,6 +29,7 @@ downvote: {
   type: [String],
   default: [],
 },
+
 fiveUpvotesRewarded: {
   type: Boolean,
   default: false,
@@ -36,6 +41,32 @@ fiveUpvotesRewarded: {
         answeredon: { type: Date, default: Date.now },
       },
     ],
+  isClosed: {
+  type: Boolean,
+  default: false,
+},
+
+closeVotes: [
+  {
+    userId: {
+      type: String,
+      required: true,
+    },
+    reason: {
+      type: String,
+      required: true,
+    },
+    votedAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+],
+
+closedAt: {
+  type: Date,
+  default: null,
+},
   },
   { timestamps: true }
 );
