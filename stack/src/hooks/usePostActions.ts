@@ -172,6 +172,16 @@ const handleDelete = async (postId: string) => {
   }
 };
 const handleReply = async (postId: string, commentId: string) => {
+   
+  const reputation = Number(user?.reputation ?? 0);
+
+if (reputation < 50) {
+  alert(
+    `You need at least 50 reputation points to reply. Your current reputation is ${reputation}.`
+  );
+  return;
+}
+
   if (!replyText.trim()) return;
 
   try {

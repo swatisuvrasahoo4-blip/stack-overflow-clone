@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 
-
 interface ReportPostModalProps {
   open: boolean;
   onClose: () => void;

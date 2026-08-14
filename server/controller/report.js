@@ -9,6 +9,22 @@ export const createReport = async (req, res) => {
     const reporterId = req.userid;
     const { postId, questionId, reason, details = "" } = req.body;
 
+    const reporter = await User.findById(reporterId).select("reputation");
+
+if (!reporter) {
+  return res.status(404).json({
+    success: false,
+    message: "User not found.",
+  });
+}
+
+if ((reporter.reputation || 0) < 500) {
+  return res.status(403).json({
+    success: false,
+    message: "You need at least 500 reputation points to report inappropriate content.",
+  });
+}
+
     if ((!postId && !questionId) || !reason) {
       return res.status(400).json({
         success: false,

@@ -5,11 +5,12 @@ import { createQuestionReport } from "../services/reportService";
 import { checkQuestionReportStatus } from "../services/questionService";
 
 interface ReportQuestionButtonProps {
- questionId: string
+ questionId: string;
+ reputation: number;
 }
 
 export default function ReportQuestionButton({
-  questionId,
+  questionId,reputation
 }: ReportQuestionButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [alreadyReported, setAlreadyReported] = useState(false);
@@ -20,6 +21,12 @@ export default function ReportQuestionButton({
      onClick={async (event) => {
   event.preventDefault();
   event.stopPropagation();
+  if (reputation < 500) {
+  alert(
+    `You need at least 500 reputation points to report inappropriate content. Your current reputation is ${reputation}.`
+  );
+  return;
+}
 
   try {
     const data = await checkQuestionReportStatus(questionId);

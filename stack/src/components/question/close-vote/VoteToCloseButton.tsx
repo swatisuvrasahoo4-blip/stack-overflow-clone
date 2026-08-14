@@ -21,14 +21,16 @@ const VoteToCloseButton = ({
       </button>
     );
   }
-
-  if (reputation < 250) {
-    return null;
-  }
-
   return (
     <button
-      onClick={onClick}
+      onClick={() => {
+  if (reputation < 250) {
+    alert("You need at least 250 reputation points to vote to close questions.");
+    return;
+  }
+
+  onClick();
+}}
       className="px-2 py-1 rounded border border-red-400 text-red-500 hover:bg-red-50 transition whitespace-nowrap"
     >
       Vote to Close

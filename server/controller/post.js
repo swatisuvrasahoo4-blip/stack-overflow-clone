@@ -348,6 +348,22 @@ export const addComment = async (req, res) => {
     const { id } = req.params;
     const { text, userName } = req.body;
 
+    const user = await User.findById(req.userid);
+
+if (!user) {
+  return res.status(404).json({
+    success: false,
+    message: "User not found",
+  });
+}
+
+if ((user.reputation || 0) < 50) {
+  return res.status(403).json({
+    success: false,
+    message: "You need at least 50 reputation points to comment.",
+  });
+}
+
     const post = await Post.findById(id);
 
     if (!post) {
@@ -394,6 +410,22 @@ export const replyToComment = async (req, res) => {
   try {
     const { id, commentId } = req.params;
     const { text, userName } = req.body;
+
+    const user = await User.findById(req.userid);
+
+if (!user) {
+  return res.status(404).json({
+    success: false,
+    message: "User not found",
+  });
+}
+
+if ((user.reputation || 0) < 50) {
+  return res.status(403).json({
+    success: false,
+    message: "You need at least 50 reputation points to reply to comments.",
+  });
+}
 
     const post = await Post.findById(id);
 

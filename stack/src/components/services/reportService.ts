@@ -25,9 +25,10 @@ export const getReports = async () => {
 
   return response.data;
 };
+
 export const checkReportStatus = async (postId: string) => {
   const response = await axiosInstance.get(
-    `/report/check/${postId}`
+    `/report/check/post/${postId}`
   );
 
   return response.data;

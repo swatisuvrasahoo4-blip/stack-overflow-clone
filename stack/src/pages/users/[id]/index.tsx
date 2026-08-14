@@ -25,6 +25,8 @@ import { getImageUrl } from "@/lib/getImageUrl";
 import SubscriptionDashboard from "@/components/subscription/SubscriptionDashboard";
 import { getUserSubscription, getSubscription } from "@/components/services/subscriptionService";
 import PaymentHistory from "@/components/subscription/PaymentHistory";
+import ReputationSummary from "@/components/reputation/ReputationSummary";
+import TransferReputationButton from "@/components/reputation/TransferReputationButton";
 
 const index = () => {
   const { user, updateUser } = useAuth();
@@ -275,7 +277,7 @@ useEffect(() => {
 <FollowStats userId={users._id || users.id} />
               </div>
 
-              {hasMounted && user && isOwnProfile  && (
+              {hasMounted && user && isOwnProfile && (
               <div className="flex flex-col gap-2 w-fit">
                 <Dialog open={isEditing} onOpenChange={setIsEditing}>
                   <DialogTrigger
@@ -501,6 +503,12 @@ useEffect(() => {
                  </div>
                 
               )}
+             {hasMounted && user && !isOwnProfile && (
+  <TransferReputationButton
+    receiverId={users._id || users.id}
+    receiverName={users.name}
+  />
+)}
             </div>
             <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
               <div className="flex items-center">
@@ -568,9 +576,18 @@ useEffect(() => {
                 </div>
               </CardContent>
             </Card>
-            <SubscriptionDashboard />
+  <ReputationSummary
+    reputation={users?.reputation || 0}
+    onViewActivity={() => {
+      router.push(`/reputation?userId=${users?._id || users?.id}`);
+    }}
+  />
+            
             {isOwnProfile && subscription && ["Bronze", "Silver", "Gold"].includes(subscriptionPlan) &&(
+              <>
+              <SubscriptionDashboard />
             <PaymentHistory />
+            </>
           )}
           </div>
         </div>

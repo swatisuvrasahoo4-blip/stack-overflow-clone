@@ -419,6 +419,7 @@ const hasAcceptedAnswer =
                   </Button>
                   <ReportQuestionButton
   questionId={question._id}
+  reputation={Number(user?.reputation ?? 0)}
 />
                   {hasMounted && question.userid === user?._id && (
                     <Button
@@ -584,6 +585,7 @@ const hasAcceptedAnswer =
           ))}
         </div>
       </div>
+      { !question?.isClosed && (
       <Card>
         <CardContent className="p-6">
           <h3 className="text-lg font-semibold mb-4 text-gray-900">
@@ -617,7 +619,7 @@ const hasAcceptedAnswer =
           </div>
         </CardContent>
       </Card>
-      
+      )}
     </div>
   );
 };

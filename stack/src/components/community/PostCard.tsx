@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PostActions from "./PostActions";
 import CommentSection from "./CommentSection";
-import { Bookmark, ThumbsUp, Star } from "lucide-react";
+import { Bookmark, ThumbsUp, Star, Send } from "lucide-react";
 import MentionAvatar from "../mentions/MentionAvatar";
 import { getImageUrl } from "@/lib/getImageUrl";
 import Link from "next/link";
@@ -39,6 +39,17 @@ const [showReportModal, setShowReportModal] = useState(false);
       ) ?? false
     );
 const handleReportClick = async () => {
+
+  // Reputation privilege check
+  const reputation = Number(user?.reputation ?? 0);
+
+  if (reputation < 500) {
+    alert(
+      `You need at least 500 reputation points to report inappropriate content. Your current reputation is ${reputation}.`
+    );
+    return;
+  }
+
   try {
     const response = await checkReportStatus(post._id);
 
@@ -216,7 +227,9 @@ const handleReportClick = async () => {
     e.stopPropagation();
     handleShare(post._id)}}
 >
-  ↗ Share
+   <Send className="w-4 h-4" />
+   Share
+  
 </button>
 <MentionAvatar
   mentions={(post.mentions || [])}
@@ -236,9 +249,20 @@ const handleReportClick = async () => {
     />
 
     <button
-      onClick={(e) =>{ 
-        e.stopPropagation();
-        handleComment(post._id)}}
+      onClick={(e) => {
+  e.stopPropagation();
+
+  const reputation = Number(user?.reputation ?? 0);
+
+  if (reputation < 50) {
+    alert(
+      `You need at least 50 reputation points to comment. Your current reputation is ${reputation}.`
+    );
+    return;
+  }
+
+  handleComment(post._id);
+}}
       className="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg"
     >
       Post Comment

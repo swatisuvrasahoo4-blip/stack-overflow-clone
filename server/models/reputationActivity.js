@@ -36,6 +36,12 @@ const reputationActivitySchema = new mongoose.Schema(
       required: true,
     },
 
+    transferReason: {
+  type: String,
+  default: null,
+  trim: true,
+},
+
     relatedId: {
       type: mongoose.Schema.Types.ObjectId,
       default: null,

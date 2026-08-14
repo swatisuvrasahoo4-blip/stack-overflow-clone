@@ -24,12 +24,11 @@ const VoteToClose = ({
 
   const handleOpenModal = () => {
   const alreadyVoted = question?.closeVotes?.some(
-    (vote: any) =>
-      vote.userId?.toString() === user?._id?.toString()
+    (vote: any) => String(vote.userId) === String(user?._id)
   );
 
   if (alreadyVoted) {
-    toast.info("You have already voted to close this question");
+    alert("You have already voted to close this question.");
     return;
   }
 
