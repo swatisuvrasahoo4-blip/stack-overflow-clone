@@ -5,6 +5,9 @@ import {
   Signup,
   checkUsername,
   updateprofile,
+  getMySessions,
+  revokeSession,
+  logoutSession,
 } from "../controller/auth.js";
 
 import auth from "../middleware/auth.js";
@@ -21,4 +24,8 @@ router.patch(
   profileUpload.single("profilePhoto"),
   updateprofile
 );
+router.get("/sessions", auth, getMySessions);
+router.patch("/sessions/:sessionId/revoke", auth, revokeSession);
+router.patch("/sessions/logout", auth, logoutSession);
+
 export default router;

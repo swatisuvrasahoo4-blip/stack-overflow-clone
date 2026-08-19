@@ -1,20 +1,22 @@
 import type { Tag } from "@/types/tag";
 import TagCard from "./TagCard";
+import { useTranslation } from "react-i18next";
 
 interface TagGridProps {
   tags: Tag[];
 }
 
 export default function TagGrid({ tags }: TagGridProps) {
-  if (tags.length === 0) {
+  const {t} = useTranslation();
+    if (tags.length === 0) {
     return (
       <div className="rounded-lg border bg-white p-8 text-center">
         <h2 className="text-lg font-semibold text-gray-800">
-          No hashtags available
+          {t("tag.noHashtagAvailable")}
         </h2>
 
         <p className="mt-2 text-sm text-gray-600">
-          Real hashtags from community posts will appear here.
+          {t("tag.realHashtagFromCommunityPostsWillAppearHere")}
         </p>
       </div>
     );

@@ -12,8 +12,10 @@ import ContentTabs from "@/components/feed/ContentTabs";
 import QuestionFilters from "@/components/feed/QuestionFilters";
 import PostFeed from "@/components/feed/PostFeed";
 import { getFollowing } from "@/components/services/followService";
+import { useTranslation } from "react-i18next";
 
 export default function Home() {
+  const {t} = useTranslation();
   const [items, setItems] = useState<any[]>([]);
   const [loading, setloading] = useState(true);
   const [activeFeed, setActiveFeed] = useState<
@@ -140,7 +142,7 @@ if (savedScroll) {
             }}
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium whitespace-nowrap"
           >
-            Ask Question
+            {t("community.askQuestion")}
           </button>
           )}
         </div>
@@ -151,27 +153,27 @@ if (savedScroll) {
             
             {activeContent === "questions" && panel !== "saves" && (
             <QuestionFilters>
-              <span className="text-gray-600">{items.length} questions</span>
+              <span className="text-gray-600">{items.length} {t("community.questions")}</span>
               <button className="px-2 sm:px-3 py-1 bg-gray-200 text-gray-700 rounded text-xs sm:text-sm">
-                Newest
+                {t("community.newest")}
               </button>
               <button className="px-2 sm:px-3 py-1 text-gray-600 hover:bg-gray-100 rounded text-xs sm:text-sm">
-                Active
+                {t("community.active")}
               </button>
               <button className="px-2 sm:px-3 py-1 text-gray-600 hover:bg-gray-100 rounded flex items-center text-xs sm:text-sm">
-                Bountied
+                {t("community.bountied")}
                 <Badge variant="secondary" className="ml-1 text-xs">
                   25
                 </Badge>
               </button>
               <button className="px-2 sm:px-3 py-1 text-gray-600 hover:bg-gray-100 rounded text-xs sm:text-sm">
-                Unanswered
+                {t("community.unanswered")}
               </button>
               <button className="px-2 sm:px-3 py-1 text-gray-600 hover:bg-gray-100 rounded text-xs sm:text-sm">
-                More ▼
+                {t("community.more")} ▼
               </button>
               <button className="px-2 sm:px-3 py-1 border border-gray-300 text-gray-600 hover:bg-gray-50 rounded ml-auto text-xs sm:text-sm">
-                🔍 Filter
+                🔍 {t("community.filter")}
               </button>
             </QuestionFilters>
             )}
@@ -200,7 +202,7 @@ if (savedScroll) {
           <div className="flex items-center gap-4 text-sm text-gray-600 sm:w-16 sm:flex-col sm:items-center sm:gap-2 lg:w-20">
             <div className="text-center">
               <div className="font-medium">{question.votes}</div>
-              <div className="text-xs">votes</div>
+              <div className="text-xs">{t("community.votes")}</div>
             </div>
 
             <div className="text-center">
@@ -215,7 +217,7 @@ if (savedScroll) {
               </div>
 
               <div className="text-xs">
-                {question.answers === 1 ? "answer" : "answers"}
+                {question.answers === 1 ? t('community.answer') : t('community.answers')}
               </div>
             </div>
           </div>
@@ -270,7 +272,7 @@ if (savedScroll) {
                   </span>
                 </Link>
 
-                <span>asked {question.timeAgo}</span>
+                <span>{t("community.asked")} {question.timeAgo}</span>
               </div>
             </div>
           </div>

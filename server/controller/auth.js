@@ -4,13 +4,27 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import cloudinary from "../config/cloudinary.js";
 import { updateReputation } from "../services/reputationServices.js";
+import { getDeviceInfo } from "../services/deviceService.js";
+import {
+  generateSessionToken,
+  hashSessionToken,
+} from "../services/loginSessionService.js";
+import LoginSession from "../models/loginSession.js";
 
 export const Signup = async (req, res) => {
-  const { name, username, email, password } = req.body;
+  const { name, username, email, mobile, password } = req.body;
   try {
-    if (!name || !username || !email || !password) {
+    if (!name || !username || !email || !mobile || !password) {
   return res.status(400).json({
     message: "All fields are required",
+  });
+}
+
+const mobilePattern = /^[0-9]{10}$/;
+
+if (!mobilePattern.test(mobile)) {
+  return res.status(400).json({
+    message: "Mobile number must contain exactly 10 digits",
   });
 }
 
@@ -55,6 +69,7 @@ if (!usernamePattern.test(cleanUsername)) {
       name,
       username: cleanUsername,
       email,
+      mobile,
       password: hashpassword,
     });
     const jwtSecret = process.env.JWT_SECRET;
@@ -126,28 +141,68 @@ export const checkUsername = async (req, res) => {
 
 export const Login = async (req, res) => {
   const { email, password } = req.body;
+
   try {
     const exisitinguser = await user.findOne({ email });
+
     if (!exisitinguser) {
-      return res.status(404).json({ message: "User does not exist" });
+      return res.status(404).json({
+        message: "User does not exist",
+      });
     }
 
     const ispasswordcrct = await bcrypt.compare(
       password,
       exisitinguser.password
     );
+
     if (!ispasswordcrct) {
-      return res.status(400).json({ message: "Invalid password" });
+      return res.status(400).json({
+        message: "Invalid password",
+      });
     }
+
+    const sessionToken = generateSessionToken();
+    const sessionTokenHash = hashSessionToken(sessionToken);
+
+    const userAgent = req.headers["user-agent"] || "";
+    const deviceInfo = getDeviceInfo(userAgent);
+
+    const inactivityDays = Number(process.env.SESSION_INACTIVITY_DAYS) || 3;
+
+const expiresAt = new Date();
+expiresAt.setDate(expiresAt.getDate() + inactivityDays);
+
+    await LoginSession.create({
+      userId: exisitinguser._id,
+      sessionTokenHash,
+      deviceId: sessionTokenHash,
+      browser: deviceInfo.browser,
+      operatingSystem: deviceInfo.operatingSystem,
+      deviceType: deviceInfo.deviceType,
+      ipAddress: req.ip,
+      loginAt: new Date(),
+      lastActivityAt: new Date(),
+      expiresAt,
+    });
+
     const token = jwt.sign(
-      { email: exisitinguser.email, id: exisitinguser._id },
+      {
+        email: exisitinguser.email,
+        id: exisitinguser._id,
+        sessionToken: sessionTokenHash,
+      },
       process.env.JWT_SECRET,
       { expiresIn: "3d" }
     );
-    res.status(200).json({ data: exisitinguser, token });
+
+    res.status(200).json({
+      data: exisitinguser,
+      token,
+    });
   } catch (error) {
+    console.log(error);
     res.status(500).json("something went wrong..");
-    return;
   }
 };
 export const getallusers = async (req, res) => {
@@ -231,5 +286,96 @@ if (
   } catch (error) {
     console.log(error);
     res.status(500).json("something went wrong..");
+  }
+};
+
+export const getMySessions = async (req, res) => {
+  try {
+    const sessions = await LoginSession.find({
+      userId: req.userid,
+      isRevoked: false,
+    }).sort({ lastActivityAt: -1 });
+
+    const sessionsWithCurrent = sessions.map((session) => ({
+      ...session.toObject(),
+      isCurrent: session.sessionTokenHash === req.sessionToken,
+    }));
+
+    res.status(200).json({
+      data: sessionsWithCurrent,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Failed to fetch login sessions",
+    });
+  }
+};
+export const revokeSession = async (req, res) => {
+  try {
+    const { sessionId } = req.params;
+
+    const session = await LoginSession.findOne({
+      _id: sessionId,
+      userId: req.userid,
+      isRevoked: false,
+    });
+
+    if (!session) {
+      return res.status(404).json({
+        success: false,
+        message: "Session not found",
+      });
+    }
+
+    if (session.sessionTokenHash === req.sessionToken) {
+      return res.status(400).json({
+        success: false,
+        message: "You cannot revoke your current session",
+      });
+    }
+
+    session.isRevoked = true;
+    await session.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Session revoked successfully",
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to revoke session",
+    });
+  }
+};
+
+export const logoutSession = async (req, res) => {
+  try {
+    await LoginSession.findOneAndUpdate(
+      {
+        userId: req.userid,
+        sessionTokenHash: req.sessionToken,
+        isRevoked: false,
+      },
+      {
+        isRevoked: true,
+      }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Session logged out successfully",
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to logout session",
+    });
   }
 };

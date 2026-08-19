@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 interface PostActionsProps {
   post: any;
   user: any;
@@ -15,6 +16,7 @@ export default function PostActions({
    setSelectedPostId,
   setShowDeleteModal,
 }: PostActionsProps) {
+  const { t } = useTranslation();
   const currentUserId = user?.id || user?._id || user?.userId;
   const postAuthorId = post.authorId || post.userId || post.userid;
 
@@ -30,7 +32,7 @@ export default function PostActions({
             }}
             className="text-blue-600 text-sm hover:underline"
           >
-            Edit
+            {t("community.edit")}
           </button>
 
           <button

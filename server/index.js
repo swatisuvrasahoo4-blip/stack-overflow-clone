@@ -19,10 +19,11 @@ import adminRoutes from "./routes/admin.js";
 import forgotPasswordRoutes from "./routes/forgotPassword.js";
 import changePasswordRoutes from "./routes/changePassword.js";
 import subscriptionRoutes from "./routes/subscription.js";
-import supportRoutes from "./routes/support.js"
-import closeVoteRoutes from "./routes/closeVote.js"
-import reputationTransferRoutes from "./routes/reputationTransfer.js"
-import reputationActivityRoutes from "./routes/reputationActivity.js"
+import supportRoutes from "./routes/support.js";
+import closeVoteRoutes from "./routes/closeVote.js";
+import reputationTransferRoutes from "./routes/reputationTransfer.js";
+import reputationActivityRoutes from "./routes/reputationActivity.js";
+import languageRoutes from "./routes/language.js";
 
 const app = express();
 dotenv.config();
@@ -50,6 +51,7 @@ app.use("/support",supportRoutes);
 app.use("/close-vote",closeVoteRoutes);
 app.use("/reputation-transfer", reputationTransferRoutes);
 app.use("/reputation",reputationActivityRoutes);
+app.use("/language",languageRoutes);
 
 const PORT = process.env.PORT || 5000;
 const databaseurl = process.env.MONGODB_URL;

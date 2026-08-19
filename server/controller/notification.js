@@ -1,4 +1,5 @@
 import Notification from "../models/notification.js";
+import sendSmsOtp from "../services/smsService.js";
 
 export const getNotifications = async (req, res) => {
   try {

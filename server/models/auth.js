@@ -11,6 +11,23 @@ const userschema = mongoose.Schema({
   },
   profilePhoto: { type: String },
   email: { type: String, required: true },
+  mobile: {
+  type: String,
+  default: "",
+},
+
+preferredLanguage: {
+  type: String,
+  enum: [
+    "English",
+    "Spanish",
+    "Hindi",
+    "Portuguese",
+    "Chinese",
+    "French",
+  ],
+  default: "English",
+},
   password: { type: String, required: true },
   reputation: {
   type: Number,

@@ -27,8 +27,10 @@ import { getUserSubscription, getSubscription } from "@/components/services/subs
 import PaymentHistory from "@/components/subscription/PaymentHistory";
 import ReputationSummary from "@/components/reputation/ReputationSummary";
 import TransferReputationButton from "@/components/reputation/TransferReputationButton";
+import { useTranslation } from "react-i18next";
 
 const index = () => {
+  const {t} = useTranslation();
   const { user, updateUser } = useAuth();
   const router = useRouter();
   const { id } = router.query;
@@ -288,8 +290,10 @@ useEffect(() => {
                   >
                     
                       <Edit className="w-4 h-4" />
-                      Edit Profile
+                      {t("user.editProfile")}
+
                   </DialogTrigger>
+
                   <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white text-gray-900">
                     <DialogHeader>
                       <DialogTitle>Edit Profile</DialogTitle>
@@ -493,12 +497,19 @@ useEffect(() => {
                   
                 </Dialog>
                 <Button
+  variant="outline"
+  className="flex justify-center gap-2 bg-white"
+  onClick={() => router.push("/loginSessions")}
+>
+  Login Sessions
+</Button>
+                <Button
     variant="outline"
     className="flex justify-center gap-2 bg-white"
     onClick={() => router.push("/change-password")}
 >
     <Lock className="w-4 h-4" />
-    Change Password
+    {t("user.changePassword")}
 </Button>
                  </div>
                 
@@ -521,17 +532,17 @@ useEffect(() => {
               <div className="flex items-center">
                 <div className="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
                 <span className="font-semibold">5</span>
-                <span className="text-gray-600 ml-1">gold badges</span>
+                <span className="text-gray-600 ml-1">{t("user.goldBadges")}</span>
               </div>
               <div className="flex items-center">
                 <div className="w-3 h-3 bg-gray-400 rounded-full mr-2"></div>
                 <span className="font-semibold">23</span>
-                <span className="text-gray-600 ml-1">silver badges</span>
+                <span className="text-gray-600 ml-1">{t("user.silverBadges")}</span>
               </div>
               <div className="flex items-center">
                 <div className="w-3 h-3 bg-amber-600 rounded-full mr-2"></div>
                 <span className="font-semibold">45</span>
-                <span className="text-gray-600 ml-1">bronze badges</span>
+                <span className="text-gray-600 ml-1">{t("user.bronzeBadges")}</span>
               </div>
             </div>
           </div>
@@ -540,7 +551,7 @@ useEffect(() => {
           <div className="lg:col-span-2 space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>About</CardTitle>
+                <CardTitle>{t("user.about")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="prose max-w-none">
@@ -554,7 +565,7 @@ useEffect(() => {
           <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Top Tags</CardTitle>
+                <CardTitle>{t("user.topTags")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">

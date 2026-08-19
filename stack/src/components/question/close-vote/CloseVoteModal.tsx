@@ -1,5 +1,5 @@
 "use client";
-
+import { useTranslation } from "react-i18next";
 interface CloseVoteModalProps {
   isOpen: boolean;
   reason: string;
@@ -25,13 +25,14 @@ const CloseVoteModal = ({
   onClose,
   onSubmit,
 }: CloseVoteModalProps) => {
+  const {t} = useTranslation();
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="w-[90%] max-w-md rounded-lg bg-white p-6 shadow-xl">
         <h2 className="text-xl font-semibold text-gray-900">
-          Vote to Close Question
+          {t("VoteToCloseQuestion")}
         </h2>
 
         <p className="mt-2 text-sm text-gray-600">
@@ -64,7 +65,7 @@ const CloseVoteModal = ({
             disabled={loading}
             className="rounded-md border px-4 py-2 text-gray-700 hover:bg-gray-50"
           >
-            Cancel
+            {t("cancel")}
           </button>
 
           <button

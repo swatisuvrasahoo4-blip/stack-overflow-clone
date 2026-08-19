@@ -1,3 +1,5 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import {
   Bookmark,
@@ -18,9 +20,11 @@ import React, { useState, useEffect } from "react";
 import { Badge } from "./ui/badge";
 import { ShieldAlert } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
+import { useTranslation } from "react-i18next";
 
 const Sidebar = ({ isopen }:any) => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   return (
     <div
       className={cn(
@@ -44,7 +48,7 @@ const Sidebar = ({ isopen }:any) => {
                 className="flex items-center px-2 py-2 text-gray-700 hover:bg-gray-100 rounded text-sm"
               >
                 <Home className="w-4 h-4 mr-2 lg:mr-3" />
-                Home
+                {t("sidebar.home")}
               </Link>
             </li>
             <li>
@@ -53,7 +57,7 @@ const Sidebar = ({ isopen }:any) => {
                 className="flex items-center px-2 py-2 text-gray-700 hover:bg-gray-100 rounded text-sm"
               >
                 <MessageSquareIcon className="w-4 h-4 mr-2 lg:mr-3" />
-                Questions
+                {t("sidebar.questions")}
               </Link>
             </li>
             <li>
@@ -62,9 +66,9 @@ const Sidebar = ({ isopen }:any) => {
                 className="flex items-center px-2 py-2 text-gray-700 hover:bg-gray-100 rounded text-sm"
               >
                 <Bot className="w-4 h-4 mr-2 lg:mr-3" />
-                AI Assist
+                {t("sidebar.aiAssist")}
                 <Badge variant="secondary" className="ml-auto text-xs">
-                  Labs
+                  {t("sidebar.labs")}
                 </Badge>
               </Link>
             </li>
@@ -74,7 +78,7 @@ const Sidebar = ({ isopen }:any) => {
                 className="flex items-center px-2 py-2 text-gray-700 hover:bg-gray-100 rounded text-sm"
               >
                 <Tag className="w-4 h-4 mr-2 lg:mr-3" />
-                Tags
+                {t("tag.tags")}
               </Link>
             </li>
             <li>
@@ -83,7 +87,7 @@ const Sidebar = ({ isopen }:any) => {
                 className="flex items-center px-2 py-2 text-gray-700 hover:bg-gray-100 rounded text-sm"
               >
                 <Users className="w-4 h-4 mr-2 lg:mr-3" />
-                Users
+                {t("sidebar.users")}
               </Link>
             </li>
             <li>
@@ -92,7 +96,7 @@ const Sidebar = ({ isopen }:any) => {
                 className="flex items-center px-2 py-2 text-gray-700 hover:bg-gray-100 rounded text-sm"
               >
                 <UsersRound className="w-4 h-4 mr-2 lg:mr-3" />
-                Community
+                {t("sidebar.community")}
               </Link>
             </li>
             <li>
@@ -101,7 +105,7 @@ const Sidebar = ({ isopen }:any) => {
                 className="flex items-center px-2 py-2 text-gray-700 hover:bg-gray-100 rounded text-sm"
               >
                 <Bookmark className="w-4 h-4 mr-2 lg:mr-3" />
-                Saves
+                {t("sidebar.saves")}
               </Link>
             </li>
             <li>
@@ -110,12 +114,12 @@ const Sidebar = ({ isopen }:any) => {
                 className="flex items-center px-2 py-2 text-gray-700 hover:bg-gray-100 rounded text-sm"
               >
                 <Trophy className="w-4 h-4 mr-2 lg:mr-3" />
-                Challenges
+                {t("sidebar.challenges")}
                 <Badge
                   variant="secondary"
                   className="ml-auto text-xs bg-orange-100 text-orange-800"
                 >
-                  NEW
+                 {t("sidebar.new")}
                 </Badge>
               </Link>
             </li>
@@ -125,7 +129,7 @@ const Sidebar = ({ isopen }:any) => {
                 className="flex items-center px-2 py-2 text-gray-700 hover:bg-gray-100 rounded text-sm"
               >
                 <MessageSquare className="w-4 h-4 mr-2 lg:mr-3" />
-                Chat
+                {t("sidebar.chat")}
               </Link>
             </li>
             <li>
@@ -134,7 +138,7 @@ const Sidebar = ({ isopen }:any) => {
                 className="flex items-center px-2 py-2 text-gray-700 hover:bg-gray-100 rounded text-sm"
               >
                 <FileText className="w-4 h-4 mr-2 lg:mr-3" />
-                Articles
+                {t("sidebar.articles")}
               </Link>
             </li>
 
@@ -144,7 +148,7 @@ const Sidebar = ({ isopen }:any) => {
                 className="flex items-center px-2 py-2 text-gray-700 hover:bg-gray-100 rounded text-sm"
               >
                 <Building className="w-4 h-4 mr-2 lg:mr-3" />
-                Companies
+                {t("sidebar.companies")}
               </Link>
             </li>
           <li>
@@ -153,7 +157,7 @@ const Sidebar = ({ isopen }:any) => {
     className="flex items-center px-2 py-2 text-gray-700 hover:bg-gray-100 rounded text-sm"
   >
     <Crown className="w-4 h-4 mr-2 lg:mr-3" />
-    Subscription
+    {t("sidebar.subscription")}
   </Link>
 </li>
 
@@ -165,7 +169,7 @@ const Sidebar = ({ isopen }:any) => {
       className="flex items-center px-2 py-2 text-gray-700 hover:bg-gray-100 rounded text-sm"
     >
       <ShieldAlert className="w-4 h-4 mr-2 lg:mr-3 text-red-600" />
-      Admin Reports
+      {t("sidebar.adminReports")}
     </Link>
   </li>
 )}

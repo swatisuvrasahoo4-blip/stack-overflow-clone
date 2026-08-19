@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Users } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface Mention {
     userId: string,
@@ -15,6 +16,7 @@ interface MentionAvatarProps {
 export default function MentionAvatar({
   mentions,
 }: MentionAvatarProps) {
+  const {t} = useTranslation();
   const [open, setOpen] = useState(false);
 
   if (!mentions || mentions.length === 0) return null;
@@ -41,7 +43,7 @@ export default function MentionAvatar({
       {open && (
         <div className="absolute left-0 mt-2 w-56 rounded-lg border bg-white shadow-lg z-50">
           <div className="border-b px-3 py-2 text-sm font-semibold">
-            Mentioned Users
+            {t("community.mentionedUsers")}
           </div>
 
           {mentions.map((user) => (

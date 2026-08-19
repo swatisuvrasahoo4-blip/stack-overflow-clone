@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 interface CommentSectionProps {
   post: any;
   user: any;
@@ -35,6 +36,7 @@ export default function CommentSection({
   setSelectedReply,
   setShowDeleteReplyModal,
 }: CommentSectionProps) {
+  const { t } = useTranslation();
   return (
     <>
     {post.comments?.length > 0 && (
@@ -71,7 +73,7 @@ export default function CommentSection({
     }}
     className="text-blue-600 text-xs hover:underline"
   >
-    Reply
+    {t("community.reply")}
   </button>
 
   {String(user?.id || user?._id || user?.userId) ===
@@ -110,7 +112,7 @@ export default function CommentSection({
       }}
       className="mt-2 bg-blue-600 text-white px-3 py-1 rounded-lg text-sm"
     >
-      Post Reply
+      {t("community.postReply")}
     </button>
   </div>
 )}
@@ -185,8 +187,8 @@ export default function CommentSection({
         className="text-blue-600 text-sm hover:underline"
       >
         {expandedComments.includes(post._id)
-          ? "Show less"
-          : `View all ${post.comments.length} comments`}
+          ? t(`community.showLess`)
+          : `${t(`community.viewAll`)} ${post.comments.length} ${t(`community.comment`)}`}
       </button>
     )}
   </div>

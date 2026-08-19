@@ -11,9 +11,11 @@ import { shareCommunityPost } from "@/utils/communityUtils";
 import { useRouter } from "next/router";
 import { log } from "console";
 import usePostActions from "@/hooks/usePostActions";
+import { useTranslation } from "react-i18next";
 
 export default function CommunityPage() {
   const { user, updateUser } = useAuth();
+  const { t } = useTranslation();
   const router = useRouter();
   //posts
   const [posts, setPosts] = useState<any[]>([]);
@@ -311,7 +313,7 @@ useEffect(() => {
   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
     <div className="w-350px rounded-xl bg-white p-6 shadow-xl">
       <h2 className="text-lg font-semibold">
-        Delete Reply
+        {t("community.deleteReply")}
       </h2>
 
       <p className="mt-2 text-gray-600">

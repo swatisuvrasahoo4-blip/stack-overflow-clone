@@ -8,12 +8,14 @@ import Link from "next/link";
 import ReportPostButton from "../reports/ReportPostButton";
 import ReportPostModal from "../reports/ReportPostModal";
 import { createReport, checkReportStatus } from "../services/reportService";
+import { useTranslation } from "react-i18next";
 
 
 export default function PostCard({post,user,handleLike,handleEdit,handleShare,handleBookmark,handleComment,handleReply,
 handleDelete, activeCommentPost, setActiveCommentPost, commentText, setCommentText,expandedComments, setExpandedComments, 
 activeReplyComment, setActiveReplyComment, replyText, setReplyText, setSelectedComment, setShowDeleteCommentModal, setSelectedReply, 
 setShowDeleteReplyModal, setSelectedPostId, setShowDeleteModal,selectedPostId,showDeleteModal,isBookmarked: initialBookmarked,}:any){
+  const { t } = useTranslation();
     const [isBookmarked, setIsBookmarked] = useState(
       initialBookmarked ??
         post.isBookmarked ??
@@ -111,7 +113,7 @@ const handleReportClick = async () => {
   {new Date(post.createdAt).toLocaleString()}
   {post.isEdited && (
     <span className="ml-2 italic text-gray-400">
-      Edited
+      {t("community.edited")}
     </span>
   )}
 </p>
@@ -192,7 +194,7 @@ const handleReportClick = async () => {
     className="h-4 w-4"
     fill={isLiked ? "currentColor" : "none"}
   />
-  {post.likes?.length || 0} Like
+  {post.likes?.length || 0} {t("community.like")}
 </button>
       <button
       className="cursor-pointer"
@@ -203,7 +205,7 @@ const handleReportClick = async () => {
     )
   }}
 >
-  💬 {post.comments?.length || 0} Comment
+  💬 {post.comments?.length || 0} {t("community.comment")}
 </button>
       <button
       type="button"
@@ -218,7 +220,7 @@ const handleReportClick = async () => {
           className="h-4 w-4"
           fill={isBookmarked ? "currentColor" : "none"}
         />
-        Bookmark
+        {t("community.bookmark")}
       </button>
       
       <button
@@ -228,7 +230,7 @@ const handleReportClick = async () => {
     handleShare(post._id)}}
 >
    <Send className="w-4 h-4" />
-   Share
+   {t("community.share")}
   
 </button>
 <MentionAvatar
@@ -265,7 +267,7 @@ const handleReportClick = async () => {
 }}
       className="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg"
     >
-      Post Comment
+      {t("community.comment")}
     </button>
   </div>
 )}

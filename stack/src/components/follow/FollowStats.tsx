@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { getFollowCounts } from "../services/followService";
 import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
 
 interface FollowStatsProps {
   userId: string;
 }
 
 export const FollowStats = ({ userId }: FollowStatsProps) => {
+  const {t} = useTranslation();
   const [followers, setFollowers] = useState(0);
   const [following, setFollowing] = useState(0);
   const router = useRouter();
@@ -37,7 +39,7 @@ export const FollowStats = ({ userId }: FollowStatsProps) => {
   }
   className="cursor-pointer hover:underline"
 >
-  <span className="font-semibold">{followers}</span> Followers
+  <span className="font-semibold">{followers}</span> {t("user.followers")}
 </button>
 
       <button
@@ -47,7 +49,7 @@ export const FollowStats = ({ userId }: FollowStatsProps) => {
   }
   className="cursor-pointer hover:underline"
 >
-  <span className="font-semibold">{following}</span> Following
+  <span className="font-semibold">{following}</span> {t("user.following")}
 </button>
     </div>
   );

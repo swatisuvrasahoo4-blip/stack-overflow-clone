@@ -1,5 +1,5 @@
 "use client";
-
+import { useTranslation } from "react-i18next";
 interface VoteToCloseButtonProps {
   reputation: number;
   isClosed: boolean;
@@ -11,6 +11,7 @@ const VoteToCloseButton = ({
   isClosed,
   onClick,
 }: VoteToCloseButtonProps) => {
+  const {t} = useTranslation();
   if (isClosed) {
     return (
       <button
@@ -31,9 +32,9 @@ const VoteToCloseButton = ({
 
   onClick();
 }}
-      className="px-2 py-1 rounded border border-red-400 text-red-500 hover:bg-red-50 transition whitespace-nowrap"
+      className="px-2 py-1 rounded border border-red-400 text-red-500 hover:bg-red-50 transition w-28 wrap-break-words"
     >
-      Vote to Close
+      {t("community.voteToClose")}
     </button>
   );
 };

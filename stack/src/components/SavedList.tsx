@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getQuestionBookmarks} from "@/components/services/questionService"
 import { useAuth } from "@/lib/AuthContext"
 import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
 import {
   deleteReply,
   getBookmarkedPosts,
@@ -12,6 +13,7 @@ import usePostActions from "@/hooks/usePostActions";
 
 export default function SavedList({ max = 100 }: { max?: number }) {
   const router = useRouter();
+  const {t} = useTranslation();
   const { user, updateUser } = useAuth();
   const [saved, setSaved] = useState<any[]>([]);
   const [savedPosts, setSavedPosts] = useState<any[]>([]);
@@ -139,7 +141,7 @@ setSavedPosts(
               : "bg-gray-100 text-gray-700"
           }`}
         >
-          Questions
+          {t("community.questions")}
         </button>
 
         <button

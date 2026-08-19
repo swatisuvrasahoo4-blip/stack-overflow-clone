@@ -1,5 +1,6 @@
 import type { Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
 
 type ContentTabsProps = {
   activeContent: "questions" | "posts";
@@ -12,6 +13,7 @@ export default function ContentTabs({
   activeContent,
   setActiveContent,
 }: ContentTabsProps) {
+  const {t} = useTranslation();
   const router = useRouter();
   return (
     <div className="flex justify-center gap-3">
@@ -34,7 +36,7 @@ export default function ContentTabs({
             : "bg-gray-200 text-gray-700 hover:bg-gray-300"
         }`}
       >
-        Questions
+        {t("community.questions")}
       </button>
 
       <button
@@ -56,7 +58,7 @@ export default function ContentTabs({
             : "bg-gray-200 text-gray-700 hover:bg-gray-300"
         }`}
       >
-        Posts
+        {t("community.posts")}
       </button>
     </div>
   );

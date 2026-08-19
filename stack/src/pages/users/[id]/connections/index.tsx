@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import MainLayout from "@/layout/Mainlayout";
 import {
@@ -9,6 +10,7 @@ import {
 import axiosInstance from "@/lib/axiosinstance";
 
 export default function ConnectionsPage() {
+  const {t} = useTranslation();
   const router = useRouter();
   const { id, tab } = router.query;
   const [profileName, setProfileName] = useState("");
@@ -89,7 +91,7 @@ const validUsers = users.filter((item: any) => {
                 : "text-gray-600"
             }`}
           >
-            Followers
+            {t("user.followers")}
           </button>
 
           <button
@@ -101,7 +103,7 @@ const validUsers = users.filter((item: any) => {
                 : "text-gray-600"
             }`}
           >
-            Following
+            {t("user.following")}
           </button>
         </div>
 

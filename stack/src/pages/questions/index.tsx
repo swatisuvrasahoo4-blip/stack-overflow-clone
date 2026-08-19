@@ -7,9 +7,11 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import axiosInstance from "@/lib/axiosinstance";
 import { useAuth } from "@/lib/AuthContext";
 import React from "react";
+import { useTranslation } from "react-i18next";
 export default function QuestionsPage() {
   const router = useRouter();
   const { user } = useAuth();
+  const {t} = useTranslation();
   const { panel } = router.query;
   const [items, setItems] = useState<any[]>([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -281,9 +283,9 @@ useEffect(() => {
       <main className="min-w-0 p-4 lg:p-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
           <div>
-            <h1 className="text-xl lg:text-2xl font-semibold">All Questions</h1>
+            <h1 className="text-xl lg:text-2xl font-semibold">{t("community.allQuestions")}</h1>
             <p className="text-sm text-gray-600 mt-1">
-              Browse the latest questions from the community.
+              {t("community.browseTheLatestQuestionsFromTheCommunity")}
             </p>
           </div>
         </div>
@@ -311,7 +313,7 @@ useEffect(() => {
                 {question.questiontitle || question.title || "(no title)"}
                   </Link>
                   <div className="text-sm text-gray-600">
-                    {question.answers} answers · {question.views} views
+                    {question.answers} {t("community.answers")} · {question.views} {t("community.views")}
                   </div>
                 </div>
                 <p className="text-gray-700 mt-2 line-clamp-2">{question.content}</p>
@@ -330,12 +332,12 @@ useEffect(() => {
   );
   setShowEditModal(true);
 }}
-                 className="text-blue-600 text-sm hover:underline transition">Edit</button>
+                 className="text-blue-600 text-sm hover:underline transition">{t("community.edit")}</button>
                     <button
                     onClick={()=> {
                       setSelectedQuestionId(question._id || question.id)
                       setShowDeleteModal(true);}}
-                    className="text-red-600 text-sm hover:underline transition">Delete</button>
+                    className="text-red-600 text-sm hover:underline transition">{t("community.delete")}</button>
                </div>
                  )}
                 <div className="mt-3 flex flex-wrap gap-2">

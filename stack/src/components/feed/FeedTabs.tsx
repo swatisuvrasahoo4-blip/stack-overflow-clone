@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
+import { useTranslation } from "react-i18next";
 type FeedTabsProps = {
   activeFeed: "trending" | "following";
   setActiveFeed: Dispatch<
@@ -10,6 +11,7 @@ export default function FeedTabs({
   activeFeed,
   setActiveFeed,
 }: FeedTabsProps) {
+  const {t} = useTranslation();
   return (
     <div className="flex gap-2 mb-6">
       <button
@@ -23,7 +25,7 @@ export default function FeedTabs({
             : "bg-gray-200"
         }`}
       >
-        Trending
+        {t("community.trending")}
       </button>
 
       <button
@@ -42,7 +44,7 @@ export default function FeedTabs({
             : "bg-gray-200"
         }`}
       >
-        Following
+        {t("community.following")}
       </button>
     </div>
   );

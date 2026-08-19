@@ -23,6 +23,7 @@ import axiosInstance from "@/lib/axiosinstance";
 import AnswerVote from "./AnswerVote";
 import ReportQuestionButton from "./reports/ReportQuestionButton";
 import VoteToClose from "./question/close-vote/VoteToClose";
+import { useTranslation } from "react-i18next";
 
 const QuestionDetail = ({ questionId }: any) => {
   const router = useRouter();
@@ -32,6 +33,7 @@ const QuestionDetail = ({ questionId }: any) => {
   const [isSubmitting, setisSubmitting] = useState(false);
   const [loading, setloading] = useState(true);
   const { user } = useAuth();
+  const { t } = useTranslation();
   const onAnswerVoteSuccess = (
   answerId: string,
   upvotes: string[],
@@ -296,7 +298,7 @@ const hasAcceptedAnswer =
         <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
             <div className="flex items-center gap-1">
             <Clock className="w-4 h-4" />
-            <span>Asked {question.askedon
+            <span>{t("community.asked")} {question.askedon
   ? new Date(question.askedon).toLocaleDateString()
   : "Unknown date"}</span>
           </div>
@@ -415,7 +417,7 @@ const hasAcceptedAnswer =
                     className="text-gray-600 hover:text-gray-800"
                   >
                     <Share className="w-4 h-4 mr-1" />
-                    Share
+                    {t("community.share")}
                   </Button>
                   <ReportQuestionButton
   questionId={question._id}
@@ -429,14 +431,14 @@ const hasAcceptedAnswer =
                       className="text-red-600 hover:text-red-800"
                     >
                       <Trash className="w-4 h-4 mr-1" />
-                      Delete
+                      {t("community.delete")}
                     </Button>
                   )}
                 </div>
 
                 <div className="flex items-center gap-2 text-sm">
                   <span className="text-gray-600">
-                    asked {question.askedon && !isNaN(new Date(question.askedon).getTime())
+                    {t("community.asked")} {question.askedon && !isNaN(new Date(question.askedon).getTime())
   ? new Date(question.askedon).toISOString().split("T")[0]
   : "Date unavailable"}
                   </span>
@@ -463,9 +465,9 @@ const hasAcceptedAnswer =
       </Card>
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-6 text-gray-900">
-          {(question.answer || []).length} Answer
-{(question.answer || []).length !== 1 ? "s" : ""}
-        </h2>
+  {(question.answer || []).length}{" "}
+  {(question.answer || []).length > 1 ? t("community.answers") : t("community.answer")}
+</h2>
         <div className="space-y-6">
           {(question.answer || []).map((ans: any) => (
             <Card key={ans._id} className={""}>
@@ -517,7 +519,7 @@ const hasAcceptedAnswer =
                           className="text-gray-600 hover:text-gray-800"
                         >
                           <Share className="w-4 h-4 mr-1" />
-                          Share
+                          {t("community.share")}
                         </Button>
                         <Button
                           variant="ghost"
@@ -525,7 +527,7 @@ const hasAcceptedAnswer =
                           className="text-gray-600 hover:text-gray-800"
                         >
                           <Flag className="w-4 h-4 mr-1" />
-                          Flag
+                          {t("community.flag")}
                         </Button>
                                     {hasMounted && ans.userid === user?._id && (
                           <Button
@@ -535,7 +537,7 @@ const hasAcceptedAnswer =
                             className="text-red-600 hover:text-red-800"
                           >
                             <Trash className="w-4 h-4 mr-1" />
-                            Delete
+                            {t("community.delete")}
                           </Button>
                         )}
                        {String(question.userid) === String(user?._id || user?.id) &&
@@ -547,19 +549,19 @@ const hasAcceptedAnswer =
     onClick={() => handleAcceptAnswer(ans._id)}
     className="text-green-600 bg-amber-50 border-green-600 hover:bg-green-50 hover:text-black"
   >
-    Accept Answer
+    {t("community.acceptAnswer")}
   </Button>
 )}
 
 {ans.isAccepted && (
   <span className="text-green-600 font-semibold text-sm">
-    ✓ Accepted Answer
+    ✓ {t("community.acceptedAnswer")}
   </span>
 )}
                       </div>
                       <div className="flex items-center gap-2 text-sm">
                         <span className="text-gray-600">
-                          answered {ans.answeredon}
+                          {t("community.answered")} {ans.answeredon}
                         </span>
                         <Link
                           href={`/users/${ans.userid}`}
@@ -589,7 +591,7 @@ const hasAcceptedAnswer =
       <Card>
         <CardContent className="p-6">
           <h3 className="text-lg font-semibold mb-4 text-gray-900">
-            Your Answer
+           {t("community.yourAnswer")}
           </h3>
           <Textarea
             placeholder="Write your answer here... You can use Markdown formatting."
@@ -603,7 +605,7 @@ const hasAcceptedAnswer =
               disabled={!newanswer.trim() || isSubmitting}
               className="bg-blue-600 hover:bg-blue-700 text-white"
             >
-              {isSubmitting ? "Posting..." : "Post Your Answer"}
+              {isSubmitting ? t('community.posting') : t('community.postYourAnswer')}
             </Button>
             <p className="text-sm text-gray-600">
               By posting your answer, you agree to the{" "}

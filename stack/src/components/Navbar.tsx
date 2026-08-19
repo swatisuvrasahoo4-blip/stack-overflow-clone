@@ -4,10 +4,12 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import NotificationBell from "./notifications/NotificationBell";
+import { useTranslation } from "react-i18next";
 
 const Navbar = ({ handleslidein }: any) => {
   const { user, Logout } = useAuth();
   const router = useRouter();
+   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("");
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => {
@@ -40,7 +42,7 @@ const Navbar = ({ handleslidein }: any) => {
           </Link>
 
           <div className="hidden sm:flex gap-1">
-            {["About", "Products", "For Teams"].map((item) => (
+            {[t("navbar.about"), t("navbar.products"), t("navbar.forTeams")].map((item) => (
               <Link
                 key={item}
                 href="/"
@@ -67,7 +69,7 @@ const Navbar = ({ handleslidein }: any) => {
       type="text"
       value={searchTerm}
       onChange={(e) => setSearchTerm(e.target.value)}
-      placeholder="Search..."
+      placeholder={t("navbar.search")}
       className="w-90 rounded border border-gray-300 py-2 pl-10 pr-1 ml-0 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
     />
 
@@ -85,13 +87,13 @@ const Navbar = ({ handleslidein }: any) => {
                 href="/auth"
                 className="text-sm font-medium text-[#454545] bg-[#e7f8fe] hover:bg-[#d3e4eb] border border-blue-500 px-4 py-1.5 rounded transition"
               >
-                Log in
+                {t("navbar.login")}
               </Link>
               <Link
   href="/signup"
   className="text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md transition-colors"
 >
-  Sign Up
+  {t("navbar.signup")}
 </Link>
             </div>
           ) : (
@@ -116,9 +118,9 @@ const Navbar = ({ handleslidein }: any) => {
 
               <button
                 onClick={handlelogout}
-                className="text-sm font-medium text-[#454545] bg-[#e7f8fe] hover:bg-[#d3e4eb] border border-blue-500 px-4 w-22 py-1.5 rounded transition"
+                className="text-sm font-medium text-[#454545] bg-[#e7f8fe] hover:bg-[#d3e4eb] border border-blue-500 px-1 w-22 py-1.5 rounded transition"
               >
-                Log out
+                {t("navbar.logout")}
               </button>
             </>
           )}

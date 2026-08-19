@@ -19,7 +19,7 @@ import axiosInstance from "@/lib/axiosinstance";
 export default function SignUpPage() {
   const router = useRouter();
   const { Signup, loading } = useAuth();
-  const [form, setform] = useState({ name: "", username:"", email: "", password: "" });
+  const [form, setform] = useState({ name: "", username:"", email: "",mobile: "", password: "" });
   const [usernameStatus, setUsernameStatus] = useState<
   "idle" | "checking" | "available" | "taken" | "invalid"
 >("idle");
@@ -89,10 +89,16 @@ useEffect(() => {
   const handlesubmit = async (e: any) => {
     e.preventDefault();
     
-    if (!form.name || !form.username || !form.email || !form.password) {
+    if (!form.name || !form.username || !form.email || !form.mobile || !form.password) {
       toast.error("ALL Fields are required");
       return;
     }
+    const mobilePattern = /^[0-9]{10}$/;
+
+if (!mobilePattern.test(form.mobile)) {
+  toast.error("Mobile number must contain exactly 10 digits");
+  return;
+}
     if (
   form.password.length < 8 ||
   !/[A-Za-z]/.test(form.password) ||
@@ -268,6 +274,19 @@ useEffect(() => {
                   onChange={handleChange}
                 />
               </div>
+              <div className="space-y-2">
+  <Label htmlFor="mobile" className="text-sm">
+    Mobile Number
+  </Label>
+
+  <Input
+    id="mobile"
+    type="tel"
+    placeholder="Enter your mobile number"
+    value={form.mobile}
+    onChange={handleChange}
+  />
+</div>
               <div className="space-y-2">
                 <Label htmlFor="password" className="text-sm">
                   Password

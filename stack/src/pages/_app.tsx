@@ -3,6 +3,8 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "@/lib/AuthContext";
+import "@/i18n/config"
+import LanguageSwitcher from "@/components/language/LanguageSwitcher";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -15,6 +17,8 @@ export default function App({ Component, pageProps }: AppProps) {
       <AuthProvider>
         <ToastContainer />
       <Component {...pageProps} />
+
+      <LanguageSwitcher />
       </AuthProvider>
       
     </>

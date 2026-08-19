@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
+import LoginSession from "../models/loginSession.js";
 
-const auth = (req, res, next) => {
+const auth = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
 
@@ -14,8 +15,34 @@ const auth = (req, res, next) => {
     const token = authHeader.split(" ")[1];
 
     const decodedata = jwt.verify(token, process.env.JWT_SECRET);
+    req.userid = decodedata.id;
+req.sessionToken = decodedata.sessionToken;
+
+    const inactivityDays =
+  Number(process.env.SESSION_INACTIVITY_DAYS) || 3;
+
+const inactiveSince = new Date();
+inactiveSince.setDate(inactiveSince.getDate() - inactivityDays);
+
+const session = await LoginSession.findOne({
+  userId: decodedata.id,
+  sessionTokenHash: decodedata.sessionToken,
+  isRevoked: false,
+  lastActivityAt: { $gt: inactiveSince },
+});
+
+    if (!session) {
+      return res.status(401).json({
+        success: false,
+        message: "Session expired or revoked",
+      });
+    }
+
+    session.lastActivityAt = new Date();
+    await session.save();
 
     req.userid = decodedata.id;
+    req.sessionId = session._id;
 
     next();
   } catch (error) {

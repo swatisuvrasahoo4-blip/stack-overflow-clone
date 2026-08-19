@@ -17,7 +17,7 @@ useEffect(() => {
   const [loading, setloading] = useState(false);
   const [error, seterror] = useState(null);
 
-  const Signup = async ({ name, username, email, password }) => {
+  const Signup = async ({ name, username, email, mobile, password }) => {
     setloading(true);
     seterror(null);
     try {
@@ -25,6 +25,7 @@ useEffect(() => {
         name,
         username,
         email,
+        mobile,
         password,
       });
       const { data, token } = res.data;
@@ -72,11 +73,20 @@ useEffect(() => {
     setUser(nextUser);
   };
 
-  const Logout = () => {
+  const Logout = async () => {
+  try {
+    await axiosInstance.patch("/user/sessions/logout");
+
     setUser(null);
     localStorage.removeItem("user");
+
     toast.info("Logged out");
-  };
+  } catch (error) {
+    console.log("Logout failed", error);
+
+    toast.error("Failed to logout");
+  }
+};
   return (
     <AuthContext.Provider
       value={{ user, Signup, Login, Logout, updateUser, loading, error }}

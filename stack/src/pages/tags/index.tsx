@@ -3,6 +3,7 @@ import TagGrid from "@/components/tags/TagGrid";
 import { useEffect, useState } from "react";
 import { getPosts } from "@/components/services/communityService";
 import type { Tag } from "@/types/tag";
+import { useTranslation } from "react-i18next";
 
 const normalizeHashtags = (hashtags: any) => {
   if (Array.isArray(hashtags)) {
@@ -52,17 +53,17 @@ export default function TagsPage() {
 
     fetchTags();
   }, []);
-
+const {t} = useTranslation();
   return (
     <Mainlayout>
       <main className="min-h-0 p-4 lg:p-6">
         <div className="mb-6">
           <h1 className="text-xl font-semibold text-gray-900 lg:text-2xl">
-            Tags
+            {t("tag.tags")}
           </h1>
 
           <p className="mt-1 text-sm text-gray-600">
-            Explore popular hashtags and community topics.
+            {t("tag.explorePopularHashtagsAndCommunityTopics")}
           </p>
         </div>
 

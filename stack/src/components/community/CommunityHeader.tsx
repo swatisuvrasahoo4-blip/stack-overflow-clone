@@ -1,5 +1,7 @@
 import Link from "next/link"
+import { useTranslation } from "react-i18next"
 export default function CommunityHeader(){
+  const {t} = useTranslation();
     return (
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
           <div>
@@ -16,7 +18,7 @@ export default function CommunityHeader(){
             href="/community/create"
             className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 text-center rounded-lg transition:colors text-sm font-medium"
           >
-            Create Post
+            {t("community.createPost")}
           </Link>
         </div>
     )
