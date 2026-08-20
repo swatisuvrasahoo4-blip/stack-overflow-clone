@@ -9,6 +9,7 @@ import {
   revokeSession,
   logoutSession,
 } from "../controller/auth.js";
+import { verifyLoginDeviceOtp } from "../controller/loginOtp.js";
 
 import auth from "../middleware/auth.js";
 import { profileUpload } from "../middleware/upload.js";
@@ -16,6 +17,7 @@ import { profileUpload } from "../middleware/upload.js";
 const router = express.Router();
 router.post("/signup", Signup);
 router.post("/login", Login);
+router.post("/login/verify-device", verifyLoginDeviceOtp);
 router.get("/getalluser", getallusers);
 router.get("/check-username", checkUsername);
 router.patch(

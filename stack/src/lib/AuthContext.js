@@ -3,6 +3,7 @@ import { createContext } from "react";
 import axiosInstance from "./axiosinstance";
 import { toast } from "react-toastify";
 import { useContext } from "react";
+
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -40,28 +41,58 @@ useEffect(() => {
       setloading(false);
     }
   };
-  const Login = async ({ email, password }) => {
-    setloading(true);
-    seterror(null);
-    try {
-      const res = await axiosInstance.post("/user/login", {
-        email,
-        password,
-      });
-      const { data, token } = res.data;
-      localStorage.setItem("user", JSON.stringify({ ...data, token }));
-      setUser({ ...data, token });
-      toast.success("Login Successful");
-      return true;
-    } catch (error) {
-      const msg = error.response?.data.message || "Login failed";
-      seterror(msg);
-      toast.error(msg);
-      return false;
-    } finally {
-      setloading(false);
+ const Login = async ({ email, password }) => {
+  setloading(true);
+  seterror(null);
+
+  try {
+    let deviceId = localStorage.getItem("deviceId");
+
+    if (!deviceId) {
+      deviceId = crypto.randomUUID();
+      localStorage.setItem("deviceId", deviceId);
     }
+
+    const res = await axiosInstance.post("/user/login", {
+      email,
+      password,
+      deviceId,
+    });
+
+    if (res.data.requiresDeviceVerification) {
+  return {
+    requiresDeviceVerification: true,
+    userId: res.data.userId,
+    deviceId: res.data.deviceId,
   };
+}
+
+    const { data, token } = res.data;
+
+    localStorage.setItem("user", JSON.stringify({ ...data, token }));
+    setUser({ ...data, token });
+
+    toast.success("Login Successful");
+    return true;
+  } catch (error) {
+    const msg = error.response?.data.message || "Login failed";
+    seterror(msg);
+    toast.error(msg);
+    return false;
+  } finally {
+    setloading(false);
+  }
+};
+
+const completeLogin = ({ data, token }) => {
+  const loggedInUser = {
+    ...data,
+    token,
+  };
+
+  localStorage.setItem("user", JSON.stringify(loggedInUser));
+  setUser(loggedInUser);
+};
 
   const updateUser = (updatedUser) => {
     const storedUser = typeof window !== "undefined" ? localStorage.getItem("user") : null;
@@ -89,7 +120,7 @@ useEffect(() => {
 };
   return (
     <AuthContext.Provider
-      value={{ user, Signup, Login, Logout, updateUser, loading, error }}
+      value={{ user, Signup, Login, Logout, updateUser, completeLogin, loading, error }}
     >
       {children}
     </AuthContext.Provider>

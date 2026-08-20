@@ -22,18 +22,37 @@ const index = () => {
     setform({ ...form, [e.target.id]: e.target.value });
   };
   const handlesubmit = async (e: any) => {
-    e.preventDefault();
-    if (!form.email || !form.password) {
-      toast.error("ALL Fields are required");
+  e.preventDefault();
+
+  if (!form.email || !form.password) {
+    toast.error("ALL Fields are required");
+    return;
+  }
+
+  try {
+    const result = await Login(form);
+
+    if (result?.requiresDeviceVerification) {
+      sessionStorage.setItem(
+        "loginVerification",
+        JSON.stringify({
+          userId: result.userId,
+          deviceId: result.deviceId,
+          email: form.email,
+        })
+      );
+
+      router.push("/verifyLoginDevice");
       return;
     }
-    try {
-      await Login(form);
+
+    if (result === true) {
       router.push("/");
-    } catch (error) {
-      console.log(error);
     }
-  };
+  } catch (error) {
+    console.log(error);
+  }
+};
   
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">

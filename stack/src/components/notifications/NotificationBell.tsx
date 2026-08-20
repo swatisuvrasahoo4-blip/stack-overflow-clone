@@ -56,9 +56,11 @@ useEffect(() => {
       const response = await getNotifications();
 
       setNotifications(response.notifications || []);
-    } catch (error) {
-      console.error("Failed to fetch notifications:", error);
-    } finally {
+    } catch (error: any) {
+  if (error?.response?.status !== 401) {
+    console.error("Failed to fetch notifications:", error);
+  }
+} finally {
       setLoading(false);
     }
   };

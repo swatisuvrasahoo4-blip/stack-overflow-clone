@@ -10,6 +10,7 @@ import {
   hashSessionToken,
 } from "../services/loginSessionService.js";
 import LoginSession from "../models/loginSession.js";
+import { createLoginOtp } from "../services/loginOtpService.js";
 
 export const Signup = async (req, res) => {
   const { name, username, email, mobile, password } = req.body;
@@ -140,7 +141,13 @@ export const checkUsername = async (req, res) => {
 };
 
 export const Login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, deviceId } = req.body;
+  if (!deviceId) {
+  return res.status(400).json({
+    success: false,
+    message: "Device ID is required",
+  });
+}
 
   try {
     const exisitinguser = await user.findOne({ email });
@@ -161,6 +168,27 @@ export const Login = async (req, res) => {
         message: "Invalid password",
       });
     }
+const existingDevice = await LoginSession.findOne({
+  userId: exisitinguser._id,
+  deviceId,
+});
+
+
+if (!existingDevice) {
+  await createLoginOtp({
+    userId: exisitinguser._id,
+    email: exisitinguser.email,
+    deviceId,
+  });
+
+  return res.status(200).json({
+    success: true,
+    requiresDeviceVerification: true,
+    message: "OTP sent to your email",
+    userId: exisitinguser._id,
+    deviceId,
+  });
+}
 
     const sessionToken = generateSessionToken();
     const sessionTokenHash = hashSessionToken(sessionToken);
@@ -176,7 +204,7 @@ expiresAt.setDate(expiresAt.getDate() + inactivityDays);
     await LoginSession.create({
       userId: exisitinguser._id,
       sessionTokenHash,
-      deviceId: sessionTokenHash,
+      deviceId,
       browser: deviceInfo.browser,
       operatingSystem: deviceInfo.operatingSystem,
       deviceType: deviceInfo.deviceType,
