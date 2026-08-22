@@ -165,7 +165,7 @@ const Sidebar = ({ isopen }:any) => {
             {user?.role === "admin" && (
   <li>
     <Link
-      href="/admin/reports"
+      href="/admin"
       className="flex items-center px-2 py-2 text-gray-700 hover:bg-gray-100 rounded text-sm"
     >
       <ShieldAlert className="w-4 h-4 mr-2 lg:mr-3 text-red-600" />

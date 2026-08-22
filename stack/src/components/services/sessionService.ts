@@ -1,4 +1,4 @@
-import axiosInstance from "./axiosinstance";
+import axiosInstance from "@/lib/axiosinstance";
 
 export const getMySessions = async () => {
   const response = await axiosInstance.get("/user/sessions");

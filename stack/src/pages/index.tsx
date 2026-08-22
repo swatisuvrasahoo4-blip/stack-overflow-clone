@@ -41,7 +41,14 @@ const [activeContent, setActiveContent] = useState<
   const { panel } = router.query;
 
   useEffect(() => {
+    
     const loadHomeFeedData = async () => {
+  if (!user?._id && !user?.id) {
+    setItems([]);
+    setFollowingIds([]);
+    setloading(false);
+    return;
+  }
       try {
         const [questionsResponse, followingResponse] = await Promise.all([
           axiosInstance.get("/question/getallquestion"),

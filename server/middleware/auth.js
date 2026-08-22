@@ -29,6 +29,7 @@ const session = await LoginSession.findOne({
   sessionTokenHash: decodedata.sessionToken,
   isRevoked: false,
   lastActivityAt: { $gt: inactiveSince },
+  expiresAt: { $gt: new Date() },
 });
 
     if (!session) {
@@ -38,8 +39,18 @@ const session = await LoginSession.findOne({
       });
     }
 
-    session.lastActivityAt = new Date();
-    await session.save();
+    const now = new Date();
+
+session.lastActivityAt = now;
+
+const newExpiresAt = new Date(now);
+newExpiresAt.setDate(
+  newExpiresAt.getDate() + inactivityDays
+);
+
+session.expiresAt = newExpiresAt;
+
+await session.save();
 
     req.userid = decodedata.id;
     req.sessionId = session._id;

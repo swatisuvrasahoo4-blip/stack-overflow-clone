@@ -7,11 +7,14 @@ import {
   hashSessionToken,
 } from "../services/loginSessionService.js";
 import { verifyLoginOtp } from "../services/loginOtpService.js";
+import { trustDevice } from "../services/trustedDeviceService.js";
 
 export const verifyLoginDeviceOtp = async (req, res) => {
   try {
     console.log("VERIFY LOGIN DEVICE API HIT");
     console.log("Body:", req.body);
+    console.log("CREATING TRUSTED SESSION");
+console.log("isTrustedDevice:", true);
 
     const { userId, deviceId, otp } = req.body;
 
@@ -46,6 +49,13 @@ export const verifyLoginDeviceOtp = async (req, res) => {
 
     const userAgent = req.headers["user-agent"] || "";
     const deviceInfo = getDeviceInfo(userAgent);
+    await trustDevice({
+  userId: existingUser._id,
+  deviceId,
+  browser: deviceInfo.browser,
+  operatingSystem: deviceInfo.operatingSystem,
+  deviceType: deviceInfo.deviceType,
+});
 
     const inactivityDays =
       Number(process.env.SESSION_INACTIVITY_DAYS) || 3;
@@ -64,6 +74,7 @@ export const verifyLoginDeviceOtp = async (req, res) => {
       loginAt: new Date(),
       lastActivityAt: new Date(),
       expiresAt,
+      isTrustedDevice: true,
     });
 
     const token = jwt.sign(
@@ -73,7 +84,7 @@ export const verifyLoginDeviceOtp = async (req, res) => {
         sessionToken: sessionTokenHash,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "3d" }
+      { expiresIn: "7d" }
     );
 
     return res.status(200).json({

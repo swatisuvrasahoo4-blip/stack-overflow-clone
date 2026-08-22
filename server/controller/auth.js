@@ -10,7 +10,9 @@ import {
   hashSessionToken,
 } from "../services/loginSessionService.js";
 import LoginSession from "../models/loginSession.js";
+import TrustedDevice from "../models/trustedDevice.js";
 import { createLoginOtp } from "../services/loginOtpService.js";
+import { isTrustedDevice } from "../services/trustedDeviceService.js";
 
 export const Signup = async (req, res) => {
   const { name, username, email, mobile, password } = req.body;
@@ -80,7 +82,7 @@ if (!usernamePattern.test(cleanUsername)) {
     const token = jwt.sign(
       { email: newuser.email, id: newuser._id },
       jwtSecret,
-      { expiresIn: "3d" }
+      { expiresIn: "7d" }
     );
     res.status(200).json({ data: newuser, token });
   } catch (error) {
@@ -168,17 +170,21 @@ export const Login = async (req, res) => {
         message: "Invalid password",
       });
     }
-const existingDevice = await LoginSession.findOne({
-  userId: exisitinguser._id,
-  deviceId,
-});
+const trustedDevice = await isTrustedDevice(
+  exisitinguser._id,
+  deviceId
+);
 
+if (!trustedDevice) {
+  const userAgent = req.headers["user-agent"] || "";
+  const deviceInfo = getDeviceInfo(userAgent);
 
-if (!existingDevice) {
   await createLoginOtp({
     userId: exisitinguser._id,
     email: exisitinguser.email,
     deviceId,
+    deviceInfo,
+    ipAddress: req.ip,
   });
 
   return res.status(200).json({
@@ -201,6 +207,7 @@ if (!existingDevice) {
 const expiresAt = new Date();
 expiresAt.setDate(expiresAt.getDate() + inactivityDays);
 
+
     await LoginSession.create({
       userId: exisitinguser._id,
       sessionTokenHash,
@@ -212,6 +219,7 @@ expiresAt.setDate(expiresAt.getDate() + inactivityDays);
       loginAt: new Date(),
       lastActivityAt: new Date(),
       expiresAt,
+      isTrustedDevice: trustedDevice,
     });
 
     const token = jwt.sign(
@@ -221,7 +229,7 @@ expiresAt.setDate(expiresAt.getDate() + inactivityDays);
         sessionToken: sessionTokenHash,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "3d" }
+      { expiresIn: "7d" }
     );
 
     res.status(200).json({
@@ -319,9 +327,21 @@ if (
 
 export const getMySessions = async (req, res) => {
   try {
+    const inactivityDays =
+      Number(process.env.SESSION_INACTIVITY_DAYS) || 3;
+
+    const inactiveSince = new Date();
+    inactiveSince.setDate(
+      inactiveSince.getDate() - inactivityDays
+    );
+
+    const now = new Date();
+
     const sessions = await LoginSession.find({
       userId: req.userid,
       isRevoked: false,
+      expiresAt: { $gt: now },
+      lastActivityAt: { $gt: inactiveSince },
     }).sort({ lastActivityAt: -1 });
 
     const sessionsWithCurrent = sessions.map((session) => ({
@@ -366,6 +386,16 @@ export const revokeSession = async (req, res) => {
 
     session.isRevoked = true;
     await session.save();
+
+    await TrustedDevice.findOneAndUpdate(
+  {
+    userId: req.userid,
+    deviceId: session.deviceId,
+  },
+  {
+    isRevoked: true,
+  }
+);
 
     res.status(200).json({
       success: true,

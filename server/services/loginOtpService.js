@@ -6,6 +6,8 @@ export const createLoginOtp = async ({
   userId,
   email,
   deviceId,
+  deviceInfo,
+  ipAddress,
 }) => {
   const otp = generateOtp();
   const otpHash = hashOtp(otp);
@@ -23,7 +25,7 @@ export const createLoginOtp = async ({
     expiresAt: new Date(Date.now() + 5 * 60 * 1000),
   });
 
-  await sendNewDeviceOtp(email, otp);
+  await sendNewDeviceOtp(email, otp, deviceInfo, ipAddress);
 };
 
 export const verifyLoginOtp = async ({

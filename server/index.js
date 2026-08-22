@@ -26,6 +26,7 @@ import reputationActivityRoutes from "./routes/reputationActivity.js";
 import languageRoutes from "./routes/language.js";
 
 const app = express();
+app.set("trust proxy", 1);
 dotenv.config();
 app.use(express.json({ limit: "30mb", extended: true }));
 app.use("/uploads",express.static(path.join(process.cwd(),"uploads")));
