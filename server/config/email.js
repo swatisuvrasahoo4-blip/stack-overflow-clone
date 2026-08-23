@@ -1,15 +1,58 @@
 import "dotenv/config";
-import nodemailer from "nodemailer";
+import axios from "axios";
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+const transporter = {
+  sendMail: async ({
+    from,
+    to,
+    subject,
+    html,
+    attachments = [],
+  }) => {
+    const emailData = {
+      sender: {
+        email: process.env.EMAIL_USER,
+        name: "CodeQuest",
+      },
+      to: [
+        {
+          email: to,
+        },
+      ],
+      subject,
+      htmlContent: html,
+    };
+
+    if (attachments.length > 0) {
+      emailData.attachment = attachments.map((file) => ({
+        name: file.filename,
+        content: file.content.toString("base64"),
+      }));
+    }
+
+    try {
+      const response = await axios.post(
+        "https://api.brevo.com/v3/smtp/email",
+        emailData,
+        {
+          headers: {
+            accept: "application/json",
+            "api-key": process.env.BREVO_API_KEY,
+            "content-type": "application/json",
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Brevo email error:",
+        error.response?.data || error.message
+      );
+
+      throw error;
+    }
   },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
-});
+};
 
 export default transporter;
