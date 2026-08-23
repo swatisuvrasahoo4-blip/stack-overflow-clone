@@ -8,13 +8,10 @@ import {
 } from "../services/loginSessionService.js";
 import { verifyLoginOtp } from "../services/loginOtpService.js";
 import { trustDevice } from "../services/trustedDeviceService.js";
+import { getIpLocation } from "../services/ipLocationService.js";
 
 export const verifyLoginDeviceOtp = async (req, res) => {
   try {
-    console.log("VERIFY LOGIN DEVICE API HIT");
-    console.log("Body:", req.body);
-    console.log("CREATING TRUSTED SESSION");
-console.log("isTrustedDevice:", true);
 
     const { userId, deviceId, otp } = req.body;
 
@@ -49,6 +46,12 @@ console.log("isTrustedDevice:", true);
 
     const userAgent = req.headers["user-agent"] || "";
     const deviceInfo = getDeviceInfo(userAgent);
+    
+    const ipAddress =
+  req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || req.ip;
+
+const location = await getIpLocation(ipAddress);
+
     await trustDevice({
   userId: existingUser._id,
   deviceId,
@@ -70,7 +73,8 @@ console.log("isTrustedDevice:", true);
       browser: deviceInfo.browser,
       operatingSystem: deviceInfo.operatingSystem,
       deviceType: deviceInfo.deviceType,
-      ipAddress: req.ip,
+      ipAddress,
+      location,
       loginAt: new Date(),
       lastActivityAt: new Date(),
       expiresAt,
