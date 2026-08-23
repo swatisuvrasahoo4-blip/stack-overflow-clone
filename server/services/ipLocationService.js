@@ -2,7 +2,8 @@ import axios from "axios";
 
 export const getIpLocation = async (ipAddress) => {
   try {
-    // Local/private IPs cannot be meaningfully geolocated
+    console.log("received",ipAddress);
+    
     if (
       !ipAddress ||
       ipAddress === "127.0.0.1" ||
