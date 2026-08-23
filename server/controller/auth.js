@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import cloudinary from "../config/cloudinary.js";
 import { updateReputation } from "../services/reputationServices.js";
 import { getDeviceInfo } from "../services/deviceService.js";
+import { getIpLocation } from "../services/ipLocationService.js";
 import {
   generateSessionToken,
   hashSessionToken,
@@ -202,6 +203,9 @@ if (!trustedDevice) {
     const userAgent = req.headers["user-agent"] || "";
     const deviceInfo = getDeviceInfo(userAgent);
 
+    const ipAddress = req.ip;
+const location = await getIpLocation(ipAddress);
+
     const inactivityDays = Number(process.env.SESSION_INACTIVITY_DAYS) || 3;
 
 const expiresAt = new Date();
@@ -215,7 +219,8 @@ expiresAt.setDate(expiresAt.getDate() + inactivityDays);
       browser: deviceInfo.browser,
       operatingSystem: deviceInfo.operatingSystem,
       deviceType: deviceInfo.deviceType,
-      ipAddress: req.ip,
+      ipAddress,
+      location,
       loginAt: new Date(),
       lastActivityAt: new Date(),
       expiresAt,
