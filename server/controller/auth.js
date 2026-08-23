@@ -203,6 +203,11 @@ if (!trustedDevice) {
     const userAgent = req.headers["user-agent"] || "";
     const deviceInfo = getDeviceInfo(userAgent);
 
+    console.log("req.ip:", req.ip);
+console.log("x-forwarded-for:", req.headers["x-forwarded-for"]);
+console.log("x-real-ip:", req.headers["x-real-ip"]);
+
+
     const ipAddress = req.ip;
 const location = await getIpLocation(ipAddress);
 
