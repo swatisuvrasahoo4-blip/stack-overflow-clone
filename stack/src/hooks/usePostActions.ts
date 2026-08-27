@@ -120,7 +120,7 @@ console.log("COMMENT RESPONSE:", response);
   return;
 }
   try{
-    await shareCommunityPost(postId);
+    await shareCommunityPost(postId,t);
   }catch(error){
     console.log("Share Error:",error);
   }

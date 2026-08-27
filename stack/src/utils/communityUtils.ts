@@ -29,8 +29,7 @@ export const savePostToBookmarks = (post: any) => {
     message: "Post saved successfully!",
   };
 };
-export const shareCommunityPost = async (postId: string) => {
-   const {t} = useTranslation();
+export const shareCommunityPost = async (postId: string, t: (key: string) => string) => {
     const shareUrl = `${window.location.origin}/community/post/${postId}`;
 
   if (navigator.share) {

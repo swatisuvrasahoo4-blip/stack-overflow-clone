@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PostActions from "./PostActions";
 import CommentSection from "./CommentSection";
-import { Bookmark, ThumbsUp, Star, Send } from "lucide-react";
+import { Bookmark, ThumbsUp, Star, Send, MessageCircle } from "lucide-react";
 import MentionAvatar from "../mentions/MentionAvatar";
 import { getImageUrl } from "@/lib/getImageUrl";
 import Link from "next/link";
