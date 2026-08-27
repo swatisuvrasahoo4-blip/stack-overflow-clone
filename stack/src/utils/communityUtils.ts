@@ -30,7 +30,7 @@ export const savePostToBookmarks = (post: any) => {
   };
 };
 export const shareCommunityPost = async (postId: string, t: (key: string) => string) => {
-    const shareUrl = `${window.location.origin}/community/post/${postId}`;
+    const shareUrl = `${window.location.origin}/community/${postId}`;
 
   if (navigator.share) {
     try {
