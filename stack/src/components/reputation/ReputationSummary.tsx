@@ -1,5 +1,6 @@
 import React from "react";
 import { Trophy, MessageCircle, Pencil, ArrowUp, Flag } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface ReputationSummaryProps {
   reputation: number;
@@ -10,24 +11,25 @@ const ReputationSummary = ({
   reputation,
   onViewActivity,
 }: ReputationSummaryProps) => {
+  const {t} = useTranslation();
   const privileges = [
     {
-      name: "Unrestricted commenting",
+      name: "unrestricted_commenting",
       required: 50,
       icon: MessageCircle,
     },
     {
-      name: "Edit community posts",
+      name: "edit_community_posts",
       required: 100,
       icon: Pencil,
     },
     {
-      name: "Vote to close questions",
+      name: "vote_to_close_questions",
       required: 250,
       icon: ArrowUp,
     },
     {
-      name: "Report inappropriate content",
+      name: "report_inappropriate_content",
       required: 500,
       icon: Flag,
     },
@@ -40,7 +42,7 @@ const ReputationSummary = ({
           <Trophy className="w-6 h-6 text-yellow-600" />
 
           <h2 className="text-2xl font-semibold">
-            Reputation
+            {t("reputation.reputation")}
           </h2>
         </div>
 
@@ -48,7 +50,7 @@ const ReputationSummary = ({
           onClick={onViewActivity}
           className="border border-green-600 text-green-700 px-4 py-2 rounded-lg hover:bg-green-50 transition"
         >
-          View Reputation Activity
+          {t("reputation.view_reputation_activity")}
         </button>
       </div>
 
@@ -59,7 +61,7 @@ const ReputationSummary = ({
 
           <div>
             <p className="text-sm text-gray-500">
-              Total Reputation
+              {t("reputation.total_reputation")}
             </p>
 
             <p className="text-4xl font-bold text-green-600">
@@ -71,7 +73,7 @@ const ReputationSummary = ({
         {/* Privileges */}
         <div>
           <h3 className="font-semibold mb-3">
-            Community Privileges
+            {t("reputation.community_privileges")}
           </h3>
 
           <div className="space-y-3">
@@ -100,7 +102,7 @@ const ReputationSummary = ({
                           : "text-gray-400"
                       }
                     >
-                      {privilege.name}
+                     {t(`reputation.${privilege.name.toLowerCase()}`)}
                     </span>
                   </div>
 

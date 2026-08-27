@@ -348,7 +348,7 @@ export const addComment = async (req, res) => {
     const { id } = req.params;
     const { text, userName } = req.body;
 
-    const user = await User.findById(req.userid);
+    const user = await auth.findById(req.userid);
 
 if (!user) {
   return res.status(404).json({
@@ -411,7 +411,7 @@ export const replyToComment = async (req, res) => {
     const { id, commentId } = req.params;
     const { text, userName } = req.body;
 
-    const user = await User.findById(req.userid);
+    const user = await auth.findById(req.userid);
 
 if (!user) {
   return res.status(404).json({

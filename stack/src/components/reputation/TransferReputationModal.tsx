@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Send } from "lucide-react";
 import { transferReputation } from "../services/reputationTransferService";
+import { useTranslation } from "react-i18next";
 
 interface TransferReputationModalProps {
   open: boolean;
@@ -23,6 +24,7 @@ const TransferReputationModal = ({
   receiverId,
   receiverName,
 }: TransferReputationModalProps) => {
+  const {t} = useTranslation();
   const [amount, setAmount] = useState("");
   const [reason, setReason] = useState("");
 
@@ -32,17 +34,17 @@ const TransferReputationModal = ({
     const points = Number(amount);
 
     if (!points || points <= 0) {
-      alert("Please enter a valid reputation amount.");
+      alert(t("alert.please_enter_a_valid_reputation_amount"));
       return;
     }
 
     if (points > 50) {
-      alert("Maximum 50 reputation points per transaction.");
+      alert(t("alert.maximum_50_reputation_points_per_transaction"));
       return;
     }
 
     if (!reason.trim()) {
-      alert("Please enter a reason for the transfer.");
+      alert(t("alert.please_enter_a_reason_for_the_transfer"));
       return;
     }
 
@@ -52,7 +54,7 @@ const TransferReputationModal = ({
       reason: reason.trim(),
     });
 
-    alert(response.message || "Reputation transferred successfully!");
+    alert(response.message || t("alert.reputation_transferred_successfully"));
 
     setAmount("");
     setReason("");
@@ -61,7 +63,7 @@ const TransferReputationModal = ({
   } catch (error: any) {
     alert(
       error?.response?.data?.message ||
-      "Failed to transfer reputation."
+      t("alert.failed_to_transfer_reputation")
     );
   }
 };

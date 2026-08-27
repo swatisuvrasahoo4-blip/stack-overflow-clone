@@ -165,7 +165,7 @@ useEffect(() => {
 
         setusers(updatedUser);
         setIsEditing(false);
-        toast.success("Profile updated successfully!");
+        toast.success(t("toast.profile_updated_successfully"));
 
         if (isOwnProfile) {
           updateUser({
@@ -199,7 +199,7 @@ useEffect(() => {
         // ignore storage errors
       }
       setIsEditing(false);
-      toast.success("Profile updated");
+      toast.success(t("toast.profile_updated"));
     }
   };
 
@@ -296,17 +296,17 @@ useEffect(() => {
 
                   <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white text-gray-900">
                     <DialogHeader>
-                      <DialogTitle>Edit Profile</DialogTitle>
+                      <DialogTitle>{t("profile.edit_profile")}</DialogTitle>
                     </DialogHeader>
                               <div className="space-y-6 py-4">
                       {/* Basic Information */}
                       <div className="space-y-4">
                         <h3 className="text-lg font-semibold">
-                          Basic Information
+                          {t("profile.basic_information")}
                         </h3>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div>
-                            <Label htmlFor="username">Username</Label>
+                            <Label htmlFor="username">{t("profile.username")}</Label>
                             <Input
                               id="username"
                               value={users.username || ""}
@@ -315,7 +315,7 @@ useEffect(() => {
                             />
                           </div>
                           <div>
-                            <Label htmlFor="name">Display Name</Label>
+                            <Label htmlFor="name">{t("profile.display_name")}</Label>
                             <Input
                               id="name"
                               value={editForm.name}
@@ -325,16 +325,16 @@ useEffect(() => {
                                   name: e.target.value,
                                 })
                               }
-                              placeholder="Your display name"
+                              placeholder={t("profile.your_display_name")}
                               className="bg-white border-gray-300"
                             />
                           </div>
                         </div>
                       </div>
                       <div className="space-y-4">
-                        <h3 className="text-lg font-semibold">Profile Photo</h3>
+                        <h3 className="text-lg font-semibold">{t("profile.profile_photo")}</h3>
                         <div>
-                          <Label htmlFor="profilePhoto">Upload photo</Label>
+                          <Label htmlFor="profilePhoto">{t("profile.upload_photo")}</Label>
                           <input
   ref={profilePhotoInputRef}
   id="profilePhoto"
@@ -357,7 +357,7 @@ useEffect(() => {
     onClick={() => profilePhotoInputRef.current?.click()}
     className="rounded bg-gray-100 px-4 py-2 hover:bg-gray-200"
   >
-    Choose file
+    {t("profile.choose_file")}
   </button>
 
   <span
@@ -365,7 +365,7 @@ useEffect(() => {
       profilePhotoFile ? "text-gray-700" : "text-red-600"
     }`}
   >
-    {profilePhotoFile ? "File selected" : "No file chosen"}
+    {profilePhotoFile ? t("profile.file_selected") : t("profile.no_file_chosen")}
   </span>
 
   {profilePhotoFile && (
@@ -381,7 +381,7 @@ useEffect(() => {
         }
       }}
     >
-      ×
+     <X className="w-3 h-3" />
     </button>
   )}
 </div>
@@ -402,16 +402,15 @@ useEffect(() => {
       setRemoveProfilePhoto(true);
     }}
   >
-    Delete Profile Photo
+    {t("profile.delete_profile_photo")}
   </button>
 )}
                         </div>
                       </div>
                       {/* About Section */}
                       <div className="space-y-4">
-                        <h3 className="text-lg font-semibold">About</h3>
+                        <h3 className="text-lg font-semibold">{t("profile.about")}</h3>
                         <div>
-                          <Label htmlFor="about">About Me</Label>
                           <Textarea
                             id="about"
                             value={editForm.about}
@@ -421,7 +420,7 @@ useEffect(() => {
                                 about: e.target.value,
                               })
                             }
-                            placeholder="Tell us about yourself, your experience, and interests..."
+                            placeholder={t("profile.tell_us_about_yourself")}
                             className="min-h-32 bg-white border-gray-300"
                           />
                         </div>
@@ -430,7 +429,7 @@ useEffect(() => {
                       {/* Tags/Skills Section */}
                       <div className="space-y-4">
                         <h3 className="text-lg font-semibold">
-                          Skills & Technologies
+                          {t("profile.skills_and_technologies")}
                         </h3>
 
                         <div className="space-y-3">
@@ -438,7 +437,7 @@ useEffect(() => {
                             <Input
                               value={newTag}
                               onChange={(e) => setNewTag(e.target.value)}
-                              placeholder="Add a skill or technology"
+                              placeholder={t("profile.add_a_skill_or_technology")}
                               onKeyPress={(e) =>
                                 e.key === "Enter" && handleAddTag()
                               }
@@ -483,13 +482,13 @@ useEffect(() => {
                           onClick={() => setIsEditing(false)}
                           className="bg-white text-gray-800 hover:text-gray-900"
                         >
-                          Cancel
+                          {t("profile.cancel")}
                         </Button>
                         <Button
                           onClick={handleSaveProfile}
                           className="bg-blue-600 hover:bg-blue-700"
                         >
-                          Save Changes
+                          {t("profile.save_changes")}
                         </Button>
                       </div>
                     </div>
@@ -501,7 +500,7 @@ useEffect(() => {
   className="flex justify-center gap-2 bg-white"
   onClick={() => router.push("/loginSessions")}
 >
-  Login Sessions
+  {t("user.loginSessions")}
 </Button>
                 <Button
     variant="outline"
@@ -524,7 +523,7 @@ useEffect(() => {
             <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
               <div className="flex items-center">
                 <Calendar className="w-4 h-4 mr-1" />
-                Member since{" "}
+                {t("user.memberSince")}{" "}
                 {new Date(users.joinDate).toISOString().split("T")[0]}
               </div>
             </div>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getSupportRequests, resolveSupportRequest } from "@/components/services/supportService";
 import { Headphones } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface SupportRequest {
   _id: string;
@@ -21,6 +22,7 @@ interface SupportRequest {
 }
 
 export default function AdminSupportPage() {
+  const {t} = useTranslation();
   const [requests, setRequests] = useState<SupportRequest[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -43,7 +45,7 @@ export default function AdminSupportPage() {
   if (loading) {
     return (
       <div className="p-6 text-gray-500">
-        Loading support requests...
+        {t("support.loading_support_requests")}
       </div>
     );
   }
@@ -60,8 +62,7 @@ export default function AdminSupportPage() {
       )
     );
   } catch (error) {
-    console.error("Failed to resolve support request:", error);
-    alert("Failed to resolve support request.");
+    alert(t("alert.failed_to_resolve_support_request"));
   }
 };
 
@@ -75,18 +76,18 @@ export default function AdminSupportPage() {
 
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
-              Support Requests
+              {t("support.support_requests")}
             </h1>
 
             <p className="text-sm text-gray-500">
-              Manage priority customer support requests.
+              {t("support.manage_priority_customer_support_requests")}
             </p>
           </div>
         </div>
 
         {requests.length === 0 ? (
           <div className="rounded-xl border bg-white p-8 text-center text-gray-500">
-            No support requests yet.
+            {t("support.no_support_requests_yet")}
           </div>
         ) : (
           <div className="space-y-4">
@@ -116,7 +117,7 @@ export default function AdminSupportPage() {
                           : "bg-slate-200 text-slate-700"
                       }`}
                     >
-                      {request.plan}
+                      {t(`subscription.${request.plan.toLowerCase()}`)}
                     </span>
 
                     <span
@@ -127,8 +128,8 @@ export default function AdminSupportPage() {
                       }`}
                     >
                       {request.priority === "highest"
-                        ? "Highest Priority"
-                        : "Priority"}
+                        ? t("support.highest_priority")
+                        : t("support.priority")}
                     </span>
                   </div>
                 </div>
@@ -146,7 +147,7 @@ export default function AdminSupportPage() {
         : "font-medium text-orange-600"
     }
   >
-    Status: {request.status}
+    {t("support.status")}: {t(`support.${request.status}`)}
   </span>
 
   {request.status !== "resolved" && (
@@ -154,7 +155,7 @@ export default function AdminSupportPage() {
       onClick={() => handleResolve(request._id)}
       className="rounded-md bg-green-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-700"
     >
-      Resolve
+      {t("support.resolve")}
     </button>
   )}
 </div>

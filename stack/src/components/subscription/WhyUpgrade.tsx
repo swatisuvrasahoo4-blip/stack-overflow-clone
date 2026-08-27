@@ -4,35 +4,37 @@ import {
   Search,
   Bookmark,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const benefits = [
   {
     icon: Crown,
-    title: "More Questions",
-    description: "Increase your daily question limit.",
+    title: "more_questions",
+    description: "increase_your_daily_question_limit",
   },
   {
     icon: BadgeCheck,
-    title: "Premium Badges",
-    description: "Stand out with exclusive profile badges.",
+    title: "premium_badges",
+    description: "stand_out_with_exclusive_profile_badges",
   },
   {
     icon: Search,
-    title: "Advanced Search",
-    description: "Find answers faster with powerful filters.",
+    title: "advanced_search",
+    description: "find_answers_faster_with_powerful_filters",
   },
   {
     icon: Bookmark,
-    title: "Unlimited Bookmarks",
-    description: "Save as many questions and posts as you like.",
+    title: "unlimited_bookmarks",
+    description: "save_as_many_questions_and_posts_as_you_like",
   },
 ];
 
 export default function WhyUpgrade() {
+  const {t} = useTranslation();
   return (
     <div className="mt-20">
       <h2 className="text-4xl font-extrabold text-center mb-12 text-purple-700">
-        Why Upgrade?
+       {t("subscription.whyUpgrade")}
       </h2>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -69,11 +71,11 @@ export default function WhyUpgrade() {
 </div>
 
               <h3 className="text-lg font-bold text-gray-900">
-                {item.title}
+                {t(`subscription.${item.title}`)}
               </h3>
 
               <p className="mt-2 text-gray-600 text-[15px] leading-7">
-                {item.description}
+                {t(`subscription.${item.description}`)}
               </p>
             </div>
           );

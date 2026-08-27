@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { UserPlus, UserCheck } from "lucide-react";
 import { followUser, unfollowUser, getFollowStatus } from "../services/followService";
 import { useAuth } from "@/lib/AuthContext";
+import { useTranslation } from "react-i18next";
 
 interface FollowButtonProps {
   userId: string;
@@ -10,6 +11,7 @@ interface FollowButtonProps {
 
 export const FollowButton = ({ userId, showText=false }: FollowButtonProps) => {
   const { user } = useAuth();
+  const {t} = useTranslation();
   const [checkingStatus, setCheckingStatus] = useState(true);
   const [isFollowing, setIsFollowing] = useState(false);
   useEffect(() => {
@@ -60,7 +62,7 @@ return (
       e.stopPropagation();
 
       if (!user) {
-  alert("Please log in to follow users.");
+  alert(t("alert.please_log_in_to_follow_users"));
   return;
 }
       try {

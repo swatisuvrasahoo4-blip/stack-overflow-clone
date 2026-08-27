@@ -12,10 +12,12 @@ import { useAuth } from "@/lib/AuthContext";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 const index = () => {
   const router = useRouter();
+  const {t} = useTranslation();
   const { Login, loading } = useAuth();
   const [form, setform] = useState({ email: "", password: "" });
   const handleChange = (e: any) => {
@@ -25,7 +27,7 @@ const index = () => {
   e.preventDefault();
 
   if (!form.email || !form.password) {
-    toast.error("ALL Fields are required");
+    toast.error(t("toast.all_fields_are_required"));
     return;
   }
 

@@ -2,8 +2,10 @@ import { useState } from "react";
 import { forgotPassword } from "@/components/services/forgotPasswordService";
 import { useRouter } from "next/router";
 import { LockKeyhole } from "lucide-react";
+import { useTranslation } from "react-i18next";
 export default function ForgotPassword() {
     const router = useRouter();
+    const {t} = useTranslation();
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
@@ -17,7 +19,7 @@ const handleForgotPassword = async () => {
     setErrorMessage("");
     setSuccessMessage("");
     if (!email.trim()) {
-        setErrorMessage("Please enter your registered email and username.");
+        setErrorMessage(t("error.please_enter_your_registered_email and_username"));
         return;
     }
 
@@ -34,7 +36,7 @@ setUsername("");
 
         setEmail("");
     } catch (error: any) {
-        setErrorMessage(error?.response?.data?.message || "Something went wrong.");
+        setErrorMessage(error?.response?.data?.message || t("error.something_went_wrong"));
     } finally {
         setLoading(false);
     }
@@ -48,14 +50,14 @@ setUsername("");
     </div>
 
     <h1 className="text-3xl font-bold text-gray-900">
-        Forgot Password
+        {t("forgotpassword.forgot_password")}
     </h1>
 </div>
 
 <p className="mt-3 text-center text-sm leading-6 text-gray-500">
-    Enter your registered email address below.
+    {t("forgotpassword.enter_your_registered_email_address_below")}
     <br />
-    We'll generate a new password for your account.
+    {t("forgotpassword.we_will_generate_a_new_password_for_your_account")}
     <br />
 </p>
 {successMessage && (
@@ -70,22 +72,22 @@ setUsername("");
     </div>
 )}
 <label className="block text-sm font-semibold text-gray-700 mb-2 mt-3">
-    Registered Email
+    {t("forgotpassword.registered_email")}
 </label>
       <input
         type="email"
-        placeholder="Enter your registered email"
+        placeholder={t("forgotpassword.enter_your_registered_email")}
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         className="w-full text-gray-700 border rounded-lg px-4 py-3  mb-4 outline-none focus:ring-2 focus:ring-blue-500"
       />
       <label className="block text-sm font-semibold text-gray-700 mt-4 mb-2">
-    Username
+    {t("forgotpassword.username")}
 </label>
 
 <input
     type="text"
-    placeholder="Enter your username"
+    placeholder={t("forgotpassword.enter_your_username")}
     value={username}
     onChange={(e) => setUsername(e.target.value)}
     className="w-full text-gray-700 border rounded-lg px-4 py-3 mb-4 outline-none focus:ring-2 focus:ring-blue-500"
@@ -97,7 +99,7 @@ setUsername("");
         disabled={loading}
         className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {loading ? "Generating Password..." : "Generate New Password"}
+        {loading ? t("forgotpassword.generating_password") : t("forgotpassword.generate_new_password")}
       </button>
     </div>
 
@@ -106,16 +108,16 @@ setUsername("");
         <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-sm">
 
          <h2 className="text-2xl font-bold text-center text-green-600">
-           Password Generated Successfully
+           {t("forgotpassword.password_generated_successfully")}
 </h2>
           <p className="text-center text-gray-500 mt-2">
-            Your new password is ready.
-Please copy it before returning to the login page.
+            {t("forgotpassword.your_new_password_is_ready")}
+{t("forgotpassword.please_copy_before_returning_to_the_login_page")}
           </p>
 
           <div className="mt-6 rounded-lg border-2 border-dashed border-orange-300 bg-orange-50 p-4 text-center">
     <p className="text-xs uppercase tracking-wider text-gray-500 mb-2">
-        Generated Password
+        {t("forgotpassword.generated_password")}
     </p>
 
     <p className="font-mono text-2xl font-bold text-orange-600 break-all">
@@ -137,14 +139,14 @@ setPasswordCopied(true);
 }}
             className="w-full mt-4 border border-gray-300 rounded-lg py-2 hover:bg-gray-100"
           >
-            {copied ? "✔ Copied" : "Copy Password"}
+            {copied ? t(`✔ ("forgotpassword.copied")`) : t("forgotpassword.copy_password")}
           </button>
 
           <button
             onClick={() => {
     if (!passwordCopied) {
         const confirmLeave = window.confirm(
-            "You haven't copied your generated password yet.\n\nAre you sure you want to go back to the login page?"
+            t(`("window.you_havenot_copied_your_generated_password_yet")\n\n("window.are_you_sure_you_want_to_go_back_to_the_login_page")`)
         );
 
         if (!confirmLeave) return;
@@ -155,7 +157,7 @@ setPasswordCopied(true);
 }}
             className="w-full mt-3 bg-blue-600 text-white rounded-lg py-2 hover:bg-blue-700"
           >
-            Back to Login
+           {t("forgotpassword.back_to_login")}
           </button>
 
         </div>

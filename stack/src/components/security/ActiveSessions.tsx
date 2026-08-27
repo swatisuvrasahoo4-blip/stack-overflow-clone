@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getMySessions, revokeSession } from "../services/sessionService";
+import { useTranslation } from "react-i18next";
 
 const ActiveSessions = () => {
+  const {t} = useTranslation();
   const [sessions, setSessions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const handleRevoke = async (sessionId: string) => {
@@ -16,10 +18,10 @@ const ActiveSessions = () => {
     console.log("Failed to revoke session", error);
 
     alert(
-      error?.response?.data?.message || "Failed to revoke session"
+      error?.response?.data?.message || t("alert.failed_to_revoke_session")
     );
   }
-};
+};5
 
   useEffect(() => {
     const fetchSessions = async () => {
@@ -40,11 +42,11 @@ const ActiveSessions = () => {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Active Sessions</CardTitle>
+          <CardTitle>{t("loginactivity.active_sessions")}</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-gray-500">
-            Loading sessions...
+            {t("logactivity.loading_sessions")}
           </p>
         </CardContent>
       </Card>
@@ -54,13 +56,13 @@ const ActiveSessions = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Active Sessions</CardTitle>
+        <CardTitle>{t("logactivity.active_sessions")}</CardTitle>
       </CardHeader>
 
       <CardContent className="space-y-4">
         {sessions.length === 0 ? (
           <p className="text-sm text-gray-500">
-            No active sessions found.
+            {t("logactivity.no_active_sessions_found")}
           </p>
         ) : (
           sessions.map((session) => (
@@ -75,26 +77,26 @@ const ActiveSessions = () => {
 
   {session.isCurrent && (
     <span className="text-sm font-medium text-green-600">
-      Current session
+      {t("logactivity.current_session")}
     </span>
   )}
 </div>
 
               <p className="text-sm text-gray-600">
-                Device: {session.deviceType}
+                {t("logactivity.device")}: {session.deviceType}
               </p>
 
               <p className="text-sm text-gray-600">
-                IP: {session.ipAddress}
+                {t("logactivity.ip")}: {session.ipAddress}
               </p>
 
               <p className="text-sm text-gray-500">
-                Login:{" "}
+                {t("logactivity.login")}:{" "}
                 {new Date(session.loginAt).toLocaleString()}
               </p>
 
               <p className="text-sm text-gray-500">
-                Last active:{" "}
+                {t("logactivity.last_active")}:{" "}
                 {new Date(session.lastActivityAt).toLocaleString()}
               </p>
               {!session.isCurrent && (
@@ -103,7 +105,7 @@ const ActiveSessions = () => {
     onClick={() => handleRevoke(session._id)}
     className="mt-3 rounded-md border border-red-500 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50"
   >
-    Revoke
+    {t("logactivity.revoke")}
   </button>
 )}
             </div>

@@ -2,7 +2,6 @@ import axios from "axios";
 
 export const getIpLocation = async (ipAddress) => {
   try {
-    console.log("received",ipAddress);
     
     if (
       !ipAddress ||

@@ -4,8 +4,10 @@ import { subscriptionPlans } from "@/constants/subscriptionPlans"
 import WhyUpgrade from "@/components/subscription/WhyUpgrade";
 import { createOrder, verifyPayment, getSubscription } from "@/components/services/subscriptionService";
 import Script from "next/script";
+import { useTranslation } from "react-i18next";
 
 export default function SubscriptionPage() {
+  const {t} = useTranslation();
   const [plans, setPlans] = useState(subscriptionPlans);
   useEffect(() => {
   const loadSubscription = async () => {
@@ -59,10 +61,10 @@ const handleUpgrade = async (plan: string) => {
             plan,
           });
 
-          alert("Subscription activated successfully!");
+          alert(t("alert.subscription_activated_successfully"));
         } catch (error) {
           console.log(error);
-          alert("Payment verification failed.");
+          alert(t("alert.payment_verification_failed"));
         }
       },
 
@@ -92,10 +94,9 @@ const handleUpgrade = async (plan: string) => {
     <div className="min-h-screen bg-gray-50">
       <div className="mx-auto max-w-7xl px-6 py-8">
         <div className="mb-12 text-center">
-          <h1 className="text-4xl font-bold text-black">Subscription Plans</h1>
+          <h1 className="text-4xl font-bold text-black">{t("subscription.subscriptionPlans")}</h1>
           <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-  Upgrade your membership to unlock premium features, increase your daily
-  question limit, and stand out in the community.
+ {t("subscription.upgrade_membership_title")}
 </p>
         </div>
 

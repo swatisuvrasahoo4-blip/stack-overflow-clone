@@ -3,10 +3,12 @@ import { createContext } from "react";
 import axiosInstance from "./axiosinstance";
 import { toast } from "react-toastify";
 import { useContext } from "react";
+import { useTranslation } from "react-i18next";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const {t} = useTranslation();
   const [user, setUser] = useState(null);
 useEffect(() => {
   const stored = localStorage.getItem("user");
@@ -18,29 +20,47 @@ useEffect(() => {
   const [loading, setloading] = useState(false);
   const [error, seterror] = useState(null);
 
-  const Signup = async ({ name, username, email, mobile, password }) => {
-    setloading(true);
-    seterror(null);
-    try {
-      const res = await axiosInstance.post("/user/signup", {
-        name,
-        username,
-        email,
-        mobile,
-        password,
-      });
-      const { data, token } = res.data;
-      localStorage.setItem("user", JSON.stringify({ ...data, token }));
-      setUser({ ...data, token });
-      toast.success("Signup Successful");
-    } catch (error) {
-      const msg = error.response?.data.message || "Signup failed";
-      seterror(msg);
-      toast.error(msg);
-    } finally {
-      setloading(false);
+ const Signup = async ({ name, username, email, mobile, password }) => {
+  setloading(true);
+  seterror(null);
+
+  try {
+    let deviceId = localStorage.getItem("deviceId");
+
+    if (!deviceId) {
+      deviceId = crypto.randomUUID();
+      localStorage.setItem("deviceId", deviceId);
     }
-  };
+
+    const res = await axiosInstance.post("/user/signup", {
+      name,
+      username,
+      email,
+      mobile,
+      password,
+      deviceId,
+    });
+
+    const { data, token } = res.data;
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify({ ...data, token })
+    );
+
+    setUser({ ...data, token });
+
+    toast.success(t("toast.signup_successful"));
+  } catch (error) {
+    const msg =
+      error.response?.data?.message || "Signup failed";
+
+    seterror(msg);
+    toast.error(msg);
+  } finally {
+    setloading(false);
+  }
+};
  const Login = async ({ email, password }) => {
   setloading(true);
   seterror(null);
@@ -72,7 +92,7 @@ useEffect(() => {
     localStorage.setItem("user", JSON.stringify({ ...data, token }));
     setUser({ ...data, token });
 
-    toast.success("Login Successful");
+    toast.success(t("toast.login_successful"));
     return true;
   } catch (error) {
     const msg = error.response?.data.message || "Login failed";
@@ -111,11 +131,11 @@ const completeLogin = ({ data, token }) => {
     setUser(null);
     localStorage.removeItem("user");
 
-    toast.info("Logged out");
+    toast.info(t("toast.logged_out"));
   } catch (error) {
     console.log("Logout failed", error);
 
-    toast.error("Failed to logout");
+    toast.error(t("toast.failed_to_logout"));
   }
 };
   return (

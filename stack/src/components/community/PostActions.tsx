@@ -43,7 +43,7 @@ export default function PostActions({
             }}
             className="text-red-600 text-sm hover:underline"
           >
-            Delete
+            {t("community.delete")}
           </button>
         </div>
       )}

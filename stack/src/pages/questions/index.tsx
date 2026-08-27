@@ -183,7 +183,7 @@ const handleDelete = async (questionId: string) => {
     alert(
       error instanceof Error
         ? error.message
-        : "Something went wrong while deleting"
+        : t("alert.something_went_wrong_while_deleting")
     );
   }
 };
@@ -232,7 +232,7 @@ const handleEdit = async () => {
     alert(
       error instanceof Error
         ? error.message
-        : "Something went wrong while editing"
+        : t("alert.something_went_wrong_while_editing")
     );
   }
 };

@@ -25,7 +25,7 @@ export default function ReportQuestionButton({
   event.stopPropagation();
   if (reputation < 500) {
   alert(
-    `You need at least 500 reputation points to report inappropriate content. Your current reputation is ${reputation}.`
+    t(`alert.you_need_at_least_500_reputation_points_to_report_inappropriate_content_your_current_reputation_is ${reputation}`)
   );
   return;
 }
@@ -35,7 +35,7 @@ export default function ReportQuestionButton({
 
     if (data.alreadyReported) {
       setAlreadyReported(true);
-      alert("You have already reported this question.");
+      alert(t("alert.you_have_already_reported_this_question"));
       return;
     }
 
@@ -43,7 +43,7 @@ export default function ReportQuestionButton({
     setIsOpen(true);
   } catch (error) {
     console.error("Failed to check question report status:", error);
-    alert("Failed to check report status.");
+    alert (t("alert.failed_to_check_report_status"));
   }
 }}
       className="flex items-center gap-2 text-sm text-gray-600 hover:text-red-600 transition"
@@ -62,12 +62,12 @@ export default function ReportQuestionButton({
       details,
     });
 
-    alert("Question reported successfully.");
+    alert(t("alert.question_reported_successfully"));
     setIsOpen(false);
   } catch (error: any) {
     alert(
       error?.response?.data?.message ||
-      "Failed to report question."
+      t("alert.failed_to_report_question")
     );
   }
 }}

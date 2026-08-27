@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import MentionSuggestions from "./MentionSuggestions";
 
 interface MentionTextProps {
@@ -16,6 +17,7 @@ export default function MentionText({
   onSelectMention,
   onClearSuggestions,
 }: MentionTextProps) {
+  const {t} = useTranslation();
   const replaceMention = (username: string) => {
     const updatedContent = value.replace(
       /(?:^|\s)@([a-zA-Z0-9_]{0,20})$/,
@@ -36,7 +38,7 @@ export default function MentionText({
       <textarea
         name="content"
         rows={5}
-        placeholder="Share something with the community..."
+        placeholder={t("createpost.share_something_with_the_community")}
         value={value}
         onChange={(event) => onChange(event.target.value)}
         className="w-full rounded border p-3"

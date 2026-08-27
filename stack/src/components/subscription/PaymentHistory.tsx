@@ -8,11 +8,13 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import InvoiceModal from "./InvoiceModal";
+import { useTranslation } from "react-i18next";
 export default function PaymentHistory() {
   const [subscription, setSubscription] = useState<any>(null);
  const [payments, setPayments] = useState<any[]>([]);
  const [selectedPayment, setSelectedPayment] = useState<any>(null);
 const [open, setOpen] = useState(false);
+const {t} = useTranslation();
   useEffect(() => {
     const loadHistory = async () => {
       try {
@@ -34,19 +36,19 @@ setPayments(paymentResponse.data);
     <>
    <Card className="mt-8">
   <CardHeader>
-    <CardTitle>Payment History</CardTitle>
+    <CardTitle>{t("subscription.payment_history")}</CardTitle>
   </CardHeader>
 
   <CardContent>
     <table className="w-full">
       <thead>
         <tr className="border-b">
-          <th className="text-left py-2">Invoice</th>
-          <th className="text-left py-2">Plan</th>
-          <th className="text-left py-2">Amount</th>
-          <th className="text-left py-2">Status</th>
-          <th className="text-left py-2">Date</th>
-          <th className="text-left py-2">Action</th>
+          <th className="text-left py-2">{t("subscription.invoice")}</th>
+          <th className="text-left py-2">{t("subscription.plan")}</th>
+          <th className="text-left py-2">{t("subscription.amount")}</th>
+          <th className="text-left py-2">{t("subscription.status")}</th>
+          <th className="text-left py-2">{t("subscription.date")}</th>
+          <th className="text-left py-2">{t("subscription.action")}</th>
         </tr>
       </thead>
 
@@ -68,7 +70,7 @@ setPayments(paymentResponse.data);
     }}
     className="text-blue-600 hover:underline"
   >
-    View
+    {t("subscription.view")}
   </button>
 </td>
           </tr>

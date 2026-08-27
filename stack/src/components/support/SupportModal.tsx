@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { createSupportRequest } from "@/components/services/supportService";
 import { getSubscription } from "../services/subscriptionService";
 import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
 
 interface SupportModalProps {
   open: boolean;
@@ -24,6 +25,7 @@ const SupportModal = ({
   onOpenChange,
 }: SupportModalProps) => {
     const router = useRouter();
+    const {t} = useTranslation();
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -54,7 +56,7 @@ useEffect(() => {
 
   const handleSubmit = async () => {
     if (!subject.trim() || !message.trim()) {
-      alert("Please enter subject and message.");
+      alert(t("alert.please_enter_subject_and_message"));
       return;
     }
 
@@ -69,13 +71,13 @@ useEffect(() => {
       setSubject("");
       setMessage("");
 
-      alert("Support request submitted successfully.");
+      alert(t("alert.support_request_submitted_successfully"));
 
       onOpenChange(false);
     } catch (error: any) {
       alert(
         error?.response?.data?.message ||
-          "Failed to submit support request."
+          t("alert.failed_to_submit_support_request")
       );
     } finally {
       setLoading(false);
@@ -86,23 +88,23 @@ useEffect(() => {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md bg-white text-gray-900">
         <DialogHeader>
-          <DialogTitle>Help & Support</DialogTitle>
+          <DialogTitle>{t("support.help_&_support")}</DialogTitle>
         </DialogHeader>
 
         {planLoading ? (
   <div className="py-8 text-center text-gray-500">
-    Checking your plan...
+    {t("support.checking_your_plan")}
   </div>
 ) : !hasPrioritySupport ? (
   <div className="space-y-4 py-3">
     <div className="rounded-lg bg-orange-50 p-4">
       <p className="font-medium text-gray-900">
-        Priority Support
+        {t("supportpriority_support")}
       </p>
 
       <p className="mt-2 text-sm text-gray-600">
-        Priority Support is available for Silver and Gold members.
-        Upgrade your plan to contact our priority support team.
+       {t("support.priority_support_is_available_for_silver_and_gold_members")}
+        {t("support.upgrade_your_plan_to_contact_our_priority_support_team")}
       </p>
     </div>
 
@@ -113,25 +115,25 @@ useEffect(() => {
         router.push("/subscription");
       }}
     >
-      Upgrade Plan
+      {t("support.upgrade_plan")}
     </Button>
   </div>
 ) : (
   <div className="space-y-4">
     <p className="text-sm text-gray-500">
       {currentPlan === "Gold"
-        ? "Gold member — Highest Priority Support"
-        : "Silver member — Priority Support"}
+        ? `${t("support.gold_member")} — ${t("support.highest_priority_support")}`
+        : `${t("support.silver_member")} — ${t("support.priority_support")}`}
     </p>
 
     <Input
-      placeholder="Subject"
+      placeholder={t("support.subject")}
       value={subject}
       onChange={(e) => setSubject(e.target.value)}
     />
 
     <Textarea
-      placeholder="Describe your issue..."
+      placeholder={t("support.describe_your_issue")}
       value={message}
       onChange={(e) => setMessage(e.target.value)}
       rows={5}
@@ -142,7 +144,7 @@ useEffect(() => {
       disabled={loading}
       className="w-full bg-orange-500 hover:bg-orange-600 text-white"
     >
-      {loading ? "Submitting..." : "Submit Request"}
+      {loading ? t("support.submitting") :  t("support.submit_request")}
     </Button>
   </div>
 )}

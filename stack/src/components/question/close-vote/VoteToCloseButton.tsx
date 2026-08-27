@@ -18,7 +18,7 @@ const VoteToCloseButton = ({
         disabled
         className="px-4 py-2 rounded-md bg-red-100 text-red-600 cursor-not-allowed"
       >
-        Question Closed
+        {t("community.question_closed")}
       </button>
     );
   }
@@ -26,7 +26,7 @@ const VoteToCloseButton = ({
     <button
       onClick={() => {
   if (reputation < 250) {
-    alert("You need at least 250 reputation points to vote to close questions.");
+    alert(t("alert.you_need_at_least_250_reputation_points_to_vote_to_close_questions"));
     return;
   }
 

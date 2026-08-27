@@ -3,6 +3,7 @@
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { toast } from "react-toastify";
 import { voteAnswer } from "./services/answerVoteService";
+import { useTranslation } from "react-i18next";
 
 interface AnswerVoteProps {
   questionId: string;
@@ -27,6 +28,7 @@ export default function AnswerVote({
   answerUserId,
   onVoteSuccess,
 }: AnswerVoteProps) {
+  const {t} = useTranslation();
   const hasUpvoted = currentUserId
     ? upvotes.includes(currentUserId)
     : false;
@@ -41,12 +43,12 @@ export default function AnswerVote({
     voteType: "upvote" | "downvote"
   ) => {
     if (!currentUserId) {
-      toast.error("Please login to vote");
+      toast.error(t("toast.please_login_to_vote"));
       return;
     }
 
     if (String(currentUserId) === String(answerUserId)) {
-      toast.error("You cannot vote on your own answer");
+      toast.error(t("toast.you_cannot_vote_on_your_own_answer"));
       return;
     }
 
@@ -71,7 +73,7 @@ export default function AnswerVote({
     } catch (error: any) {
       toast.error(
         error?.response?.data?.message ||
-          "Failed to vote on answer"
+          t("toast.failed_to_vote_on_answer")
       );
     }
   };

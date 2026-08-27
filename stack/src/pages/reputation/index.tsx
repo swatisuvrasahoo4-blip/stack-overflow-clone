@@ -3,10 +3,12 @@ import React, { useEffect, useState } from "react";
 import { getMyReputationActivity, getUserReputationActivity } from "@/components/services/reputationActivityService";
 import ReputationActivityList from "@/components/reputation/ReputationActivityList";
 import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
 
 const ReputationActivityPage = () => {
   const router = useRouter();
 const { userId } = router.query;
+const {t} = useTranslation();
     const [reputation, setReputation] = useState(0);
 const [activities, setActivities] = useState<any[]>([]);
 const [loading, setLoading] = useState(true);
@@ -42,12 +44,12 @@ useEffect(() => {
     <MainLayout>
       {loading ? (
   <p className="mt-6 text-gray-500">
-    Loading reputation...
+    {t("reputation.loading_reputation")}
   </p>
 ) : (
   <div className="mt-6 border rounded-xl bg-white p-6">
     <p className="text-sm text-gray-500">
-      Current Reputation
+      {t("reputation.current_reputation")}
     </p>
 
     <p className="text-4xl font-bold text-green-600 mt-1">
@@ -55,7 +57,7 @@ useEffect(() => {
     </p>
 
     <p className="text-sm text-gray-500 mt-2">
-      {activities.length} reputation activities
+      {activities.length} {t("reputation.reputation_activities")}
     </p>
     <ReputationActivityList activities={activities} />
   </div>

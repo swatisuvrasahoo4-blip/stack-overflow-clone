@@ -1,4 +1,6 @@
+import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 interface CommentSectionProps {
   post: any;
   user: any;
@@ -37,6 +39,7 @@ export default function CommentSection({
   setShowDeleteReplyModal,
 }: CommentSectionProps) {
   const { t } = useTranslation();
+  const router = useRouter();
   return (
     <>
     {post.comments?.length > 0 && (
@@ -65,6 +68,11 @@ export default function CommentSection({
   <button
     onClick={(e) =>{
       e.stopPropagation();
+       if (!user) {
+          toast.info(t("toast.please_login_to_continue"));
+          router.push("/auth");
+          return;
+        }
       setActiveReplyComment(
         activeReplyComment === comment._id
           ? null
@@ -90,7 +98,7 @@ export default function CommentSection({
 }}
       className="text-red-600 text-xs hover:underline"
     >
-      Delete
+      {t("community.delete")}
     </button>
   )}
 </div>
@@ -153,7 +161,7 @@ export default function CommentSection({
 }}
     className="mt-1 text-xs text-red-600 hover:underline"
   >
-    Delete
+    {t("community.delete")}
   </button>
 )}
 
@@ -188,7 +196,7 @@ export default function CommentSection({
       >
         {expandedComments.includes(post._id)
           ? t(`community.showLess`)
-          : `${t(`community.viewAll`)} ${post.comments.length} ${t(`community.comment`)}`}
+          : `${t(`community.viewAll`)} ${post.comments.length-2} ${t(`community.comment`)}`}
       </button>
     )}
   </div>

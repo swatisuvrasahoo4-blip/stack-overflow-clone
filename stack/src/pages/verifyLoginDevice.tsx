@@ -11,9 +11,11 @@ import {
 } from "@/components/ui/card";
 import axiosInstance from "@/lib/axiosinstance";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const VerifyLoginDevice = () => {
   const router = useRouter();
+  const {t} = useTranslation();
   const { completeLogin } = useAuth();
 
   const [otp, setOtp] = useState("");
@@ -24,7 +26,7 @@ const VerifyLoginDevice = () => {
       const storedData = sessionStorage.getItem("loginVerification");
 
       if (!storedData) {
-        toast.error("Login verification session not found");
+        toast.error(t("toast.login_verification_session_not_found"));
         router.push("/auth");
         return;
       }
@@ -32,7 +34,7 @@ const VerifyLoginDevice = () => {
       const { userId, deviceId } = JSON.parse(storedData);
 
       if (!otp || otp.length !== 6) {
-        toast.error("Please enter the 6-digit OTP");
+        toast.error(t("toast.please_enter the_6-digit_otp"));
         return;
       }
 
@@ -54,7 +56,7 @@ const VerifyLoginDevice = () => {
 
   sessionStorage.removeItem("loginVerification");
 
-  toast.success("Device verified and login successful");
+  toast.success(t("toast.device_verified_and_login_successful"));
 
   router.push("/");
 }

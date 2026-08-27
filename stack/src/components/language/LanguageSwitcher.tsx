@@ -91,6 +91,9 @@ const LanguageSwitcher = () => {
             setOtpOpen(false);
             setExpiresAt(null);
             setSelectedLanguage(null);
+
+            //Reload page after successful OTP verification
+            window.location.reload();
           } catch (error) {
             console.error("Failed to change language:", error);
           }

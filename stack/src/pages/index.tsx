@@ -24,14 +24,13 @@ export default function Home() {
 useEffect(() => {
   const savedFeed = sessionStorage.getItem("homeActiveFeed");
 
-  console.log("savedFeed =", savedFeed);
 
   if (savedFeed === "trending" || savedFeed === "following") {
     setActiveFeed(savedFeed);
-    console.log("restored =", savedFeed);
   }
 }, []);
   const [followingIds, setFollowingIds] = useState<string[]>([]);
+  const [postCount, setPostCount] = useState(0);
   const router = useRouter();
 const [activeContent, setActiveContent] = useState<
   "questions" | "posts"
@@ -43,12 +42,7 @@ const [activeContent, setActiveContent] = useState<
   useEffect(() => {
     
     const loadHomeFeedData = async () => {
-  if (!user?._id && !user?.id) {
-    setItems([]);
-    setFollowingIds([]);
-    setloading(false);
-    return;
-  }
+ 
       try {
         const [questionsResponse, followingResponse] = await Promise.all([
           axiosInstance.get("/question/getallquestion"),
@@ -59,15 +53,7 @@ const [activeContent, setActiveContent] = useState<
 
         const questions = questionsResponse.data?.data || questionsResponse.data || [];
         setItems(questions.map(normalizeStoredQuestion));
-        setItems(questions.map(normalizeStoredQuestion));
 
-const savedScroll = sessionStorage.getItem("questionsScrollPosition");
-
-if (savedScroll) {
-  setTimeout(() => {
-    window.scrollTo(0, Number(savedScroll));
-  }, 100);
-}
 
         const following = Array.isArray(followingResponse)
           ? followingResponse
@@ -89,6 +75,37 @@ if (savedScroll) {
 
     loadHomeFeedData();
   }, [user?._id, user?.id]);
+  useEffect(() => {
+  const savedScroll = sessionStorage.getItem(
+    "questionsScrollPosition"
+  );
+
+  if (!savedScroll || loading || activeContent !== "questions") {
+    return;
+  }
+
+  let attempts = 0;
+  const maxAttempts = 20;
+  const position = Number(savedScroll);
+
+  const restoreScroll = () => {
+    window.scrollTo(0, position);
+
+    attempts++;
+
+    if (
+      Math.abs(window.scrollY - position) < 5 ||
+      attempts >= maxAttempts
+    ) {
+      sessionStorage.removeItem("questionsScrollPosition");
+      return;
+    }
+
+    requestAnimationFrame(restoreScroll);
+  };
+
+  requestAnimationFrame(restoreScroll);
+}, [loading, items.length, activeContent]);
 
   function normalizeStoredQuestion(s: any) {
     const id = s._id || s.id || String(Date.now());
@@ -231,9 +248,16 @@ if (savedScroll) {
 
           <div className="min-w-0 flex-1">
             <Link
-              href={`/questions/${question.id || question._id}`}
-              className="mb-2 block text-base font-medium text-blue-600 hover:text-blue-800 lg:text-lg"
-            >
+  href={`/questions/${question.id || question._id}`}
+  onClick={() => {
+    sessionStorage.setItem("homeActiveFeed", activeFeed);
+    sessionStorage.setItem(
+      "questionsScrollPosition",
+      String(window.scrollY)
+    );
+  }}
+  className="mb-2 block text-base font-medium text-blue-600 hover:text-blue-800 lg:text-lg"
+>
               {question.title}
             </Link>
 
@@ -287,7 +311,11 @@ if (savedScroll) {
       </div>
       ))
   ) : (
-    <PostFeed activeFeed={activeFeed} followingIds={followingIds} />
+    <PostFeed 
+    activeFeed={activeFeed}
+     followingIds={followingIds}
+     onPostCountChange={setPostCount}
+      />
   )}
 </div>
         </div>

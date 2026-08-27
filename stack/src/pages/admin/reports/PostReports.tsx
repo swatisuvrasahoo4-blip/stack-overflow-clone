@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface PostReportsProps {
   reports: any[];
@@ -24,6 +25,7 @@ const PostReports = ({
   handleSuspend,
   handleUnsuspend,
 }: PostReportsProps) => {
+  const {t} = useTranslation();
     const [updatingId, setUpdatingId] = useState<string | null>(null);
     const handleStatusChange = async (
   reportId: string,
@@ -40,28 +42,28 @@ const PostReports = ({
   <>
   <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
     <div className="rounded-xl border bg-white p-5 shadow-sm">
-      <p className="text-sm text-gray-500">Pending</p>
+      <p className="text-sm text-gray-500">{t("report.pending")}</p>
       <h2 className="mt-2 text-3xl font-bold text-yellow-600">
         {reportStats?.pending ?? 0}
       </h2>
     </div>
 
     <div className="rounded-xl border bg-white p-5 shadow-sm">
-      <p className="text-sm text-gray-500">Reviewed</p>
+      <p className="text-sm text-gray-500">{t("report.reviewed")}</p>
       <h2 className="mt-2 text-3xl font-bold text-blue-600">
         {reportStats?.reviewed ?? 0}
       </h2>
     </div>
 
     <div className="rounded-xl border bg-white p-5 shadow-sm">
-      <p className="text-sm text-gray-500">Dismissed</p>
+      <p className="text-sm text-gray-500">{t("report.dismissed")}</p>
       <h2 className="mt-2 text-3xl font-bold text-gray-700">
         {reportStats?.dismissed ?? 0}
       </h2>
     </div>
 
     <div className="rounded-xl border bg-white p-5 shadow-sm">
-      <p className="text-sm text-gray-500">Action Taken</p>
+      <p className="text-sm text-gray-500">{t("report.actionTaken")}</p>
       <h2 className="mt-2 text-3xl font-bold text-red-600">
         {reportStats?.actionTaken ?? 0}
       </h2>
@@ -70,11 +72,11 @@ const PostReports = ({
        {! reports || reports.length === 0 ? (
         <div className="rounded-xl border border-gray-200 bg-white p-10 text-center shadow-sm">
           <p className="text-base font-medium text-gray-700">
-            No reports found
+            {t("report.no_reports_found")}
           </p>
 
           <p className="mt-1 text-sm text-gray-500">
-            New reported posts will appear here.
+            {t("report.new_reported_posts_will_appear_here")}
           </p>
         </div>
       ) : (
@@ -110,7 +112,7 @@ const PostReports = ({
 
                       {report.postAuthorId?.isSuspended && (
                         <span className="rounded-full bg-red-600 px-3 py-1 text-xs font-semibold text-white">
-                          User Suspended
+                          {t("report.user_suspended")}
                         </span>
                       )}
                     </div>
@@ -122,19 +124,19 @@ const PostReports = ({
 
                   <div className="rounded-xl border border-gray-100 bg-gray-50 p-5">
                     <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
-                      Reported post
+                      {t("report.reported_post")}
                     </p>
 
                     <p className="text-base font-medium leading-7 text-gray-900">
                       {report.postId?.content ||
-                        "Reported post unavailable."}
+                        t("reported_post_unavailable")}
                     </p>
                     
 
                     {report.postId?.image && (
                       <img
                         src={report.postId.image}
-                        alt="Reported post"
+                        alt={t("Reported_post")}
                         className="mt-4 max-h-72 w-full rounded-lg object-cover"
                       />
                     )}
@@ -143,7 +145,7 @@ const PostReports = ({
                   {report.details && (
                     <div className="rounded-lg border border-orange-100 bg-orange-50 p-4">
                       <p className="text-xs font-semibold uppercase tracking-wide text-orange-700">
-                        Additional details
+                        {t("report.additionalDetails")}
                       </p>
 
                       <p className="mt-1 text-sm text-gray-700">
@@ -157,7 +159,7 @@ const PostReports = ({
   {/* Reporter */}
   <div>
     <p className="mb-2 text-xs font-medium uppercase text-gray-400">
-      Reporter
+      {t("report.reporter")}
     </p>
 
     {report.reporterId && (
@@ -168,7 +170,7 @@ const PostReports = ({
         {report.reporterId.profilePhoto ? (
           <img
             src={report.reporterId.profilePhoto}
-            alt="Reporter"
+            alt={t("reporter")}
             className="h-10 w-10 rounded-full object-cover"
           />
         ) : (
@@ -190,7 +192,7 @@ const PostReports = ({
   {/* Post Author */}
   <div>
     <p className="mb-2 text-xs font-medium uppercase text-gray-400">
-      Post Author
+      {t("report.post_author")}
     </p>
 
     {report.postAuthorId && (
@@ -201,7 +203,7 @@ const PostReports = ({
         {report.postAuthorId.profilePhoto ? (
           <img
             src={report.postAuthorId.profilePhoto}
-            alt="Author"
+            alt={t("report.author")}
             className="h-10 w-10 rounded-full object-cover"
           />
         ) : (
@@ -236,8 +238,8 @@ const PostReports = ({
   className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-40"
 >
   {report.status === "reviewed"
-    ? "Reviewed"
-    : "Mark Reviewed"}
+    ? t("report.reviewed")
+    : t("report.markReviewed")}
 </button>
 
 {/* Dismiss */}
@@ -251,8 +253,8 @@ const PostReports = ({
   className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
 >
   {report.status === "dismissed"
-    ? "Dismissed"
-    : "Dismiss"}
+    ? t("report.dismissed")
+    : t("report.dismiss")}
 </button>
 
 {/* Action Taken */}
@@ -265,7 +267,7 @@ const PostReports = ({
   onClick={() => handleStatusChange(report._id, "action_taken")}
   className="rounded-lg bg-orange-600 px-4 py-2 text-sm font-medium text-white hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-40"
 >
-  Action Taken
+  {t("report.actionTaken")}
 </button>
 
                 {report.postAuthorId &&
@@ -277,7 +279,7 @@ const PostReports = ({
                       }
                       className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
                     >
-                      Unsuspend User
+                      {t("report.unsuspendUser")}
                     </button>
                   ) : (
                     <button
@@ -287,7 +289,7 @@ const PostReports = ({
                       }
                       className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
                     >
-                      Suspend User
+                      {t("report.suspendUser")}
                     </button>
                   ))}
               </div>

@@ -16,14 +16,18 @@ import { createLoginOtp } from "../services/loginOtpService.js";
 import { isTrustedDevice } from "../services/trustedDeviceService.js";
 
 export const Signup = async (req, res) => {
-  const { name, username, email, mobile, password } = req.body;
+  const { name, username, email, mobile, password, deviceId } = req.body;
   try {
     if (!name || !username || !email || !mobile || !password) {
   return res.status(400).json({
     message: "All fields are required",
   });
 }
-
+if (!deviceId) {
+  return res.status(400).json({
+    message: "Device ID is required",
+  });
+}
 const mobilePattern = /^[0-9]{10}$/;
 
 if (!mobilePattern.test(mobile)) {
@@ -76,12 +80,44 @@ if (!usernamePattern.test(cleanUsername)) {
       mobile,
       password: hashpassword,
     });
+
+const sessionToken = generateSessionToken();
+const sessionTokenHash = hashSessionToken(sessionToken);
+
+const userAgent = req.headers["user-agent"] || "";
+const deviceInfo = getDeviceInfo(userAgent);
+
+const ipAddress =
+  req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || req.ip;
+
+const location = await getIpLocation(ipAddress);
+
+const inactivityDays =
+  Number(process.env.SESSION_INACTIVITY_DAYS) || 3;
+
+const expiresAt = new Date();
+expiresAt.setDate(expiresAt.getDate() + inactivityDays);
+
+await LoginSession.create({
+  userId: newuser._id,
+  sessionTokenHash,
+  deviceId,
+  browser: deviceInfo.browser,
+  operatingSystem: deviceInfo.operatingSystem,
+  deviceType: deviceInfo.deviceType,
+  ipAddress,
+  location,
+  loginAt: new Date(),
+  lastActivityAt: new Date(),
+  expiresAt,
+  isTrustedDevice: true,
+});
     const jwtSecret = process.env.JWT_SECRET;
     if (!jwtSecret) {
       throw new Error("Missing JWT_SECRET environment variable");
     }
     const token = jwt.sign(
-      { email: newuser.email, id: newuser._id },
+      { email: newuser.email, id: newuser._id, sessionToken: sessionTokenHash },
       jwtSecret,
       { expiresIn: "7d" }
     );

@@ -119,7 +119,7 @@ setanswer(questionData?.answer || []);
 
   const handleVote = async (vote: string) => {
   if (!user) {
-    toast.info("Please login to continue");
+    toast.info(t("toast.please_login_to_continue"));
     router.push("/");
     return;
   }
@@ -135,17 +135,17 @@ setanswer(questionData?.answer || []);
 
     setquestion(response.data);
 
-    toast.success("Vote updated");
+    toast.success(t("toast.vote_updated"));
   } catch (error) {
     console.error(error);
-    toast.error("Failed to vote question");
+    toast.error(t("toast.failed_to_vote_question"));
   }
 };
 const handlebookmark = async () => {
   const userId = user?._id || user?.id;
 
   if (!userId) {
-    toast.info("Please login to save questions");
+    toast.info(t("toast.please_login_to_save_questions"));
     router.push("/");
     return;
   }
@@ -153,7 +153,7 @@ const handlebookmark = async () => {
   const questionId = question?._id;
 
   if (!questionId) {
-    toast.error("Question ID not found");
+    toast.error(t("toast.question_id_not_found"));
     return;
   }
 
@@ -177,13 +177,13 @@ const handlebookmark = async () => {
     toast.success(result.message);
   } catch (error: any) {
     toast.error(
-      error?.response?.data?.message || "Unable to update bookmark"
+      error?.response?.data?.message || t("toast.unable_to_update_bookmark")
     );
   }
 };
   const handleSubmitanswer = async () => {
     if(!user){
-      toast.info("Please login to continue")
+      toast.info(t("toast.please_login_to_continue"))
       router.push("/")
       return
     }
@@ -198,10 +198,10 @@ const handlebookmark = async () => {
 
 setquestion(result.data);
 
-toast.success("Answer uploaded successfully");
+toast.success(t("toast.answer_uploaded_successfully"));
     } catch (error) {
       console.error(error);
-      toast.error("Failed to Answer");
+      toast.error(t("toast.failed_to_answer"));
     } finally {
       setnewAnswer("");
       setisSubmitting(false);
@@ -212,7 +212,7 @@ toast.success("Answer uploaded successfully");
   try {
     await acceptAnswer(String(question._id), answerId);
 
-    toast.success("Answer accepted successfully");
+    toast.success(t("toast.answer_accepted_successfully"));
 
     // Refresh question data so accepted status appears immediately
     const updatedQuestion = await getQuestionById(String(question._id));
@@ -223,30 +223,30 @@ toast.success("Answer uploaded successfully");
     console.error(error);
 
     toast.error(
-      error?.response?.data?.message || "Failed to accept answer"
+      error?.response?.data?.message || t("toast.failed_to_accept_answer")
     );
   }
 };
 
   const handleDelete = async () => {
     if(!user){
-      toast.info("Please login to continue")
+      toast.info(t("toast.please_login_to_continue"))
       router.push("/")
       return
     }
-    if (!window.confirm("Are you sure you want to delete this question?"))
+    if (!window.confirm(t("window.are_you_sure_you_want_to_delete_this_question")))
       return;
    
-    toast.success("Question deleted (local)");
+    toast.success(t("toast.question_deleted"));
     router.push("/");
   };
   const handleDeleteanswer = async (id: String) => {
     if(!user){
-      toast.info("Please login to continue")
+      toast.info(t("toast.please_login_to_continue"))
       router.push("/")
       return
     }
-    if (!window.confirm("Are you sure you want to delete this answer?"))
+    if (!window.confirm(t("window.are_you_sure_you_want_to_delete_this_answer")))
       return;
     try {
       await axiosInstance.delete(
@@ -260,10 +260,10 @@ toast.success("Answer uploaded successfully");
         noofanswer: updateanswer.length,
         answer: updateanswer,
       }));
-      toast.success("Answer deleted");
+      toast.success(t("toast.answer_deleted"));
     } catch (error) {
       console.error(error);
-      toast.error("Failed to delete answer");
+      toast.error(t("toast.failed_to_delete_answer"));
     }
   };
 const handleShare = async () => {
@@ -278,7 +278,7 @@ const handleShare = async () => {
       });
     } else {
       await navigator.clipboard.writeText(shareUrl);
-      toast.success("Question link copied!");
+      toast.success(t("toast.question_link_copied"));
     }
   } catch (error) {
     console.log(error);

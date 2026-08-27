@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import { changePassword } from "@/components/services/changePasswordService";
 import { useRouter } from "next/router";
 import { useAuth } from "@/lib/AuthContext";
+import { useTranslation } from "react-i18next";
 export default function ChangePassword() {
     const router = useRouter();
     const { user } = useAuth();
+    const {t} = useTranslation();
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -16,7 +18,7 @@ const [successMessage, setSuccessMessage] = useState("");
     setSuccessMessage("");
 
     if (!currentPassword || !newPassword || !confirmPassword) {
-        setErrorMessage("Please fill in all fields.");
+        setErrorMessage(t("error.please_fill_in_all_fields"));
         return;
     }
 
@@ -41,7 +43,7 @@ const [successMessage, setSuccessMessage] = useState("");
 
     } catch (error: any) {
         setErrorMessage(
-            error?.response?.data?.message || "Something went wrong."
+            error?.response?.data?.message || t("error.something_went_wrong")
         );
     } finally {
         setLoading(false);
@@ -58,11 +60,11 @@ if (!user) return null
             <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-6">
 
                 <h1 className="text-3xl font-bold text-center mb-2 text-black">
-                    Change Password
+                    {t("changepass.change_password")}
                 </h1>
 
                 <p className="text-center text-gray-500 mb-6">
-                    Update your account password securely.
+                    {t("changepass.update_your_account_password_securely")}
                 </p>
 {successMessage && (
     <div className="mb-4 rounded-lg bg-green-100 border border-green-300 text-green-700 px-4 py-3 text-sm">
@@ -76,50 +78,48 @@ if (!user) return null
     </div>
 )}
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Current Password
+                    {t("changepass.current_password")}
                 </label>
 
                 <input
                     type="password"
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
-                    placeholder="Enter current password"
+                    placeholder={t("changepass.enter_current_password")}
                     className="w-full border rounded-lg text-gray-700 px-4 py-3 mb-4 outline-none focus:ring-2 focus:ring-orange-500"
                 />
 
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    New Password
+                    {t("changepass.new_password")}
                 </label>
 
                 <input
                     type="password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Enter new password"
+                    placeholder={t("changepass.enter_new_password")}
                     className="w-full border rounded-lg text-gray-700 px-4 py-3 mb-4 outline-none focus:ring-2 focus:ring-orange-500"
                 />
 
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Confirm Password
+                    {t("changepass.confirm_password")}
                 </label>
 
                 <input
                     type="password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Confirm new password"
+                    placeholder={t("changepass.confirm_new_password")}
                     className="w-full border rounded-lg text-gray-700 px-4 py-3 mb-6 outline-none focus:ring-2 focus:ring-orange-500"
                 />
-
                 <button
     type="button"
     onClick={handleChangePassword}
     disabled={loading}
     className="w-full bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
 >
-    {loading ? "Changing Password..." : "Change Password"}
+    {loading ? t("changepass.changing_password") : t("changepass.change_password")}
 </button>
-
             </div>
         </div>
     );

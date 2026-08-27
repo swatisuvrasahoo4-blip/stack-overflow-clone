@@ -1,6 +1,9 @@
 import type { Dispatch, SetStateAction } from "react";
 import { toggleLikePost,toggleBookmarkPost, getPosts, addComment, updatePost,deletePost, addReply, deleteComment } from "@/components/services/communityService";
 import { shareCommunityPost } from "@/utils/communityUtils";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 export default function usePostActions({
   posts,
@@ -27,7 +30,14 @@ setActiveReplyComment: React.Dispatch<
 >;
 
 }) {
+  const router = useRouter();
+  const {t} = useTranslation();
   const handleLike = async (postId: string) => {
+    if (!user) {
+  toast.info(t("toast.please_login_to_continue"));
+  router.push("/auth");
+  return;
+}
     try {
       const updatedPost = await toggleLikePost(postId);
 
@@ -44,10 +54,11 @@ setActiveReplyComment: React.Dispatch<
   const handleBookmark = async (post: any) => {
     const userId = user?._id || user?.id || user?.userId;
 
-    if (!userId) {
-      alert("Please log in to save posts.");
-      return null;
-    }
+   if (!user) {
+  toast.info(t("toast.please_login_to_continue"));
+  router.push("/auth");
+  return;
+}
   
     try {
      const result = await toggleBookmarkPost(userId, post._id);
@@ -68,32 +79,46 @@ return null;
    } catch (error: any) {
   alert(
     error?.response?.data?.message ||
-      "Unable to update bookmark. Please try again."
+      (t("alert.unable_to_update_bookmark_please_try_again"))
   );
   return null;
 }
   };
   const handleComment = async (postId: string) => {
-    if (!commentText.trim()) return;
-  
-    try {
-      await addComment(postId, {
-    text: commentText,
-    userName: user?.name || user?.username || user?.email,
-  });
-     const response = await getPosts();
-  setPosts(response.data || []);
-  
-      setCommentText("");
-      setActiveCommentPost(null);
-    } catch (error) {
-      console.log(error);
+    
+  if (!commentText.trim()) return;
+console.log(postId);
+
+
+  try {
+    const response = await addComment(postId, {
+      text: commentText,
+      userName: user?.name || user?.username || user?.email,
+    });
+
+console.log("COMMENT RESPONSE:", response);
+    const updatedPost = response?.data;
+
+    if (updatedPost) {
+      setPosts((previousPosts) =>
+        previousPosts.map((post) =>
+          post._id === postId ? updatedPost : post
+        )
+      );
     }
-  };
-  const handleShare = async (postId: string) => {
-  if(!user){
-    alert("Please log in to share posts.")
+
+    setCommentText("");
+    setActiveCommentPost(null);
+  } catch (error) {
+    console.log("Add Comment Error:", error);
   }
+};
+  const handleShare = async (postId: string) => {
+  if (!user) {
+  toast.info(t("toast.please_login_to_continue"));
+  router.push("/auth");
+  return;
+}
   try{
     await shareCommunityPost(postId);
   }catch(error){
@@ -102,7 +127,7 @@ return null;
 };
 const handleEdit = (post: any) => {
   if((user?.reputation || 0) < 100){
-    alert("You need at least 100 reputation points to edit community posts.");
+    alert(t("alert.you_need_atleast_100_reputation_points_to_edit_community_posts"));
     return;
   }
   setEditingPost(post);
@@ -113,7 +138,7 @@ const handleSaveEdit = async () => {
   if (!editingPost) return;
 
   if (!editContent.trim()) {
-    alert("Post content cannot be empty.");
+    alert(t("alert.post_content_cannot_be_empty"));
     return;
   }
   try {
@@ -137,18 +162,18 @@ const handleSaveEdit = async () => {
     console.log("Edit Post Error:", error);
 
     if (error?.response?.status === 401) {
-      alert("Your session has expired. Please log in again.");
+      alert(t("alert.your_session_has_expired_please_log_in_again"));
       return;
     }
 
     if (error?.response?.status === 403) {
-      alert(error?.response?.data?.message || "You can only edit your own post.");
+      alert(error?.response?.data?.message || t("alert.you_can_only_edit_your_own_post"));
       return;
     }
 
     alert(
       error?.response?.data?.message ||
-        "Something went wrong while updating the post."
+        t("alert.something_went_wrong_while_updating_the_post")
     );
   }
 };
@@ -161,13 +186,13 @@ const handleDelete = async (postId: string) => {
       prev.filter((post) => post._id !== postId)
     );
 
-    alert("Post deleted successfully!");
+    alert(t("alert.post_deleted_successfully"));
   } catch (error: any) {
     console.log(error);
 
     alert(
       error.response?.data?.message ||
-        "Unable to delete the post"
+        t("alert.unable_to_delete_the_post")
     );
   }
 };
@@ -177,7 +202,7 @@ const handleReply = async (postId: string, commentId: string) => {
 
 if (reputation < 50) {
   alert(
-    `You need at least 50 reputation points to reply. Your current reputation is ${reputation}.`
+    t(`alert.you_need_atleast_50_reputation_points_to_reply_your_current_reputation_is ${reputation}`)
   );
   return;
 }
@@ -204,24 +229,30 @@ const handleDeleteComment = async (
   commentId: string
 ) => {
   try {
-    await deleteComment(postId, commentId)
-    setPosts((prevPosts) =>
-      prevPosts.map((post) =>
-        post._id === postId
-          ? {
-              ...post,
-              comments: post.comments.filter(
-                (comment: any) => comment._id !== commentId
-              ),
-            }
-          : post
+    const response = await deleteComment(postId, commentId);
+
+    const updatedPost = response?.data;
+
+    if (!updatedPost) {
+      console.error(
+        "Updated post missing from delete comment response:",
+        response
+      );
+      return;
+    }
+
+    setPosts((previousPosts) =>
+      previousPosts.map((post) =>
+        post._id === postId ? updatedPost : post
       )
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error("Delete comment error:", error);
-    alert("Unable to delete comment");
-    
-    
+
+    alert(
+      error?.response?.data?.message ||
+        t("alert.unable_to_delete_comment")
+    );
   }
 };
   return {

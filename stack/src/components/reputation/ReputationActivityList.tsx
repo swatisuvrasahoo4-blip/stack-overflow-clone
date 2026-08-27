@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface ReputationActivityListProps {
   activities: any[];
@@ -7,11 +8,12 @@ interface ReputationActivityListProps {
 const ReputationActivityList = ({
   activities,
 }: ReputationActivityListProps) => {
+  const {t} = useTranslation();
   if (activities.length === 0) {
     return (
       <div className="mt-6 border rounded-xl bg-white p-6">
         <p className="text-gray-500 text-center">
-          No reputation activity yet.
+          {t("reputation.no_reputation_activity_yet")}
         </p>
       </div>
     );
@@ -20,7 +22,7 @@ const ReputationActivityList = ({
   return (
     <div className="mt-6 border rounded-xl bg-white p-6">
       <h2 className="text-xl font-semibold mb-5">
-        Reputation Activity
+        {t("reputation.reputation_activity")}
       </h2>
 
       <div className="space-y-3">
@@ -36,7 +38,7 @@ const ReputationActivityList = ({
 
               {activity.transferReason && (
   <p className="text-sm text-gray-600 mt-1">
-    Reason: {activity.transferReason}
+    {t("reputation.reason")}: {activity.transferReason}
   </p>
 )}
 

@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface PlanCardProps {
   name: string;
@@ -22,6 +23,7 @@ export default function PlanCard({
   currentPlan,
   onUpgrade,
 }: PlanCardProps) {
+  const {t} = useTranslation();
 
   const planOrder: Record<string, number> = {
   Free: 0,
@@ -42,7 +44,7 @@ const canUpgrade =
 >
       {isPopular && (
         <span className="absolute top-4 right-4 rounded-full bg-yellow-500 px-3 py-1 text-xs font-semibold text-white">
-          Most Popular
+          {t("subscription.most_popular")}
         </span>
       )}
 
@@ -57,7 +59,7 @@ const canUpgrade =
       : "text-yellow-600"
   }`}
 >
-  {name}
+  {t(`subscription.${name.toLowerCase()}`)}
 </h2>
 
       <p
@@ -71,10 +73,10 @@ const canUpgrade =
       : "text-yellow-500"
   }`}
 >
-  {price}
+  {price.replace("month", t("subscription.month"))}
 </p>
 
-      <p className="mt-4 text-base text-gray-600">{description}</p>
+      <p className="mt-4 text-base text-gray-600">{t(`subscription.${description}`)}</p>
 
       <div className="mt-8 space-y-4">
         {features.map((feature, index) => (
@@ -90,7 +92,7 @@ const canUpgrade =
       : "text-yellow-500"
   }`}
 />
-            <span className="text-sm font-medium text-gray-700">{feature}</span>
+            <span className="text-sm font-medium text-gray-700">{t(`subscription.${feature}`)}</span>
           </div>
         ))}
       </div>
@@ -109,7 +111,7 @@ const canUpgrade =
       : "bg-yellow-500 hover:bg-yellow-500"
   }`}
 >
-  Current Plan
+  {t("subscription.current_plan")}
 </Button>
         ) : (
           <Button
@@ -124,7 +126,7 @@ const canUpgrade =
       : "bg-purple-600 hover:bg-purple-700"
   }`}
 >
-  {canUpgrade ? "Upgrade" : "Lower Plan"}
+  {canUpgrade ? t("subscription.upgrade") : t("subscription.lower_plan")}
 </Button>
         )}
       </div>

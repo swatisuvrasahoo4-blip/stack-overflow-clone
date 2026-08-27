@@ -9,6 +9,8 @@ import ReportPostButton from "../reports/ReportPostButton";
 import ReportPostModal from "../reports/ReportPostModal";
 import { createReport, checkReportStatus } from "../services/reportService";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 
 export default function PostCard({post,user,handleLike,handleEdit,handleShare,handleBookmark,handleComment,handleReply,
@@ -16,6 +18,7 @@ handleDelete, activeCommentPost, setActiveCommentPost, commentText, setCommentTe
 activeReplyComment, setActiveReplyComment, replyText, setReplyText, setSelectedComment, setShowDeleteCommentModal, setSelectedReply, 
 setShowDeleteReplyModal, setSelectedPostId, setShowDeleteModal,selectedPostId,showDeleteModal,isBookmarked: initialBookmarked,}:any){
   const { t } = useTranslation();
+  const router = useRouter();
     const [isBookmarked, setIsBookmarked] = useState(
       initialBookmarked ??
         post.isBookmarked ??
@@ -41,13 +44,20 @@ const [showReportModal, setShowReportModal] = useState(false);
       ) ?? false
     );
 const handleReportClick = async () => {
+if (!user) {
+  toast.info(t("toast.please_login_to_continue"));
+  router.push("/auth");
+  return;
+}
 
   // Reputation privilege check
   const reputation = Number(user?.reputation ?? 0);
+  console.log("REPORT REPUTATION:", user?.reputation);
+console.log("REPORT USER:", user);
 
   if (reputation < 500) {
     alert(
-      `You need at least 500 reputation points to report inappropriate content. Your current reputation is ${reputation}.`
+     t(`alert.you_need_atleast_least_500_reputation_points_to_report_inappropriate_content_your_current_reputation_is,${reputation}`)
     );
     return;
   }
@@ -56,13 +66,13 @@ const handleReportClick = async () => {
     const response = await checkReportStatus(post._id);
 
     if (response.alreadyReported) {
-      alert("You have already reported this post.");
+      alert (t("alert.you_have_already_reported_this_post"));
       return;
     }
 
     setShowReportModal(true);
   } catch (error) {
-    alert("Failed to check report status.");
+    alert (t("alert.failed_to_check_report_status"));
   }
 };
     const handleLikeClick = (postId: string) => {
@@ -200,6 +210,11 @@ const handleReportClick = async () => {
       className="cursor-pointer"
   onClick={(e) =>{
     e.stopPropagation();
+ if (!user) {
+          toast.info(t("toast.please_login_to_continue"));
+          router.push("/auth");
+          return;
+        }
     setActiveCommentPost(
       activeCommentPost === post._id ? null : post._id
     )
@@ -210,6 +225,7 @@ const handleReportClick = async () => {
       <button
       type="button"
       onClick={(e)=>{ 
+       
         e.stopPropagation();
         handleBookmark(post).then((nextState: boolean | null) => {
           if (nextState !== null) setIsBookmarked(nextState);
@@ -253,12 +269,17 @@ const handleReportClick = async () => {
     <button
       onClick={(e) => {
   e.stopPropagation();
+  if (!user) {
+  toast.info(t("toast.please_login_to_continue"));
+  router.push("/auth");
+  return;
+}
 
   const reputation = Number(user?.reputation ?? 0);
 
   if (reputation < 50) {
     alert(
-      `You need at least 50 reputation points to comment. Your current reputation is ${reputation}.`
+      t(`alert.you_need_atleast_50_reputation_points_to_comment_your_current_reputation_is, ${reputation}.`)
     );
     return;
   }
@@ -304,12 +325,12 @@ const handleReportClick = async () => {
         details,
       });
 
-      alert("Post reported successfully.");
+      alert(t("alert.post_reported_successfully"));
       setShowReportModal(false);
     } catch (error: any) {
       alert(
         error?.response?.data?.message ||
-          "Failed to report post."
+          t("alert.failed_to_report_post")
       );
     }
   }}

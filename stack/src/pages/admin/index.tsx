@@ -2,10 +2,12 @@ import { useState } from "react";
 import AdminReportsPage from "./reports";
 import AdminSupportPage from "./support";
 import LoginActivityPage from "./login-activity";
+import { useTranslation } from "react-i18next";
 
 type AdminTab = "reports" | "support" | "loginActivity";
 
 const AdminDashboard = () => {
+  const {t} = useTranslation();
   const [activeTab, setActiveTab] = useState<AdminTab>("reports");
 
   return (
@@ -13,11 +15,11 @@ const AdminDashboard = () => {
       <div className="mx-auto max-w-6xl">
         <div className="mb-6 text-center">
           <h1 className="text-3xl font-bold text-gray-900">
-            Admin Dashboard
+            {t("admin.adminDashboard")}
           </h1>
 
           <p className="mt-2 text-sm text-gray-600">
-            Manage reports, support, and login activity.
+            {t("admin.manageReportsSupportLoginActivity")}
           </p>
         </div>
 
@@ -32,7 +34,7 @@ const AdminDashboard = () => {
                 : "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
             }`}
           >
-            Reports
+            {t("admin.reports")}
           </button>
 
           <button
@@ -44,7 +46,7 @@ const AdminDashboard = () => {
                 : "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
             }`}
           >
-            Support
+            {t("admin.support")}
           </button>
 
           <button
@@ -56,7 +58,7 @@ const AdminDashboard = () => {
                 : "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
             }`}
           >
-            Login Activity
+            {t("admin.loginActivity")}
           </button>
         </div>
 

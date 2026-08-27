@@ -1,4 +1,5 @@
 import { useState,useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 interface ReportQuestionModalProps {
   open: boolean;
@@ -11,6 +12,7 @@ export default function ReportQuestionModal({
   onClose,
   onSubmit,
 }: ReportQuestionModalProps) {
+  const {t} = useTranslation();
   const [reason, setReason] = useState("");
   const [details, setDetails] = useState("");
   useEffect(() => {
@@ -26,13 +28,13 @@ export default function ReportQuestionModal({
   if (!open) return null;
 
   const reasons = [
-    "Spam",
-    "Harassment or Hate",
-    "Violence",
-    "Nudity or Sexual Content",
-    "Misinformation",
-    "Copyright",
-    "Other",
+    "spam",
+    "harassment_or_hate",
+    "violence",
+    "nudity_or_sexual_content",
+    "misinformation",
+    "copyright",
+    "other",
   ];
 
   return (
@@ -44,10 +46,10 @@ export default function ReportQuestionModal({
   className="w-full max-w-md max-h-[85vh] overflow-y-auto rounded-lg bg-white p-6 shadow-xl"
   onClick={(event) => event.stopPropagation()}
 >
-        <h2 className="text-lg font-semibold">Report Question</h2>
+        <h2 className="text-lg font-semibold">{t("report.report_question")}</h2>
 
         <p className="mt-1 text-sm text-gray-600">
-          Select the reason for reporting this question.
+          {t("report.select_the_reason_for_reporting_this_question")}
         </p>
 
         <div className="mt-4 space-y-3">
@@ -64,7 +66,7 @@ export default function ReportQuestionModal({
                 onChange={(event) => setReason(event.target.value)}
               />
 
-              <span className="text-sm text-gray-700">{item}</span>
+              <span className="text-sm text-gray-700">{t(`report.${item}`)}</span>
             </label>
           ))}
         </div>
@@ -73,7 +75,7 @@ export default function ReportQuestionModal({
           <textarea
             value={details}
             onChange={(event) => setDetails(event.target.value)}
-            placeholder="Explain the issue..."
+            placeholder={t("report.explain_the_issue")}
             className="mt-4 min-h-24 w-full rounded-md border p-3 text-sm outline-none focus:ring-2 focus:ring-blue-500"
           />
         )}
@@ -84,7 +86,7 @@ export default function ReportQuestionModal({
             onClick={onClose}
             className="rounded-md border px-4 py-2 text-sm hover:bg-gray-100"
           >
-            Cancel
+            {t("report.cancel")}
           </button>
 
           <button
@@ -93,7 +95,7 @@ export default function ReportQuestionModal({
             onClick={() => onSubmit(reason, details)}
             className="rounded-md bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Submit Report
+            {t("report.submit_report")}
           </button>
         </div>
       </div>

@@ -15,9 +15,11 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import axiosInstance from "@/lib/axiosinstance";
+import { useTranslation } from "react-i18next";
 
 export default function SignUpPage() {
   const router = useRouter();
+  const {t} = useTranslation();
   const { Signup, loading } = useAuth();
   const [form, setform] = useState({ name: "", username:"", email: "",mobile: "", password: "" });
   const [usernameStatus, setUsernameStatus] = useState<
@@ -90,13 +92,13 @@ useEffect(() => {
     e.preventDefault();
     
     if (!form.name || !form.username || !form.email || !form.mobile || !form.password) {
-      toast.error("ALL Fields are required");
+      toast.error(t("toast.all_fields_are_required"));
       return;
     }
     const mobilePattern = /^[0-9]{10}$/;
 
 if (!mobilePattern.test(form.mobile)) {
-  toast.error("Mobile number must contain exactly 10 digits");
+  toast.error(t("toast.mobile_number_must_contain_exactly_10_digits"));
   return;
 }
     if (
@@ -105,12 +107,12 @@ if (!mobilePattern.test(form.mobile)) {
   !/[0-9]/.test(form.password)
 ) {
   toast.error(
-    "Password must contain at least 8 characters, including at least 1 letter and 1 number"
+    t("toast.password_must_contain_at_least_8_characters_including_atleast_1_letter_and_1_number")
   );
   return;
 }
     if (usernameStatus !== "available") {
-  toast.error("Please choose an available username");
+  toast.error(t("toast.please_choose_an_available_username"));
   return;
 }
     try {
@@ -326,7 +328,7 @@ if (!mobilePattern.test(form.mobile)) {
 
               <div className="text-center text-sm">
                 Already have an account?{" "}
-                <Link href="/login" className="text-blue-600 hover:underline">
+                <Link href="/auth" className="text-blue-600 hover:underline">
                   Log in
                 </Link>
               </div>

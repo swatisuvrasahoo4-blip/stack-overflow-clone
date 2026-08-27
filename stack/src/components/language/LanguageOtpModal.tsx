@@ -22,6 +22,7 @@ const LanguageOtpModal = ({
   onVerified,
 }: LanguageOtpModalProps) => {
     const { i18n } = useTranslation();
+    const {t} = useTranslation();
   const [otp, setOtp] = useState("");
   const [timeLeft, setTimeLeft] = useState(0);
   const [error, setError] = useState("");
@@ -62,15 +63,14 @@ useEffect(() => {
   };
 
   const handleVerifyOtp = async () => {
-    console.log("language before verify",language);
     
   if (otp.length !== 6) {
-    setError("Please enter a 6-digit OTP");
+    setError(t("error.please_enter_a_6-digit_otp"));
     return;
   }
 
   if (!language) {
-  setError("Language not selected");
+  setError(t("error.language_not_selected"));
   return;
 }
    
@@ -90,13 +90,9 @@ useEffect(() => {
   }
 );
 
-console.log("VERIFY RESPONSE:", response.data);
-console.log("LANGUAGE FROM SERVER:", response.data.language);
 
 if (response.data.success) {
   await i18n.changeLanguage(language);
-
-  console.log("i18n language AFTER change:", i18n.language);
 
   setOtp("");
   onVerified(language);
@@ -125,11 +121,11 @@ if (response.data.success) {
         </button>
 
         <h2 className="text-xl font-semibold text-gray-800">
-          Verify Language Change
+          {t("language.verify_language_change")}
         </h2>
 
         <p className="mt-2 text-sm text-gray-500">
-          Enter the 6-digit OTP sent to your registered email.
+          {t("language.enter_the_6-digit_otp_sent_to_your_device")}
         </p>
 
         <input
@@ -137,8 +133,8 @@ if (response.data.success) {
           inputMode="numeric"
           value={otp}
           onChange={(e) => handleOtpChange(e.target.value)}
-          placeholder="Enter 6-digit OTP"
-          className="mt-6 w-full text-black rounded-lg border border-gray-300 px-4 py-3 text-center text-lg tracking-[0.3em] outline-none focus:border-orange-500"
+          placeholder={t("language.enter_6-digit_otp")}
+          className="mt-6 w-full text-black rounded-lg border border-gray-300 px-4 py-3 text-center text-sm tracking-[0.3em] outline-none focus:border-orange-500"
         />
 
         {error && (
@@ -152,17 +148,17 @@ if (response.data.success) {
           disabled={timeLeft === 0 || sending}
           className="mt-5 w-full rounded-lg bg-orange-500 py-3 font-medium text-white hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Verify OTP
+          {t("language.verify_otp")}
         </button>
 
      <p className="mt-4 text-center text-xs text-gray-800">
   {!expiresAt || sending ? (
     <span className="font-semibold text-gray-600">
-      Sending OTP...
+      {t("language.sending_otp")}
     </span>
   ) : timeLeft > 0 ? (
     <>
-      OTP expires in{" "}
+      {t("language.otp_expires_in")}{" "}
       <span className="font-semibold">
         {String(minutes).padStart(2, "0")}:
         {String(seconds).padStart(2, "0")}
@@ -170,7 +166,7 @@ if (response.data.success) {
     </>
   ) : (
     <span className="font-semibold text-red-500">
-      OTP expired
+      {t("language.otp_expired")}
     </span>
   )}
 </p>

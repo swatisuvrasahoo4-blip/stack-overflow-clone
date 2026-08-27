@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import VoteToCloseButton from "./VoteToCloseButton";
 import CloseVoteModal from "./CloseVoteModal";
 import { voteToCloseQuestion } from "../../services/closeVoteService";
+import { useTranslation } from "react-i18next";
 
 interface VoteToCloseProps {
   question: any;
@@ -18,6 +19,7 @@ const VoteToClose = ({
   user,
   onQuestionUpdate,
 }: VoteToCloseProps) => {
+  const {t} = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [reason, setReason] = useState("");
   const [loading, setLoading] = useState(false);
@@ -28,7 +30,7 @@ const VoteToClose = ({
   );
 
   if (alreadyVoted) {
-    alert("You have already voted to close this question.");
+    alert(t("alert.you_have_already_voted_to_close_this_question"));
     return;
   }
 
@@ -58,7 +60,7 @@ const VoteToClose = ({
     } catch (error: any) {
       toast.error(
         error.response?.data?.message ||
-          "Failed to vote to close question"
+          t("toast.failed_to_vote_to_close_question")
       );
     } finally {
       setLoading(false);

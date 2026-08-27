@@ -169,7 +169,7 @@ const Sidebar = ({ isopen }:any) => {
       className="flex items-center px-2 py-2 text-gray-700 hover:bg-gray-100 rounded text-sm"
     >
       <ShieldAlert className="w-4 h-4 mr-2 lg:mr-3 text-red-600" />
-      {t("sidebar.adminReports")}
+      {t("sidebar.admin")}
     </Link>
   </li>
 )}
@@ -183,6 +183,7 @@ const Sidebar = ({ isopen }:any) => {
 export default Sidebar;
 
 function SavedList() {
+  const {t} = useTranslation();
   const [saved, setSaved] = useState([]);
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -208,7 +209,7 @@ function SavedList() {
     return () => window.removeEventListener("mockQuestionsUpdated", handler);
   }, []);
   if (!saved || saved.length === 0) {
-    return <div className="text-xs text-gray-500 mt-2">No saved questions</div>;
+    return <div className="text-xs text-gray-500 mt-2">{t("community.no_saved_question")}</div>;
   }
   return (
     <ul className="mt-2 space-y-2 text-sm">

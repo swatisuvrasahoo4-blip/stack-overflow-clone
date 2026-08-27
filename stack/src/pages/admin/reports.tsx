@@ -10,6 +10,7 @@ import {
 } from "@/components/services/adminService";
 import { useAuth } from "@/lib/AuthContext";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 
 interface ReportUser {
   _id: string;
@@ -41,7 +42,7 @@ interface ReportItem {
 export default function AdminReportsPage() {
   const router = useRouter();
   const { user } = useAuth();
-
+  const {t} = useTranslation();
   const [reports, setReports] = useState<ReportItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
@@ -59,7 +60,7 @@ export default function AdminReportsPage() {
       console.error("Failed to fetch reports:", error);
 
       if (error?.response?.status === 403) {
-        alert("Admin access required.");
+        alert(t("alert.admin_access_required"));
         router.push("/");
       }
     } finally {
@@ -67,19 +68,19 @@ export default function AdminReportsPage() {
     }
   };
   const handleSuspend = async (userId: string) => {
-  const reason = prompt("Reason for suspension:");
+  const reason = prompt(t("prompt.reason_for_suspension"));
 
   if (!reason) return;
 
   try {
     await suspendAdminUser(userId, reason);
 
-    alert("User suspended successfully.");
+    alert(t("alert.user_suspended_successfully"));
 
     fetchReports();
   } catch (error) {
     console.error(error);
-    alert("Failed to suspend user.");
+    alert(t("alert.failed_to_suspend_user"));
   }
 };
 
@@ -87,12 +88,12 @@ const handleUnsuspend = async (userId: string) => {
   try {
     await unsuspendAdminUser(userId);
 
-    alert("User unsuspended successfully.");
+    alert(t("alert.user_unsuspend_successfully"));
 
     fetchReports();
   } catch (error) {
     console.error(error);
-    alert("Failed to unsuspend user.");
+    alert(t("alert.failed_to_unsuspend_user"));
   }
 };
 
@@ -133,7 +134,7 @@ const handleUnsuspend = async (userId: string) => {
     } catch (error: any) {
       alert(
         error?.response?.data?.message ||
-          "Failed to update report."
+          t("alert.failed_to_update_report")
       );
     } finally {
       setUpdatingId(null);
@@ -174,11 +175,11 @@ return (
     <div className="mx-auto max-w-6xl">
       <div className="mb-8">
   <h1 className="text-3xl font-bold text-gray-900">
-    Reports
+    {t("admin.reports")}
   </h1>
 
   <p className="mt-2 text-sm text-gray-600">
-    Review reports, moderate content, and manage suspended users.
+    {t("admin.reviewReportsModerateContentManageSuspendedUsers")}
   </p>
 <div className="flex gap-2 my-6">
   <button
@@ -189,7 +190,7 @@ return (
         : "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
     }`}
   >
-    Post Reports
+    {t("admin.postReports")}
   </button>
 
   <button
@@ -200,7 +201,7 @@ return (
         : "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
     }`}
   >
-    Question Reports
+    {t("admin.questionReports")}
   </button>
 </div>
 {activeReportTab === "questions" && <QuestionReports reports={reports} updatingId={updatingId} onStatusChange={handleStatusChange} />}

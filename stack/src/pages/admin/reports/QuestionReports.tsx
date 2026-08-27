@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 interface QuestionReportsProps {
   reports: any[];
   updatingId: string | null;
@@ -12,6 +14,7 @@ export default function QuestionReports({
   updatingId,
   onStatusChange,
 }: QuestionReportsProps) {
+  const {t} = useTranslation();
   const questionReports = (reports || []).filter(
   (report) => report.questionId
 );
@@ -39,28 +42,28 @@ const reportStats = {
 
   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
     <div className="rounded-xl border border-gray-200 bg-white p-6">
-      <p className="text-sm text-gray-500">Pending</p>
+      <p className="text-sm text-gray-500">{t("report.pending")}</p>
       <p className="mt-2 text-3xl font-semibold text-yellow-600">
         {reportStats.pending}
       </p>
     </div>
 
     <div className="rounded-xl border border-gray-200 bg-white p-6">
-      <p className="text-sm text-gray-500">Reviewed</p>
+      <p className="text-sm text-gray-500">{t("report.reviewed")}</p>
       <p className="mt-2 text-3xl font-semibold text-blue-600">
         {reportStats.reviewed}
       </p>
     </div>
 
     <div className="rounded-xl border border-gray-200 bg-white p-6">
-      <p className="text-sm text-gray-500">Dismissed</p>
+      <p className="text-sm text-gray-500">{t("report.dismissed")}</p>
       <p className="mt-2 text-3xl font-semibold text-gray-700">
         {reportStats.dismissed}
       </p>
     </div>
 
     <div className="rounded-xl border border-gray-200 bg-white p-6">
-      <p className="text-sm text-gray-500">Action Taken</p>
+      <p className="text-sm text-gray-500">{t("report.actionTaken")}</p>
       <p className="mt-2 text-3xl font-semibold text-red-600">
         {reportStats.actionTaken}
       </p>
@@ -69,7 +72,7 @@ const reportStats = {
     <div className="rounded-xl border border-gray-200 bg-white p-6">
      {questionReports.length === 0 ? (
   <p className="text-gray-600">
-    No question reports found.
+    {t("report.noQuestionReportsFound")}
   </p>
 ) : (
   <div className="space-y-4">
@@ -102,7 +105,7 @@ const reportStats = {
 </div>
        <div className="rounded-xl border border-gray-100 bg-gray-50 p-5">
   <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
-    Reported Question
+    {t("report.reportedQuestion")}
   </p>
 
   <p className="text-base font-medium leading-7 text-gray-900">
@@ -120,7 +123,7 @@ const reportStats = {
        {report.details && (
   <div className="mt-4 rounded-lg border border-orange-100 bg-orange-50 p-4">
     <p className="text-xs font-semibold uppercase tracking-wide text-orange-700">
-      Additional Details
+      {t("report.additionalDetails")}
     </p>
 
     <p className="mt-1 text-sm text-gray-700">
@@ -133,7 +136,7 @@ const reportStats = {
 
   <div>
     <p className="mb-2 text-xs font-medium uppercase text-gray-400">
-      Reporter
+      {t("report.reporter")}
     </p>
 
     <div className="flex items-center gap-3">
@@ -161,7 +164,7 @@ const reportStats = {
 
   <div>
     <p className="mb-2 text-xs font-medium uppercase text-gray-400">
-      Question Author
+      {t("report.questionAuthor")}
     </p>
 
     <div className="flex items-center gap-3">
@@ -200,7 +203,7 @@ const reportStats = {
                hover:bg-blue-700
                disabled:cursor-not-allowed disabled:opacity-40"
   >
-    {report.status === "reviewed" ? "Reviewed" : "Mark Reviewed"}
+    {report.status === "reviewed" ? t("report.reviewed") : t("report.markReviewed")}
   </button>
 
   {/* Dismiss */}
@@ -215,7 +218,7 @@ const reportStats = {
                hover:bg-gray-50
                disabled:cursor-not-allowed disabled:opacity-40"
   >
-    {report.status === "dismissed" ? "Dismissed" : "Dismiss"}
+    {report.status === "dismissed" ? t("report.dismissed") : t("report.dismiss")}
   </button>
 
   {/* Action Taken */}
@@ -231,8 +234,8 @@ const reportStats = {
                disabled:cursor-not-allowed disabled:opacity-40"
   >
     {report.status === "action_taken"
-      ? "Action Taken"
-      : "Action Taken"}
+      ? t("report.actionTaken")
+      : t("report.actionTaken")}
   </button>
 
 </div>

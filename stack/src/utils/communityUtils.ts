@@ -1,4 +1,7 @@
+import { useTranslation } from "react-i18next";
+
 export const savePostToBookmarks = (post: any) => {
+ 
   const savedPosts = JSON.parse(
     localStorage.getItem("savedPosts") || "[]"
   );
@@ -27,6 +30,7 @@ export const savePostToBookmarks = (post: any) => {
   };
 };
 export const shareCommunityPost = async (postId: string) => {
+   const {t} = useTranslation();
     const shareUrl = `${window.location.origin}/community/post/${postId}`;
 
   if (navigator.share) {
@@ -41,6 +45,6 @@ export const shareCommunityPost = async (postId: string) => {
     }
   } else {
     await navigator.clipboard.writeText(shareUrl);
-    alert("Link copied to clipboard!");
+    alert(t("alert.link_copied_to_clipboard"));
   }
 }

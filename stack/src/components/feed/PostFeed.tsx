@@ -3,21 +3,24 @@ import { getPosts, toggleLikePost,toggleBookmarkPost, addComment, addReply, dele
 import { useRouter } from "next/router";
 import PostCard from "../community/PostCard";
 import { useAuth } from "@/lib/AuthContext";
-import { toast } from "react-toastify";
 import usePostActions from "@/hooks/usePostActions";
 import { deleteReply } from "@/components/services/communityService";
+import { useTranslation } from "react-i18next";
 
 export default function PostFeed({
   activeFeed = "trending",
   followingIds = [],
   initialPosts,
+  onPostCountChange,
 }: {
   activeFeed?: "trending" | "following";
   followingIds?: string[];
   initialPosts?: any[];
+  onPostCountChange?: (count: number) => void;
 }) {
     const { user, updateUser } = useAuth();
   const router = useRouter();
+  const {t} = useTranslation();
   const [posts, setPosts] = useState<any[]>(initialPosts || []);
  
   const [commentText, setCommentText] = useState("");
@@ -75,6 +78,7 @@ const [showDeleteCommentModal, setShowDeleteCommentModal] =
   const [page, setPage] = useState(1);
 const [hasMore, setHasMore] = useState(true);
 const [loadingMore, setLoadingMore] = useState(false);
+const [postCount, setPostCount] = useState(0);
 const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
 const fetchPosts = async (pageNumber = 1) => {
@@ -196,6 +200,9 @@ if (!firstFeatured && secondFeatured) return 1;
     (post) =>
       activeFeed === "trending" || followingIds.includes(String(post.authorId))
   );
+  useEffect(() => {
+  onPostCountChange?.(visiblePosts.length);
+}, [visiblePosts.length, onPostCountChange]);
 
   if (loading) {
     return (
@@ -218,94 +225,70 @@ if (!firstFeatured && secondFeatured) return 1;
       <div className="mt-6 gap-4 flex flex-col">
       {visiblePosts.map((post) => (
   <div
-      key={post._id}
-      role="button"
-      tabIndex={0}
-      onClick={() => {
-  sessionStorage.setItem(
-    "communityScrollPosition",
-    window.scrollY.toString()
-  );
-
-  sessionStorage.setItem(
-    "communitySelectedPostId",
-    post._id
-  );
-
-  router.push(`/community/${post._id}`);
-}}
-      onKeyDown={(e) => {
-        if(e.key === "Enter" || e.key === " "){
-           sessionStorage.setItem(
-  "communityScrollPosition",
-  window.scrollY.toString()
-);
-
-sessionStorage.setItem(
-  "communitySelectedPostId",
-  post._id
-);
-
-router.push(`/community/${post._id}`);
-        }
-      }}
-      className="cursor-pointer rounded-lg transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-200/40"
-      >
-    <div
-     onClick={() => {
-  sessionStorage.setItem(
-    "communityScrollPosition",
-    window.scrollY.toString()
-  );
-
-  sessionStorage.setItem(
-    "communitySelectedPostId",
-    post._id
-  );
-
-  router.push(`/community/${post._id}`);
-}}
-     className="cursor-pointer transition-all duration300 ease-out hover:-translate-y-1 hover:shadow-xl">
-    <PostCard
     key={post._id}
-    post={post}
-    user={user}
-handleLike={handleLike}
-handleBookmark={handleBookmark}
-handleComment={handleComment}
-handleReply={handleReply}
-handleDelete={handleDelete}
-handleEdit={handleEdit}
-editingPost={editingPost}
-editContent={editContent}
-setEditContent={setEditContent}
-handleSaveEdit={handleSaveEdit}
-setEditingPost={setEditingPost}
-handleShare={handleShare}
-activeCommentPost={activeCommentPost}
-setActiveCommentPost={setActiveCommentPost}
-commentText={commentText}
-setCommentText={setCommentText}
-activeReplyComment={activeReplyComment}
-setActiveReplyComment={setActiveReplyComment}
-replyText={replyText}
-setReplyText={setReplyText}
-expandedComments={expandedComments}
-setExpandedComments={setExpandedComments}
-selectedPostId={selectedPostId}
-setSelectedPostId={setSelectedPostId}
-showDeleteModal={showDeleteModal}
-setShowDeleteModal={setShowDeleteModal}
-selectedComment={selectedComment}
-setSelectedComment={setSelectedComment}
-showDeleteCommentModal={showDeleteCommentModal}
-setShowDeleteCommentModal={setShowDeleteCommentModal}
-setSelectedReply={setSelectedReply}
-setShowDeleteReplyModal={setShowDeleteReplyModal}
-/>
+    className="rounded-lg transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-200/40"
+    onClick={(e) => {
+      const target = e.target as HTMLElement;
 
+      // Don't navigate when interacting with PostCard controls
+      if (
+        target.closest(
+          "button, input, textarea, select, a, [role='button'], [contenteditable='true']"
+        )
+      ) {
+        return;
+      }
 
-</div>
+      sessionStorage.setItem(
+        "communityScrollPosition",
+        window.scrollY.toString()
+      );
+
+      sessionStorage.setItem(
+        "communitySelectedPostId",
+        post._id
+      );
+
+      router.push(`/community/${post._id}`);
+    }}
+  >
+    <PostCard
+      key={post._id}
+      post={post}
+      user={user}
+      handleLike={handleLike}
+      handleBookmark={handleBookmark}
+      handleComment={handleComment}
+      handleReply={handleReply}
+      handleDelete={handleDelete}
+      handleEdit={handleEdit}
+      editingPost={editingPost}
+      editContent={editContent}
+      setEditContent={setEditContent}
+      handleSaveEdit={handleSaveEdit}
+      setEditingPost={setEditingPost}
+      handleShare={handleShare}
+      activeCommentPost={activeCommentPost}
+      setActiveCommentPost={setActiveCommentPost}
+      commentText={commentText}
+      setCommentText={setCommentText}
+      activeReplyComment={activeReplyComment}
+      setActiveReplyComment={setActiveReplyComment}
+      replyText={replyText}
+      setReplyText={setReplyText}
+      expandedComments={expandedComments}
+      setExpandedComments={setExpandedComments}
+      selectedPostId={selectedPostId}
+      setSelectedPostId={setSelectedPostId}
+      showDeleteModal={showDeleteModal}
+      setShowDeleteModal={setShowDeleteModal}
+      selectedComment={selectedComment}
+      setSelectedComment={setSelectedComment}
+      showDeleteCommentModal={showDeleteCommentModal}
+      setShowDeleteCommentModal={setShowDeleteCommentModal}
+      setSelectedReply={setSelectedReply}
+      setShowDeleteReplyModal={setShowDeleteReplyModal}
+    />
   </div>
 ))}
       </div>
@@ -402,7 +385,7 @@ setShowDeleteReplyModal={setShowDeleteReplyModal}
           }}
           className="rounded-lg bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700"
         >
-          Delete
+          {t("community.delete")}
         </button>
       </div>
     </div>

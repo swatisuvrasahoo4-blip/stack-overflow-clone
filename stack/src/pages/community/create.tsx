@@ -6,10 +6,12 @@ import { useAuth } from "@/lib/AuthContext";
 import { createPost } from "@/components/services/communityService";
 import MentionText from "@/components/mentions/MentionText";
 import { getSubscription } from "@/components/services/subscriptionService";
+import { useTranslation } from "react-i18next";
 
 export default function CreatePost() {
   const router = useRouter();
   const { user } = useAuth();
+  const {t} = useTranslation();
   const imageInputRef = useRef<HTMLInputElement>(null);
   const [mentionInput, setMentionInput] = useState("");
   const [mentionInputMatches, setMentionInputMatches] = useState<string[]>([]);
@@ -152,13 +154,13 @@ if (form.image instanceof File) {
 
 await createPost(formData);
 
-      alert("Post created successfully!");
+      alert(t("alert.post_created_successfully"));
      await router.push("/community");
       router.reload();
     } catch (err: any) {
       console.log(err);
 
-      alert(err.response?.data?.message || "Failed to create post.");
+      alert(err.response?.data?.message || t("alert.failed_to_create_post"));
     } finally {
       setLoading(false);
     }
@@ -172,7 +174,7 @@ await createPost(formData);
   if (!username) return;
 
   if (!allUsernames.includes(username)) {
-    alert("User not found");
+    alert(t("alert.user_not_found"));
     return;
   }
 
@@ -191,7 +193,7 @@ await createPost(formData);
     <Mainlayout>
       <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow">
         <h1 className="text-2xl font-bold mb-6">
-          Create Community Post
+          {t("createpost.create_community_post")}
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -263,10 +265,10 @@ await createPost(formData);
   onChange={handleChange}
   className="w-full border rounded p-2"
 >
-  <option value="Technical Update">Technical Update</option>
-  <option value="Project Showcase">Project Showcase</option>
-  <option value="Learning Achievement">Learning Achievement</option>
-  <option value="Code Snippet">Code Snippet</option>
+  <option value="Technical Update">{t("createpost.technical_update")}</option>
+  <option value="Project Showcase">{t("createpost.project_showcase")}</option>
+  <option value="Learning Achievement">{t("createpost.learning_achievement")}</option>
+  <option value="Code Snippet">{t("createpost.code_snippet")}</option>
 </select>
 
 
@@ -286,10 +288,10 @@ await createPost(formData);
 
     <div>
       <p className="font-medium text-yellow-800">
-        Feature this post
+       {t("createpost.feature_this_post")}
       </p>
       <p className="text-sm text-yellow-700">
-        Give this post premium visibility in the community.
+        {t("createpost.give_this_post_premium_visibility_in_the_community")}
       </p>
     </div>
   </label>
@@ -306,10 +308,10 @@ await createPost(formData);
 
     <div>
       <p className="font-medium text-gray-700">
-        Feature this post
+        {t("createpost.feature_this_post")}
       </p>
       <p className="text-sm text-gray-500">
-        Gold feature — Upgrade to Gold to feature your posts.
+        {t("createpost.gold_feature_-_upgrade_to_gold_to_feature_your_posts")}
       </p>
     </div>
   </div>
@@ -338,7 +340,7 @@ await createPost(formData);
       className="cursor-pointer rounded bg-gray-100 px-4 py-2 hover:bg-gray-200"
       onClick={() => imageInputRef.current?.click()}
     >
-      Choose file
+      {t("createpost.choose_file")}
     </button>
 
     <span
@@ -346,7 +348,7 @@ await createPost(formData);
     form.image ? "text-gray-700" : "text-red-600"
   }`}
 >
-  {form.image ? form.image.name : "No file chosen"}
+  {form.image ? form.image.name : t("createpost.no_file_choosen")}
 </span>
 
     {form.image && (
@@ -377,7 +379,7 @@ await createPost(formData);
   <input
     type="text"
     name="projectTitle"
-    placeholder="Project title"
+    placeholder={t("createpost.project_title")}
     value={form.projectTitle}
     onChange={handleChange}
     className="w-full rounded border p-2"
@@ -385,7 +387,7 @@ await createPost(formData);
   <input
       type="url"
       name="projectLink"
-      placeholder="GitHub or Live Demo URL"
+      placeholder={t("createpost.github_or_live_demo_url")}
       value={form.projectLink}
       onChange={handleChange}
       className="w-full rounded border p-2"
@@ -398,7 +400,7 @@ await createPost(formData);
     <input
       type="text"
       name="achievementTitle"
-      placeholder="Achievement title"
+      placeholder={t("createpost.achievement_title")}
       value={form.achievementTitle}
       onChange={handleChange}
       className="w-full rounded border p-2"
@@ -406,7 +408,7 @@ await createPost(formData);
 
     <textarea
       name="achievementDescription"
-      placeholder="Describe your achievement..."
+      placeholder={t("createpost.describe_your_achievement")}
       value={form.achievementDescription}
       onChange={handleChange}
       rows={3}
@@ -420,14 +422,14 @@ await createPost(formData);
     name="codeSnippet"
     value={form.codeSnippet}
     onChange={handleChange}
-    placeholder="Paste your code snippet..."
+    placeholder={t("createpost.paste_your_code_snippet")}
     className="min-h-40 w-full rounded border p-3 font-mono"
   />
 )}
 
 
 <div className="relative space-y-2">
-  <label className="text-sm font-medium">Mention users</label>
+  <label className="text-sm font-medium">{t("createpost.mention_users")}</label>
 
   <div className="flex gap-2">
     <input
@@ -460,7 +462,7 @@ await createPost(formData);
 
         setMentionInputMatches(filteredUsers);
       }}
-      placeholder="Type a username"
+      placeholder={t("createpost.type_a_username")}
       className="w-full rounded-md border px-3 py-2"
     />
 
@@ -494,13 +496,13 @@ await createPost(formData);
 
     <div className="space-y-2">
   <label className="block text-sm font-medium">
-    Hashtags
+    {t("createpost.hashtags")}
   </label>
 
   <div className="grid w-full grid-cols-[minmax(0,1fr)_44px] gap-2">
     <input
       type="text"
-      placeholder="e.g. react"
+      placeholder={t("createpost.eg_react")}
       value={tagInput}
       onChange={(e) => setTagInput(e.target.value)}
       className="h-11 min-w-0 w-full rounded-md border px-3 text-sm"
@@ -534,7 +536,7 @@ await createPost(formData);
             disabled={loading}
             className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded"
           >
-            {loading ? "Posting..." : "Create Post"}
+            {loading ? t("createpost.posting") : t("createpost.create_post")}
           </button>
 
         </form>

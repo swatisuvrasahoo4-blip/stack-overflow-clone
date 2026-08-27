@@ -1,4 +1,5 @@
 import axios from "axios";
+import i18n from "@/i18n/config";
 
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000",
@@ -32,13 +33,18 @@ axiosInstance.interceptors.response.use(
   (response) => response,
 
   (error) => {
+    console.log("API ERROR:", {
+  url: error.config?.url,
+  status: error.response?.status,
+  data: error.response?.data,
+});
     const storedUser = localStorage.getItem("user");
     if (error.response?.status === 401 && storedUser && !isLoggingOut) {
       isLoggingOut = true;
 
       localStorage.removeItem("user");
 
-      alert("Your session has expired. Please login again.");
+      alert(i18n.t("alert.your_session_has_expired_please_login_again"));
 
       window.location.replace("/auth");
     }

@@ -152,7 +152,7 @@ setSavedPosts(
               : "bg-gray-100 text-gray-700"
           }`}
         >
-          Community Posts
+          {t("community.communityPosts")}
         </button>
       </div>
 
