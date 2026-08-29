@@ -281,14 +281,31 @@ useEffect(() => {
   return (
     <Mainlayout>
       <main className="min-w-0 p-4 lg:p-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-          <div>
-            <h1 className="text-xl lg:text-2xl font-semibold">{t("community.allQuestions")}</h1>
-            <p className="text-sm text-gray-600 mt-1">
-              {t("community.browseTheLatestQuestionsFromTheCommunity")}
-            </p>
-          </div>
-        </div>
+       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+  <div>
+    <h1 className="text-xl lg:text-2xl font-semibold">
+      {t("community.allQuestions")}
+    </h1>
+    <p className="text-sm text-gray-600 mt-1">
+      {t("community.browseTheLatestQuestionsFromTheCommunity")}
+    </p>
+  </div>
+
+  {panel !== "saves" && (
+    <button
+      onClick={() => {
+        if (user) {
+          router.push("/ask");
+        } else {
+          router.push("/auth");
+        }
+      }}
+      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium whitespace-nowrap"
+    >
+      {t("community.askQuestion")}
+    </button>
+  )}
+</div>
         <div className="space-y-4">
           {panel === "saves" ? (
             <SavedList />
@@ -297,7 +314,14 @@ useEffect(() => {
               <div
   key={question.id || question._id}
   ref={index === items.length - 1 ? lastQuestionRef : null}
-  className="border rounded-lg bg-white p-4 shadow-sm"
+  onClick={() => {
+    sessionStorage.setItem(
+      "questionScrollPosition",
+      String(window.scrollY)
+    );
+    router.push(`/questions/${question._id || question.id}`);
+  }}
+  className="border rounded-lg bg-white p-4 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
 >
                 <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
                   <Link
@@ -321,7 +345,8 @@ useEffect(() => {
                 {question.authorId === user?._id && (
                      <div className="flex gap-2 mt-3">
                  <button
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
   setSelectedQuestion(question);
   setEditTitle(question.questiontitle || question.title || "");
   setEditContent(question.questionbody || question.content || "");
@@ -334,7 +359,8 @@ useEffect(() => {
 }}
                  className="text-blue-600 text-sm hover:underline transition">{t("community.edit")}</button>
                     <button
-                    onClick={()=> {
+                    onClick={(e)=> {
+                      e.stopPropagation();
                       setSelectedQuestionId(question._id || question.id)
                       setShowDeleteModal(true);}}
                     className="text-red-600 text-sm hover:underline transition">{t("community.delete")}</button>

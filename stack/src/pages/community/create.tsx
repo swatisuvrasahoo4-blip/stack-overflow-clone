@@ -518,17 +518,30 @@ await createPost(formData);
   </div>
 
   {tags.length > 0 && (
-    <div className="flex flex-wrap gap-2">
-      {tags.map((tag) => (
-        <span
-          key={tag}
-          className="rounded bg-blue-100 px-3 py-1 text-sm text-blue-700"
+  <div className="flex flex-wrap gap-2">
+    {tags.map((tag) => (
+      <span
+        key={tag}
+        className="inline-flex items-center gap-1 rounded-md bg-blue-100 px-3 py-1 text-sm text-blue-700"
+      >
+        #{tag}
+
+        <button
+          type="button"
+          onClick={() => {
+            setTags((previousTags) =>
+              previousTags.filter((existingTag) => existingTag !== tag)
+            );
+          }}
+          className="ml-1 font-bold text-blue-600 hover:text-red-600"
+          aria-label={`Remove ${tag} hashtag`}
         >
-          #{tag}
-        </span>
-      ))}
-    </div>
-  )}
+          ×
+        </button>
+      </span>
+    ))}
+  </div>
+)}
 </div>
 
           <button

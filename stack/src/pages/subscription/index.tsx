@@ -5,9 +5,14 @@ import WhyUpgrade from "@/components/subscription/WhyUpgrade";
 import { createOrder, verifyPayment, getSubscription } from "@/components/services/subscriptionService";
 import Script from "next/script";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "@/lib/AuthContext";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 export default function SubscriptionPage() {
   const {t} = useTranslation();
+  const router = useRouter();
+  const { user } = useAuth();
   const [plans, setPlans] = useState(subscriptionPlans);
   useEffect(() => {
   const loadSubscription = async () => {
@@ -36,10 +41,14 @@ const planOrder: Record<string, number> = {
   Gold: 3,
 };
 
-const currentPlan = plans.find((plan) => plan.isCurrent)?.name || "Free";
+const currentPlan = plans.find((plan) => plan.isCurrent)?.name || "";
 
 const handleUpgrade = async (plan: string) => {
-  
+  if (!user) {
+    toast.info(t("toast.please_login_to_continue"));
+    router.push("/auth");
+    return;
+  }
   
   try {
     const response = await createOrder(plan);

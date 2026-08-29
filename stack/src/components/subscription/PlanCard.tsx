@@ -1,6 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
+import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "@/lib/AuthContext";
+import { toast } from "react-toastify";
 
 interface PlanCardProps {
   name: string;
@@ -23,6 +26,8 @@ export default function PlanCard({
   currentPlan,
   onUpgrade,
 }: PlanCardProps) {
+  const router = useRouter();
+  const { user } = useAuth();
   const {t} = useTranslation();
 
   const planOrder: Record<string, number> = {
@@ -33,7 +38,7 @@ export default function PlanCard({
 };
 
 const canUpgrade =
-  planOrder[name] > planOrder[currentPlan || "Free"];
+  !!user && planOrder[name] > planOrder[currentPlan];
   return (
     <div
   className={`relative rounded-2xl border bg-white p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl ${
@@ -100,7 +105,7 @@ const canUpgrade =
       <div className="mt-8">
         {isCurrent ? (
           <Button
-  disabled={!canUpgrade}
+disabled
   className={`w-full text-white font-semibold ${
     name === "Free"
       ? "bg-purple-600 hover:bg-purple-600"
@@ -115,7 +120,17 @@ const canUpgrade =
 </Button>
         ) : (
           <Button
-  onClick={() => onUpgrade?.(name)}
+          
+  onClick={() => {
+      if (!canUpgrade) return;
+    if (!user) {
+    toast.info(t("toast.please_login_to_continue"));
+    router.push("/auth");
+    return;
+  }
+    onUpgrade?.(name)
+  }
+  }
   className={`w-full font-semibold text-white transition-all duration-300 ${
     name === "Bronze"
       ? "bg-amber-700 hover:bg-amber-800"

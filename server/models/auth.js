@@ -79,6 +79,13 @@ suspensionReason: {
   default: "Free",
 },
 
+subscriptionBadges: {
+  Free: { type: Number, default: 0 },
+  Bronze: { type: Number, default: 0 },
+  Silver: { type: Number, default: 0 },
+  Gold: { type: Number, default: 0 },
+},
+
 subscriptionStatus: {
   type: String,
   default: "Active",

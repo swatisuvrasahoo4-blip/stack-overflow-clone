@@ -75,10 +75,10 @@ const index = () => {
           <Card>
             <CardHeader className="space-y-1 text-center">
               <CardTitle className="text-xl lg:text-2xl">
-                Log in to your account
+                {t("login.login_to_your_account")}
               </CardTitle>
               <CardDescription>
-                Enter your email and password to access Stack Overflow
+                {t("login.enter_your_email_and_password_to_access_stack_overflow")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -105,7 +105,7 @@ const index = () => {
                     d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                   />
                 </svg>
-                Log in with Google
+                {t("login.log_in_with_google")}
               </Button>
               <Button
                 type="button"
@@ -123,7 +123,7 @@ const index = () => {
                     clipRule="evenodd"
                   />
                 </svg>
-                Log in with GitHub
+                {t("login.log_in_with_github")}
               </Button>
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
@@ -131,14 +131,14 @@ const index = () => {
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
                   <span className="bg-white px-2 text-muted-foreground">
-                    Or continue with
+                    {t("login.or_continue_with")}
                   </span>
                 </div>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm">
-                  Email
+                  {t("login.email")}
                 </Label>
                 <Input
                   id="email"
@@ -150,7 +150,7 @@ const index = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password" className="text-sm">
-                  Password
+                  {t("login.password")}
                 </Label>
                 <Input
                   id="password"
@@ -163,17 +163,17 @@ const index = () => {
                 type="submit"
                 className="w-full bg-blue-600 hover:bg-blue-700 text-sm"
               >
-                {loading ? "loading" : "Log in"}
+                {loading ? t("login.loading") : t("login.log_in")}
               </Button>
               <div className="text-center text-sm">
                 <Link href="/forgot-password" className="text-blue-600 hover:underline">
-                  Forgot your password?
+                  {t("login.forgot_your_password")}
                 </Link>
               </div>
               <div className="text-center text-sm">
-                Don't have an account?{" "}
+                {t("login.dont_have_an_account")}{" "}
                 <Link href="/signup" className="text-blue-600 hover:underline">
-                  Sign up
+                  {t("login.sign_up")}
                 </Link>
               </div>
             </CardContent>

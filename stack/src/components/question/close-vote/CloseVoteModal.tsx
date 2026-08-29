@@ -32,7 +32,7 @@ const CloseVoteModal = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="w-[90%] max-w-md rounded-lg bg-white p-6 shadow-xl">
         <h2 className="text-xl font-semibold text-gray-900">
-          {t("VoteToCloseQuestion")}
+          {t("community.VoteToCloseQuestion")}
         </h2>
 
         <p className="mt-2 text-sm text-gray-600">

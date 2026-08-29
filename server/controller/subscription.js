@@ -180,6 +180,15 @@ export const verifyPayment = async (req, res) => {
   renewalDate: renewalDate,
 });
 
+await auth.findByIdAndUpdate(
+  req.userid,
+  {
+    $inc: {
+      [`subscriptionBadges.${plan.toLowerCase()}`]: 1,
+    },
+  }
+);
+
 const currentUser = await auth.findById(req.userid);
 
 const invoiceNumber = `CQ-${Date.now()}`;

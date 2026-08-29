@@ -6,6 +6,8 @@ import SupportButton from "@/components/support/SupportButton";
 import SupportModal from "@/components/support/SupportModal";
 import { useRouter } from "next/router";
 import { useAuth } from "@/lib/AuthContext";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 interface MainlayoutProps {
   children: ReactNode;
@@ -15,17 +17,19 @@ const Mainlayout = ({ children }: MainlayoutProps) => {
   const [supportOpen, setSupportOpen] = useState(false);
   const router = useRouter();
   const { user } = useAuth();
+  const {t} = useTranslation();
 
   const handleslidein = () => {
       setSidebarOpen((state) => !state);
   };
 
   const handleSupportClick = () => {
-  if (user?.role === "admin") {
-    router.push("/admin/support");
-  } else {
-    setSupportOpen(true);
+    if (!user) {
+    toast.info(t("toast.please_login_to_continue"));
+    router.push("/auth");
+    return;
   }
+    setSupportOpen(true);
 };
 
   return (

@@ -25,7 +25,7 @@ router.get("/:id",getPostById);
 router.put("/like/:id",auth ,notSuspended, likePost);
 router.post("/comment/:id", auth, notSuspended, addComment);
 router.post("/reply/:id/:commentId", auth, notSuspended, replyToComment);
-router.put("/:id",auth, notSuspended, editPost);
+router.put("/:id",auth, notSuspended, cloudinaryUpload.single("image"), editPost);
 router.delete("/:id",auth,deletePost);
 router.delete("/:postId/comment/:commentId",auth,deleteComment);
 router.delete("/:postId/comment/:commentId/reply/:replyId",auth,deleteReply);

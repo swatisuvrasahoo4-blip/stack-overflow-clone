@@ -376,6 +376,7 @@
   },
   "language": {
     "verify_language_change": "验证语言更改",
+    "choose_language": "选择语言",
     "enter_the_6-digit_otp_sent_to_your_device": "输入发送到您设备的 6 位 OTP。",
     "enter_6-digit_otp": "输入 6 位 OTP",
     "verify_otp": "验证 OTP",
@@ -500,5 +501,19 @@
   "copied": "已复制",
   "copy_password": "复制密码",
   "back_to_login": "返回登录"
-}
+},
+  "login": {
+    "login_to_your_account": "登录您的账户",
+    "enter_your_email_and_password_to_access_stack_overflow": "输入您的电子邮件和密码以访问 Stack Overflow",
+    "log_in_with_google": "使用 Google 登录",
+    "log_in_with_github": "使用 GitHub 登录",
+    "or_continue_with": "或继续使用",
+    "email": "电子邮件",
+    "password": "密码",
+    "log_in": "登录",
+    "loading": "加载中",
+    "forgot_your_password": "忘记密码？",
+    "dont_have_an_account": "还没有账户？",
+    "sign_up": "注册"
+  }
 }

@@ -12,7 +12,7 @@ const SupportButton = ({ onClick }: SupportButtonProps) => {
     <Button
       onClick={onClick}
       className="
-        fixed bottom-6 right-6 z-50
+        fixed bottom-24 right-6 z-50
         h-14 w-14 rounded-full
         bg-orange-500 hover:bg-orange-600
         text-white shadow-lg

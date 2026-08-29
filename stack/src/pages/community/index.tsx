@@ -54,12 +54,75 @@ const [selectedReply, setSelectedReply] = useState<{
 // Edit post
 const [editingPost, setEditingPost] = useState<any>(null);
 const [editContent, setEditContent] = useState("");
- const { handleLike,handleBookmark, handleComment, handleShare,handleReply, handleDelete,handleDeleteComment,
-   handleSaveEdit,handleEdit} = 
-   usePostActions({
-    posts,setPosts,user,updateUser,commentText,setCommentText,setActiveCommentPost,editContent,setEditContent,
-    editingPost,setEditingPost,replyText,setReplyText,setActiveReplyComment,
-  });
+const [editHashtags, setEditHashtags] = useState("");
+const [editTagInput, setEditTagInput] = useState("");
+const [editImage, setEditImage] = useState<File | null>(null);
+
+const [editProjectTitle, setEditProjectTitle] = useState("");
+const [editProjectLink, setEditProjectLink] = useState("");
+
+const [editAchievementTitle, setEditAchievementTitle] = useState("");
+const [editAchievementDescription, setEditAchievementDescription] = useState("");
+
+const [editCodeSnippet, setEditCodeSnippet] = useState("");
+
+
+
+ const {
+  handleLike,
+  handleBookmark,
+  handleComment,
+  handleShare,
+  handleReply,
+  handleDelete,
+  handleDeleteComment,
+  handleSaveEdit,
+  handleEdit
+} = usePostActions({
+  posts,
+  setPosts,
+  user,
+  updateUser,
+
+  commentText,
+  setCommentText,
+  setActiveCommentPost,
+
+  editingPost,
+  setEditingPost,
+
+  editContent,
+  setEditContent,
+
+  editHashtags,
+  setEditHashtags,
+
+
+  editTagInput,
+  setEditTagInput,
+
+  editImage,
+  setEditImage,
+
+  editProjectTitle,
+  setEditProjectTitle,
+
+  editProjectLink,
+  setEditProjectLink,
+
+  editAchievementTitle,
+  setEditAchievementTitle,
+
+  editAchievementDescription,
+  setEditAchievementDescription,
+
+  editCodeSnippet,
+  setEditCodeSnippet,
+
+  replyText,
+  setReplyText,
+  setActiveReplyComment,
+});
 
   const [page, setPage] = useState(1);
 const [hasMore, setHasMore] = useState(true);
@@ -69,6 +132,8 @@ const loadMoreRef = useRef<HTMLDivElement | null>(null);
 const fetchPosts = async (pageNumber = 1) => {
   try {
     const response = await getPosts(pageNumber, 10);
+    console.log("response",response);
+    
 
     if (pageNumber === 1) {
       setPosts(response.data || []);
@@ -353,26 +418,310 @@ useEffect(() => {
   </div>
 )}
 {editingPost && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-    <div className="w-full max-w-lg rounded-xl bg-white p-5 shadow-xl">
-      <h2 className="mb-4 text-xl font-semibold">Edit Post</h2>
+  <div
+    className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-6"
+    onClick={(e) => e.stopPropagation()}
+  >
+    <div
+      className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white p-6 shadow-xl"
+      onClick={(e) => e.stopPropagation()}
+    >
+      {/* Header */}
+      <div className="mb-5 flex items-center justify-between">
+        <h2 className="text-xl font-semibold">
+          Edit Post
+        </h2>
 
-      <textarea
-        value={editContent}
-        onClick={(e)=> e.stopPropagation}
-        onChange={(e) => setEditContent(e.target.value)}
-        className="min-h-160px w-full rounded-md border p-3 outline-none focus:ring-2 focus:ring-blue-500"
-        placeholder="Edit your post..."
-      />
-
-      <div className="mt-4 flex justify-end gap-3">
         <button
           type="button"
           onClick={() => {
             setEditingPost(null);
             setEditContent("");
+            setEditHashtags("");
+            setEditTagInput("");
+            setEditImage(null);
+            setEditProjectTitle("");
+            setEditProjectLink("");
+            setEditAchievementTitle("");
+            setEditAchievementDescription("");
+            setEditCodeSnippet("");
           }}
-          className="rounded-md border px-4 py-2"
+          className="text-2xl leading-none text-gray-500 hover:text-gray-800"
+        >
+          ×
+        </button>
+      </div>
+
+      {/* Content */}
+      <div>
+        <label className="mb-2 block text-sm font-medium text-gray-700">
+          Content
+        </label>
+
+        <textarea
+          value={editContent}
+          onChange={(e) => setEditContent(e.target.value)}
+          onClick={(e) => e.stopPropagation()}
+          className="min-h-160px w-full resize-y rounded-md border p-3 outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Edit your post..."
+        />
+      </div>
+
+
+      {/* Hashtags */}
+      <div className="mt-5">
+        <label className="mb-2 block text-sm font-medium text-gray-700">
+          Hashtags
+        </label>
+
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={editTagInput}
+            onChange={(e) => setEditTagInput(e.target.value)}
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+
+                const tag = editTagInput.trim().replace(/^#/, "");
+
+                if (
+                  tag &&
+                  !editHashtags
+                    .split(" ")
+                    .filter(Boolean)
+                    .includes(`#${tag}`)
+                ) {
+                  setEditHashtags((prev) =>
+                    prev ? `${prev} #${tag}` : `#${tag}`
+                  );
+                }
+
+                setEditTagInput("");
+              }
+            }}
+            placeholder="Add a hashtag"
+            className="flex-1 rounded-md border px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+
+              const tag = editTagInput.trim().replace(/^#/, "");
+
+              if (
+                tag &&
+                !editHashtags
+                  .split(" ")
+                  .filter(Boolean)
+                  .includes(`#${tag}`)
+              ) {
+                setEditHashtags((prev) =>
+                  prev ? `${prev} #${tag}` : `#${tag}`
+                );
+              }
+
+              setEditTagInput("");
+            }}
+            className="rounded-md bg-blue-600 px-4 py-2 text-xl font-semibold text-white hover:bg-blue-700"
+          >
+            +
+          </button>
+        </div>
+
+        {/* Tags */}
+        <div className="mt-3 flex flex-wrap gap-2">
+          {editHashtags
+            .split(" ")
+            .filter(Boolean)
+            .map((tag, index) => (
+              <span
+                key={`${tag}-${index}`}
+                className="flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-700"
+              >
+                {tag}
+
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+
+                    const updatedTags = editHashtags
+                      .split(" ")
+                      .filter((_, i) => i !== index)
+                      .join(" ");
+
+                    setEditHashtags(updatedTags);
+                  }}
+                  className="ml-1 text-base font-semibold text-blue-600 hover:text-red-600"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+        </div>
+      </div>
+
+      {/* Image */}
+<div className="mt-5">
+  <label className="mb-2 block text-sm font-medium text-gray-700">
+    Image
+  </label>
+
+  {/* Current / Selected Image */}
+  {(editImage || editingPost?.image) && (
+    <div className="relative mb-3 w-fit">
+      <img
+        src={
+          editImage
+            ? URL.createObjectURL(editImage)
+            : editingPost?.image
+        }
+        alt="Post image"
+        className="max-h-48 max-w-full rounded-lg object-cover"
+      />
+
+      {/* Remove image */}
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+
+          setEditImage(null);
+
+          if (editingPost?.image) {
+            setEditingPost({
+              ...editingPost,
+              image: null,
+            });
+          }
+        }}
+        className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-red-600 text-lg font-bold text-white shadow hover:bg-red-700"
+        aria-label="Remove image"
+      >
+        ×
+      </button>
+    </div>
+  )}
+
+  <input
+    type="file"
+    accept="image/jpeg,image/png,image/webp"
+    onChange={(e) => {
+      const file = e.target.files?.[0] || null;
+      setEditImage(file);
+    }}
+    onClick={(e) => e.stopPropagation()}
+    className="w-full rounded-md border p-2 text-sm"
+  />
+
+  {!editImage && !editingPost?.image && (
+    <p className="mt-2 text-sm text-red-600">
+      No file chosen
+    </p>
+  )}
+
+  {editImage && (
+    <p className="mt-2 text-sm text-gray-500">
+      Selected: {editImage.name}
+    </p>
+  )}
+</div>
+
+      {/* Project Showcase */}
+      {editingPost?.postType === "project" && (
+        <div className="mt-5 rounded-lg border p-4">
+          <h3 className="mb-4 font-semibold">
+            Project Showcase
+          </h3>
+
+          <input
+            type="text"
+            value={editProjectTitle}
+            onChange={(e) => setEditProjectTitle(e.target.value)}
+            onClick={(e) => e.stopPropagation()}
+            placeholder="Project title"
+            className="mb-3 w-full rounded-md border px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          <input
+            type="url"
+            value={editProjectLink}
+            onChange={(e) => setEditProjectLink(e.target.value)}
+            onClick={(e) => e.stopPropagation()}
+            placeholder="Project link"
+            className="w-full rounded-md border px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+      )}
+
+      {/* Learning Achievement */}
+      {editingPost?.postType === "achievement" && (
+        <div className="mt-5 rounded-lg border p-4">
+          <h3 className="mb-4 font-semibold">
+            Learning Achievement
+          </h3>
+
+          <input
+            type="text"
+            value={editAchievementTitle}
+            onChange={(e) =>
+              setEditAchievementTitle(e.target.value)
+            }
+            onClick={(e) => e.stopPropagation()}
+            placeholder="Achievement title"
+            className="mb-3 w-full rounded-md border px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          <textarea
+            value={editAchievementDescription}
+            onChange={(e) =>
+              setEditAchievementDescription(e.target.value)
+            }
+            onClick={(e) => e.stopPropagation()}
+            placeholder="Achievement description"
+            className="min-h-100px w-full rounded-md border p-3 outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+      )}
+
+      {/* Code Snippet */}
+      {editingPost?.postType === "code" && (
+        <div className="mt-5">
+          <label className="mb-2 block text-sm font-medium text-gray-700">
+            Code Snippet
+          </label>
+
+          <textarea
+            value={editCodeSnippet}
+            onChange={(e) => setEditCodeSnippet(e.target.value)}
+            onClick={(e) => e.stopPropagation()}
+            placeholder="Edit your code..."
+            className="min-h-180px w-full rounded-md border bg-gray-50 p-3 font-mono text-sm outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+      )}
+
+      {/* Buttons */}
+      <div className="mt-6 flex justify-end gap-3 border-t pt-4">
+        <button
+          type="button"
+          onClick={() => {
+            setEditingPost(null);
+            setEditContent("");
+            setEditHashtags("");
+            setEditTagInput("");
+            setEditImage(null);
+            setEditProjectTitle("");
+            setEditProjectLink("");
+            setEditAchievementTitle("");
+            setEditAchievementDescription("");
+            setEditCodeSnippet("");
+          }}
+          className="rounded-md border px-4 py-2 text-gray-700 hover:bg-gray-50"
         >
           Cancel
         </button>
@@ -380,14 +729,13 @@ useEffect(() => {
         <button
           type="button"
           onClick={handleSaveEdit}
-          className="rounded-md bg-blue-600 px-4 py-2 text-white"
+          className="rounded-md bg-blue-600 px-5 py-2 text-white hover:bg-blue-700"
         >
           Save Changes
         </button>
       </div>
     </div>
   </div>
-
 )}
     </Mainlayout>
   );

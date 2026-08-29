@@ -81,10 +81,17 @@ console.log("REPORT USER:", user);
     };
 
     const hashtags = Array.isArray(post.hashtags)
-      ? post.hashtags
-      : typeof post.hashtags === "string"
-      ? post.hashtags.split(",").map((tag: string) => tag.trim()).filter(Boolean)
-      : [];
+  ? post.hashtags
+      .flatMap((tag: string) =>
+        tag.split(/[,\s]+/).map((t) => t.trim())
+      )
+      .filter(Boolean)
+  : typeof post.hashtags === "string"
+  ? post.hashtags
+      .split(/[,\s]+/)
+      .map((tag: string) => tag.trim())
+      .filter(Boolean)
+  : [];
     
   return(
         <>

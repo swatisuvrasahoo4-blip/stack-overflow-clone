@@ -24,6 +24,7 @@ import closeVoteRoutes from "./routes/closeVote.js";
 import reputationTransferRoutes from "./routes/reputationTransfer.js";
 import reputationActivityRoutes from "./routes/reputationActivity.js";
 import languageRoutes from "./routes/language.js";
+import tagRoutes from "./routes/tag.js"
 
 const app = express();
 app.set("trust proxy", 1);
@@ -40,6 +41,7 @@ app.use("/admin",adminRoutes);
 app.use('/question',questionroute);
 app.use('/answer',answerroutes);
 app.use("/post",postroutes);
+app.use("/tags", tagRoutes);
 app.use("/bookmark",bookmarkRoutes)
 app.use("/question-bookmark",questionBookmarkRoutes)
 app.use("/follow",followRoutes);

@@ -1,10 +1,12 @@
-import { useEffect, useState, useRef } from "react";
-import { getPosts, toggleLikePost,toggleBookmarkPost, addComment, addReply, deletePost } from "@/components/services/communityService";
+import { useEffect, useState } from "react";
+import {
+  getPosts,
+  deleteReply,
+} from "@/components/services/communityService";
 import { useRouter } from "next/router";
 import PostCard from "../community/PostCard";
 import { useAuth } from "@/lib/AuthContext";
 import usePostActions from "@/hooks/usePostActions";
-import { deleteReply } from "@/components/services/communityService";
 import { useTranslation } from "react-i18next";
 
 export default function PostFeed({
@@ -18,95 +20,210 @@ export default function PostFeed({
   initialPosts?: any[];
   onPostCountChange?: (count: number) => void;
 }) {
-    const { user, updateUser } = useAuth();
+  const { user, updateUser } = useAuth();
   const router = useRouter();
-  const {t} = useTranslation();
-  const [posts, setPosts] = useState<any[]>(initialPosts || []);
- 
+  const { t } = useTranslation();
+
+  const [posts, setPosts] = useState<any[]>(
+    initialPosts || []
+  );
+
   const [commentText, setCommentText] = useState("");
-const [activeCommentPost, setActiveCommentPost] = useState<string | null>(null);
+  const [activeCommentPost, setActiveCommentPost] =
+    useState<string | null>(null);
 
-const [editingPost, setEditingPost] = useState<any>(null);
-const [editContent, setEditContent] = useState("");
+  const [editingPost, setEditingPost] = useState<any>(null);
+  const [editContent, setEditContent] = useState("");
+  const [editHashtags, setEditHashtags] = useState("");
+  const [editTagInput, setEditTagInput] = useState("");
+  const [editImage, setEditImage] = useState<File | null>(null);
+  const [editProjectTitle, setEditProjectTitle] = useState("");
+  const [editProjectLink, setEditProjectLink] = useState("");
+  const [editAchievementTitle, setEditAchievementTitle] =
+    useState("");
+  const [editAchievementDescription, setEditAchievementDescription] =
+    useState("");
+  const [editCodeSnippet, setEditCodeSnippet] = useState("");
 
-const [replyText, setReplyText] = useState("");
-const [activeReplyComment, setActiveReplyComment] = useState<string | null>(null);
-const [expandedComments, setExpandedComments] = useState<string[]>([]);
-const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
-const [showDeleteModal, setShowDeleteModal] = useState(false);
-const [selectedReply, setSelectedReply] = useState<{
-  postId: string;
-  commentId: string;
-  replyId: string;
-} | null>(null);
+  const [replyText, setReplyText] = useState("");
+  const [activeReplyComment, setActiveReplyComment] =
+    useState<string | null>(null);
 
-const [showDeleteReplyModal, setShowDeleteReplyModal] = useState(false);
-const [selectedComment, setSelectedComment] = useState<{
-  postId: string;
-  commentId: string;
-} | null>(null);
+  const [expandedComments, setExpandedComments] = useState<
+    string[]
+  >([]);
 
-const [showDeleteCommentModal, setShowDeleteCommentModal] =
-  useState(false);
+  const [selectedPostId, setSelectedPostId] =
+    useState<string | null>(null);
+
+  const [showDeleteModal, setShowDeleteModal] =
+    useState(false);
+
+  const [selectedReply, setSelectedReply] = useState<{
+    postId: string;
+    commentId: string;
+    replyId: string;
+  } | null>(null);
+
+  const [showDeleteReplyModal, setShowDeleteReplyModal] =
+    useState(false);
+
+  const [selectedComment, setSelectedComment] = useState<{
+    postId: string;
+    commentId: string;
+  } | null>(null);
+
+  const [showDeleteCommentModal, setShowDeleteCommentModal] =
+    useState(false);
+
   const {
-  handleLike,
-  handleBookmark,
-  handleComment,
-  handleShare,
-  handleEdit,
-  handleSaveEdit,
-  handleDelete,
-  handleReply,
-  handleDeleteComment,
-} = usePostActions({
-  posts,
-  setPosts,
-  user,
-  updateUser,
-  commentText,
-  setCommentText,
-  setActiveCommentPost,
-  editingPost,
-  setEditingPost,
-  editContent,
-  setEditContent,
-  replyText,
-  setReplyText,
-  setActiveReplyComment,
-});
- const [loading, setLoading] = useState(!initialPosts);
+    handleLike,
+    handleBookmark,
+    handleComment,
+    handleShare,
+    handleEdit,
+    handleSaveEdit,
+    handleDelete,
+    handleReply,
+    handleDeleteComment,
+  } = usePostActions({
+    posts,
+    setPosts,
+    user,
+    updateUser,
+    commentText,
+    setCommentText,
+    setActiveCommentPost,
+    editingPost,
+    setEditingPost,
+    editContent,
+    setEditContent,
+    editHashtags,
+    setEditHashtags,
+    editImage,
+    editTagInput,
+    setEditTagInput,
+    setEditImage,
+    editProjectTitle,
+    setEditProjectTitle,
+    editProjectLink,
+    setEditProjectLink,
+    editAchievementTitle,
+    setEditAchievementTitle,
+    editAchievementDescription,
+    setEditAchievementDescription,
+    editCodeSnippet,
+    setEditCodeSnippet,
+    replyText,
+    setReplyText,
+    setActiveReplyComment,
+  });
+
+  const [loading, setLoading] = useState(
+    !initialPosts
+  );
+
   const [page, setPage] = useState(1);
-const [hasMore, setHasMore] = useState(true);
-const [loadingMore, setLoadingMore] = useState(false);
-const [postCount, setPostCount] = useState(0);
-const loadMoreRef = useRef<HTMLDivElement | null>(null);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] =
+    useState(false);
 
-const fetchPosts = async (pageNumber = 1) => {
-  try {
-    const response = await getPosts(pageNumber, 10);
+  // --------------------------------------------------
+  // FETCH POSTS
+  // --------------------------------------------------
 
-    if (pageNumber === 1) {
-      setPosts(response.data || []);
-    } else {
-      setPosts((prev) => {
-        const existingIds = new Set(prev.map((p: any) => p._id));
+  const fetchPosts = async (
+    pageNumber = 1
+  ) => {
+    try {
+      console.log(
+        "FETCHING PAGE:",
+        pageNumber
+      );
 
-        const newPosts = (response.data || []).filter(
-          (p: any) => !existingIds.has(p._id)
-        );
+      const response = await getPosts(
+        pageNumber,
+        10
+      );
 
-        return [...prev, ...newPosts];
-      });
+      console.log(
+        "RECEIVED POSTS:",
+        response.data?.length
+      );
+
+      console.log(
+        "HAS MORE:",
+        response.pagination?.hasMore
+      );
+
+      if (pageNumber === 1) {
+        setPosts(response.data || []);
+      } else {
+        setPosts((previousPosts) => {
+          const existingIds = new Set(
+            previousPosts.map((post: any) =>
+              String(post._id)
+            )
+          );
+
+          const newPosts = (
+            response.data || []
+          ).filter(
+            (post: any) =>
+              !existingIds.has(
+                String(post._id)
+              )
+          );
+
+          console.log(
+            "OLD POSTS:",
+            previousPosts.length
+          );
+
+          console.log(
+  "PAGE",
+  pageNumber,
+  "API POSTS",
+  response.data?.map((post: any) => post._id)
+);
+
+console.log(
+  "NEW POSTS",
+  newPosts.map((post: any) => post._id)
+);
+
+          console.log(
+            "NEW POSTS:",
+            newPosts.length
+          );
+
+          console.log(
+            "TOTAL POSTS:",
+            previousPosts.length +
+              newPosts.length
+          );
+
+          return [
+            ...previousPosts,
+            ...newPosts,
+          ];
+        });
+      }
+
+      setHasMore(
+        response.pagination?.hasMore ?? false
+      );
+
+      setPage(pageNumber);
+    } catch (error) {
+      console.error(
+        "Failed to fetch posts:",
+        error
+      );
+    } finally {
+      setLoading(false);
     }
-
-    setHasMore(response.pagination.hasMore);
-    setPage(pageNumber);
-  } catch (error) {
-    console.error(error);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
 useEffect(() => {
   if (initialPosts) {
@@ -114,95 +231,153 @@ useEffect(() => {
     return;
   }
 
-  fetchPosts(1);
-}, [activeFeed, followingIds, initialPosts]);
-
-useEffect(() => {
-  if (initialPosts || !hasMore || loadingMore) return;
-
-  const observer = new IntersectionObserver(
-    async (entries) => {
-      if (entries[0].isIntersecting && hasMore && !loadingMore) {
-        setLoadingMore(true);
-
-        await fetchPosts(page + 1);
-
-        setLoadingMore(false);
-      }
-    },
-    {
-      threshold: 1,
-    }
+  const selectedPostId = sessionStorage.getItem(
+    "communitySelectedPostId"
   );
 
-  if (loadMoreRef.current) {
-    observer.observe(loadMoreRef.current);
+  const savedPage = sessionStorage.getItem(
+    "communityFeedPage"
+  );
+
+  const restorePage =
+    selectedPostId && savedPage
+      ? Number(savedPage)
+      : 1;
+
+  // Clear it immediately so a normal refresh
+  // does not load extra pages.
+  if (selectedPostId && savedPage) {
+    sessionStorage.removeItem(
+      "communityFeedPage"
+    );
   }
 
-  return () => {
-    if (loadMoreRef.current) {
-      observer.unobserve(loadMoreRef.current);
+  setPage(1);
+  setHasMore(true);
+  setLoading(true);
+
+  const loadRequiredPages = async () => {
+    try {
+      await fetchPosts(1);
+
+      for (
+        let currentPage = 2;
+        currentPage <= restorePage;
+        currentPage++
+      ) {
+        await fetchPosts(currentPage);
+      }
+    } catch (error) {
+      console.error(
+        "Failed to restore community feed:",
+        error
+      );
     }
-    observer.disconnect();
   };
-}, [page, hasMore, loadingMore]);
 
-  useEffect(() => {
-  if (!posts || posts.length === 0) return;
+  loadRequiredPages();
+}, [activeFeed, initialPosts]);
 
-  const savedPosition = sessionStorage.getItem(
-    "communityScrollPosition"
+// RESTORE EXACT POST WHEN RETURNING FROM POST PAGE
+useEffect(() => {
+  if (!router.isReady || loading || posts.length === 0) {
+    return;
+  }
+
+  const selectedPostId = sessionStorage.getItem(
+    "communitySelectedPostId"
   );
 
-  if (!savedPosition) return;
+  if (!selectedPostId) {
+    return;
+  }
+
+  const postElement = document.getElementById(
+    `community-post-${selectedPostId}`
+  );
+
+  if (!postElement) {
+    // The selected post is not loaded yet.
+    return;
+  }
 
   const timer = setTimeout(() => {
-    window.scrollTo({
-      top: Number(savedPosition),
+    postElement.scrollIntoView({
       behavior: "auto",
+      block: "center",
     });
 
-    sessionStorage.removeItem("communityScrollPosition");
-    sessionStorage.removeItem("communitySelectedPostId");
+    sessionStorage.removeItem(
+      "communitySelectedPostId"
+    );
   }, 300);
 
   return () => clearTimeout(timer);
-}, [posts]);
+}, [router.isReady, loading, posts.length]);
 
-  const visiblePosts = (activeFeed === "trending"
-    ? [...(Array.isArray(posts) ? posts : [])].sort((first, second) => {
-        const score = (post: any) => {
-          const replies = (post.comments || []).reduce(
-            (total: number, comment: any) =>
-              total + (comment.replies?.length || 0),
-            0
-          );
+  // --------------------------------------------------
+  // VISIBLE POSTS
+  // --------------------------------------------------
 
-          return (
-            (post.likes?.length || 0) * 3 +
-            (post.comments?.length || 0) * 5 +
-            replies * 2 +
-            (post.shareCount || 0) * 4
-          );
-        };
+  const visiblePosts = (
+  activeFeed === "trending"
+    ? [...(Array.isArray(posts) ? posts : [])].sort(
+        (first: any, second: any) => {
+          const score = (post: any) => {
+            const replies = (post.comments || []).reduce(
+              (total: number, comment: any) =>
+                total + (comment.replies?.length || 0),
+              0
+            );
 
+            return (
+              (post.likes?.length || 0) * 3 +
+              (post.comments?.length || 0) * 5 +
+              replies * 2 +
+              (post.shareCount || 0) * 4
+            );
+          };
 
-        const firstFeatured = first.isFeatured === true;
-const secondFeatured = second.isFeatured === true;
+          const firstFeatured =
+            first.isFeatured === true;
 
-if (firstFeatured && !secondFeatured) return -1;
-if (!firstFeatured && secondFeatured) return 1;
+          const secondFeatured =
+            second.isFeatured === true;
 
-        return score(second) - score(first);
-      })
+          if (firstFeatured && !secondFeatured) {
+            return -1;
+          }
+
+          if (!firstFeatured && secondFeatured) {
+            return 1;
+          }
+
+          return score(second) - score(first);
+        }
+      )
     : posts
-  ).filter(
-    (post) =>
-      activeFeed === "trending" || followingIds.includes(String(post.authorId))
+).filter((post: any) => {
+  return (
+    activeFeed === "trending" ||
+    followingIds.includes(String(post.authorId))
   );
+});
+  // --------------------------------------------------
+  // POST COUNT
+  // --------------------------------------------------
+
   useEffect(() => {
-  onPostCountChange?.(visiblePosts.length);
-}, [visiblePosts.length, onPostCountChange]);
+    onPostCountChange?.(
+      visiblePosts.length
+    );
+  }, [
+    visiblePosts.length,
+    onPostCountChange,
+  ]);
+
+  // --------------------------------------------------
+  // LOADING
+  // --------------------------------------------------
 
   if (loading) {
     return (
@@ -220,105 +395,233 @@ if (!firstFeatured && secondFeatured) return 1;
     );
   }
 
+  // --------------------------------------------------
+  // UI
+  // --------------------------------------------------
+
   return (
     <>
-      <div className="mt-6 gap-4 flex flex-col">
-      {visiblePosts.map((post) => (
-  <div
-    key={post._id}
-    className="rounded-lg transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-200/40"
-    onClick={(e) => {
-      const target = e.target as HTMLElement;
+      <div className="mt-6 flex flex-col gap-4">
+        {visiblePosts.map(
+          (post) => (
+            <div
+              key={post._id}
+              id={`community-post-${post._id}`}
+              className="rounded-lg transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-200/40"
+              onClick={(e) => {
+  const target = e.target as HTMLElement;
 
-      // Don't navigate when interacting with PostCard controls
-      if (
-        target.closest(
-          "button, input, textarea, select, a, [role='button'], [contenteditable='true']"
-        )
-      ) {
-        return;
-      }
+  if (
+    target.closest(
+      "button, input, textarea, select, a, [role='button'], [contenteditable='true']"
+    )
+  ) {
+    return;
+  }
 
-      sessionStorage.setItem(
-        "communityScrollPosition",
-        window.scrollY.toString()
-      );
+  // Save the exact post that was clicked
+  sessionStorage.setItem(
+    "communitySelectedPostId",
+    String(post._id)
+  );
 
-      sessionStorage.setItem(
-        "communitySelectedPostId",
-        post._id
-      );
+  sessionStorage.setItem(
+  "communityFeedPage",
+  String(page)
+);
 
-      router.push(`/community/${post._id}`);
-    }}
-  >
-    <PostCard
-      key={post._id}
-      post={post}
-      user={user}
-      handleLike={handleLike}
-      handleBookmark={handleBookmark}
-      handleComment={handleComment}
-      handleReply={handleReply}
-      handleDelete={handleDelete}
-      handleEdit={handleEdit}
-      editingPost={editingPost}
-      editContent={editContent}
-      setEditContent={setEditContent}
-      handleSaveEdit={handleSaveEdit}
-      setEditingPost={setEditingPost}
-      handleShare={handleShare}
-      activeCommentPost={activeCommentPost}
-      setActiveCommentPost={setActiveCommentPost}
-      commentText={commentText}
-      setCommentText={setCommentText}
-      activeReplyComment={activeReplyComment}
-      setActiveReplyComment={setActiveReplyComment}
-      replyText={replyText}
-      setReplyText={setReplyText}
-      expandedComments={expandedComments}
-      setExpandedComments={setExpandedComments}
-      selectedPostId={selectedPostId}
-      setSelectedPostId={setSelectedPostId}
-      showDeleteModal={showDeleteModal}
-      setShowDeleteModal={setShowDeleteModal}
-      selectedComment={selectedComment}
-      setSelectedComment={setSelectedComment}
-      showDeleteCommentModal={showDeleteCommentModal}
-      setShowDeleteCommentModal={setShowDeleteCommentModal}
-      setSelectedReply={setSelectedReply}
-      setShowDeleteReplyModal={setShowDeleteReplyModal}
-    />
-  </div>
-))}
+  router.push(`/community/${post._id}`);
+}}
+            >
+              <PostCard
+                post={post}
+                user={user}
+                handleLike={
+                  handleLike
+                }
+                handleBookmark={
+                  handleBookmark
+                }
+                handleComment={
+                  handleComment
+                }
+                handleReply={
+                  handleReply
+                }
+                handleDelete={
+                  handleDelete
+                }
+                handleEdit={
+                  handleEdit
+                }
+                editingPost={
+                  editingPost
+                }
+                editContent={
+                  editContent
+                }
+                setEditContent={
+                  setEditContent
+                }
+                handleSaveEdit={
+                  handleSaveEdit
+                }
+                setEditingPost={
+                  setEditingPost
+                }
+                handleShare={
+                  handleShare
+                }
+                activeCommentPost={
+                  activeCommentPost
+                }
+                setActiveCommentPost={
+                  setActiveCommentPost
+                }
+                commentText={
+                  commentText
+                }
+                setCommentText={
+                  setCommentText
+                }
+                activeReplyComment={
+                  activeReplyComment
+                }
+                setActiveReplyComment={
+                  setActiveReplyComment
+                }
+                replyText={
+                  replyText
+                }
+                setReplyText={
+                  setReplyText
+                }
+                expandedComments={
+                  expandedComments
+                }
+                setExpandedComments={
+                  setExpandedComments
+                }
+                selectedPostId={
+                  selectedPostId
+                }
+                setSelectedPostId={
+                  setSelectedPostId
+                }
+                showDeleteModal={
+                  showDeleteModal
+                }
+                setShowDeleteModal={
+                  setShowDeleteModal
+                }
+                selectedComment={
+                  selectedComment
+                }
+                setSelectedComment={
+                  setSelectedComment
+                }
+                showDeleteCommentModal={
+                  showDeleteCommentModal
+                }
+                setShowDeleteCommentModal={
+                  setShowDeleteCommentModal
+                }
+                setSelectedReply={
+                  setSelectedReply
+                }
+                setShowDeleteReplyModal={
+                  setShowDeleteReplyModal
+                }
+              />
+            </div>
+          )
+        )}
       </div>
 
+      {/* LOAD MORE */}
+      {hasMore && (
+        <div className="flex justify-center py-6">
+          <button
+            type="button"
+            disabled={
+              loadingMore
+            }
+            onClick={async () => {
+  if (loadingMore) return;
+
+  // Remember where the user was before new posts are added
+  const currentScrollY = window.scrollY;
+
+  setLoadingMore(true);
+
+  try {
+    await fetchPosts(page + 1);
+
+    // Wait for React to render the newly loaded posts
+    requestAnimationFrame(() => {
+      window.scrollTo({
+        top: currentScrollY,
+        behavior: "auto",
+      });
+    });
+  } finally {
+    setLoadingMore(false);
+  }
+}}
+            className="rounded-lg bg-blue-600 px-5 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {loadingMore
+              ? "Loading..."
+              : "Load More"}
+          </button>
+        </div>
+      )}
+
+      {/* DELETE POST */}
       {showDeleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-xl">
-            <h2 className="text-lg font-semibold">Delete Post</h2>
+            <h2 className="text-lg font-semibold">
+              Delete Post
+            </h2>
+
             <p className="mt-2 text-gray-600">
               Are you sure you want to delete this post?
             </p>
+
             <div className="mt-6 flex justify-end gap-3">
               <button
                 type="button"
                 onClick={() => {
-                  setShowDeleteModal(false);
-                  setSelectedPostId(null);
+                  setShowDeleteModal(
+                    false
+                  );
+                  setSelectedPostId(
+                    null
+                  );
                 }}
                 className="rounded-lg border px-4 py-2"
               >
                 No
               </button>
+
               <button
                 type="button"
                 onClick={() => {
-                  if (selectedPostId) {
-                    handleDelete(selectedPostId);
+                  if (
+                    selectedPostId
+                  ) {
+                    handleDelete(
+                      selectedPostId
+                    );
                   }
-                  setShowDeleteModal(false);
-                  setSelectedPostId(null);
+
+                  setShowDeleteModal(
+                    false
+                  );
+                  setSelectedPostId(
+                    null
+                  );
                 }}
                 className="rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700"
               >
@@ -329,99 +632,145 @@ if (!firstFeatured && secondFeatured) return 1;
         </div>
       )}
 
-{showDeleteReplyModal && selectedReply && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-    <div className="w-350px rounded-xl bg-white p-6 shadow-xl">
-      <h2 className="text-lg font-semibold">Delete reply</h2>
+      {/* DELETE REPLY */}
+      {showDeleteReplyModal &&
+        selectedReply && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+            <div className="w-350px rounded-xl bg-white p-6 shadow-xl">
+              <h2 className="text-lg font-semibold">
+                Delete reply
+              </h2>
 
-      <p className="mt-2 text-sm text-gray-600">
-        Are you sure you want to delete this reply?
-      </p>
+              <p className="mt-2 text-sm text-gray-600">
+                Are you sure you want to delete this reply?
+              </p>
 
-      <div className="mt-5 flex justify-end gap-3">
-        <button
-          type="button"
-          onClick={() => {
-            setShowDeleteReplyModal(false);
-            setSelectedReply(null);
-          }}
-          className="rounded-lg border px-4 py-2 text-sm"
-        >
-          Cancel
-        </button>
+              <div className="mt-5 flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowDeleteReplyModal(
+                      false
+                    );
+                    setSelectedReply(
+                      null
+                    );
+                  }}
+                  className="rounded-lg border px-4 py-2 text-sm"
+                >
+                  Cancel
+                </button>
 
-        <button
-          type="button"
-          onClick={async () => {
-            await deleteReply(
-              selectedReply.postId,
-              selectedReply.commentId,
-              selectedReply.replyId
-            );
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await deleteReply(
+                      selectedReply.postId,
+                      selectedReply.commentId,
+                      selectedReply.replyId
+                    );
 
-            setPosts((previousPosts: any[]) =>
-              previousPosts.map((post: any) =>
-                post._id === selectedReply.postId
-                  ? {
-                      ...post,
-                      comments: post.comments.map((comment: any) =>
-                        comment._id === selectedReply.commentId
-                          ? {
-                              ...comment,
-                              replies: comment.replies.filter(
-                                (reply: any) =>
-                                  reply._id !== selectedReply.replyId
-                              ),
-                            }
-                          : comment
-                      ),
-                    }
-                  : post
-              )
-            );
+                    setPosts(
+                      (
+                        previousPosts
+                      ) =>
+                        previousPosts.map(
+                          (
+                            post: any
+                          ) =>
+                            post._id ===
+                            selectedReply.postId
+                              ? {
+                                  ...post,
+                                  comments:
+                                    post.comments.map(
+                                      (
+                                        comment: any
+                                      ) =>
+                                        comment._id ===
+                                        selectedReply.commentId
+                                          ? {
+                                              ...comment,
+                                              replies:
+                                                comment.replies.filter(
+                                                  (
+                                                    reply: any
+                                                  ) =>
+                                                    reply._id !==
+                                                    selectedReply.replyId
+                                                ),
+                                            }
+                                          : comment
+                                    ),
+                                }
+                              : post
+                        )
+                    );
 
-            setShowDeleteReplyModal(false);
-            setSelectedReply(null);
-          }}
-          className="rounded-lg bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700"
-        >
-          {t("community.delete")}
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+                    setShowDeleteReplyModal(
+                      false
+                    );
+                    setSelectedReply(
+                      null
+                    );
+                  }}
+                  className="rounded-lg bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700"
+                >
+                  {t(
+                    "community.delete"
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
-
+      {/* DELETE COMMENT */}
       {showDeleteCommentModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-xl">
-            <h2 className="text-lg font-semibold">Delete Comment</h2>
+            <h2 className="text-lg font-semibold">
+              Delete Comment
+            </h2>
+
             <p className="mt-2 text-gray-600">
               Are you sure you want to delete this comment?
             </p>
+
             <div className="mt-6 flex justify-end gap-3">
               <button
                 type="button"
                 onClick={() => {
-                  setShowDeleteCommentModal(false);
-                  setSelectedComment(null);
+                  setShowDeleteCommentModal(
+                    false
+                  );
+                  setSelectedComment(
+                    null
+                  );
                 }}
                 className="rounded-lg border px-4 py-2"
               >
                 No
               </button>
+
               <button
                 type="button"
                 onClick={() => {
-                  if (selectedComment) {
+                  if (
+                    selectedComment
+                  ) {
                     handleDeleteComment(
                       selectedComment.postId,
                       selectedComment.commentId
                     );
                   }
-                  setShowDeleteCommentModal(false);
-                  setSelectedComment(null);
+
+                  setShowDeleteCommentModal(
+                    false
+                  );
+                  setSelectedComment(
+                    null
+                  );
                 }}
                 className="rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700"
               >
@@ -431,16 +780,6 @@ if (!firstFeatured && secondFeatured) return 1;
           </div>
         </div>
       )}
-      <div
-  ref={loadMoreRef}
-  className="h-10 flex items-center justify-center"
->
-  {loadingMore && (
-    <p className="text-sm text-gray-500">
-      Loading more...
-    </p>
-  )}
-</div>
     </>
   );
 }

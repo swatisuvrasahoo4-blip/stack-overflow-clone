@@ -23,9 +23,6 @@ export const createPost = async (req, res) => {
       mentions,
     } = req.body;
 
-    const normalizedHashtags = extractHashtags(content, hashtags);
-       
-    
     if (!content || content.trim() === "") {
       return res.status(400).json({
         success: false,
@@ -33,75 +30,80 @@ export const createPost = async (req, res) => {
       });
     }
 
-    if (isFeatured === true || isFeatured ==="true") {
-  const user = await auth.findById(authorId);
+    const normalizedHashtags = extractHashtags(content, hashtags);
 
-  if (
-    !user ||
-    user.subscription !== "Gold" ||
-    user.subscriptionStatus !== "Active"
-  ) {
-    return res.status(403).json({
-      success: false,
-      message: "Featured posts are available only for Gold members.",
-    });
-  }
-}
+    // Check Featured Post permission
+    if (isFeatured === true || isFeatured === "true") {
+      const user = await auth.findById(authorId);
 
+      if (
+        !user ||
+        user.subscription !== "Gold" ||
+        user.subscriptionStatus !== "Active"
+      ) {
+        return res.status(403).json({
+          success: false,
+          message: "Featured posts are available only for Gold members.",
+        });
+      }
+    }
+
+    // Upload image
     let image = "";
 
-if (req.file) {
-  const uploadResult = await new Promise((resolve, reject) => {
-    const uploadStream = cloudinary.uploader.upload_stream(
-      {
-        folder: "codequest/posts",
-        resource_type: "image",
-      },
-      (error, result) => {
-        if (error) {
-          reject(error);
-          return;
-        }
+    if (req.file) {
+      const uploadResult = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            folder: "codequest/posts",
+            resource_type: "image",
+          },
+          (error, result) => {
+            if (error) {
+              reject(error);
+              return;
+            }
 
-        resolve(result);
-      }
-    );
+            resolve(result);
+          }
+        );
 
-    uploadStream.end(req.file.buffer);
-  });
+        uploadStream.end(req.file.buffer);
+      });
 
-  image = uploadResult.secure_url;
-}
-    
-    
+      image = uploadResult.secure_url;
+    }
+
+    // Handle mentions
     let mentionUsernames = [];
 
-if (Array.isArray(mentions)) {
-  mentionUsernames = mentions;
-} else if (typeof mentions === "string") {
-  mentionUsernames = mentions.split(",");
-}
+    if (Array.isArray(mentions)) {
+      mentionUsernames = mentions;
+    } else if (typeof mentions === "string") {
+      mentionUsernames = mentions.split(",");
+    }
 
-mentionUsernames = [
-  ...new Set(
-    mentionUsernames
-      .map((username) =>
-        username.trim().replace(/^@/, "").toLowerCase()
-      )
-      .filter(Boolean)
-  ),
-];
+    mentionUsernames = [
+      ...new Set(
+        mentionUsernames
+          .map((username) =>
+            username.trim().replace(/^@/, "").toLowerCase()
+          )
+          .filter(Boolean)
+      ),
+    ];
 
-const mentionedUsers = await auth.find({
-  username: { $in: mentionUsernames },
-});
+    const mentionedUsers = await auth.find({
+      username: { $in: mentionUsernames },
+    });
 
-const normalizedMentions = mentionedUsers.map((person) => ({
-  userId: person._id,
-  username: person.username,
-  name: person.name,
-}));
+    const normalizedMentions = mentionedUsers.map((person) => ({
+      userId: person._id,
+      username: person.username,
+      name: person.name,
+    }));
 
+    // Create post
     const newPost = new Post({
       authorId,
       authorName,
@@ -111,7 +113,7 @@ const normalizedMentions = mentionedUsers.map((person) => ({
       image,
       codeSnippet,
       hashtags: normalizedHashtags,
-      mentions:normalizedMentions,
+      mentions: normalizedMentions,
       projectTitle,
       projectLink,
       achievementTitle,
@@ -120,29 +122,30 @@ const normalizedMentions = mentionedUsers.map((person) => ({
 
     const savedPost = await newPost.save();
 
-const mentionNotifications = normalizedMentions
-  .filter(
-    (mentionedUser) =>
-      mentionedUser.userId.toString() !== authorId.toString()
-  )
-  .map((mentionedUser) => ({
-    recipientId: normalizeObjectId(mentionedUser.userId),
-    senderId: normalizeObjectId(authorId),
-    postId: savedPost._id,
-    type: "mention",
-    message: "mentioned you in a post.",
-  }));
+    // Mention notifications
+    const mentionNotifications = normalizedMentions
+      .filter(
+        (mentionedUser) =>
+          mentionedUser.userId.toString() !== authorId.toString()
+      )
+      .map((mentionedUser) => ({
+        recipientId: normalizeObjectId(mentionedUser.userId),
+        senderId: normalizeObjectId(authorId),
+        postId: savedPost._id,
+        type: "mention",
+        message: "mentioned you in a post.",
+      }));
 
-if (mentionNotifications.length > 0) {
-  await Notification.insertMany(mentionNotifications);
-}
+    if (mentionNotifications.length > 0) {
+      await Notification.insertMany(mentionNotifications);
+    }
 
-return res.status(201).json({
-  success: true,
-  message: "Post created successfully.",
-  data: savedPost,
-})
-} catch (error) {
+    return res.status(201).json({
+      success: true,
+      message: "Post created successfully.",
+      data: savedPost,
+    });
+  } catch (error) {
     console.error("Create Post Error:", error);
 
     res.status(500).json({
@@ -151,15 +154,17 @@ return res.status(201).json({
     });
   }
 };
+
 // Edit an existing post
 export const editPost = async (req, res) => {
   try {
+    console.log("EDIT BODY:", req.body);
+console.log("EDIT FILE:", req.file);
     const { id } = req.params;
-    
+
     const {
       content,
       postType,
-      image,
       codeSnippet,
       hashtags,
       projectTitle,
@@ -178,47 +183,108 @@ export const editPost = async (req, res) => {
 
     const user = await auth.findById(req.userid);
 
-    if(!user){
+    if (!user) {
       return res.status(404).json({
         message: "User not found",
       });
     }
-    
-    const isOwner = post.authorId.toString() === req.userid.toString();
-    if(!isOwner){
+
+    // Check ownership
+    const isOwner =
+      post.authorId.toString() === req.userid.toString();
+
+    if (!isOwner) {
       return res.status(403).json({
-        message: "You can only edit your own post"
-      })
-    }
-    if((user.reputation || 0) < 100){
-      return res.status(403).json({
-        message:"You need at least 100 reputation points to edit community posts"
-      })
+        message: "You can only edit your own post",
+      });
     }
 
+    // Check reputation
+    if ((user.reputation || 0) < 100) {
+      return res.status(403).json({
+        message:
+          "You need at least 100 reputation points to edit community posts",
+      });
+    }
+
+    // Content validation
     if (!content || content.trim() === "") {
       return res.status(400).json({
         message: "Post content is required",
       });
     }
-    const normalizedHashtags = extractHashtags(content, hashtags);
 
+    // Handle image
+    // Keep the old image if no new image is selected.
+    // Replace it only when a new image is uploaded.
+    let image = post.image;
 
+    if (req.file) {
+      const uploadResult = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            folder: "codequest/posts",
+            resource_type: "image",
+          },
+          (error, result) => {
+            if (error) {
+              reject(error);
+              return;
+            }
+
+            resolve(result);
+          }
+        );
+
+        uploadStream.end(req.file.buffer);
+      });
+
+      image = uploadResult.secure_url;
+    }
+
+    // Normalize hashtags
+    const normalizedHashtags = extractHashtags(
+      content,
+      hashtags
+    );
+
+    // Update post
     post.content = content;
     post.postType = postType || post.postType;
-    post.image = image !== undefined ? image : post.image;
+    post.image = image;
+
     post.codeSnippet =
-    codeSnippet !== undefined ? codeSnippet : post.codeSnippet;
+      codeSnippet !== undefined
+        ? codeSnippet
+        : post.codeSnippet;
+
     post.hashtags = normalizedHashtags;
-    post.projectTitle = projectTitle !== undefined ? projectTitle : post.projectTitle;
-    post.projectLink = projectLink !== undefined ? projectLink : post.projectLink;
-    post.achievementTitle = achievementTitle !== undefined ? achievementTitle : post.achievementTitle;
-    post.achievementDescription = achievementDescription !== undefined ? achievementDescription : post.achievementDescription;
+
+    post.projectTitle =
+      projectTitle !== undefined
+        ? projectTitle
+        : post.projectTitle;
+
+    post.projectLink =
+      projectLink !== undefined
+        ? projectLink
+        : post.projectLink;
+
+    post.achievementTitle =
+      achievementTitle !== undefined
+        ? achievementTitle
+        : post.achievementTitle;
+
+    post.achievementDescription =
+      achievementDescription !== undefined
+        ? achievementDescription
+        : post.achievementDescription;
+
     post.isEdited = true;
 
     const updatedPost = await post.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Post updated successfully",
       data: updatedPost,
@@ -231,6 +297,7 @@ export const editPost = async (req, res) => {
     });
   }
 };
+
 // Get all community posts
 export const getAllPosts = async (req, res) => {
   try {
@@ -238,13 +305,24 @@ export const getAllPosts = async (req, res) => {
     const limit = Number(req.query.limit) || 10;
 
     const skip = (page - 1) * limit;
-    const { type, feed } = req.query;
 
-const query = {};
+    const { type, followingIds } = req.query;
 
-if (type) {
-  query.postType = type;
-}
+    const query = {};
+
+    if (type) {
+      query.postType = type;
+    }
+
+    // Following feed
+    if (followingIds) {
+      const ids = followingIds
+        .split(",")
+        .map((id) => id.trim())
+        .filter(Boolean);
+
+      query.authorId = { $in: ids };
+    }
 
     const totalPosts = await Post.countDocuments(query);
 
@@ -272,6 +350,7 @@ if (type) {
     });
   }
 };
+
 // Like / Unlike post
 export const likePost = async (req, res) => {
   try {
@@ -308,13 +387,14 @@ export const likePost = async (req, res) => {
         post.authorId &&
         post.authorId.toString() !== userId.toString()
       ) {
-        const createdNotification = await Notification.create({
-          recipientId: normalizeObjectId(post.authorId),
-          senderId: normalizeObjectId(userId),
-          postId: post._id,
-          type: "like",
-          message: "liked your post.",
-        });
+        const createdNotification =
+          await Notification.create({
+            recipientId: normalizeObjectId(post.authorId),
+            senderId: normalizeObjectId(userId),
+            postId: post._id,
+            type: "like",
+            message: "liked your post.",
+          });
 
         console.log(
           "Like notification created:",
@@ -342,6 +422,7 @@ export const likePost = async (req, res) => {
     });
   }
 };
+
 // Add comment to a post
 export const addComment = async (req, res) => {
   try {
@@ -350,19 +431,20 @@ export const addComment = async (req, res) => {
 
     const user = await auth.findById(req.userid);
 
-if (!user) {
-  return res.status(404).json({
-    success: false,
-    message: "User not found",
-  });
-}
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
 
-if ((user.reputation || 0) < 50) {
-  return res.status(403).json({
-    success: false,
-    message: "You need at least 50 reputation points to comment.",
-  });
-}
+    if ((user.reputation || 0) < 50) {
+      return res.status(403).json({
+        success: false,
+        message:
+          "You need at least 50 reputation points to comment.",
+      });
+    }
 
     const post = await Post.findById(id);
 
@@ -379,15 +461,17 @@ if ((user.reputation || 0) < 50) {
       text,
     });
 
-    if (post.authorId.toString() !== req.userid.toString()) {
-  await Notification.create({
-    recipientId: normalizeObjectId(post.authorId),
-    senderId: normalizeObjectId(req.userid),
-    postId: post._id,
-    type: "comment",
-    message: "commented on your post.",
-  });
-}
+    if (
+      post.authorId.toString() !== req.userid.toString()
+    ) {
+      await Notification.create({
+        recipientId: normalizeObjectId(post.authorId),
+        senderId: normalizeObjectId(req.userid),
+        postId: post._id,
+        type: "comment",
+        message: "commented on your post.",
+      });
+    }
 
     await post.save();
 
@@ -405,6 +489,7 @@ if ((user.reputation || 0) < 50) {
     });
   }
 };
+
 // Reply to a comment
 export const replyToComment = async (req, res) => {
   try {
@@ -413,19 +498,20 @@ export const replyToComment = async (req, res) => {
 
     const user = await auth.findById(req.userid);
 
-if (!user) {
-  return res.status(404).json({
-    success: false,
-    message: "User not found",
-  });
-}
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
 
-if ((user.reputation || 0) < 50) {
-  return res.status(403).json({
-    success: false,
-    message: "You need at least 50 reputation points to reply to comments.",
-  });
-}
+    if ((user.reputation || 0) < 50) {
+      return res.status(403).json({
+        success: false,
+        message:
+          "You need at least 50 reputation points to reply to comments.",
+      });
+    }
 
     const post = await Post.findById(id);
 
@@ -453,7 +539,9 @@ if ((user.reputation || 0) < 50) {
 
     await post.save();
 
-    if (comment.userId.toString() !== req.userid.toString()) {
+    if (
+      comment.userId.toString() !== req.userid.toString()
+    ) {
       await Notification.create({
         recipientId: normalizeObjectId(comment.userId),
         senderId: normalizeObjectId(req.userid),
@@ -477,7 +565,8 @@ if ((user.reputation || 0) < 50) {
     });
   }
 };
-// delete a post
+
+// Delete a post
 export const deletePost = async (req, res) => {
   try {
     const { id } = req.params;
@@ -490,7 +579,9 @@ export const deletePost = async (req, res) => {
       });
     }
 
-    if (post.authorId.toString() !== req.userid.toString()) {
+    if (
+      post.authorId.toString() !== req.userid.toString()
+    ) {
       return res.status(403).json({
         message: "You can only delete your own post",
       });
@@ -509,7 +600,8 @@ export const deletePost = async (req, res) => {
     });
   }
 };
-// delete comment
+
+// Delete comment
 export const deleteComment = async (req, res) => {
   try {
     const { postId, commentId } = req.params;
@@ -557,7 +649,8 @@ export const deleteComment = async (req, res) => {
     });
   }
 };
-//delete reply
+
+// Delete reply
 export const deleteReply = async (req, res) => {
   try {
     const { postId, commentId, replyId } = req.params;
@@ -601,11 +694,14 @@ export const deleteReply = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+
     res.status(500).json({
       message: "Server Error",
     });
   }
 };
+
+// Get single post
 export const getPostById = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);

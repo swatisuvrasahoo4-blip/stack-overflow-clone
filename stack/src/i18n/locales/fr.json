@@ -376,6 +376,7 @@
 }, 
 "language": {
   "verify_language_change": "Vérifier le changement de langue",
+  "choose_language": "Choisir la langue",
   "enter_the_6-digit_otp_sent_to_your_device": "Saisissez le code OTP à 6 chiffres envoyé à votre appareil.",
   "enter_6-digit_otp": "Saisissez le code OTP à 6 chiffres",
   "verify_otp": "Vérifier le code OTP",
@@ -500,5 +501,19 @@
   "copied": "Copié",
   "copy_password": "Copier le mot de passe",
   "back_to_login": "Retour à la connexion"
-}
+},
+"login": {
+    "login_to_your_account": "Connectez-vous à votre compte",
+    "enter_your_email_and_password_to_access_stack_overflow": "Entrez votre adresse e-mail et votre mot de passe pour accéder à Stack Overflow",
+    "log_in_with_google": "Se connecter avec Google",
+    "log_in_with_github": "Se connecter avec GitHub",
+    "or_continue_with": "OU CONTINUER AVEC",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "log_in": "Se connecter",
+    "loading": "Chargement",
+    "forgot_your_password": "Mot de passe oublié?",
+    "dont_have_an_account": "Vous n'avez pas de compte ?",
+    "sign_up": "S'inscrire"
+  }
 }

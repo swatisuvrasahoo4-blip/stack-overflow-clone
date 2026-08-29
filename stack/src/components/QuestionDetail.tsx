@@ -117,10 +117,18 @@ setanswer(questionData?.answer || []);
     );
   }
 
-  const handleVote = async (vote: string) => {
+const handleVote = async (vote: string) => {
   if (!user) {
     toast.info(t("toast.please_login_to_continue"));
-    router.push("/");
+    router.push("/auth");
+    return;
+  }
+
+  const isOwnQuestion =
+    String(question?.userid) === String(user?._id || user?.id);
+
+  if (isOwnQuestion) {
+    toast.info("You cannot vote on your own question.");
     return;
   }
 
@@ -141,12 +149,13 @@ setanswer(questionData?.answer || []);
     toast.error(t("toast.failed_to_vote_question"));
   }
 };
+
 const handlebookmark = async () => {
   const userId = user?._id || user?.id;
 
   if (!userId) {
     toast.info(t("toast.please_login_to_save_questions"));
-    router.push("/");
+    router.push("/auth");
     return;
   }
 
@@ -184,7 +193,7 @@ const handlebookmark = async () => {
   const handleSubmitanswer = async () => {
     if(!user){
       toast.info(t("toast.please_login_to_continue"))
-      router.push("/")
+      router.push("/auth")
       return
     }
     if (!newanswer.trim()) return;
@@ -267,6 +276,12 @@ toast.success(t("toast.answer_uploaded_successfully"));
     }
   };
 const handleShare = async () => {
+  if (!user) {
+    toast.info(t("toast.please_login_to_continue"));
+    router.push("/auth");
+    return;
+  }
+
   const shareUrl = window.location.href;
 
   try {
@@ -287,6 +302,10 @@ const handleShare = async () => {
 
 const hasAcceptedAnswer =
   question?.answer?.some((ans: any) => ans.isAccepted) ?? false;
+
+  const isOwnQuestion =
+  String(question.userid) === String(user?._id || user?.id);
+
   return (
     <div className="max-w-5xl">
       {/* Question Header */}

@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslation } from "react-i18next";
+
 interface LanguageMenuProps {
   open: boolean;
   onClose: () => void;
@@ -16,6 +18,7 @@ const languages = [
 ];
 
 const LanguageMenu = ({ open, onClose, onSelect, }: LanguageMenuProps) => {
+  const {t} = useTranslation();
   if (!open) return null;
 
  return (
@@ -32,7 +35,7 @@ const LanguageMenu = ({ open, onClose, onSelect, }: LanguageMenuProps) => {
   >
     <div className="flex items-center justify-between px-4 py-3 border-b">
       <p className="font-semibold text-gray-800">
-        Choose Language
+        {t("language.choose_language")}
       </p>
 
       <button

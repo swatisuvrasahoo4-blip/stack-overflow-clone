@@ -10,7 +10,22 @@ export default function usePostActions({
   setPosts,
   user,
   updateUser,
-  commentText,setCommentText,setActiveCommentPost,setEditingPost,editContent,setEditContent,editingPost,replyText,setReplyText,setActiveReplyComment,
+  commentText,setCommentText,setActiveCommentPost,setEditingPost,editContent,setEditContent,editingPost,replyText,setReplyText,setActiveReplyComment, editHashtags,
+  setEditHashtags,
+  editTagInput,
+  setEditTagInput,
+  editImage,
+  setEditImage,
+  editProjectTitle,
+  setEditProjectTitle,
+  editProjectLink,
+  setEditProjectLink,
+  editAchievementTitle,
+  setEditAchievementTitle,
+  editAchievementDescription,
+  setEditAchievementDescription,
+  editCodeSnippet,
+  setEditCodeSnippet,
 }: {
   posts: any[];
   setPosts: React.Dispatch<React.SetStateAction<any[]>>;
@@ -23,6 +38,30 @@ export default function usePostActions({
   setEditingPost: React.Dispatch<React.SetStateAction<any>>;
   editContent: string;
   setEditContent: React.Dispatch<React.SetStateAction<string>>;
+  editHashtags: string;
+setEditHashtags: React.Dispatch<React.SetStateAction<string>>;
+
+
+editTagInput: string;
+setEditTagInput: React.Dispatch<React.SetStateAction<string>>;
+
+editImage: File | null;
+setEditImage: React.Dispatch<React.SetStateAction<File | null>>;
+
+editProjectTitle: string;
+setEditProjectTitle: React.Dispatch<React.SetStateAction<string>>;
+
+editProjectLink: string;
+setEditProjectLink: React.Dispatch<React.SetStateAction<string>>;
+
+editAchievementTitle: string;
+setEditAchievementTitle: React.Dispatch<React.SetStateAction<string>>;
+
+editAchievementDescription: string;
+setEditAchievementDescription: React.Dispatch<React.SetStateAction<string>>;
+
+editCodeSnippet: string;
+setEditCodeSnippet: React.Dispatch<React.SetStateAction<string>>;
   replyText: string;
 setReplyText: React.Dispatch<React.SetStateAction<string>>;
 setActiveReplyComment: React.Dispatch<
@@ -126,29 +165,74 @@ console.log("COMMENT RESPONSE:", response);
   }
 };
 const handleEdit = (post: any) => {
-  if((user?.reputation || 0) < 100){
-    alert(t("alert.you_need_atleast_100_reputation_points_to_edit_community_posts"));
+  if ((user?.reputation || 0) < 100) {
+    alert(
+      t(
+        "alert.you_need_atleast_100_reputation_points_to_edit_community_posts"
+      )
+    );
     return;
   }
+
   setEditingPost(post);
+
   setEditContent(post.content || "");
-}
+
+  setEditHashtags(
+    Array.isArray(post.hashtags)
+      ? post.hashtags.join(", ")
+      : post.hashtags || ""
+  );
+
+  setEditTagInput("");
+
+  setEditImage(null);
+
+  setEditProjectTitle(post.projectTitle || "");
+  setEditProjectLink(post.projectLink || "");
+
+  setEditAchievementTitle(post.achievementTitle || "");
+  setEditAchievementDescription(
+    post.achievementDescription || ""
+  );
+
+  setEditCodeSnippet(post.codeSnippet || "");
+};
 
 const handleSaveEdit = async () => {
   if (!editingPost) return;
+
+  console.log("EDITING POST:", editingPost);
+console.log("EDIT CONTENT:", editContent);
 
   if (!editContent.trim()) {
     alert(t("alert.post_content_cannot_be_empty"));
     return;
   }
+
   try {
-    const updatedPost = await updatePost(editingPost._id, {
-      content: editContent,
-      postType: editingPost.postType,
-      image: editingPost.image,
-      codeSnippet: editingPost.codeSnippet,
-      hashtags: editingPost.hashtags,
-    });
+    const formData = new FormData();
+
+formData.append("content", editContent);
+formData.append("postType", editingPost.postType);
+formData.append("hashtags", editHashtags);
+formData.append("codeSnippet", editCodeSnippet);
+formData.append("projectTitle", editProjectTitle);
+formData.append("projectLink", editProjectLink);
+formData.append("achievementTitle", editAchievementTitle);
+formData.append(
+  "achievementDescription",
+  editAchievementDescription
+);
+
+if (editImage) {
+  formData.append("image", editImage);
+}
+
+const updatedPost = await updatePost(
+  editingPost._id,
+  formData
+);
 
     setPosts((previousPosts: any[]) =>
       previousPosts.map((post) =>
@@ -158,6 +242,18 @@ const handleSaveEdit = async () => {
 
     setEditingPost(null);
     setEditContent("");
+
+    setEditHashtags("");
+    setEditTagInput("");
+    setEditImage(null);
+
+    setEditProjectTitle("");
+    setEditProjectLink("");
+
+    setEditAchievementTitle("");
+    setEditAchievementDescription("");
+
+    setEditCodeSnippet("");
   } catch (error: any) {
     console.log("Edit Post Error:", error);
 
@@ -167,7 +263,10 @@ const handleSaveEdit = async () => {
     }
 
     if (error?.response?.status === 403) {
-      alert(error?.response?.data?.message || t("alert.you_can_only_edit_your_own_post"));
+      alert(
+        error?.response?.data?.message ||
+          t("alert.you_can_only_edit_your_own_post")
+      );
       return;
     }
 
@@ -197,31 +296,39 @@ const handleDelete = async (postId: string) => {
   }
 };
 const handleReply = async (postId: string, commentId: string) => {
-   
   const reputation = Number(user?.reputation ?? 0);
 
-if (reputation < 50) {
-  alert(
-    t(`alert.you_need_atleast_50_reputation_points_to_reply_your_current_reputation_is ${reputation}`)
-  );
-  return;
-}
+  if (reputation < 50) {
+    alert(
+      t(
+        `alert.you_need_atleast_50_reputation_points_to_reply_your_current_reputation_is ${reputation}`
+      )
+    );
+    return;
+  }
 
   if (!replyText.trim()) return;
 
   try {
-    await addReply(postId, commentId, {
-  text: replyText,
-  userName: user?.name || user?.username || user?.email,
-});
+    const response = await addReply(postId, commentId, {
+      text: replyText,
+      userName: user?.name || user?.username || user?.email,
+    });
 
-    const post = await getPosts();
-    setPosts(post)
+    const updatedPost = response?.data;
+
+    if (updatedPost) {
+      setPosts((previousPosts) =>
+        previousPosts.map((post) =>
+          post._id === postId ? updatedPost : post
+        )
+      );
+    }
 
     setReplyText("");
     setActiveReplyComment(null);
   } catch (error) {
-    console.log(error);
+    console.log("Add Reply Error:", error);
   }
 };
 const handleDeleteComment = async (

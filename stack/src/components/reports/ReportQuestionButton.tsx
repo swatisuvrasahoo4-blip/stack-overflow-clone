@@ -4,6 +4,9 @@ import ReportQuestionModal from "./ReportQuestionModal";
 import { createQuestionReport } from "../services/reportService";
 import { checkQuestionReportStatus } from "../services/questionService";
 import { useTranslation } from "react-i18next";
+import { useRouter } from "next/router";
+import { useAuth } from "@/lib/AuthContext";
+import { toast } from "react-toastify";
 
 interface ReportQuestionButtonProps {
  questionId: string;
@@ -13,6 +16,8 @@ interface ReportQuestionButtonProps {
 export default function ReportQuestionButton({
   questionId,reputation
 }: ReportQuestionButtonProps) {
+  const router = useRouter();
+  const {user} = useAuth();
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [alreadyReported, setAlreadyReported] = useState(false);
@@ -23,9 +28,14 @@ export default function ReportQuestionButton({
      onClick={async (event) => {
   event.preventDefault();
   event.stopPropagation();
+  if (!user) {
+    toast.info(t("toast.please_login_to_continue"));
+    router.push("/auth");
+    return;
+  }
   if (reputation < 500) {
   alert(
-    t(`alert.you_need_at_least_500_reputation_points_to_report_inappropriate_content_your_current_reputation_is ${reputation}`)
+    t(`alert.you_need_at_least_500_reputation_points_to_report_inappropriate_content_your_current_reputation_is, ${reputation}`)
   );
   return;
 }

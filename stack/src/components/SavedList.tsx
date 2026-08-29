@@ -25,6 +25,17 @@ export default function SavedList({ max = 100 }: { max?: number }) {
   const [expandedComments, setExpandedComments] = useState<string[]>([]);
   const [editingPost, setEditingPost] = useState<any>(null);
   const [editContent, setEditContent] = useState("");
+  const [editHashtags, setEditHashtags] = useState("");
+  const [editTagInput, setEditTagInput] = useState("");
+const [editImage, setEditImage] = useState<File | null>(null);
+
+const [editProjectTitle, setEditProjectTitle] = useState("");
+const [editProjectLink, setEditProjectLink] = useState("");
+
+const [editAchievementTitle, setEditAchievementTitle] = useState("");
+const [editAchievementDescription, setEditAchievementDescription] = useState("");
+
+const [editCodeSnippet, setEditCodeSnippet] = useState("");
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedComment, setSelectedComment] = useState<any>(null);
@@ -54,6 +65,29 @@ export default function SavedList({ max = 100 }: { max?: number }) {
     setEditingPost,
     editContent,
     setEditContent,
+    editHashtags,
+setEditHashtags,
+
+editTagInput,
+setEditTagInput,
+
+editImage,
+setEditImage,
+
+editProjectTitle,
+setEditProjectTitle,
+
+editProjectLink,
+setEditProjectLink,
+
+editAchievementTitle,
+setEditAchievementTitle,
+
+editAchievementDescription,
+setEditAchievementDescription,
+
+editCodeSnippet,
+setEditCodeSnippet,
     replyText,
     setReplyText,
     setActiveReplyComment,
@@ -305,37 +339,220 @@ setSavedPosts(
       )}
 
       {editingPost && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          <div className="w-full max-w-lg rounded-xl bg-white p-5 shadow-xl">
-            <h2 className="mb-4 text-xl font-semibold">Edit Post</h2>
-            <textarea
-              value={editContent}
-              onChange={(event) => setEditContent(event.target.value)}
-              className="min-h-40 w-full rounded-md border p-3 outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Edit your post..."
-            />
-            <div className="mt-4 flex justify-end gap-3">
-              <button
-                type="button"
-                onClick={() => {
-                  setEditingPost(null);
-                  setEditContent("");
-                }}
-                className="rounded-md border px-4 py-2"
+  <div
+    className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+    onClick={() => setEditingPost(null)}
+  >
+    <div
+      className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl bg-white p-5 shadow-xl"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <h2 className="mb-4 text-xl font-semibold">
+        Edit Post
+      </h2>
+
+      {/* Content */}
+      <textarea
+        value={editContent}
+        onChange={(e) => setEditContent(e.target.value)}
+        className="min-h-40 w-full rounded-md border p-3 outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="Edit your post..."
+      />
+
+      {/* Hashtags */}
+      <div className="mt-4">
+        <label className="mb-2 block text-sm font-medium">
+          Hashtags
+        </label>
+
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={editTagInput}
+            onChange={(e) => setEditTagInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+
+                const tag = editTagInput.trim();
+
+                if (!tag) return;
+
+                const formattedTag = tag.startsWith("#")
+                  ? tag
+                  : `#${tag}`;
+
+                const currentTags = editHashtags
+                  .split(",")
+                  .map((item) => item.trim())
+                  .filter(Boolean);
+
+                if (!currentTags.includes(formattedTag)) {
+                  setEditHashtags(
+                    [...currentTags, formattedTag].join(", ")
+                  );
+                }
+
+                setEditTagInput("");
+              }
+            }}
+            placeholder="Add a hashtag"
+            className="flex-1 rounded-md border px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          <button
+            type="button"
+            onClick={() => {
+              const tag = editTagInput.trim();
+
+              if (!tag) return;
+
+              const formattedTag = tag.startsWith("#")
+                ? tag
+                : `#${tag}`;
+
+              const currentTags = editHashtags
+                .split(",")
+                .map((item) => item.trim())
+                .filter(Boolean);
+
+              if (!currentTags.includes(formattedTag)) {
+                setEditHashtags(
+                  [...currentTags, formattedTag].join(", ")
+                );
+              }
+
+              setEditTagInput("");
+            }}
+            className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          >
+            +
+          </button>
+        </div>
+
+        {/* Existing hashtags */}
+        <div className="mt-3 flex flex-wrap gap-2">
+          {editHashtags
+            .split(",")
+            .map((tag) => tag.trim())
+            .filter(Boolean)
+            .map((tag) => (
+              <span
+                key={tag}
+                className="flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-700"
               >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleSaveEdit}
-                className="rounded-md bg-blue-600 px-4 py-2 text-white"
-              >
-                Save Changes
-              </button>
-            </div>
-          </div>
+                {tag}
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    const updatedTags = editHashtags
+                      .split(",")
+                      .map((item) => item.trim())
+                      .filter(
+                        (item) => item && item !== tag
+                      );
+
+                    setEditHashtags(updatedTags.join(", "));
+                  }}
+                  className="ml-1 text-blue-700 hover:text-red-600"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+        </div>
+      </div>
+
+      {/* Project Showcase */}
+      {editingPost.postType === "project" && (
+        <div className="mt-4 space-y-3">
+          <input
+            type="text"
+            value={editProjectTitle}
+            onChange={(e) =>
+              setEditProjectTitle(e.target.value)
+            }
+            placeholder="Project title"
+            className="w-full rounded-md border px-3 py-2"
+          />
+
+          <input
+            type="url"
+            value={editProjectLink}
+            onChange={(e) =>
+              setEditProjectLink(e.target.value)
+            }
+            placeholder="Project link"
+            className="w-full rounded-md border px-3 py-2"
+          />
         </div>
       )}
+
+      {/* Achievement */}
+      {editingPost.postType === "achievement" && (
+        <div className="mt-4 space-y-3">
+          <input
+            type="text"
+            value={editAchievementTitle}
+            onChange={(e) =>
+              setEditAchievementTitle(e.target.value)
+            }
+            placeholder="Achievement title"
+            className="w-full rounded-md border px-3 py-2"
+          />
+
+          <textarea
+            value={editAchievementDescription}
+            onChange={(e) =>
+              setEditAchievementDescription(e.target.value)
+            }
+            placeholder="Achievement description"
+            className="min-h-24 w-full rounded-md border px-3 py-2"
+          />
+        </div>
+      )}
+
+      {/* Code Snippet */}
+      {editingPost.postType === "code" && (
+        <div className="mt-4">
+          <textarea
+            value={editCodeSnippet}
+            onChange={(e) =>
+              setEditCodeSnippet(e.target.value)
+            }
+            placeholder="Code snippet"
+            className="min-h-32 w-full rounded-md border p-3 font-mono"
+          />
+        </div>
+      )}
+
+      {/* Buttons */}
+      <div className="mt-5 flex justify-end gap-3">
+        <button
+          type="button"
+          onClick={() => {
+            setEditingPost(null);
+            setEditContent("");
+            setEditHashtags("");
+            setEditTagInput("");
+          }}
+          className="rounded-md border px-4 py-2"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          onClick={handleSaveEdit}
+          className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+        >
+          Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 }

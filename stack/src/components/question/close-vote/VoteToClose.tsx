@@ -24,9 +24,18 @@ const VoteToClose = ({
   const [reason, setReason] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleOpenModal = () => {
+ const handleOpenModal = () => {
+  const isOwnQuestion =
+    String(question?.userid) === String(user?._id || user?.id);
+
+  if (isOwnQuestion) {
+    toast.info("You cannot vote to close your own question.");
+    return;
+  }
+
   const alreadyVoted = question?.closeVotes?.some(
-    (vote: any) => String(vote.userId) === String(user?._id)
+    (vote: any) =>
+      String(vote.userId) === String(user?._id || user?.id)
   );
 
   if (alreadyVoted) {

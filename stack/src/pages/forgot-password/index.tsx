@@ -137,7 +137,7 @@ setPasswordCopied(true);
         setCopied(false);
     }, 2000);
 }}
-            className="w-full mt-4 border border-gray-300 rounded-lg py-2 hover:bg-gray-100"
+            className="w-full mt-4 border border-gray-300 text-black rounded-lg py-2 hover:bg-gray-100"
           >
             {copied ? t(`✔ ("forgotpassword.copied")`) : t("forgotpassword.copy_password")}
           </button>

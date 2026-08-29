@@ -2,10 +2,20 @@ import axiosInstance from "@/lib/axiosinstance";
 
 export const getPosts = async (
   page = 1,
-  limit = 10
+  limit = 10,
+  followingIds: string[] = []
 ) => {
+  const params = new URLSearchParams({
+    page: String(page),
+    limit: String(limit),
+  });
+
+  if (followingIds.length > 0) {
+    params.set("followingIds", followingIds.join(","));
+  }
+
   const res = await axiosInstance.get(
-    `/post?page=${page}&limit=${limit}`
+    `/post?${params.toString()}`
   );
 
   return res.data;
@@ -23,9 +33,22 @@ export const updatePost = async (
   postId: string,
   postData: any
 ) => {
+  const formData = new FormData();
+  console.log("post datsa",postData);
+  
+  Object.entries(postData).forEach(([key, value]) => {
+    if (value !== null && value !== undefined) {
+      if (key === "image" && value instanceof File) {
+        formData.append("image", value);
+      } else {
+        formData.append(key, String(value));
+      }
+    }
+  });
+
   const res = await axiosInstance.put(
     `/post/${postId}`,
-    postData
+    formData
   );
 
   return res.data.data;

@@ -6,10 +6,14 @@ import LanguageMenu from "./LanguageMenu";
 import LanguageOtpModal from "./LanguageOtpModal";
 import axiosInstance from "@/lib/axiosinstance";
 import { useTranslation } from "react-i18next";
+import { useRouter } from "next/router";
+import { useAuth } from "@/lib/AuthContext";
+import { toast } from "react-toastify";
 
 const LanguageSwitcher = () => {
-  const { i18n } = useTranslation();
-
+  const { i18n, t } = useTranslation();
+  const router = useRouter();
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [otpOpen, setOtpOpen] = useState(false);
   const [expiresAt, setExpiresAt] = useState<string | null>(null);
@@ -61,7 +65,14 @@ const LanguageSwitcher = () => {
 
   return (
     <>
-      <LanguageButton onClick={() => setOpen(!open)} />
+      <LanguageButton onClick={() => {
+        if (!user) {
+    toast.info(t("toast.please_login_to_continue"));
+    router.push("/auth");
+    return;
+  }
+        setOpen(!open)
+        }} />
 
       <LanguageMenu
         open={open}

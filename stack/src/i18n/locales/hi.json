@@ -376,6 +376,7 @@
   },
   "language": {
     "verify_language_change": "भाषा परिवर्तन सत्यापित करें",
+    "choose_language": "भाषा चुनें",
     "enter_the_6-digit_otp_sent_to_your_device": "अपने डिवाइस पर भेजा गया 6 अंकों का OTP दर्ज करें।",
     "enter_6-digit_otp": "6 अंकों का OTP दर्ज करें",
     "verify_otp": "OTP सत्यापित करें",
@@ -500,5 +501,19 @@
   "copied": "कॉपी किया गया",
   "copy_password": "पासवर्ड कॉपी करें",
   "back_to_login": "लॉगिन पर वापस जाएं"
-}
+},
+"login": {
+    "login_to_your_account": "अपने खाते में लॉग इन करें",
+    "enter_your_email_and_password_to_access_stack_overflow": "Stack Overflow तक पहुँचने के लिए अपना ईमेल और पासवर्ड दर्ज करें",
+    "log_in_with_google": "Google से लॉग इन करें",
+    "log_in_with_github": "GitHub से लॉग इन करें",
+    "or_continue_with": "या इसके साथ जारी रखें",
+    "email": "ईमेल",
+    "password": "पासवर्ड",
+    "log_in": "लॉग इन करें",
+    "loading": "लोड हो रहा है",
+    "forgot_your_password": "क्या आप अपना पासवर्ड भूल गए?",
+    "dont_have_an_account": "क्या आपका कोई खाता नहीं है?",
+    "sign_up": "साइन अप करें"
+  }
 }
