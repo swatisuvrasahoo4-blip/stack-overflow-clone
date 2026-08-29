@@ -119,25 +119,69 @@ if (authorId && authorId.toString() === reporterId.toString()) {
 export const getReports = async (req, res) => {
   try {
     const reports = await Report.find()
-  .populate("reporterId", "name username profilePhoto")
-  .populate(
-    "postAuthorId",
-    "name username profilePhoto isSuspended"
-  )
-  .populate(
-    "questionAuthorId",
-    "name username profilePhoto isSuspended"
-  )
-  .populate("postId", "content postType image createdAt")
-  .populate(
-    "questionId",
-    "questiontitle questionbody questiontags askedon"
-  )
-  .sort({ createdAt: -1 });
+      .populate("reporterId", "name username profilePhoto")
+      .populate(
+        "postAuthorId",
+        "name username profilePhoto isSuspended"
+      )
+      .populate(
+        "questionAuthorId",
+        "name username profilePhoto isSuspended"
+      )
+      .populate("postId", "content postType image createdAt")
+      .populate(
+        "questionId",
+        "questiontitle questionbody questiontags askedon"
+      )
+      .sort({ createdAt: -1 });
+
+    // Get unique authors from both post and question reports
+    const authorIds = [
+      ...reports.map((report) => report.postAuthorId?._id),
+      ...reports.map((report) => report.questionAuthorId?._id),
+    ].filter(Boolean);
+
+    const uniqueAuthorIds = [
+      ...new Set(authorIds.map((id) => id.toString())),
+    ];
+
+    // Count confirmed violations for each author
+    const violationCounts = {};
+
+    for (const authorId of uniqueAuthorIds) {
+      const count = await Report.countDocuments({
+        $or: [
+          { postAuthorId: authorId },
+          { questionAuthorId: authorId },
+        ],
+        status: "action_taken",
+      });
+
+      violationCounts[authorId] = count;
+    }
+
+    // Add violation information to each report
+    const reportsWithViolationData = reports.map((report) => {
+      const reportObject = report.toObject();
+
+      const authorId =
+        report.postAuthorId?._id ||
+        report.questionAuthorId?._id;
+
+      const violationCount = authorId
+        ? violationCounts[authorId.toString()] || 0
+        : 0;
+
+      return {
+        ...reportObject,
+        violationCount,
+        isRepeatOffender: violationCount >= 2,
+      };
+    });
 
     return res.status(200).json({
       success: true,
-      reports,
+      reports: reportsWithViolationData,
     });
   } catch (error) {
     console.error("Get reports error:", error);

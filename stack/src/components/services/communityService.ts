@@ -20,6 +20,25 @@ export const getPosts = async (
 
   return res.data;
 };
+
+export const searchPosts = async (
+  query: string,
+  type?: string
+) => {
+  const params = new URLSearchParams({
+    q: query,
+  });
+
+  if (type && type !== "All") {
+    params.set("type", type);
+  }
+
+  const res = await axiosInstance.get(
+    `/post/search?${params.toString()}`
+  );
+
+  return res.data;
+};
 export const toggleLikePost = async (postId: string) => {
   const res = await axiosInstance.put(`/post/like/${postId}`);
   return res.data.data;

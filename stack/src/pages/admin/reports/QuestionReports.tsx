@@ -7,12 +7,16 @@ interface QuestionReportsProps {
     reportId: string,
     status: "pending" | "reviewed" | "dismissed" | "action_taken"
   ) => Promise<any>;
+  handleSuspend: (userId: string) => void;
+  handleUnsuspend: (userId: string) => void;
 }
 
 export default function QuestionReports({
   reports,
   updatingId,
   onStatusChange,
+  handleSuspend,
+  handleUnsuspend,
 }: QuestionReportsProps) {
   const {t} = useTranslation();
   const questionReports = (reports || []).filter(
@@ -162,34 +166,58 @@ const reportStats = {
 </div>
   </div>
 
-  <div>
-    <p className="mb-2 text-xs font-medium uppercase text-gray-400">
-      {t("report.questionAuthor")}
-    </p>
+ <div>
+  <p className="mb-2 text-xs font-medium uppercase text-gray-400">
+    {t("report.questionAuthor")}
+  </p>
 
-    <div className="flex items-center gap-3">
-  {report.questionAuthorId?.profilePhoto ? (
-    <img
-      src={report.questionAuthorId.profilePhoto}
-      alt="Question Author"
-      className="h-10 w-10 rounded-full object-cover"
-    />
-  ) : (
-    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-600 text-white">
-      {(report.questionAuthorId?.name ||
+  <div className="flex items-center gap-3">
+    {report.questionAuthorId?.profilePhoto ? (
+      <img
+        src={report.questionAuthorId.profilePhoto}
+        alt="Question Author"
+        className="h-10 w-10 rounded-full object-cover"
+      />
+    ) : (
+      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-600 text-white">
+        {(report.questionAuthorId?.name ||
+          report.questionAuthorId?.username ||
+          "U")[0].toUpperCase()}
+      </div>
+    )}
+
+    <span className="font-medium text-blue-600">
+      {report.questionAuthorId?.name ||
         report.questionAuthorId?.username ||
-        "U")[0].toUpperCase()}
+        "Unknown User"}
+    </span>
+  </div>
+
+  {/* Violation Information */}
+  {report.violationCount > 0 && (
+    <div className="mt-2 ml-2 flex flex-wrap items-center gap-2">
+      <span
+        className={`rounded-full px-3 py-1 text-xs font-semibold ${
+          report.isRepeatOffender
+            ? "bg-red-100 text-red-700"
+            : "bg-yellow-100 text-yellow-700"
+        }`}
+      >
+        {report.isRepeatOffender
+          ? "⚠️ Repeat Offender"
+          : "⚠️ Previous Violation"}
+      </span>
+
+      <span className="text-xs text-gray-500">
+        {report.violationCount} confirmed{" "}
+        {report.violationCount === 1
+          ? "violation"
+          : "violations"}
+      </span>
     </div>
   )}
-
-  <span className="font-medium text-blue-600">
-    {report.questionAuthorId?.name ||
-      report.questionAuthorId?.username ||
-      "Unknown User"}
-  </span>
 </div>
-  </div>
-<div className="mt-5 flex flex-wrap gap-3 border-t border-gray-200 pt-4">
+<div className="mt-5 flex flex-row items-center flex-wrap gap-3 border-t border-gray-200 pt-4">
 
   {/* Mark Reviewed */}
   <button
@@ -237,6 +265,29 @@ const reportStats = {
       ? t("report.actionTaken")
       : t("report.actionTaken")}
   </button>
+
+  {report.questionAuthorId &&
+  (report.questionAuthorId.isSuspended ? (
+    <button
+      type="button"
+      onClick={() =>
+        handleUnsuspend(report.questionAuthorId._id)
+      }
+      className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
+    >
+      {t("report.unsuspendUser")}
+    </button>
+  ) : (
+    <button
+      type="button"
+      onClick={() =>
+        handleSuspend(report.questionAuthorId._id)
+      }
+      className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+    >
+      {t("report.suspendUser")}
+    </button>
+  ))}
 
 </div>
 </div>

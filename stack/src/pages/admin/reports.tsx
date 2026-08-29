@@ -204,7 +204,7 @@ return (
     {t("admin.questionReports")}
   </button>
 </div>
-{activeReportTab === "questions" && <QuestionReports reports={reports} updatingId={updatingId} onStatusChange={handleStatusChange} />}
+{activeReportTab === "questions" && <QuestionReports reports={reports} updatingId={updatingId} onStatusChange={handleStatusChange} handleSuspend={handleSuspend} handleUnsuspend={handleUnsuspend} />}
 {activeReportTab === "posts" && (
   <PostReports
     reports={reports}

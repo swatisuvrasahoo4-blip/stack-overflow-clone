@@ -190,12 +190,13 @@ const PostReports = ({
   </div>
 
   {/* Post Author */}
-  <div>
-    <p className="mb-2 text-xs font-medium uppercase text-gray-400">
-      {t("report.post_author")}
-    </p>
+<div>
+  <p className="mb-2 text-xs font-medium uppercase text-gray-400">
+    {t("report.post_author")}
+  </p>
 
-    {report.postAuthorId && (
+  {report.postAuthorId && (
+    <>
       <Link
         href={`/users/${report.postAuthorId._id}`}
         className="flex items-center gap-3 rounded-lg p-2 transition hover:bg-gray-100"
@@ -219,8 +220,33 @@ const PostReports = ({
             report.postAuthorId.username}
         </span>
       </Link>
-    )}
-  </div>
+
+      {/* Violation Information */}
+      {report.violationCount > 0 && (
+        <div className="mt-2 ml-2 flex flex-wrap items-center gap-2">
+          <span
+            className={`rounded-full px-3 py-1 text-xs font-semibold ${
+              report.isRepeatOffender
+                ? "bg-red-100 text-red-700"
+                : "bg-yellow-100 text-yellow-700"
+            }`}
+          >
+            {report.isRepeatOffender
+              ? "⚠️ Repeat Offender"
+              : "⚠️ Previous Violation"}
+          </span>
+
+          <span className="text-xs text-gray-500">
+            {report.violationCount} confirmed{" "}
+            {report.violationCount === 1
+              ? "violation"
+              : "violations"}
+          </span>
+        </div>
+      )}
+    </>
+  )}
+</div>
 </div>
                   </div>
                 </div>

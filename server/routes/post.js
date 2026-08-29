@@ -1,6 +1,6 @@
 import express from "express";
 import auth from "../middleware/auth.js";
-import { createPost, getAllPosts, likePost, addComment, replyToComment, deletePost, deleteComment, deleteReply, getPostById, editPost  } from "../controller/post.js";
+import { createPost, getAllPosts, searchPosts, likePost, addComment, replyToComment, deletePost, deleteComment, deleteReply, getPostById, editPost  } from "../controller/post.js";
 import upload from "../middleware/upload.js";
 import cloudinaryUpload from "../middleware/cloudinaryUpload.js";
 import notSuspended from "../middleware/notSuspended.js";
@@ -21,6 +21,7 @@ const handleMulterError = (err, req, res, next) => {
 
 router.post("/create", auth, notSuspended, cloudinaryUpload.single("image"), handleMulterError, createPost);
 router.get("/",getAllPosts);
+router.get("/search", searchPosts);
 router.get("/:id",getPostById);
 router.put("/like/:id",auth ,notSuspended, likePost);
 router.post("/comment/:id", auth, notSuspended, addComment);

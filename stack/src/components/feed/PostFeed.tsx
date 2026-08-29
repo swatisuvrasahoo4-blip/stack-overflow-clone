@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   getPosts,
   deleteReply,
@@ -128,6 +128,8 @@ export default function PostFeed({
   const [loadingMore, setLoadingMore] =
     useState(false);
 
+    const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
   // --------------------------------------------------
   // FETCH POSTS
   // --------------------------------------------------
@@ -224,6 +226,44 @@ console.log(
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+  if (initialPosts || !hasMore) return;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (
+        entries[0].isIntersecting &&
+        !loadingMore &&
+        hasMore
+      ) {
+        setLoadingMore(true);
+
+        fetchPosts(page + 1).finally(() => {
+          setLoadingMore(false);
+        });
+      }
+    },
+    {
+      rootMargin: "300px",
+    }
+  );
+
+  const element = loadMoreRef.current;
+
+  if (element) {
+    observer.observe(element);
+  }
+
+  return () => {
+    observer.disconnect();
+  };
+}, [
+  page,
+  hasMore,
+  loadingMore,
+  initialPosts,
+]);
 
 useEffect(() => {
   if (initialPosts) {
@@ -538,44 +578,18 @@ useEffect(() => {
         )}
       </div>
 
-      {/* LOAD MORE */}
-      {hasMore && (
-        <div className="flex justify-center py-6">
-          <button
-            type="button"
-            disabled={
-              loadingMore
-            }
-            onClick={async () => {
-  if (loadingMore) return;
-
-  // Remember where the user was before new posts are added
-  const currentScrollY = window.scrollY;
-
-  setLoadingMore(true);
-
-  try {
-    await fetchPosts(page + 1);
-
-    // Wait for React to render the newly loaded posts
-    requestAnimationFrame(() => {
-      window.scrollTo({
-        top: currentScrollY,
-        behavior: "auto",
-      });
-    });
-  } finally {
-    setLoadingMore(false);
-  }
-}}
-            className="rounded-lg bg-blue-600 px-5 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {loadingMore
-              ? "Loading..."
-              : "Load More"}
-          </button>
-        </div>
-      )}
+      {!initialPosts && (
+  <div
+    ref={loadMoreRef}
+    className="py-6 text-center text-gray-500"
+  >
+    {hasMore
+      ? loadingMore
+        ? "Loading more posts..."
+        : ""
+      : "No more posts"}
+  </div>
+)}
 
       {/* DELETE POST */}
       {showDeleteModal && (

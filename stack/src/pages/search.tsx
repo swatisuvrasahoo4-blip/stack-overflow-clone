@@ -1,7 +1,8 @@
 import Mainlayout from "@/layout/Mainlayout";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
-import { getPosts } from "@/components/services/communityService";
+import { searchPosts } from "@/components/services/communityService";
+import { searchQuestions } from "@/components/services/questionService";
 import { getSubscription } from "@/components/services/subscriptionService";
 import PostFeed from "@/components/feed/PostFeed";
 import Link from "next/link";
@@ -13,6 +14,11 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(true);
   const [currentPlan, setCurrentPlan] = useState("Free");
   const [selectedType, setSelectedType] = useState("All");
+  const [searchType, setSearchType] = useState<
+  "All" | "Posts" | "Questions"
+>("All");
+
+const [questionResults, setQuestionResults] = useState<any[]>([]);
 const hasAdvancedSearch = ["Bronze", "Silver", "Gold"].includes(currentPlan);
 
   const query = useMemo(() => {
@@ -36,48 +42,59 @@ useEffect(() => {
 }, []);
 
   useEffect(() => {
-    const loadResults = async () => {
-      if (!query) {
+  const loadResults = async () => {
+    if (!query) {
+      setResults([]);
+      setQuestionResults([]);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const normalizedQuery = query.trim().toLowerCase();
+
+      // Search Posts
+      if (searchType === "Posts" || searchType === "All") {
+        const response = await searchPosts(
+  query,
+  hasAdvancedSearch ? selectedType : "All"
+);
+
+setResults(response?.data || []);
+      } else {
         setResults([]);
-        setLoading(false);
-        return;
       }
 
-      try {
-        const response = await getPosts();
-        const posts = response?.data || [];
-        
-        const normalizedQuery = query.trim().toLowerCase();
+      // Search Questions
+      if (searchType === "Questions" || searchType === "All") {
+        const response = await searchQuestions(query);
 
-        const filtered = Array.isArray(posts)
-          ? posts.filter((post: any) => {
-              const titleMatches = String(post.content || "").
-                toLowerCase()
-                .includes(normalizedQuery);
-              const hashtagMatches = (post.hashtags || [])
-                .map((tag: any) => String(tag).toLowerCase())
-                .some((tag: string) => tag.includes(normalizedQuery));
-              const searchMatches = titleMatches || hashtagMatches;
-const typeMatches =
-  !hasAdvancedSearch ||
-  selectedType === "All" ||
-  post.postType === selectedType;
+        const questions = response?.data || [];
 
-return searchMatches && typeMatches;
-            })
-          : [];
-
-        setResults(filtered);
-      } catch (error) {
-        console.error("Search error:", error);
-        setResults([]);
-      } finally {
-        setLoading(false);
+        setQuestionResults(
+          Array.isArray(questions) ? questions : []
+        );
+      } else {
+        setQuestionResults([]);
       }
-    };
+    } catch (error) {
+      console.error("Search error:", error);
+      setResults([]);
+      setQuestionResults([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    loadResults();
-  }, [query, selectedType, hasAdvancedSearch]);
+  loadResults();
+}, [
+  query,
+  searchType,
+  selectedType,
+  hasAdvancedSearch,
+]);
 
   return (
     <Mainlayout>
@@ -85,9 +102,30 @@ return searchMatches && typeMatches;
         <div className="mb-6">
           <h1 className="text-2xl font-semibold">Search results</h1>
           <p className="mt-2 text-gray-600">Results for “{query}”.</p>
+          <div className="flex gap-2 mt-4">
+  {(["All", "Posts", "Questions"] as const).map((type) => (
+    <button
+      key={type}
+      onClick={() => {
+        setSearchType(type);
+
+        if (type === "Questions") {
+          setSelectedType("All");
+        }
+      }}
+      className={`px-4 py-2 rounded-md text-sm font-medium transition ${
+        searchType === type
+          ? "bg-blue-600 text-white"
+          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+      }`}
+    >
+      {type}
+    </button>
+  ))}
+</div>
         </div>
 
-{hasAdvancedSearch && (
+{hasAdvancedSearch && searchType !== "Questions" && (
   <div className="mb-6">
     <label className="block text-sm font-medium text-gray-700 mb-2">
       Filter by Post Type
@@ -108,14 +146,128 @@ return searchMatches && typeMatches;
 )}
 
         {loading ? (
-          <p className="text-gray-500">Searching...</p>
-        ) : results.length === 0 ? (
-          <p className="text-gray-500">No posts matched your search.</p>
-        ) : (
-          <PostFeed
+  <p className="text-gray-500">Searching...</p>
+) : searchType === "Posts" ? (
+  results.length === 0 ? (
+    <p className="text-gray-500">
+      No posts matched your search.
+    </p>
+  ) : (
+    <PostFeed
+      key={`${query}-${selectedType}`}
+      initialPosts={results}
+    />
+  )
+) : searchType === "Questions" ? (
+  questionResults.length === 0 ? (
+    <p className="text-gray-500">
+      No questions matched your search.
+    </p>
+  ) : (
+    <div className="space-y-4">
+      {questionResults.map((question: any) => (
+        <div
+          key={question._id}
+          onClick={() => {
+            router.push(`/questions/${question._id}`);
+          }}
+          className="border rounded-lg bg-white p-4 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+        >
+          <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
+            <h2 className="text-blue-600 hover:underline font-medium">
+              {question.questiontitle || "(no title)"}
+            </h2>
+
+            <div className="text-sm text-gray-600">
+              {question.noofanswer || 0} answers ·{" "}
+              {question.views || 0} views
+            </div>
+          </div>
+
+          <p className="text-gray-700 mt-2 line-clamp-2">
+            {question.questionbody || ""}
+          </p>
+
+          <div className="mt-3 flex flex-wrap gap-2">
+            {(question.questiontags || []).map(
+              (tag: string) => (
+                <span
+                  key={tag}
+                  className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm"
+                >
+                  {tag}
+                </span>
+              )
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+) : (
+  <>
+    {results.length > 0 && (
+      <>
+        <h2 className="text-lg font-semibold mb-3">
+          Posts
+        </h2>
+
+        <PostFeed
           key={`${query}-${selectedType}`}
-          initialPosts={results} />
-        )}
+          initialPosts={results}
+        />
+      </>
+    )}
+
+    {questionResults.length > 0 && (
+      <div className="mt-8">
+        <h2 className="text-lg font-semibold mb-3">
+          Questions
+        </h2>
+
+        <div className="space-y-4">
+          {questionResults.map((question: any) => (
+            <div
+              key={question._id}
+              onClick={() =>
+                router.push(`/questions/${question._id}`)
+              }
+              className="border rounded-lg bg-white p-4 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+            >
+              <h2 className="text-blue-600 font-medium">
+                {question.questiontitle || "(no title)"}
+              </h2>
+
+              <p className="text-gray-700 mt-2 line-clamp-2">
+                {question.questionbody || ""}
+              </p>
+
+              <div className="mt-3 flex flex-wrap gap-2">
+                {(question.questiontags || []).map(
+                  (tag: string) => (
+                    <span
+                      key={tag}
+                      className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm"
+                    >
+                      {tag}
+                    </span>
+                  )
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {results.length === 0 &&
+      questionResults.length === 0 && (
+        <p className="text-gray-500">
+          No posts or questions matched your search.
+        </p>
+      )}
+  </>
+)}
       </main>
     </Mainlayout>
   );

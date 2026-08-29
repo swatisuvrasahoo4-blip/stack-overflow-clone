@@ -727,3 +727,56 @@ export const getPostById = async (req, res) => {
     });
   }
 };
+
+// Search community posts
+export const searchPosts = async (req, res) => {
+  try {
+    const { q, type } = req.query;
+
+    if (!q || !String(q).trim()) {
+      return res.status(200).json({
+        success: true,
+        data: [],
+      });
+    }
+
+    const searchQuery = String(q).trim();
+
+    const query = {
+      $or: [
+        {
+          content: {
+            $regex: searchQuery,
+            $options: "i",
+          },
+        },
+        {
+          hashtags: {
+            $regex: searchQuery,
+            $options: "i",
+          },
+        },
+      ],
+    };
+
+    // Apply post type filter only when provided
+    if (type && type !== "All") {
+      query.postType = type;
+    }
+
+    const posts = await Post.find(query)
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      data: posts,
+    });
+  } catch (error) {
+    console.error("Post Search Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong while searching posts",
+    });
+  }
+};

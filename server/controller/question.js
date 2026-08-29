@@ -329,3 +329,52 @@ export const deleteQuestion = async (req, res) => {
     });
   }
 };
+
+export const searchQuestions = async (req, res) => {
+  try {
+    const { q } = req.query;
+
+    if (!q || !String(q).trim()) {
+      return res.status(200).json({
+        data: [],
+      });
+    }
+
+    const searchQuery = String(q).trim();
+
+    const questions = await question
+      .find({
+        $or: [
+          {
+            questiontitle: {
+              $regex: searchQuery,
+              $options: "i",
+            },
+          },
+          {
+            questionbody: {
+              $regex: searchQuery,
+              $options: "i",
+            },
+          },
+          {
+            questiontags: {
+              $regex: searchQuery,
+              $options: "i",
+            },
+          },
+        ],
+      })
+      .sort({ askedon: -1 });
+
+    res.status(200).json({
+      data: questions,
+    });
+  } catch (error) {
+    console.error("Question search error:", error);
+
+    res.status(500).json({
+      message: "Something went wrong",
+    });
+  }
+};

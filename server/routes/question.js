@@ -9,6 +9,7 @@ import {
   deleteAnswer,
   editQuestion,
   deleteQuestion,
+  searchQuestions,
 } from "../controller/question.js";
 import auth from "../middleware/auth.js";
 import notSuspended from "../middleware/notSuspended.js";
@@ -20,9 +21,8 @@ router.get("/getallquestion", getallquestion);
 router.patch("/edit/:id", auth, editQuestion);
 router.delete("/delete/:id", auth, deleteQuestion);
 router.post("/answer/:id",auth,answerQuestion);
-router.delete("/delete/:id", auth, deletequestion);
 router.delete("/delete-answer/:questionId/:answerId",auth,deleteAnswer);
 router.patch("/vote/:id", auth, votequestion);
-
+router.get("/search", searchQuestions);
 router.get("/:id",getQuestionById);
 export default router;

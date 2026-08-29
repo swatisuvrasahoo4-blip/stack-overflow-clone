@@ -84,3 +84,13 @@ export const checkQuestionReportStatus = async (questionId: string) => {
 
   return response.data;
 };
+
+export const searchQuestions = async (query: string) => {
+  const res = await axiosInstance.get("/question/search", {
+    params: {
+      q: query,
+    },
+  });
+
+  return res.data;
+};
