@@ -5,6 +5,7 @@ import { getTagContent } from "@/components/services/tagService";
 import PostCard from "@/components/community/PostCard";
 import { useAuth } from "@/lib/AuthContext";
 import usePostActions from "@/hooks/usePostActions";
+import type { Post } from "@/types/community";
 
 interface TagQuestion {
   _id: string;
@@ -17,35 +18,59 @@ export default function TagDetailPage() {
   const router = useRouter();
   const { tag } = router.query;
 
-  const [posts, setPosts] = useState<any[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [questions, setQuestions] = useState<TagQuestion[]>([]);
   const [loading, setLoading] = useState(true);
 
   const [commentText, setCommentText] = useState("");
-  const [activeCommentPost, setActiveCommentPost] = useState<string | null>(
-    null
-  );
+
+  const [activeCommentPost, setActiveCommentPost] =
+    useState<string | null>(null);
 
   const [replyText, setReplyText] = useState("");
-  const [activeReplyComment, setActiveReplyComment] = useState<string | null>(
-    null
-  );
 
-  const [expandedComments, setExpandedComments] = useState<string[]>([]);
+  const [activeReplyComment, setActiveReplyComment] =
+    useState<string | null>(null);
 
-  const [editingPost, setEditingPost] = useState<any>(null);
+  const [expandedComments, setExpandedComments] =
+    useState<string[]>([]);
+
+  const [editingPost, setEditingPost] =
+    useState<Post | null>(null);
+
   const [editContent, setEditContent] = useState("");
 
-  // Edit post states required by usePostActions
   const [editHashtags, setEditHashtags] = useState("");
   const [editTagInput, setEditTagInput] = useState("");
-  const [editImage, setEditImage] = useState<File | null>(null);
-  const [editProjectTitle, setEditProjectTitle] = useState("");
-  const [editProjectLink, setEditProjectLink] = useState("");
-  const [editAchievementTitle, setEditAchievementTitle] = useState("");
-  const [editAchievementDescription, setEditAchievementDescription] =
+
+  const [editImage, setEditImage] =
+    useState<File | null>(null);
+
+  const [editProjectTitle, setEditProjectTitle] =
     useState("");
-  const [editCodeSnippet, setEditCodeSnippet] = useState("");
+
+  const [editProjectLink, setEditProjectLink] =
+    useState("");
+
+  const [
+    editAchievementTitle,
+    setEditAchievementTitle,
+  ] = useState("");
+
+  const [
+    editAchievementDescription,
+    setEditAchievementDescription,
+  ] = useState("");
+
+  const [editCodeSnippet, setEditCodeSnippet] =
+    useState("");
+
+  // Delete post modal states
+  const [selectedPostId, setSelectedPostId] =
+    useState<string | null>(null);
+
+  const [showDeleteModal, setShowDeleteModal] =
+    useState(false);
 
   const { user, updateUser } = useAuth();
 
@@ -55,10 +80,8 @@ export default function TagDetailPage() {
     handleComment,
     handleShare,
     handleEdit,
-    handleSaveEdit,
     handleDelete,
     handleReply,
-    handleDeleteComment,
   } = usePostActions({
     posts,
     setPosts,
@@ -105,8 +128,9 @@ export default function TagDetailPage() {
   });
 
   useEffect(() => {
-    const loadTagContent = async () => {
-      const tagName = Array.isArray(tag) ? tag[0] : tag;
+    const loadTagContent = async (): Promise<void> => {
+      const tagName =
+        Array.isArray(tag) ? tag[0] : tag;
 
       if (!tagName) {
         setPosts([]);
@@ -120,8 +144,11 @@ export default function TagDetailPage() {
 
         setPosts(data.posts || []);
         setQuestions(data.questions || []);
-      } catch (error) {
-        console.error("Tag detail load failed:", error);
+      } catch (error: unknown) {
+        console.error(
+          "Tag detail load failed:",
+          error
+        );
 
         setPosts([]);
         setQuestions([]);
@@ -130,10 +157,11 @@ export default function TagDetailPage() {
       }
     };
 
-    loadTagContent();
+    void loadTagContent();
   }, [tag]);
 
-  const tagName = Array.isArray(tag) ? tag[0] : tag;
+  const tagName =
+    Array.isArray(tag) ? tag[0] : tag;
 
   return (
     <Mainlayout>
@@ -145,7 +173,8 @@ export default function TagDetailPage() {
           </h1>
 
           <p className="mt-2 text-gray-600">
-            Questions and community posts tagged with #{tagName}.
+            Questions and community posts tagged with #
+            {tagName}.
           </p>
         </div>
 
@@ -167,7 +196,9 @@ export default function TagDetailPage() {
                     <div
                       key={question._id}
                       onClick={() =>
-                        router.push(`/questions/${question._id}`)
+                        void router.push(
+                          `/questions/${question._id}`
+                        )
                       }
                       className="cursor-pointer rounded-lg border bg-white p-4 shadow-sm transition hover:shadow-md"
                     >
@@ -180,14 +211,16 @@ export default function TagDetailPage() {
                       </p>
 
                       <div className="mt-3 flex flex-wrap gap-2">
-                        {question.questiontags.map((questionTag) => (
-                          <span
-                            key={questionTag}
-                            className="rounded bg-blue-100 px-2 py-1 text-xs text-blue-800"
-                          >
-                            {questionTag}
-                          </span>
-                        ))}
+                        {question.questiontags.map(
+                          (questionTag) => (
+                            <span
+                              key={questionTag}
+                              className="rounded bg-blue-100 px-2 py-1 text-xs text-blue-800"
+                            >
+                              {questionTag}
+                            </span>
+                          )
+                        )}
                       </div>
                     </div>
                   ))}
@@ -214,22 +247,51 @@ export default function TagDetailPage() {
                       handleShare={handleShare}
                       handleEdit={handleEdit}
                       handleDelete={handleDelete}
-                      activeCommentPost={activeCommentPost}
-                      setActiveCommentPost={setActiveCommentPost}
+                      handleReply={handleReply}
+                      activeCommentPost={
+                        activeCommentPost
+                      }
+                      setActiveCommentPost={
+                        setActiveCommentPost
+                      }
                       commentText={commentText}
-                      setCommentText={setCommentText}
-                      expandedComments={expandedComments}
-                      setExpandedComments={setExpandedComments}
-                      activeReplyComment={activeReplyComment}
-                      setActiveReplyComment={setActiveReplyComment}
+                      setCommentText={
+                        setCommentText
+                      }
+                      expandedComments={
+                        expandedComments
+                      }
+                      setExpandedComments={
+                        setExpandedComments
+                      }
+                      activeReplyComment={
+                        activeReplyComment
+                      }
+                      setActiveReplyComment={
+                        setActiveReplyComment
+                      }
                       replyText={replyText}
                       setReplyText={setReplyText}
                       setSelectedComment={() => {}}
-                      setShowDeleteCommentModal={() => {}}
+                      setShowDeleteCommentModal={() =>
+                        {}
+                      }
                       setSelectedReply={() => {}}
-                      setShowDeleteReplyModal={() => {}}
-                      setSelectedPostId={() => {}}
-                      setShowDeleteModal={() => {}}
+                      setShowDeleteReplyModal={() =>
+                        {}
+                      }
+                      selectedPostId={
+                        selectedPostId
+                      }
+                      setSelectedPostId={
+                        setSelectedPostId
+                      }
+                      showDeleteModal={
+                        showDeleteModal
+                      }
+                      setShowDeleteModal={
+                        setShowDeleteModal
+                      }
                     />
                   ))}
                 </div>
@@ -237,11 +299,13 @@ export default function TagDetailPage() {
             )}
 
             {/* Empty State */}
-            {posts.length === 0 && questions.length === 0 && (
-              <p className="text-gray-500">
-                No questions or posts found for this tag.
-              </p>
-            )}
+            {posts.length === 0 &&
+              questions.length === 0 && (
+                <p className="text-gray-500">
+                  No questions or posts found for this
+                  tag.
+                </p>
+              )}
           </>
         )}
       </main>

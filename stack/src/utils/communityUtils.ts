@@ -1,13 +1,19 @@
-import { useTranslation } from "react-i18next";
+import type { Post } from "@/types/community";
 
-export const savePostToBookmarks = (post: any) => {
- 
-  const savedPosts = JSON.parse(
+interface BookmarkResult {
+  success: boolean;
+  message: string;
+}
+
+export const savePostToBookmarks = (
+  post: Post
+): BookmarkResult => {
+  const savedPosts: Post[] = JSON.parse(
     localStorage.getItem("savedPosts") || "[]"
-  );
+  ) as Post[];
 
   const alreadySaved = savedPosts.some(
-    (item: any) => item._id === post._id
+    (item) => item._id === post._id
   );
 
   if (alreadySaved) {
@@ -29,8 +35,12 @@ export const savePostToBookmarks = (post: any) => {
     message: "Post saved successfully!",
   };
 };
-export const shareCommunityPost = async (postId: string, t: (key: string) => string) => {
-    const shareUrl = `${window.location.origin}/community/${postId}`;
+
+export const shareCommunityPost = async (
+  postId: string,
+  t: (key: string) => string
+): Promise<void> => {
+  const shareUrl = `${window.location.origin}/community/${postId}`;
 
   if (navigator.share) {
     try {
@@ -39,11 +49,23 @@ export const shareCommunityPost = async (postId: string, t: (key: string) => str
         text: "Check out this community post!",
         url: shareUrl,
       });
-    } catch (err) {
-      console.log(err);
+    } catch (error: unknown) {
+      console.error("Share failed:", error);
     }
-  } else {
-    await navigator.clipboard.writeText(shareUrl);
-    alert(t("alert.link_copied_to_clipboard"));
+
+    return;
   }
-}
+
+  try {
+    await navigator.clipboard.writeText(shareUrl);
+
+    alert(
+      t("alert.link_copied_to_clipboard")
+    );
+  } catch (error: unknown) {
+    console.error(
+      "Failed to copy link:",
+      error
+    );
+  }
+};

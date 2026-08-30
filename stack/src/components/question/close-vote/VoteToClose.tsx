@@ -1,17 +1,37 @@
 "use client";
 
 import { useState } from "react";
+import axios from "axios";
 import { toast } from "react-toastify";
-
 import VoteToCloseButton from "./VoteToCloseButton";
 import CloseVoteModal from "./CloseVoteModal";
 import { voteToCloseQuestion } from "../../services/closeVoteService";
 import { useTranslation } from "react-i18next";
+import { Question as BaseQuestion } from "@/types/questions";
+
+// Extra fields used only in VoteToClose
+interface CloseVote {
+  userId: string;
+  reason: string;
+  votedAt?: string | Date;
+}
+
+// Extend the shared Question type
+interface VoteCloseQuestion extends BaseQuestion {
+  closeVotes?: CloseVote[];
+  closedAt?: string | Date | null;
+}
+
+interface User {
+  _id?: string;
+  id?: string;
+  reputation?: number;
+}
 
 interface VoteToCloseProps {
-  question: any;
-  user: any;
-  onQuestionUpdate: (question: any) => void;
+  question: VoteCloseQuestion;
+  user: User;
+  onQuestionUpdate: (question: VoteCloseQuestion) => void;
 }
 
 const VoteToClose = ({
@@ -19,63 +39,73 @@ const VoteToClose = ({
   user,
   onQuestionUpdate,
 }: VoteToCloseProps) => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
+
   const [isOpen, setIsOpen] = useState(false);
   const [reason, setReason] = useState("");
   const [loading, setLoading] = useState(false);
 
- const handleOpenModal = () => {
-  const isOwnQuestion =
-    String(question?.userid) === String(user?._id || user?.id);
+  const handleOpenModal = () => {
+    const isOwnQuestion =
+      String(question.userid) === String(user._id || user.id);
 
-  if (isOwnQuestion) {
-    toast.info(t("toast.you_cannot_vote_to_close_your_own_question"));
-    return;
-  }
+    if (isOwnQuestion) {
+      toast.info(
+        t("toast.you_cannot_vote_to_close_your_own_question")
+      );
+      return;
+    }
 
-  const alreadyVoted = question?.closeVotes?.some(
-    (vote: any) =>
-      String(vote.userId) === String(user?._id || user?.id)
-  );
+    const alreadyVoted = question.closeVotes?.some(
+      (vote) =>
+        String(vote.userId) === String(user._id || user.id)
+    );
 
-  if (alreadyVoted) {
-    alert(t("alert.you_have_already_voted_to_close_this_question"));
-    return;
-  }
+    if (alreadyVoted) {
+      toast.info(
+        t("alert.you_have_already_voted_to_close_this_question")
+      );
+      return;
+    }
 
-  setIsOpen(true);
-};
+    setIsOpen(true);
+  };
 
   const handleSubmit = async () => {
-  if (!reason) return;
+    if (!reason) return;
 
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const data = await voteToCloseQuestion(
-      question._id,
-      reason
-    );
+      const data = await voteToCloseQuestion(question._id, reason);
 
-    toast.success(t(`message.${data.message}`));
+      toast.success(t(`message.${data.message}`));
 
-    onQuestionUpdate({
-      ...question,
-      isClosed: data.isClosed,
-    });
+      onQuestionUpdate({
+        ...question,
+        isClosed: data.isClosed,
+      });
 
-    setReason("");
-    setIsOpen(false);
-  } catch (error: any) {
-    toast.error(
-      error.response?.data?.message
-        ? t(`message.${error.response.data.message}`)
-        : t("message.failed_to_vote_to_close_question")
-    );
-  } finally {
-    setLoading(false);
-  }
-};
+      setReason("");
+      setIsOpen(false);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const message = error.response?.data?.message;
+
+        toast.error(
+          message
+            ? t(`message.${message}`)
+            : t("message.failed_to_vote_to_close_question")
+        );
+      } else {
+        toast.error(
+          t("message.failed_to_vote_to_close_question")
+        );
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (!user || !question) return null;
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Dialog,
   DialogContent,
@@ -74,12 +75,16 @@ useEffect(() => {
       alert(t("alert.support_request_submitted_successfully"));
 
       onOpenChange(false);
-    } catch (error: any) {
-      alert(
-        error?.response?.data?.message ||
-          t("alert.failed_to_submit_support_request")
-      );
-    } finally {
+    }catch (error: unknown) {
+  if (axios.isAxiosError(error)) {
+    alert(
+      error.response?.data?.message ||
+        t("alert.failed_to_submit_support_request")
+    );
+  } else {
+    alert(t("alert.failed_to_submit_support_request"));
+  }
+} finally {
       setLoading(false);
     }
   };

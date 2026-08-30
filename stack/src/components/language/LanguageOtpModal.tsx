@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "@/lib/axiosinstance";
 import { useTranslation } from "react-i18next";
+import axios from "axios";
 
 interface LanguageOtpModalProps {
   open: boolean;
@@ -98,12 +99,19 @@ if (response.data.success) {
   onVerified(language);
   onClose();
 }
-  } catch (error: any) {
+  } catch (error: unknown) {
+  if (axios.isAxiosError(error)) {
     console.error(
       "OTP verification failed:",
       error.response?.data || error
     );
+  } else {
+    console.error(
+      "OTP verification failed:",
+      error
+    );
   }
+}
 };
 
   return (

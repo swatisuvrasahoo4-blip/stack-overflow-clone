@@ -3,11 +3,7 @@ import Link from "next/link";
 import { Users } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-interface Mention {
-    userId: string,
-  username: string;
-  name?: string;
-}
+import type { Mention } from "@/types/community";
 
 interface MentionAvatarProps {
   mentions: Mention[];

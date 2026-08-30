@@ -412,49 +412,170 @@ export const deleteQuestion = async (req, res) => {
 
 export const searchQuestions = async (req, res) => {
   try {
-    const { q } = req.query;
+    const {
+      q,
+      cursor,
+    } = req.query;
+
+    const limit = Math.min(
+      Number(req.query.limit) || 10,
+      50
+    );
 
     if (!q || !String(q).trim()) {
       return res.status(200).json({
         data: [],
+        pagination: {
+          hasMore: false,
+          nextCursor: null,
+        },
       });
     }
 
-    const searchQuery = String(q).trim();
+    const searchQuery =
+      String(q).trim();
 
-    const questions = await question
-      .find({
-        $or: [
-          {
-            questiontitle: {
-              $regex: searchQuery,
-              $options: "i",
-            },
-          },
-          {
-            questionbody: {
-              $regex: searchQuery,
-              $options: "i",
-            },
-          },
-          {
-            questiontags: {
-              $regex: searchQuery,
-              $options: "i",
-            },
-          },
-        ],
-      })
-      .sort({ askedon: -1 });
+    const searchConditions = [
+      {
+        questiontitle: {
+          $regex: searchQuery,
+          $options: "i",
+        },
+      },
+      {
+        questionbody: {
+          $regex: searchQuery,
+          $options: "i",
+        },
+      },
+      {
+        questiontags: {
+          $regex: searchQuery,
+          $options: "i",
+        },
+      },
+    ];
 
-    res.status(200).json({
-      data: questions,
+    const query = {
+      $or: searchConditions,
+    };
+
+    // Decode cursor
+    if (cursor) {
+      try {
+        const decodedCursor =
+          JSON.parse(
+            Buffer.from(
+              cursor,
+              "base64"
+            ).toString("utf-8")
+          );
+
+        const cursorDate =
+          new Date(
+            decodedCursor.askedon
+          );
+
+        const cursorId =
+          decodedCursor.id;
+
+        if (
+          Number.isNaN(
+            cursorDate.getTime()
+          ) ||
+          !cursorId ||
+          !mongoose.Types.ObjectId.isValid(
+            cursorId
+          )
+        ) {
+          return res.status(400).json({
+            message: "Invalid cursor",
+          });
+        }
+
+        query.$and = [
+          {
+            $or: searchConditions,
+          },
+          {
+            $or: [
+              {
+                askedon: {
+                  $lt: cursorDate,
+                },
+              },
+              {
+                askedon: cursorDate,
+                _id: {
+                  $lt:
+                    new mongoose.Types.ObjectId(
+                      cursorId
+                    ),
+                },
+              },
+            ],
+          },
+        ];
+
+        delete query.$or;
+      } catch (error) {
+        return res.status(400).json({
+          message: "Invalid cursor",
+        });
+      }
+    }
+
+    const questions =
+      await question
+        .find(query)
+        .sort({
+          askedon: -1,
+          _id: -1,
+        })
+        .limit(limit + 1);
+
+    const hasMore =
+      questions.length > limit;
+
+    const data = hasMore
+      ? questions.slice(0, limit)
+      : questions;
+
+    let nextCursor = null;
+
+    if (
+      hasMore &&
+      data.length > 0
+    ) {
+      const lastQuestion =
+        data[data.length - 1];
+
+      nextCursor = Buffer.from(
+        JSON.stringify({
+          askedon:
+            lastQuestion.askedon,
+          id: lastQuestion._id.toString(),
+        })
+      ).toString("base64");
+    }
+
+    return res.status(200).json({
+      data,
+      pagination: {
+        limit,
+        hasMore,
+        nextCursor,
+      },
     });
   } catch (error) {
-    console.error("Question search error:", error);
+    console.error(
+      "Question search error:",
+      error
+    );
 
-    res.status(500).json({
-      message: "Something went wrong",
+    return res.status(500).json({
+      message:
+        "Something went wrong",
     });
   }
 };

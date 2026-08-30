@@ -1,4 +1,5 @@
 import axiosInstance from "@/lib/axiosinstance";
+import axios from "axios";
 
 export const submitAnswer = async (
   questionId: string,
@@ -35,13 +36,16 @@ export const getQuestionBookmarks = async (userId?: string) => {
     );
 
     return res.data.questionBookmarks || [];
-  } catch (error: any) {
-    if (error?.response?.status === 401) {
-      return [];
-    }
-
-    throw error;
+  } catch (error: unknown) {
+  if (
+    axios.isAxiosError(error) &&
+    error.response?.status === 401
+  ) {
+    return [];
   }
+
+  throw error;
+}
 };
 
 export const getQuestionById = async (questionId: string) => {
@@ -85,10 +89,16 @@ export const checkQuestionReportStatus = async (questionId: string) => {
   return response.data;
 };
 
-export const searchQuestions = async (query: string) => {
+export const searchQuestions = async (
+  query: string,
+  cursor: string | null = null,
+  limit = 10
+) => {
   const res = await axiosInstance.get("/question/search", {
     params: {
       q: query,
+      cursor: cursor || undefined,
+      limit,
     },
   });
 

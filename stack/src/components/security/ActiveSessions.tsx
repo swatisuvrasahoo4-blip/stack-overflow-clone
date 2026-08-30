@@ -1,35 +1,73 @@
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getMySessions, revokeSession } from "../services/sessionService";
+import axios from "axios";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  getMySessions,
+  revokeSession,
+} from "../services/sessionService";
 import { useTranslation } from "react-i18next";
 
+interface Session {
+  _id: string;
+  browser: string;
+  operatingSystem: string;
+  deviceType: string;
+  ipAddress: string;
+  loginAt: string;
+  lastActivityAt: string;
+  isCurrent?: boolean;
+}
+
 const ActiveSessions = () => {
-  const {t} = useTranslation();
-  const [sessions, setSessions] = useState<any[]>([]);
+  const { t } = useTranslation();
+
+  const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
+
   const handleRevoke = async (sessionId: string) => {
-  try {
-    await revokeSession(sessionId);
+    try {
+      await revokeSession(sessionId);
 
-    setSessions((prev) =>
-      prev.filter((session) => session._id !== sessionId)
-    );
-  } catch (error: any) {
-    console.log("Failed to revoke session", error);
+      setSessions((prev) =>
+        prev.filter(
+          (session) => session._id !== sessionId
+        )
+      );
+    } catch (error: unknown) {
+      console.error(
+        "Failed to revoke session:",
+        error
+      );
 
-    alert(
-      error?.response?.data?.message || t("alert.failed_to_revoke_session")
-    );
-  }
-};5
+      if (axios.isAxiosError(error)) {
+        alert(
+          error.response?.data?.message ||
+            t("alert.failed_to_revoke_session")
+        );
+      } else {
+        alert(
+          t("alert.failed_to_revoke_session")
+        );
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchSessions = async () => {
       try {
         const response = await getMySessions();
+
         setSessions(response?.data || []);
-      } catch (error) {
-        console.log("Failed to fetch sessions", error);
+      } catch (error: unknown) {
+        console.error(
+          "Failed to fetch sessions:",
+          error
+        );
       } finally {
         setLoading(false);
       }
@@ -42,8 +80,11 @@ const ActiveSessions = () => {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>{t("loginactivity.active_sessions")}</CardTitle>
+          <CardTitle>
+            {t("logactivity.active_sessions")}
+          </CardTitle>
         </CardHeader>
+
         <CardContent>
           <p className="text-sm text-gray-500">
             {t("logactivity.loading_sessions")}
@@ -56,13 +97,17 @@ const ActiveSessions = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t("logactivity.active_sessions")}</CardTitle>
+        <CardTitle>
+          {t("logactivity.active_sessions")}
+        </CardTitle>
       </CardHeader>
 
       <CardContent className="space-y-4">
         {sessions.length === 0 ? (
           <p className="text-sm text-gray-500">
-            {t("logactivity.no_active_sessions_found")}
+            {t(
+              "logactivity.no_active_sessions_found"
+            )}
           </p>
         ) : (
           sessions.map((session) => (
@@ -71,43 +116,55 @@ const ActiveSessions = () => {
               className="rounded-lg border p-4"
             >
               <div className="flex items-center justify-between gap-2">
-  <p className="font-medium">
-    {session.browser} · {session.operatingSystem}
-  </p>
+                <p className="font-medium">
+                  {session.browser} ·{" "}
+                  {session.operatingSystem}
+                </p>
 
-  {session.isCurrent && (
-    <span className="text-sm font-medium text-green-600">
-      {t("logactivity.current_session")}
-    </span>
-  )}
-</div>
+                {session.isCurrent && (
+                  <span className="text-sm font-medium text-green-600">
+                    {t(
+                      "logactivity.current_session"
+                    )}
+                  </span>
+                )}
+              </div>
 
               <p className="text-sm text-gray-600">
-                {t("logactivity.device")}: {session.deviceType}
+                {t("logactivity.device")}:{" "}
+                {session.deviceType}
               </p>
 
               <p className="text-sm text-gray-600">
-                {t("logactivity.ip")}: {session.ipAddress}
+                {t("logactivity.ip")}:{" "}
+                {session.ipAddress}
               </p>
 
               <p className="text-sm text-gray-500">
                 {t("logactivity.login")}:{" "}
-                {new Date(session.loginAt).toLocaleString()}
+                {new Date(
+                  session.loginAt
+                ).toLocaleString()}
               </p>
 
               <p className="text-sm text-gray-500">
                 {t("logactivity.last_active")}:{" "}
-                {new Date(session.lastActivityAt).toLocaleString()}
+                {new Date(
+                  session.lastActivityAt
+                ).toLocaleString()}
               </p>
+
               {!session.isCurrent && (
-  <button
-    type="button"
-    onClick={() => handleRevoke(session._id)}
-    className="mt-3 rounded-md border border-red-500 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50"
-  >
-    {t("logactivity.revoke")}
-  </button>
-)}
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleRevoke(session._id)
+                  }
+                  className="mt-3 rounded-md border border-red-500 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50"
+                >
+                  {t("logactivity.revoke")}
+                </button>
+              )}
             </div>
           ))
         )}

@@ -1,4 +1,7 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+} from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import Mainlayout from "@/layout/Mainlayout";
 import SavedList from "@/components/SavedList";
@@ -32,18 +35,62 @@ type Question = {
   views: number;
 };
 
+type RawQuestion = {
+  _id?: string;
+  id?: string;
+  questiontitle?: string;
+  title?: string;
+  questionTitle?: string;
+  questionbody?: string;
+  content?: string;
+  body?: string;
+  questiontags?: string[];
+  tags?: string[];
+  userposted?: string;
+  author?: string;
+  userid?: string;
+  authorId?: string;
+  askedon?: string;
+  askedOn?: string;
+  asked?: string;
+  upvote?: string[];
+  upvotes?: number;
+  downvote?: string[];
+  downvotes?: number;
+  noofanswer?: number;
+  answers?: number;
+  answer?: unknown[];
+  views?: number;
+};
+
+type QuestionResponse = {
+  data?: RawQuestion[];
+  pagination?: {
+    nextCursor?: string | null;
+    hasMore?: boolean;
+  };
+};
+
+type FollowingRelationship = {
+  following?:
+    | string
+    | {
+        _id?: string;
+        id?: string;
+      };
+};
+
 export default function Home() {
   const { t } = useTranslation();
   const router = useRouter();
   const { user } = useAuth();
   const { panel } = router.query;
 
-  // --------------------------------------------------
-  // QUESTIONS
-  // --------------------------------------------------
+  const [items, setItems] =
+    useState<Question[]>([]);
 
-  const [items, setItems] = useState<Question[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] =
+    useState(true);
 
   const [loadingMore, setLoadingMore] =
     useState(false);
@@ -54,39 +101,30 @@ export default function Home() {
   const [nextCursor, setNextCursor] =
     useState<string | null>(null);
 
-  // Sentinel for infinite scrolling
   const loadMoreRef =
     useRef<HTMLDivElement | null>(null);
 
-  // Prevent duplicate requests
   const loadingMoreRef =
     useRef(false);
 
-  // --------------------------------------------------
-  // FEED
-  // --------------------------------------------------
-
-  const [activeFeed, setActiveFeed] = useState<
-    "trending" | "following"
-  >("trending");
+  const [activeFeed, setActiveFeed] =
+    useState<
+      "trending" | "following"
+    >("trending");
 
   const [followingIds, setFollowingIds] =
     useState<string[]>([]);
 
-  const [postCount, setPostCount] =
+  const [, setPostCount] =
     useState(0);
 
   const [activeContent, setActiveContent] =
-    useState<"questions" | "posts">(
-      "questions"
-    );
+    useState<
+      "questions" | "posts"
+    >("questions");
 
   const [contentReady, setContentReady] =
     useState(false);
-
-  // --------------------------------------------------
-  // RESTORE TRENDING / FOLLOWING
-  // --------------------------------------------------
 
   useEffect(() => {
     const savedFeed =
@@ -101,10 +139,6 @@ export default function Home() {
       setActiveFeed(savedFeed);
     }
   }, []);
-
-  // --------------------------------------------------
-  // RESTORE QUESTIONS / POSTS
-  // --------------------------------------------------
 
   useEffect(() => {
     if (!router.isReady) {
@@ -129,12 +163,8 @@ export default function Home() {
     router.query.content,
   ]);
 
-  // --------------------------------------------------
-  // NORMALIZE QUESTION
-  // --------------------------------------------------
-
   function normalizeStoredQuestion(
-    s: any
+    s: RawQuestion
   ): Question {
     const id =
       s._id ||
@@ -170,7 +200,7 @@ export default function Home() {
 
     const timeAgo = (() => {
       try {
-        const d = new Date(
+        const date = new Date(
           s.askedon ||
             s.askedOn ||
             s.asked ||
@@ -179,7 +209,7 @@ export default function Home() {
 
         const diff =
           Date.now() -
-          d.getTime();
+          date.getTime();
 
         const mins =
           Math.floor(
@@ -211,21 +241,21 @@ export default function Home() {
     })();
 
     const votes =
-      (s.upvote?.length ||
-        s.upvotes ||
+      (s.upvote?.length ??
+        s.upvotes ??
         0) -
-      (s.downvote?.length ||
-        s.downvotes ||
+      (s.downvote?.length ??
+        s.downvotes ??
         0);
 
     const answers =
-      s.noofanswer ||
-      s.answers ||
-      (s.answer?.length || 0) ||
+      s.noofanswer ??
+      s.answers ??
+      s.answer?.length ??
       0;
 
     const views =
-      s.views || 0;
+      s.views ?? 0;
 
     return {
       id,
@@ -241,94 +271,85 @@ export default function Home() {
     };
   }
 
-  // --------------------------------------------------
-  // FETCH QUESTIONS
-  // --------------------------------------------------
+  const fetchQuestions =
+    async (
+      cursor: string | null = null
+    ) => {
+      const params =
+        new URLSearchParams();
 
-  const fetchQuestions = async (
-    cursor: string | null = null
-  ) => {
-    const params =
-      new URLSearchParams();
+      params.set("limit", "10");
 
-    params.set("limit", "10");
+      if (cursor) {
+        params.set(
+          "cursor",
+          cursor
+        );
+      }
 
-    if (cursor) {
-      params.set(
-        "cursor",
-        cursor
-      );
-    }
-
-    console.log(
-      "Fetching questions:",
-      `/question/getallquestion?${params.toString()}`
-    );
-
-    const response =
-      await axiosInstance.get(
+      console.log(
+        "Fetching questions:",
         `/question/getallquestion?${params.toString()}`
       );
 
-    console.log(
-      "Question API response:",
-      response.data
-    );
+      const response =
+        await axiosInstance.get<QuestionResponse>(
+          `/question/getallquestion?${params.toString()}`
+        );
 
-    const rawQuestions =
-      response.data?.data ||
-      [];
-
-    const questions =
-      rawQuestions.map(
-        (question: any) =>
-          normalizeStoredQuestion(
-            question
-          )
+      console.log(
+        "Question API response:",
+        response.data
       );
 
-    const pagination =
-      response.data?.pagination;
+      const rawQuestions =
+        response.data.data ?? [];
 
-    console.log(
-      "Received:",
-      questions.length
-    );
+      const questions =
+        rawQuestions.map(
+          (question) =>
+            normalizeStoredQuestion(
+              question
+            )
+        );
 
-    console.log(
-      "nextCursor:",
-      pagination?.nextCursor
-    );
+      const pagination =
+        response.data.pagination;
 
-    console.log(
-      "hasMore:",
-      pagination?.hasMore
-    );
+      console.log(
+        "Received:",
+        questions.length
+      );
 
-    return {
-      questions,
-      nextCursor:
-        pagination?.nextCursor ??
-        null,
-      hasMore:
-        pagination?.hasMore ??
-        false,
+      console.log(
+        "nextCursor:",
+        pagination?.nextCursor
+      );
+
+      console.log(
+        "hasMore:",
+        pagination?.hasMore
+      );
+
+      return {
+        questions,
+        nextCursor:
+          pagination?.nextCursor ??
+          null,
+        hasMore:
+          pagination?.hasMore ??
+          false,
+      };
     };
-  };
-
-  // --------------------------------------------------
-  // INITIAL LOAD
-  // --------------------------------------------------
 
   useEffect(() => {
     let cancelled = false;
 
     const loadHomeFeedData =
-      async () => {
+      async (): Promise<void> => {
         setLoading(true);
 
         try {
-          // First page of questions
           const questionsResult =
             await fetchQuestions();
 
@@ -348,7 +369,6 @@ export default function Home() {
             questionsResult.hasMore
           );
 
-          // Load following users
           if (
             user?._id ||
             user?.id
@@ -365,17 +385,38 @@ export default function Home() {
               )
             ) {
               const following =
-                followingResponse
+                (
+                  followingResponse as FollowingRelationship[]
+                )
                   .map(
                     (
-                      relationship: any
-                    ) =>
                       relationship
-                        .following?._id ||
-                      relationship.following
+                    ) => {
+                      if (
+                        typeof relationship.following ===
+                        "string"
+                      ) {
+                        return relationship.following;
+                      }
+
+                      return (
+                        relationship
+                          .following
+                          ?._id ||
+                        relationship
+                          .following
+                          ?.id
+                      );
+                    }
                   )
-                  .filter(Boolean)
-                  .map(String);
+                  .filter(
+                    (
+                      followingId
+                    ): followingId is string =>
+                      Boolean(
+                        followingId
+                      )
+                  );
 
               setFollowingIds(
                 following
@@ -386,7 +427,9 @@ export default function Home() {
           } else {
             setFollowingIds([]);
           }
-        } catch (error) {
+        } catch (
+          error: unknown
+        ) {
           console.error(
             "Failed to load home feed:",
             error
@@ -405,7 +448,7 @@ export default function Home() {
         }
       };
 
-    loadHomeFeedData();
+    void loadHomeFeedData();
 
     return () => {
       cancelled = true;
@@ -415,48 +458,87 @@ export default function Home() {
     user?.id,
   ]);
 
-  // --------------------------------------------------
-  // LOAD MORE QUESTIONS
-  // --------------------------------------------------
-const loadMoreQuestions = useCallback(async () => {
-  if (loadingMoreRef.current || !hasMore || !nextCursor) {
-    return;
-  }
+  const loadMoreQuestions =
+    useCallback(
+      async (): Promise<void> => {
+        if (
+          loadingMoreRef.current ||
+          !hasMore ||
+          !nextCursor
+        ) {
+          return;
+        }
 
-  loadingMoreRef.current = true;
-  setLoadingMore(true);
+        loadingMoreRef.current =
+          true;
 
-  try {
-    const result = await fetchQuestions(nextCursor);
+        setLoadingMore(true);
 
-    setItems((previousItems) => {
-      const existingIds = new Set(
-        previousItems.map((question) => question.id)
-      );
+        try {
+          const result =
+            await fetchQuestions(
+              nextCursor
+            );
 
-      const newQuestions = result.questions.filter(
-        (question: any) => !existingIds.has(question.id)
-      );
+          setItems(
+            (
+              previousItems
+            ) => {
+              const existingIds =
+                new Set(
+                  previousItems.map(
+                    (
+                      question
+                    ) =>
+                      question.id
+                  )
+                );
 
-      return [...previousItems, ...newQuestions];
-    });
+              const newQuestions =
+                result.questions.filter(
+                  (
+                    question
+                  ) =>
+                    !existingIds.has(
+                      question.id
+                    )
+                );
 
-    setNextCursor(result.nextCursor);
-    setHasMore(result.hasMore);
-  } catch (error) {
-    console.error("Failed to load more questions:", error);
-  } finally {
-    // Keep the loading message visible briefly
-    setTimeout(() => {
-      loadingMoreRef.current = false;
-      setLoadingMore(false);
-    }, 500);
-  }
-}, [nextCursor, hasMore]);
+              return [
+                ...previousItems,
+                ...newQuestions,
+              ];
+            }
+          );
 
-  // --------------------------------------------------
-  // INFINITE SCROLL
-  // --------------------------------------------------
+          setNextCursor(
+            result.nextCursor
+          );
+
+          setHasMore(
+            result.hasMore
+          );
+        } catch (
+          error: unknown
+        ) {
+          console.error(
+            "Failed to load more questions:",
+            error
+          );
+        } finally {
+          setTimeout(() => {
+            loadingMoreRef.current =
+              false;
+
+            setLoadingMore(false);
+          }, 500);
+        }
+      },
+      [
+        nextCursor,
+        hasMore,
+      ]
+    );
 
   useEffect(() => {
     if (
@@ -489,6 +571,7 @@ const loadMoreQuestions = useCallback(async () => {
       console.log(
         "❌ Load more sentinel not found"
       );
+
       return;
     }
 
@@ -509,7 +592,7 @@ const loadMoreQuestions = useCallback(async () => {
               "🔥 Load more sentinel visible"
             );
 
-            loadMoreQuestions();
+            void loadMoreQuestions();
           }
         },
         {
@@ -535,10 +618,6 @@ const loadMoreQuestions = useCallback(async () => {
     nextCursor,
     loadMoreQuestions,
   ]);
-
-  // --------------------------------------------------
-  // RESTORE QUESTION SCROLL
-  // --------------------------------------------------
 
   useEffect(() => {
     const savedScroll =
@@ -575,7 +654,8 @@ const loadMoreQuestions = useCallback(async () => {
             window.scrollY -
               position
           ) < 5 ||
-          attempts >= maxAttempts
+          attempts >=
+            maxAttempts
         ) {
           sessionStorage.removeItem(
             "questionsScrollPosition"
@@ -598,10 +678,6 @@ const loadMoreQuestions = useCallback(async () => {
     activeContent,
   ]);
 
-  // --------------------------------------------------
-  // UI
-  // --------------------------------------------------
-
   return (
     <Mainlayout>
       {!contentReady ? (
@@ -616,11 +692,7 @@ const loadMoreQuestions = useCallback(async () => {
         </main>
       ) : (
         <main className="min-w-0 p-4 lg:p-6">
-
-          {/* FEED TABS */}
-
           <div className="mb-6 space-y-6">
-
             {panel !==
               "saves" && (
               <>
@@ -645,21 +717,15 @@ const loadMoreQuestions = useCallback(async () => {
                 </div>
               </>
             )}
-
           </div>
 
           <div className="w-full">
-
-            {/* QUESTION FILTERS */}
-
-            <div className="flex flex-col sm:flex-row items-start sm:items-center mb-4 text-sm gap-2 sm:gap-4">
-
+            <div className="mb-4 flex flex-col items-start gap-2 text-sm sm:flex-row sm:items-center sm:gap-4">
               {activeContent ===
                 "questions" &&
                 panel !==
                   "saves" && (
                   <QuestionFilters>
-
                     <span className="text-gray-600">
                       {
                         items.length
@@ -669,19 +735,19 @@ const loadMoreQuestions = useCallback(async () => {
                       )}
                     </span>
 
-                    <button className="px-2 sm:px-3 py-1 bg-gray-200 text-gray-700 rounded text-xs sm:text-sm">
+                    <button className="rounded bg-gray-200 px-2 py-1 text-xs text-gray-700 sm:px-3 sm:text-sm">
                       {t(
                         "community.newest"
                       )}
                     </button>
 
-                    <button className="px-2 sm:px-3 py-1 text-gray-600 hover:bg-gray-100 rounded text-xs sm:text-sm">
+                    <button className="rounded px-2 py-1 text-xs text-gray-600 hover:bg-gray-100 sm:px-3 sm:text-sm">
                       {t(
                         "community.active"
                       )}
                     </button>
 
-                    <button className="px-2 sm:px-3 py-1 text-gray-600 hover:bg-gray-100 rounded flex items-center text-xs sm:text-sm">
+                    <button className="flex items-center rounded px-2 py-1 text-xs text-gray-600 hover:bg-gray-100 sm:px-3 sm:text-sm">
                       {t(
                         "community.bountied"
                       )}
@@ -694,45 +760,36 @@ const loadMoreQuestions = useCallback(async () => {
                       </Badge>
                     </button>
 
-                    <button className="px-2 sm:px-3 py-1 text-gray-600 hover:bg-gray-100 rounded text-xs sm:text-sm">
+                    <button className="rounded px-2 py-1 text-xs text-gray-600 hover:bg-gray-100 sm:px-3 sm:text-sm">
                       {t(
                         "community.unanswered"
                       )}
                     </button>
 
-                    <button className="px-2 sm:px-3 py-1 text-gray-600 hover:bg-gray-100 rounded text-xs sm:text-sm">
+                    <button className="rounded px-2 py-1 text-xs text-gray-600 hover:bg-gray-100 sm:px-3 sm:text-sm">
                       {t(
                         "community.more"
                       )}{" "}
                       ▼
                     </button>
 
-                    <button className="px-2 sm:px-3 py-1 border border-gray-300 text-gray-600 hover:bg-gray-50 rounded ml-auto text-xs sm:text-sm">
+                    <button className="ml-auto rounded border border-gray-300 px-2 py-1 text-xs text-gray-600 hover:bg-gray-50 sm:px-3 sm:text-sm">
                       🔍{" "}
                       {t(
                         "community.filter"
                       )}
                     </button>
-
                   </QuestionFilters>
                 )}
-
             </div>
 
-            {/* CONTENT */}
-
             <div className="space-y-4">
-
-              {/* SAVED */}
-
               {panel ===
               "saves" ? (
                 <SavedList />
-
               ) : loading &&
                 activeContent ===
                   "questions" ? (
-
                 <div className="flex items-center justify-center py-10">
                   <p className="text-sm text-gray-500">
                     {t(
@@ -740,15 +797,10 @@ const loadMoreQuestions = useCallback(async () => {
                     )}
                   </p>
                 </div>
-
               ) : activeContent ===
                 "questions" ? (
-
                 <>
-                  {/* QUESTION LIST */}
-
                   <div className="space-y-4">
-
                     {(activeFeed ===
                     "trending"
                       ? [
@@ -787,22 +839,15 @@ const loadMoreQuestions = useCallback(async () => {
                         (
                           question
                         ) => (
-
                           <div
                             key={
                               question.id
                             }
                             className="border-b border-gray-200 pb-4"
                           >
-
                             <div className="flex flex-col gap-4 sm:flex-row">
-
-                              {/* VOTES / ANSWERS */}
-
                               <div className="flex items-center gap-4 text-sm text-gray-600 sm:w-16 sm:flex-col sm:items-center sm:gap-2 lg:w-20">
-
                                 <div className="text-center">
-
                                   <div className="font-medium">
                                     {
                                       question.votes
@@ -814,11 +859,9 @@ const loadMoreQuestions = useCallback(async () => {
                                       "community.votes"
                                     )}
                                   </div>
-
                                 </div>
 
                                 <div className="text-center">
-
                                   <div
                                     className={`font-medium ${
                                       question.answers >
@@ -844,15 +887,10 @@ const loadMoreQuestions = useCallback(async () => {
                                           )
                                     }
                                   </div>
-
                                 </div>
-
                               </div>
 
-                              {/* QUESTION */}
-
                               <div className="min-w-0 flex-1">
-
                                 <Link
                                   href={`/questions/${question.id}`}
                                   onClick={() => {
@@ -882,14 +920,10 @@ const loadMoreQuestions = useCallback(async () => {
                                 </p>
 
                                 <div className="flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center">
-
-                                  {/* TAGS */}
-
                                   <div className="flex flex-wrap gap-1">
-
-                                    {question.tags?.map(
+                                    {question.tags.map(
                                       (
-                                        tag: string
+                                        tag
                                       ) => (
                                         <Badge
                                           key={
@@ -904,13 +938,9 @@ const loadMoreQuestions = useCallback(async () => {
                                         </Badge>
                                       )
                                     )}
-
                                   </div>
 
-                                  {/* AUTHOR */}
-
                                   <div className="flex flex-shrink:0 items-center text-xs text-gray-600">
-
                                     <Link
                                       href={`/questions/${question.id}`}
                                       onClick={() => {
@@ -928,15 +958,12 @@ const loadMoreQuestions = useCallback(async () => {
                                       }}
                                       className="flex items-center"
                                     >
-
                                       <Avatar className="mr-1 h-4 w-4">
-
                                         <AvatarFallback className="text-xs">
                                           {
                                             question.author?.[0]
                                           }
                                         </AvatarFallback>
-
                                       </Avatar>
 
                                       <span className="mr-1 text-blue-600 hover:text-blue-800">
@@ -944,7 +971,6 @@ const loadMoreQuestions = useCallback(async () => {
                                           question.author
                                         }
                                       </span>
-
                                     </Link>
 
                                     <span>
@@ -955,23 +981,14 @@ const loadMoreQuestions = useCallback(async () => {
                                         question.timeAgo
                                       }
                                     </span>
-
                                   </div>
-
                                 </div>
-
                               </div>
-
                             </div>
-
                           </div>
-
                         )
                       )}
-
                   </div>
-
-                  {/* INFINITE SCROLL SENTINEL */}
 
                   <div
                     ref={
@@ -980,30 +997,23 @@ const loadMoreQuestions = useCallback(async () => {
                     className="h-20 w-full"
                   />
 
-                  {/* LOADING MORE */}
-
                   {loadingMore && (
                     <div className="py-6 text-center text-gray-500">
-                      Loading more questions...
+                      Loading more
+                      questions...
                     </div>
                   )}
-
-                  {/* NO MORE */}
 
                   {!hasMore &&
                     items.length >
                       0 && (
                       <div className="py-6 text-center text-gray-400">
-                        No more questions.
+                        No more
+                        questions.
                       </div>
                     )}
-
                 </>
-
               ) : (
-
-                /* POSTS */
-
                 <PostFeed
                   activeFeed={
                     activeFeed
@@ -1015,9 +1025,7 @@ const loadMoreQuestions = useCallback(async () => {
                     setPostCount
                   }
                 />
-
               )}
-
             </div>
           </div>
         </main>

@@ -4,16 +4,24 @@ import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/lib/AuthContext";
 import { toast } from "react-toastify";
+import type { PlanName } from "@/constants/subscriptionPlans";
+
+type PaidPlan =
+  | "Bronze"
+  | "Silver"
+  | "Gold";
 
 interface PlanCardProps {
-  name: string;
+  name: PlanName;
   price: string;
   description: string;
   features: string[];
   isCurrent?: boolean;
   isPopular?: boolean;
-  currentPlan: string;
-  onUpgrade?: (plan: string) => void;
+  currentPlan: PlanName | "";
+  onUpgrade?: (
+    plan: PaidPlan
+  ) => void | Promise<void>;
 }
 
 export default function PlanCard({
@@ -28,121 +36,180 @@ export default function PlanCard({
 }: PlanCardProps) {
   const router = useRouter();
   const { user } = useAuth();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
-  const planOrder: Record<string, number> = {
-  Free: 0,
-  Bronze: 1,
-  Silver: 2,
-  Gold: 3,
-};
+  const planOrder: Record<PlanName, number> = {
+    Free: 0,
+    Bronze: 1,
+    Silver: 2,
+    Gold: 3,
+  };
 
-const canUpgrade =
-  !!user && planOrder[name] > planOrder[currentPlan];
+  const currentPlanLevel =
+    currentPlan
+      ? planOrder[currentPlan]
+      : -1;
+
+  const canUpgrade =
+    planOrder[name] > currentPlanLevel;
+
+  const handleUpgradeClick = (): void => {
+    if (!user) {
+      toast.info(
+        t(
+          "toast.please_login_to_continue"
+        )
+      );
+
+      void router.push("/auth");
+      return;
+    }
+
+    if (!canUpgrade) {
+      return;
+    }
+
+    if (name === "Free") {
+      return;
+    }
+
+    void onUpgrade?.(name);
+  };
+
   return (
     <div
-  className={`relative rounded-2xl border bg-white p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl ${
-    isPopular
-      ? "border-yellow-400 shadow-xl ring-2 ring-yellow-200 scale-[1.03]"
-      : "border-gray-200 shadow-md"
-  }`}
->
+      className={`relative rounded-2xl border bg-white p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl ${
+        isPopular
+          ? "scale-[1.03] border-yellow-400 shadow-xl ring-2 ring-yellow-200"
+          : "border-gray-200 shadow-md"
+      }`}
+    >
       {isPopular && (
-        <span className="absolute top-4 right-4 rounded-full bg-yellow-500 px-3 py-1 text-xs font-semibold text-white">
-          {t("subscription.most_popular")}
+        <span className="absolute right-4 top-4 rounded-full bg-yellow-500 px-3 py-1 text-xs font-semibold text-white">
+          {t(
+            "subscription.most_popular"
+          )}
         </span>
       )}
 
       <h2
-  className={`text-3xl font-bold ${
-    name === "Free"
-      ? "text-gray-900"
-      : name === "Bronze"
-      ? "text-amber-700"
-      : name === "Silver"
-      ? "text-slate-600"
-      : "text-yellow-600"
-  }`}
->
-  {t(`subscription.${name.toLowerCase()}`)}
-</h2>
+        className={`text-3xl font-bold ${
+          name === "Free"
+            ? "text-gray-900"
+            : name === "Bronze"
+              ? "text-amber-700"
+              : name === "Silver"
+                ? "text-slate-600"
+                : "text-yellow-600"
+        }`}
+      >
+        {t(
+          `subscription.${name.toLowerCase()}`
+        )}
+      </h2>
 
       <p
-  className={`mt-4 mb-3 text-5xl font-extrabold ${
-    name === "Free"
-      ? "text-purple-600"
-      : name === "Bronze"
-      ? "text-amber-700"
-      : name === "Silver"
-      ? "text-slate-600"
-      : "text-yellow-500"
-  }`}
->
-  {price.replace("month", t("subscription.month"))}
-</p>
+        className={`mb-3 mt-4 text-5xl font-extrabold ${
+          name === "Free"
+            ? "text-purple-600"
+            : name === "Bronze"
+              ? "text-amber-700"
+              : name === "Silver"
+                ? "text-slate-600"
+                : "text-yellow-500"
+        }`}
+      >
+        {price.replace(
+          "month",
+          t("subscription.month")
+        )}
+      </p>
 
-      <p className="mt-4 text-base text-gray-600">{t(`subscription.${description}`)}</p>
+      <p className="mt-4 text-base text-gray-600">
+        {t(
+          `subscription.${description}`
+        )}
+      </p>
 
       <div className="mt-8 space-y-4">
-        {features.map((feature, index) => (
-          <div key={index} className="flex items-center gap-2">
-            <Check
-  className={`h-5 w-5 ${
-    name === "Free"
-      ? "text-purple-600"
-      : name === "Bronze"
-      ? "text-amber-600"
-      : name === "Silver"
-      ? "text-slate-500"
-      : "text-yellow-500"
-  }`}
-/>
-            <span className="text-sm font-medium text-gray-700">{t(`subscription.${feature}`)}</span>
-          </div>
-        ))}
+        {features.map(
+          (feature) => (
+            <div
+              key={feature}
+              className="flex items-center gap-2"
+            >
+              <Check
+                className={`h-5 w-5 ${
+                  name === "Free"
+                    ? "text-purple-600"
+                    : name === "Bronze"
+                      ? "text-amber-600"
+                      : name === "Silver"
+                        ? "text-slate-500"
+                        : "text-yellow-500"
+                }`}
+              />
+
+              <span className="text-sm font-medium text-gray-700">
+                {t(
+                  `subscription.${feature}`
+                )}
+              </span>
+            </div>
+          )
+        )}
       </div>
 
       <div className="mt-8">
         {isCurrent ? (
           <Button
-disabled
-  className={`w-full text-white font-semibold ${
-    name === "Free"
-      ? "bg-purple-600 hover:bg-purple-600"
-      : name === "Bronze"
-      ? "bg-amber-700 hover:bg-amber-700"
-      : name === "Silver"
-      ? "bg-slate-600 hover:bg-slate-600"
-      : "bg-yellow-500 hover:bg-yellow-500"
-  }`}
->
-  {t("subscription.current_plan")}
-</Button>
+            disabled
+            className={`w-full font-semibold text-white ${
+              name === "Free"
+                ? "bg-purple-600 hover:bg-purple-600"
+                : name === "Bronze"
+                  ? "bg-amber-700 hover:bg-amber-700"
+                  : name === "Silver"
+                    ? "bg-slate-600 hover:bg-slate-600"
+                    : "bg-yellow-500 hover:bg-yellow-500"
+            }`}
+          >
+            {t(
+              "subscription.current_plan"
+            )}
+          </Button>
         ) : (
           <Button
-          
-  onClick={() => {
-      if (!canUpgrade) return;
-    if (!user) {
-    toast.info(t("toast.please_login_to_continue"));
-    router.push("/auth");
-    return;
-  }
-    onUpgrade?.(name)
-  }
-  }
-  className={`w-full font-semibold text-white transition-all duration-300 ${
-    name === "Bronze"
-      ? "bg-amber-700 hover:bg-amber-800"
-      : name === "Silver"
-      ? "bg-slate-600 hover:bg-slate-700"
-      : name === "Gold"
-      ? "bg-yellow-500 hover:bg-yellow-600 text-black"
-      : "bg-purple-600 hover:bg-purple-700"
-  }`}
->
-  {canUpgrade ? t("subscription.upgrade") : t("subscription.lower_plan")}
-</Button>
+            type="button"
+            onClick={
+              handleUpgradeClick
+            }
+            disabled={
+              Boolean(user) &&
+              !canUpgrade
+            }
+            className={`w-full font-semibold text-white transition-all duration-300 ${
+              name === "Bronze"
+                ? "bg-amber-700 hover:bg-amber-800"
+                : name === "Silver"
+                  ? "bg-slate-600 hover:bg-slate-700"
+                  : name === "Gold"
+                    ? "bg-yellow-500 text-black hover:bg-yellow-600"
+                    : "bg-purple-600 hover:bg-purple-700"
+            }`}
+          >
+            {!user
+              ? t(
+                  "subscription.upgrade"
+                )
+              : canUpgrade
+                ? t(
+                    "subscription.upgrade"
+                  )
+                : t(
+                    "subscription.lower_plan"
+                  )}
+          </Button>
         )}
       </div>
     </div>

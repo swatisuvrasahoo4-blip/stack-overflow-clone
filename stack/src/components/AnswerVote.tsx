@@ -2,6 +2,7 @@
 
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { toast } from "react-toastify";
+import axios from "axios";
 import { voteAnswer } from "./services/answerVoteService";
 import { useTranslation } from "react-i18next";
 
@@ -19,6 +20,18 @@ interface AnswerVoteProps {
   ) => void;
 }
 
+interface UpdatedAnswer {
+  _id: string;
+  upvote?: string[];
+  downvote?: string[];
+}
+
+interface VoteResponse {
+  data: {
+    answer: UpdatedAnswer[];
+  };
+}
+
 export default function AnswerVote({
   questionId,
   answerId,
@@ -28,7 +41,8 @@ export default function AnswerVote({
   answerUserId,
   onVoteSuccess,
 }: AnswerVoteProps) {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
+
   const hasUpvoted = currentUserId
     ? upvotes.includes(currentUserId)
     : false;
@@ -48,19 +62,22 @@ export default function AnswerVote({
     }
 
     if (String(currentUserId) === String(answerUserId)) {
-      toast.error(t("toast.you_cannot_vote_on_your_own_answer"));
+      toast.error(
+        t("toast.you_cannot_vote_on_your_own_answer")
+      );
       return;
     }
 
     try {
-      const response = await voteAnswer(
+      const response = (await voteAnswer(
         questionId,
         answerId,
         voteType
-      );
+      )) as VoteResponse;
 
       const updatedAnswer = response.data.answer.find(
-        (ans: any) => String(ans._id) === String(answerId)
+        (ans) =>
+          String(ans._id) === String(answerId)
       );
 
       if (updatedAnswer) {
@@ -70,11 +87,17 @@ export default function AnswerVote({
           updatedAnswer.downvote || []
         );
       }
-    } catch (error: any) {
-      toast.error(
-        error?.response?.data?.message ||
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        toast.error(
+          error.response?.data?.message ||
+            t("toast.failed_to_vote_on_answer")
+        );
+      } else {
+        toast.error(
           t("toast.failed_to_vote_on_answer")
-      );
+        );
+      }
     }
   };
 

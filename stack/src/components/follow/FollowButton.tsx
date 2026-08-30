@@ -3,6 +3,7 @@ import { UserPlus, UserCheck } from "lucide-react";
 import { followUser, unfollowUser, getFollowStatus } from "../services/followService";
 import { useAuth } from "@/lib/AuthContext";
 import { useTranslation } from "react-i18next";
+import axios from "axios";
 
 interface FollowButtonProps {
   userId: string;
@@ -58,27 +59,31 @@ return (
         : "bg-blue-600 text-white hover:bg-blue-700"
     }`}
     onClick={async (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+  e.preventDefault();
+  e.stopPropagation();
 
-      if (!user) {
-  alert(t("alert.please_log_in_to_follow_users"));
-  return;
-}
-      try {
-        if (isFollowing) {
-          await unfollowUser(userId);
-        } else {
-          await followUser(userId);
-        }
+  if (!user) {
+    alert(t("alert.please_log_in_to_follow_users"));
+    return;
+  }
 
-        setIsFollowing(!isFollowing);
-      } catch (error: any) {
-        console.log(error.response?.status);
-        console.log(error.response?.data);
-        console.error("Follow action failed:", error);
-      }
-    }}
+  try {
+    if (isFollowing) {
+      await unfollowUser(userId);
+    } else {
+      await followUser(userId);
+    }
+
+    setIsFollowing(!isFollowing);
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.log(error.response?.status);
+      console.log(error.response?.data);
+    }
+
+    console.error("Follow action failed:", error);
+  }
+}}
   >
     {showText ? (
       isFollowing ? (

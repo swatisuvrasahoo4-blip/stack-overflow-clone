@@ -1,5 +1,13 @@
 import axiosInstance from "@/lib/axiosinstance";
 
+interface VerifyPaymentData {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+  plan: "Bronze" | "Silver" | "Gold";
+}
+
+
 export const getSubscription = async () => {
   const response = await axiosInstance.get("/subscription");
   return response.data;
@@ -21,7 +29,9 @@ export const createOrder = async (plan: string) => {
   return response.data;
 };
 
-export const verifyPayment = async (data: any) => {
+export const verifyPayment = async (
+  data: VerifyPaymentData
+) => {
   const response = await axiosInstance.post(
     "/subscription/verify-payment",
     data

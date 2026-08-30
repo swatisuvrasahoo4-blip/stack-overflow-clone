@@ -1,4 +1,5 @@
 import axiosInstance from "@/lib/axiosinstance";
+import axios from "axios";
 
 export const getMyReputationActivity = async () => {
   try {
@@ -7,14 +8,21 @@ export const getMyReputationActivity = async () => {
     );
 
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
+  if (axios.isAxiosError(error)) {
     console.error(
       "Get Reputation Activity Error:",
       error.response?.data || error.message
     );
-
-    throw error;
+  } else {
+    console.error(
+      "Get Reputation Activity Error:",
+      error
+    );
   }
+
+  throw error;
+}
 };
 
 export const getUserReputationActivity = async (userId: string) => {
@@ -24,12 +32,19 @@ export const getUserReputationActivity = async (userId: string) => {
     );
 
     return response.data;
-  } catch (error: any) {
+  } catch (error: unknown) {
+  if (axios.isAxiosError(error)) {
     console.error(
       "Get User Reputation Activity Error:",
       error.response?.data || error.message
     );
-
-    throw error;
+  } else {
+    console.error(
+      "Get User Reputation Activity Error:",
+      error
+    );
   }
+
+  throw error;
+}
 };

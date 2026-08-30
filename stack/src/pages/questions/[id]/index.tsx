@@ -3,22 +3,41 @@ import Mainlayout from "@/layout/Mainlayout";
 import { useRouter } from "next/router";
 import React from "react";
 
-const index = () => {
+const QuestionPage = () => {
   const router = useRouter();
-  const handleBack = () => {
-    router.push("/questions",undefined, { scroll: false});
-  }
+
   const { id } = router.query;
+
+  const questionId = Array.isArray(id)
+    ? id[0]
+    : id;
+
+  const handleBack = (): void => {
+    void router.push(
+      "/questions",
+      undefined,
+      { scroll: false }
+    );
+  };
+
+  if (!router.isReady || !questionId) {
+    return (
+      <Mainlayout>
+        <div>Loading...</div>
+      </Mainlayout>
+    );
+  }
+
   return (
     <Mainlayout>
       <div>
-       <QuestionDetail
-  questionId={Array.isArray(id) ? id[0] : id}
-  key={Array.isArray(id) ? id[0] : id}
-/>
+        <QuestionDetail
+          questionId={questionId}
+          key={questionId}
+        />
       </div>
     </Mainlayout>
   );
 };
 
-export default index;
+export default QuestionPage;

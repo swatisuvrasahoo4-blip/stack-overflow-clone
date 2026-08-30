@@ -1,14 +1,22 @@
-import React from "react";
 import { useTranslation } from "react-i18next";
 
+type ReputationActivity = {
+  _id: string;
+  reason: string;
+  transferReason?: string | null;
+  createdAt: string;
+  points: number;
+};
+
 interface ReputationActivityListProps {
-  activities: any[];
+  activities: ReputationActivity[];
 }
 
 const ReputationActivityList = ({
   activities,
 }: ReputationActivityListProps) => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
+
   if (activities.length === 0) {
     return (
       <div className="mt-6 border rounded-xl bg-white p-6">
@@ -37,13 +45,16 @@ const ReputationActivityList = ({
               </p>
 
               {activity.transferReason && (
-  <p className="text-sm text-gray-600 mt-1">
-    {t("reputation.reason")}: {activity.transferReason}
-  </p>
-)}
+                <p className="text-sm text-gray-600 mt-1">
+                  {t("reputation.reason")}:{" "}
+                  {activity.transferReason}
+                </p>
+              )}
 
               <p className="text-sm text-gray-500 mt-1">
-                {new Date(activity.createdAt).toLocaleString()}
+                {new Date(
+                  activity.createdAt
+                ).toLocaleString()}
               </p>
             </div>
 

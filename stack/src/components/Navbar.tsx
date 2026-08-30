@@ -1,3 +1,5 @@
+"use client";
+
 import { useAuth } from "@/lib/AuthContext";
 import { Menu, Search } from "lucide-react";
 import Link from "next/link";
@@ -6,43 +8,65 @@ import { useRouter } from "next/router";
 import NotificationBell from "./notifications/NotificationBell";
 import { useTranslation } from "react-i18next";
 
-const Navbar = ({ handleslidein }: any) => {
+interface NavbarProps {
+  handleslidein: () => void;
+}
+
+const Navbar = ({ handleslidein }: NavbarProps) => {
   const { user, Logout } = useAuth();
   const router = useRouter();
-   const { t } = useTranslation();
+  const { t } = useTranslation();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [hasMounted, setHasMounted] = useState(false);
+
   useEffect(() => {
     setHasMounted(true);
   }, []);
-  
 
   const handlelogout = () => {
     Logout();
+
     try {
       router.push("/");
-    } catch (e) {
+    } catch (error: unknown) {
       window.location.href = "/";
     }
   };
+
   return (
     <div className="fixed inset-x-0 top-0 z-50 h-53px w-full bg-white border-t-[3px] border-[#ef8236] shadow-[0_1px_5px_#00000033] flex items-center justify-center">
       <div className="mx-auto flex w-[90%] max-w-1440px items-center justify-between py-1">
-       
-          <div className="flex items-center gap-2 flex-1">
-             <button
-          aria-label="Toggle sidebar"
-          className="sm:block p-2 rounded hover:bg-gray-100 transition"
-          onClick={handleslidein}
-        >
-          <Menu className="w-4 h-5 text-gray-800" />
-        </button>
+
+        {/* Left Section */}
+        <div className="flex items-center gap-2 flex-1">
+
+          {/* Sidebar Button */}
+          <button
+            type="button"
+            aria-label="Toggle sidebar"
+            className="sm:block p-2 rounded hover:bg-gray-100 transition"
+            onClick={handleslidein}
+          >
+            <Menu className="w-4 h-5 text-gray-800" />
+          </button>
+
+          {/* Logo */}
           <Link href="/" className="px-3 py-1">
-            <img src="/logo.png" alt="Logo" className="h-6 w-auto" />
+            <img
+              src="/logo.png"
+              alt="Logo"
+              className="h-6 w-auto"
+            />
           </Link>
 
+          {/* Navigation Links */}
           <div className="hidden sm:flex gap-1">
-            {[t("navbar.about"), t("navbar.products"), t("navbar.forTeams")].map((item) => (
+            {[
+              t("navbar.about"),
+              t("navbar.products"),
+              t("navbar.forTeams"),
+            ].map((item) => (
               <Link
                 key={item}
                 href="/"
@@ -52,82 +76,109 @@ const Navbar = ({ handleslidein }: any) => {
               </Link>
             ))}
           </div>
+
+          {/* Search */}
           <div className="hidden flex-1 items-center px-4 lg:flex">
-  <form
-    onSubmit={(e) => {
-      e.preventDefault();
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
 
-      const query = searchTerm.trim();
+                const query = searchTerm.trim();
 
-      if (!query) return;
+                if (!query) {
+                  return;
+                }
 
-      router.push(`/search?q=${encodeURIComponent(query)}`);
-    }}
-    className="relative flex-1"
-  >
-    <input
-      type="text"
-      value={searchTerm}
-      onChange={(e) => setSearchTerm(e.target.value)}
-      placeholder={t("navbar.search")}
-      className="w-90 rounded border border-gray-300 py-2 pl-10 pr-1 ml-0 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-    />
+                router.push(
+                  `/search?q=${encodeURIComponent(query)}`
+                );
+              }}
+              className="relative flex-1"
+            >
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) =>
+                  setSearchTerm(e.target.value)
+                }
+                placeholder={t("navbar.search")}
+                className="w-90 rounded border border-gray-300 py-2 pl-10 pr-1 ml-0 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+              />
 
-    <Search className="absolute left-4 top-2.5 h-4 w-4 text-gray-600" />
-  </form>
-</div>
+              <Search className="absolute left-4 top-2.5 h-4 w-4 text-gray-600" />
+            </form>
+          </div>
 
-<div className="flex items-center gap-7 pt-2 ">
-  {hasMounted && user ? <NotificationBell /> : null}
+          {/* Right Section */}
+          <div className="flex items-center gap-7 pt-2">
 
-   <div className="flex items-center gap-3">
-          {!hasMounted ? null : !user ? (
-            <div className="flex gap-2">
-              <Link
-                href="/auth"
-                className="text-sm font-medium text-[#454545] bg-[#e7f8fe] hover:bg-[#d3e4eb] border border-blue-500 px-4 py-1.5 rounded transition"
-              >
-                {t("navbar.login")}
-              </Link>
-              <Link
-  href="/signup"
-  className="text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md transition-colors"
->
-  {t("navbar.signup")}
-</Link>
+            {/* Notifications */}
+            {hasMounted && user ? (
+              <NotificationBell />
+            ) : null}
+
+            <div className="flex items-center gap-3">
+
+              {/* Logged Out */}
+              {!hasMounted ? null : !user ? (
+                <div className="flex gap-2">
+
+                  <Link
+                    href="/auth"
+                    className="text-sm font-medium text-[#454545] bg-[#e7f8fe] hover:bg-[#d3e4eb] border border-blue-500 px-4 py-1.5 rounded transition"
+                  >
+                    {t("navbar.login")}
+                  </Link>
+
+                  <Link
+                    href="/signup"
+                    className="text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md transition-colors"
+                  >
+                    {t("navbar.signup")}
+                  </Link>
+
+                </div>
+              ) : (
+
+                /* Logged In */
+                <>
+                  {/* Profile */}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      router.push(`/users/${user._id}`)
+                    }
+                    className="cursor-pointer rounded-full transition-transform duration-200 hover:scale-105"
+                  >
+                    {user.profilePhoto ? (
+                      <img
+                        src={user.profilePhoto}
+                        alt="Profile"
+                        className="h-10 w-10 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="h-10 w-10 rounded-full bg-orange-600 text-white flex items-center justify-center font-semibold">
+                        {user.name
+                          ?.charAt(0)
+                          .toUpperCase()}
+                      </div>
+                    )}
+                  </button>
+
+                  {/* Logout */}
+                  <button
+                    type="button"
+                    onClick={handlelogout}
+                    className="text-sm font-medium text-[#454545] bg-[#e7f8fe] hover:bg-[#d3e4eb] border border-blue-500 px-1 w-22 py-1.5 rounded transition"
+                  >
+                    {t("navbar.logout")}
+                  </button>
+                </>
+              )}
+
             </div>
-          ) : (
-            <>
-             <button
-    type="button"
-    onClick={() => router.push(`/users/${user?._id}`)}
-    className="cursor-pointer rounded-full transition-transform duration-200 hover:scale-105"
->
-    {user?.profilePhoto ? (
-        <img
-            src={user.profilePhoto}
-            alt="Profile"
-            className="h-10 w-10 rounded-full object-cover"
-        />
-    ) : (
-        <div className="h-10 w-10 rounded-full bg-orange-600 text-white flex items-center justify-center font-semibold">
-            {user?.name?.charAt(0).toUpperCase()}
+          </div>
         </div>
-    )}
-</button>
-
-              <button
-                onClick={handlelogout}
-                className="text-sm font-medium text-[#454545] bg-[#e7f8fe] hover:bg-[#d3e4eb] border border-blue-500 px-1 w-22 py-1.5 rounded transition"
-              >
-                {t("navbar.logout")}
-              </button>
-            </>
-          )}
-        </div>
-</div>
-        </div>
-       
       </div>
     </div>
   );

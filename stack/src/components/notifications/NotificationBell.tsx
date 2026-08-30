@@ -2,6 +2,7 @@ import { Bell, Trash2 } from "lucide-react";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import { useAuth } from "@/lib/AuthContext";
+import axios from "axios";
 
 import {
   deleteNotification,
@@ -56,11 +57,17 @@ useEffect(() => {
       const response = await getNotifications();
 
       setNotifications(response.notifications || []);
-    } catch (error: any) {
-  if (error?.response?.status !== 401) {
-    console.error("Failed to fetch notifications:", error);
+    } catch (error: unknown) {
+  if (
+    !axios.isAxiosError(error) ||
+    error.response?.status !== 401
+  ) {
+    console.error(
+      "Failed to fetch notifications:",
+      error
+    );
   }
-} finally {
+}finally {
       setLoading(false);
     }
   };

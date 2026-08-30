@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Send } from "lucide-react";
 import { transferReputation } from "../services/reputationTransferService";
 import { useTranslation } from "react-i18next";
+import axios from "axios";
 
 interface TransferReputationModalProps {
   open: boolean;
@@ -60,12 +61,18 @@ const TransferReputationModal = ({
     setReason("");
     onOpenChange(false);
 
-  } catch (error: any) {
+  } catch (error: unknown) {
+  if (axios.isAxiosError(error)) {
     alert(
-      error?.response?.data?.message ||
+      error.response?.data?.message ||
+        t("alert.failed_to_transfer_reputation")
+    );
+  } else {
+    alert(
       t("alert.failed_to_transfer_reputation")
     );
   }
+}
 };
 
   return (

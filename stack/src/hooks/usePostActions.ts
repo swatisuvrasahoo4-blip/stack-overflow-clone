@@ -1,16 +1,136 @@
 import type { Dispatch, SetStateAction } from "react";
-import { toggleLikePost,toggleBookmarkPost, getPosts, addComment, updatePost,deletePost, addReply, deleteComment } from "@/components/services/communityService";
+
+import type { Post, User } from "@/types/community";
+
+import {
+  toggleLikePost,
+  toggleBookmarkPost,
+  addComment,
+  updatePost,
+  deletePost,
+  addReply,
+  deleteComment,
+} from "@/components/services/communityService";
+
 import { shareCommunityPost } from "@/utils/communityUtils";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+
+interface ApiError {
+  response?: {
+    status?: number;
+    data?: {
+      message?: string;
+    };
+  };
+  message?: string;
+}
+
+interface UsePostActionsProps {
+  posts: Post[];
+
+  setPosts: Dispatch<SetStateAction<Post[]>>;
+
+  user: User | null;
+
+  updateUser: (updatedUser: Partial<User>) => void;
+
+  commentText: string;
+
+  setCommentText: Dispatch<SetStateAction<string>>;
+
+  setActiveCommentPost: Dispatch<
+    SetStateAction<string | null>
+  >;
+
+  editingPost: Post | null;
+
+  setEditingPost: Dispatch<
+    SetStateAction<Post | null>
+  >;
+
+  editContent: string;
+
+  setEditContent: Dispatch<
+    SetStateAction<string>
+  >;
+
+  editHashtags: string;
+
+  setEditHashtags: Dispatch<
+    SetStateAction<string>
+  >;
+
+  editTagInput: string;
+
+  setEditTagInput: Dispatch<
+    SetStateAction<string>
+  >;
+
+  editImage: File | null;
+
+  setEditImage: Dispatch<
+    SetStateAction<File | null>
+  >;
+
+  editProjectTitle: string;
+
+  setEditProjectTitle: Dispatch<
+    SetStateAction<string>
+  >;
+
+  editProjectLink: string;
+
+  setEditProjectLink: Dispatch<
+    SetStateAction<string>
+  >;
+
+  editAchievementTitle: string;
+
+  setEditAchievementTitle: Dispatch<
+    SetStateAction<string>
+  >;
+
+  editAchievementDescription: string;
+
+  setEditAchievementDescription: Dispatch<
+    SetStateAction<string>
+  >;
+
+  editCodeSnippet: string;
+
+  setEditCodeSnippet: Dispatch<
+    SetStateAction<string>
+  >;
+
+  replyText: string;
+
+  setReplyText: Dispatch<
+    SetStateAction<string>
+  >;
+
+  setActiveReplyComment: Dispatch<
+    SetStateAction<string | null>
+  >;
+}
 
 export default function usePostActions({
   posts,
   setPosts,
   user,
   updateUser,
-  commentText,setCommentText,setActiveCommentPost,setEditingPost,editContent,setEditContent,editingPost,replyText,setReplyText,setActiveReplyComment, editHashtags,
+  commentText,
+  setCommentText,
+  setActiveCommentPost,
+  setEditingPost,
+  editContent,
+  setEditContent,
+  editingPost,
+  replyText,
+  setReplyText,
+  setActiveReplyComment,
+  editHashtags,
   setEditHashtags,
   editTagInput,
   setEditTagInput,
@@ -26,343 +146,538 @@ export default function usePostActions({
   setEditAchievementDescription,
   editCodeSnippet,
   setEditCodeSnippet,
-}: {
-  posts: any[];
-  setPosts: React.Dispatch<React.SetStateAction<any[]>>;
-  user: any;
-  updateUser: (updatedUser: any) => void;
-  commentText: string;
-  setCommentText: React.Dispatch<React.SetStateAction<string>>;
-  setActiveCommentPost: React.Dispatch<React.SetStateAction<string | null>>;
-  editingPost: any;
-  setEditingPost: React.Dispatch<React.SetStateAction<any>>;
-  editContent: string;
-  setEditContent: React.Dispatch<React.SetStateAction<string>>;
-  editHashtags: string;
-setEditHashtags: React.Dispatch<React.SetStateAction<string>>;
-
-
-editTagInput: string;
-setEditTagInput: React.Dispatch<React.SetStateAction<string>>;
-
-editImage: File | null;
-setEditImage: React.Dispatch<React.SetStateAction<File | null>>;
-
-editProjectTitle: string;
-setEditProjectTitle: React.Dispatch<React.SetStateAction<string>>;
-
-editProjectLink: string;
-setEditProjectLink: React.Dispatch<React.SetStateAction<string>>;
-
-editAchievementTitle: string;
-setEditAchievementTitle: React.Dispatch<React.SetStateAction<string>>;
-
-editAchievementDescription: string;
-setEditAchievementDescription: React.Dispatch<React.SetStateAction<string>>;
-
-editCodeSnippet: string;
-setEditCodeSnippet: React.Dispatch<React.SetStateAction<string>>;
-  replyText: string;
-setReplyText: React.Dispatch<React.SetStateAction<string>>;
-setActiveReplyComment: React.Dispatch<
-  React.SetStateAction<string | null>
->;
-
-}) {
+}: UsePostActionsProps) {
   const router = useRouter();
-  const {t} = useTranslation();
-  const handleLike = async (postId: string) => {
+  const { t } = useTranslation();
+
+  const handleLike = async (
+    postId: string
+  ): Promise<void> => {
     if (!user) {
-  toast.info(t("toast.please_login_to_continue"));
-  router.push("/auth");
-  return;
-}
+      toast.info(
+        t("toast.please_login_to_continue")
+      );
+
+      router.push("/auth");
+      return;
+    }
+
     try {
-      const updatedPost = await toggleLikePost(postId);
+      const updatedPost =
+        await toggleLikePost(postId);
 
       setPosts((previousPosts) =>
         previousPosts.map((post) =>
-          post._id === postId ? updatedPost : post
+          post._id === postId
+            ? updatedPost
+            : post
         )
       );
-    } catch (error: any) {
-      
-      
+    } catch (error: unknown) {
+      console.error(
+        "Like post error:",
+        error
+      );
     }
   };
-  const handleBookmark = async (post: any) => {
-    const userId = user?._id || user?.id || user?.userId;
 
-   if (!user) {
-  toast.info(t("toast.please_login_to_continue"));
-  router.push("/auth");
-  return;
-}
-  
+  const handleBookmark = async (
+    post: Post
+  ): Promise<boolean | null> => {
+    if (!user) {
+      toast.info(
+        t("toast.please_login_to_continue")
+      );
+
+      router.push("/auth");
+
+      return null;
+    }
+
+    const userId =
+      user._id ||
+      user.id ||
+      user.userId;
+
+    if (!userId) {
+      return null;
+    }
+
     try {
-     const result = await toggleBookmarkPost(userId, post._id);
+      const result =
+        await toggleBookmarkPost(
+          userId,
+          post._id
+        );
 
+      updateUser({
+        bookmarks: result.bookmarks,
+      });
 
-updateUser({
-  bookmarks: result.bookmarks,
-});
-if (result.message === "Post bookmarked") {
-  return true;
-}
+      if (
+        result.message ===
+        "Post bookmarked"
+      ) {
+        return true;
+      }
 
-if (result.message === "Bookmark removed") {
-  return false;
-}
+      if (
+        result.message ===
+        "Bookmark removed"
+      ) {
+        return false;
+      }
 
-return null;
-   } catch (error: any) {
-  alert(
-    error?.response?.data?.message ||
-      (t("alert.unable_to_update_bookmark_please_try_again"))
-  );
-  return null;
-}
-  };
-  const handleComment = async (postId: string) => {
-    
-  if (!commentText.trim()) return;
-console.log(postId);
+      return null;
+    } catch (error: unknown) {
+      const apiError =
+        error as ApiError;
 
-
-  try {
-    const response = await addComment(postId, {
-      text: commentText,
-      userName: user?.name || user?.username || user?.email,
-    });
-
-console.log("COMMENT RESPONSE:", response);
-    const updatedPost = response?.data;
-
-    if (updatedPost) {
-      setPosts((previousPosts) =>
-        previousPosts.map((post) =>
-          post._id === postId ? updatedPost : post
-        )
+      alert(
+        apiError.response?.data
+          ?.message ||
+          t(
+            "alert.unable_to_update_bookmark_please_try_again"
+          )
       );
+
+      return null;
+    }
+  };
+
+  const handleComment = async (
+    postId: string
+  ): Promise<void> => {
+    if (!commentText.trim()) {
+      return;
     }
 
-    setCommentText("");
-    setActiveCommentPost(null);
-  } catch (error) {
-    console.log("Add Comment Error:", error);
-  }
-};
-  const handleShare = async (postId: string) => {
-  if (!user) {
-  toast.info(t("toast.please_login_to_continue"));
-  router.push("/auth");
-  return;
-}
-  try{
-    await shareCommunityPost(postId,t);
-  }catch(error){
-    console.log("Share Error:",error);
-  }
-};
-const handleEdit = (post: any) => {
-  if ((user?.reputation || 0) < 100) {
-    alert(
-      t(
-        "alert.you_need_atleast_100_reputation_points_to_edit_community_posts"
-      )
-    );
-    return;
-  }
+    try {
+      const response =
+        await addComment(postId, {
+          text: commentText,
+          userName:
+            user?.name ||
+            user?.username ||
+            user?.email ||
+            "",
+        });
 
-  setEditingPost(post);
+      const updatedPost =
+        response?.data;
 
-  setEditContent(post.content || "");
+      if (updatedPost) {
+        setPosts(
+          (previousPosts) =>
+            previousPosts.map(
+              (post) =>
+                post._id === postId
+                  ? updatedPost
+                  : post
+            )
+        );
+      }
 
-  setEditHashtags(
-    Array.isArray(post.hashtags)
-      ? post.hashtags.join(", ")
-      : post.hashtags || ""
-  );
+      setCommentText("");
 
-  setEditTagInput("");
+      setActiveCommentPost(null);
+    } catch (error: unknown) {
+      console.error(
+        "Add Comment Error:",
+        error
+      );
+    }
+  };
 
-  setEditImage(null);
+  const handleShare = async (
+    postId: string
+  ): Promise<void> => {
+    if (!user) {
+      toast.info(
+        t("toast.please_login_to_continue")
+      );
 
-  setEditProjectTitle(post.projectTitle || "");
-  setEditProjectLink(post.projectLink || "");
+      router.push("/auth");
 
-  setEditAchievementTitle(post.achievementTitle || "");
-  setEditAchievementDescription(
-    post.achievementDescription || ""
-  );
+      return;
+    }
 
-  setEditCodeSnippet(post.codeSnippet || "");
-};
+    try {
+      await shareCommunityPost(
+        postId,
+        t
+      );
+    } catch (error: unknown) {
+      console.error(
+        "Share Error:",
+        error
+      );
+    }
+  };
 
-const handleSaveEdit = async () => {
-  if (!editingPost) return;
+  const handleEdit = (
+    post: Post
+  ): void => {
+    if (
+      (user?.reputation || 0) < 100
+    ) {
+      alert(
+        t(
+          "alert.you_need_atleast_100_reputation_points_to_edit_community_posts"
+        )
+      );
 
-  console.log("EDITING POST:", editingPost);
-console.log("EDIT CONTENT:", editContent);
+      return;
+    }
 
-  if (!editContent.trim()) {
-    alert(t("alert.post_content_cannot_be_empty"));
-    return;
-  }
+    setEditingPost(post);
 
-  try {
-    const formData = new FormData();
-
-formData.append("content", editContent);
-formData.append("postType", editingPost.postType);
-formData.append("hashtags", editHashtags);
-formData.append("codeSnippet", editCodeSnippet);
-formData.append("projectTitle", editProjectTitle);
-formData.append("projectLink", editProjectLink);
-formData.append("achievementTitle", editAchievementTitle);
-formData.append(
-  "achievementDescription",
-  editAchievementDescription
-);
-
-if (editImage) {
-  formData.append("image", editImage);
-}
-
-const updatedPost = await updatePost(
-  editingPost._id,
-  formData
-);
-
-    setPosts((previousPosts: any[]) =>
-      previousPosts.map((post) =>
-        post._id === updatedPost._id ? updatedPost : post
-      )
+    setEditContent(
+      post.content || ""
     );
 
-    setEditingPost(null);
-    setEditContent("");
+    setEditHashtags(
+      Array.isArray(post.hashtags)
+        ? post.hashtags.join(", ")
+        : post.hashtags || ""
+    );
 
-    setEditHashtags("");
     setEditTagInput("");
+
     setEditImage(null);
 
-    setEditProjectTitle("");
-    setEditProjectLink("");
-
-    setEditAchievementTitle("");
-    setEditAchievementDescription("");
-
-    setEditCodeSnippet("");
-  } catch (error: any) {
-    console.log("Edit Post Error:", error);
-
-    if (error?.response?.status === 401) {
-      alert(t("alert.your_session_has_expired_please_log_in_again"));
-      return;
-    }
-
-    if (error?.response?.status === 403) {
-      alert(
-        error?.response?.data?.message ||
-          t("alert.you_can_only_edit_your_own_post")
-      );
-      return;
-    }
-
-    alert(
-      error?.response?.data?.message ||
-        t("alert.something_went_wrong_while_updating_the_post")
-    );
-  }
-};
-const handleDelete = async (postId: string) => {
-
-  try {
-    await deletePost(postId);
-
-    setPosts((prev) =>
-      prev.filter((post) => post._id !== postId)
+    setEditProjectTitle(
+      post.projectTitle || ""
     );
 
-    alert(t("alert.post_deleted_successfully"));
-  } catch (error: any) {
-    console.log(error);
-
-    alert(
-      error.response?.data?.message ||
-        t("alert.unable_to_delete_the_post")
+    setEditProjectLink(
+      post.projectLink || ""
     );
-  }
-};
-const handleReply = async (postId: string, commentId: string) => {
-  const reputation = Number(user?.reputation ?? 0);
 
-  if (reputation < 50) {
-    alert(
-      t(
-        `alert.you_need_atleast_50_reputation_points_to_reply_your_current_reputation_is ${reputation}`
-      )
+    setEditAchievementTitle(
+      post.achievementTitle || ""
     );
-    return;
-  }
 
-  if (!replyText.trim()) return;
+    setEditAchievementDescription(
+      post.achievementDescription ||
+        ""
+    );
 
-  try {
-    const response = await addReply(postId, commentId, {
-      text: replyText,
-      userName: user?.name || user?.username || user?.email,
-    });
+    setEditCodeSnippet(
+      post.codeSnippet || ""
+    );
+  };
 
-    const updatedPost = response?.data;
+  const handleSaveEdit =
+    async (): Promise<void> => {
+      if (!editingPost) {
+        return;
+      }
 
-    if (updatedPost) {
+      if (!editContent.trim()) {
+        alert(
+          t(
+            "alert.post_content_cannot_be_empty"
+          )
+        );
+
+        return;
+      }
+
+      try {
+        const formData =
+          new FormData();
+
+        formData.append(
+          "content",
+          editContent
+        );
+
+        formData.append(
+  "postType",
+  editingPost.postType ?? ""
+);
+
+        formData.append(
+          "hashtags",
+          editHashtags
+        );
+
+        formData.append(
+          "codeSnippet",
+          editCodeSnippet
+        );
+
+        formData.append(
+          "projectTitle",
+          editProjectTitle
+        );
+
+        formData.append(
+          "projectLink",
+          editProjectLink
+        );
+
+        formData.append(
+          "achievementTitle",
+          editAchievementTitle
+        );
+
+        formData.append(
+          "achievementDescription",
+          editAchievementDescription
+        );
+
+        if (editImage) {
+          formData.append(
+            "image",
+            editImage
+          );
+        }
+
+        const updatedPost =
+          await updatePost(
+            editingPost._id,
+            formData
+          );
+
+        setPosts(
+          (previousPosts) =>
+            previousPosts.map(
+              (post) =>
+                post._id ===
+                updatedPost._id
+                  ? updatedPost
+                  : post
+            )
+        );
+
+        setEditingPost(null);
+
+        setEditContent("");
+
+        setEditHashtags("");
+
+        setEditTagInput("");
+
+        setEditImage(null);
+
+        setEditProjectTitle("");
+
+        setEditProjectLink("");
+
+        setEditAchievementTitle("");
+
+        setEditAchievementDescription(
+          ""
+        );
+
+        setEditCodeSnippet("");
+      } catch (error: unknown) {
+        const apiError =
+          error as ApiError;
+
+        console.error(
+          "Edit Post Error:",
+          error
+        );
+
+        if (
+          apiError.response?.status ===
+          401
+        ) {
+          alert(
+            t(
+              "alert.your_session_has_expired_please_log_in_again"
+            )
+          );
+
+          return;
+        }
+
+        if (
+          apiError.response?.status ===
+          403
+        ) {
+          alert(
+            apiError.response?.data
+              ?.message ||
+              t(
+                "alert.you_can_only_edit_your_own_post"
+              )
+          );
+
+          return;
+        }
+
+        alert(
+          apiError.response?.data
+            ?.message ||
+            t(
+              "alert.something_went_wrong_while_updating_the_post"
+            )
+        );
+      }
+    };
+
+  const handleDelete = async (
+    postId: string
+  ): Promise<void> => {
+    try {
+      await deletePost(postId);
+
       setPosts((previousPosts) =>
-        previousPosts.map((post) =>
-          post._id === postId ? updatedPost : post
+        previousPosts.filter(
+          (post) =>
+            post._id !== postId
         )
       );
-    }
 
-    setReplyText("");
-    setActiveReplyComment(null);
-  } catch (error) {
-    console.log("Add Reply Error:", error);
-  }
-};
-const handleDeleteComment = async (
-  postId: string,
-  commentId: string
-) => {
-  try {
-    const response = await deleteComment(postId, commentId);
-
-    const updatedPost = response?.data;
-
-    if (!updatedPost) {
-      console.error(
-        "Updated post missing from delete comment response:",
-        response
+      alert(
+        t(
+          "alert.post_deleted_successfully"
+        )
       );
+    } catch (error: unknown) {
+      const apiError =
+        error as ApiError;
+
+      console.error(error);
+
+      alert(
+        apiError.response?.data
+          ?.message ||
+          t(
+            "alert.unable_to_delete_the_post"
+          )
+      );
+    }
+  };
+
+  const handleReply = async (
+    postId: string,
+    commentId: string
+  ): Promise<void> => {
+    const reputation = Number(
+      user?.reputation ?? 0
+    );
+
+    if (reputation < 50) {
+      alert(
+        t(
+          `alert.you_need_atleast_50_reputation_points_to_reply_your_current_reputation_is ${reputation}`
+        )
+      );
+
       return;
     }
 
-    setPosts((previousPosts) =>
-      previousPosts.map((post) =>
-        post._id === postId ? updatedPost : post
-      )
-    );
-  } catch (error: any) {
-    console.error("Delete comment error:", error);
+    if (!replyText.trim()) {
+      return;
+    }
 
-    alert(
-      error?.response?.data?.message ||
-        t("alert.unable_to_delete_comment")
-    );
-  }
-};
+    try {
+      const response =
+        await addReply(
+          postId,
+          commentId,
+          {
+            text: replyText,
+            userName:
+              user?.name ||
+              user?.username ||
+              user?.email ||
+              "",
+          }
+        );
+
+      const updatedPost =
+        response?.data;
+
+      if (updatedPost) {
+        setPosts(
+          (previousPosts) =>
+            previousPosts.map(
+              (post) =>
+                post._id === postId
+                  ? updatedPost
+                  : post
+            )
+        );
+      }
+
+      setReplyText("");
+
+      setActiveReplyComment(null);
+    } catch (error: unknown) {
+      console.error(
+        "Add Reply Error:",
+        error
+      );
+    }
+  };
+
+  const handleDeleteComment =
+    async (
+      postId: string,
+      commentId: string
+    ): Promise<void> => {
+      try {
+        const response =
+          await deleteComment(
+            postId,
+            commentId
+          );
+
+        const updatedPost =
+          response?.data;
+
+        if (!updatedPost) {
+          console.error(
+            "Updated post missing from delete comment response:",
+            response
+          );
+
+          return;
+        }
+
+        setPosts(
+          (previousPosts) =>
+            previousPosts.map(
+              (post) =>
+                post._id === postId
+                  ? updatedPost
+                  : post
+            )
+        );
+      } catch (error: unknown) {
+        const apiError =
+          error as ApiError;
+
+        console.error(
+          "Delete comment error:",
+          error
+        );
+
+        alert(
+          apiError.response?.data
+            ?.message ||
+            t(
+              "alert.unable_to_delete_comment"
+            )
+        );
+      }
+    };
+
   return {
-    handleLike, handleBookmark, handleComment,handleShare, handleEdit, handleSaveEdit,handleDelete, handleReply, handleDeleteComment
+    handleLike,
+    handleBookmark,
+    handleComment,
+    handleShare,
+    handleEdit,
+    handleSaveEdit,
+    handleDelete,
+    handleReply,
+    handleDeleteComment,
   };
 }

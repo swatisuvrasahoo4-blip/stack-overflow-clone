@@ -10,12 +10,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import axiosInstance from "@/lib/axiosinstance";
+import axios from "axios";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 
+interface LoginVerificationData {
+  userId: string;
+  deviceId: string;
+}
+
 const VerifyLoginDevice = () => {
   const router = useRouter();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const { completeLogin } = useAuth();
 
   const [otp, setOtp] = useState("");
@@ -23,46 +29,103 @@ const VerifyLoginDevice = () => {
 
   const handleVerify = async () => {
     try {
-      const storedData = sessionStorage.getItem("loginVerification");
+      const storedData = sessionStorage.getItem(
+        "loginVerification"
+      );
 
       if (!storedData) {
-        toast.error(t("toast.login_verification_session_not_found"));
-        router.push("/auth");
+        toast.error(
+          t(
+            "toast.login_verification_session_not_found"
+          )
+        );
+
+        void router.push("/auth");
         return;
       }
 
-      const { userId, deviceId } = JSON.parse(storedData);
+      const parsedData = JSON.parse(
+        storedData
+      ) as LoginVerificationData;
 
-      if (!otp || otp.length !== 6) {
-        toast.error(t("toast.please_enter the_6-digit_otp"));
+      const {
+        userId,
+        deviceId,
+      } = parsedData;
+
+      if (
+        !otp ||
+        otp.length !== 6
+      ) {
+        toast.error(
+          t(
+            "toast.please_enter_the_6_digit_otp"
+          )
+        );
+
         return;
       }
 
       setLoading(true);
 
-      const response = await axiosInstance.post(
-        "/user/login/verify-device",
-        {
-          userId,
-          deviceId,
-          otp,
-        }
-      );
+      const response =
+        await axiosInstance.post(
+          "/user/login/verify-device",
+          {
+            userId,
+            deviceId,
+            otp,
+          }
+        );
 
-      if (response.data.success) {
-  const { data, token } = response.data;
+      if (
+        response.data.success
+      ) {
+        const {
+          data,
+          token,
+        } = response.data;
 
-  completeLogin({ data, token });
+        completeLogin({
+          data,
+          token,
+        });
 
-  sessionStorage.removeItem("loginVerification");
+        sessionStorage.removeItem(
+          "loginVerification"
+        );
 
-  toast.success(t("toast.device_verified_and_login_successful"));
+        toast.success(
+          t(
+            "toast.device_verified_and_login_successful"
+          )
+        );
 
-  router.push("/");
-}
-    } catch (error: any) {
+        void router.push("/");
+      }
+    } catch (
+      error: unknown
+    ) {
+      if (
+        axios.isAxiosError(
+          error
+        )
+      ) {
+        toast.error(
+          error.response?.data
+            ?.message ||
+            t(
+              "toast.otp_verification_failed"
+            )
+        );
+
+        return;
+      }
+
       toast.error(
-        error?.response?.data?.message || "OTP verification failed"
+        t(
+          "toast.otp_verification_failed"
+        )
       );
     } finally {
       setLoading(false);
@@ -70,40 +133,60 @@ const VerifyLoginDevice = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Verify New Device</CardTitle>
+          <CardTitle>
+            {t(
+              "login_device.verify_new_device"
+            )}
+          </CardTitle>
         </CardHeader>
 
         <CardContent className="space-y-4">
           <p className="text-sm text-gray-600">
-            We detected a login from a new device. Enter the 6-digit OTP
-            sent to your email address.
+            {t(
+              "login_device.new_device_message"
+            )}
           </p>
 
           <Input
             type="text"
             inputMode="numeric"
             maxLength={6}
-            placeholder="Enter OTP"
+            placeholder={t(
+              "login_device.enter_otp"
+            )}
             value={otp}
-            onChange={(e) =>
-              setOtp(e.target.value.replace(/\D/g, ""))
+            onChange={(
+              event
+            ) =>
+              setOtp(
+                event.target.value.replace(
+                  /\D/g,
+                  ""
+                )
+              )
             }
           />
 
           <Button
-            onClick={()=>{
-              console.log("button clicked");
-              
-              handleVerify()
-
+            type="button"
+            onClick={() => {
+              void handleVerify();
             }}
-            disabled={loading}
+            disabled={
+              loading
+            }
             className="w-full bg-blue-600 hover:bg-blue-700"
           >
-            {loading ? "Verifying..." : "Verify Device"}
+            {loading
+              ? t(
+                  "login_device.verifying"
+                )
+              : t(
+                  "login_device.verify_device"
+                )}
           </Button>
         </CardContent>
       </Card>

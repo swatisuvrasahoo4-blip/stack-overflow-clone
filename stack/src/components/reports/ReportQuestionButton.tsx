@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
 import { useAuth } from "@/lib/AuthContext";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 interface ReportQuestionButtonProps {
  questionId: string;
@@ -74,12 +75,18 @@ export default function ReportQuestionButton({
 
     alert(t("alert.question_reported_successfully"));
     setIsOpen(false);
-  } catch (error: any) {
+  } catch (error: unknown) {
+  if (axios.isAxiosError(error)) {
     alert(
-      error?.response?.data?.message ||
+      error.response?.data?.message ||
+        t("alert.failed_to_report_question")
+    );
+  } else {
+    alert(
       t("alert.failed_to_report_question")
     );
   }
+}
 }}
 />
   </>

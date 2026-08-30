@@ -10,20 +10,36 @@ import {
 } from "./services/communityService";
 import PostCard from "./community/PostCard";
 import usePostActions from "@/hooks/usePostActions";
+import { Question } from "@/types/questions";
+
+type CommunityPost = React.ComponentProps<typeof PostCard>["post"];
+type PostComment = NonNullable<CommunityPost["comments"]>[number];
+type PostReply = NonNullable<PostComment["replies"]>[number];
+
+interface SelectedComment {
+  postId: string;
+  commentId: string;
+}
+
+interface SelectedReply {
+  postId: string;
+  commentId: string;
+  replyId: string;
+}
 
 export default function SavedList({ max = 100 }: { max?: number }) {
   const router = useRouter();
   const {t} = useTranslation();
   const { user, updateUser } = useAuth();
-  const [saved, setSaved] = useState<any[]>([]);
-  const [savedPosts, setSavedPosts] = useState<any[]>([]);
+  const [saved, setSaved] = useState<Question[]>([]);
+  const [savedPosts, setSavedPosts] = useState<CommunityPost[]>([]);
   const [activeTab, setActiveTab] = useState("questions");
   const [commentText, setCommentText] = useState("");
   const [activeCommentPost, setActiveCommentPost] = useState<string | null>(null);
   const [replyText, setReplyText] = useState("");
   const [activeReplyComment, setActiveReplyComment] = useState<string | null>(null);
   const [expandedComments, setExpandedComments] = useState<string[]>([]);
-  const [editingPost, setEditingPost] = useState<any>(null);
+  const [editingPost, setEditingPost] = useState<CommunityPost | null>(null);
   const [editContent, setEditContent] = useState("");
   const [editHashtags, setEditHashtags] = useState("");
   const [editTagInput, setEditTagInput] = useState("");
@@ -38,9 +54,9 @@ const [editAchievementDescription, setEditAchievementDescription] = useState("")
 const [editCodeSnippet, setEditCodeSnippet] = useState("");
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedComment, setSelectedComment] = useState<any>(null);
+  const [selectedComment, setSelectedComment] = useState<SelectedComment | null>(null);
   const [showDeleteCommentModal, setShowDeleteCommentModal] = useState(false);
-  const [selectedReply, setSelectedReply] = useState<any>(null);
+  const [selectedReply, setSelectedReply] = useState<SelectedReply | null>(null);
   const [showDeleteReplyModal, setShowDeleteReplyModal] = useState(false);
 
   const {
@@ -93,36 +109,39 @@ setEditCodeSnippet,
     setActiveReplyComment,
   });
 
-  const handleDeleteReply = async (
-    postId: string,
-    commentId: string,
-    replyId: string
-  ) => {
-    try {
-      await deleteReply(postId, commentId, replyId);
-      setSavedPosts((previousPosts) =>
-        previousPosts.map((post) =>
-          post._id === postId
-            ? {
-                ...post,
-                comments: post.comments.map((comment: any) =>
+ const handleDeleteReply = async (
+  postId: string,
+  commentId: string,
+  replyId: string
+) => {
+  try {
+    await deleteReply(postId, commentId, replyId);
+
+    setSavedPosts((previousPosts) =>
+      previousPosts.map((post) =>
+        post._id === postId
+          ? {
+              ...post,
+              comments: (post.comments ?? []).map(
+                (comment: PostComment) =>
                   comment._id === commentId
                     ? {
                         ...comment,
-                        replies: comment.replies.filter(
-                          (reply: any) => reply._id !== replyId
+                        replies: (comment.replies ?? []).filter(
+                          (reply: PostReply) =>
+                            reply._id !== replyId
                         ),
                       }
                     : comment
-                ),
-              }
-            : post
-        )
-      );
-    } catch (error) {
-      console.error("Delete reply error:", error);
-    }
-  };
+              ),
+            }
+          : post
+      )
+    );
+  } catch (error) {
+    console.error("Delete reply error:", error);
+  }
+};
 
 useEffect(() => {
   const loadSavedItems = async () => {
@@ -248,34 +267,36 @@ setSavedPosts(
             <div className="space-y-4">
               {savedPosts.map((post) => (
                 <PostCard
-                  key={post._id}
-                  post={post}
-                  user={user}
-                  handleLike={handleLike}
-                  handleBookmark={handleBookmark}
-                  handleComment={handleComment}
-                  handleReply={handleReply}
-                  handleShare={handleShare}
-                  handleEdit={handleEdit}
-                  handleDelete={handleDelete}
-                  activeCommentPost={activeCommentPost}
-                  setActiveCommentPost={setActiveCommentPost}
-                  commentText={commentText}
-                  setCommentText={setCommentText}
-                  expandedComments={expandedComments}
-                  setExpandedComments={setExpandedComments}
-                  activeReplyComment={activeReplyComment}
-                  setActiveReplyComment={setActiveReplyComment}
-                  replyText={replyText}
-                  setReplyText={setReplyText}
-                  setSelectedComment={setSelectedComment}
-                  setShowDeleteCommentModal={setShowDeleteCommentModal}
-                  setSelectedReply={setSelectedReply}
-                  setShowDeleteReplyModal={setShowDeleteReplyModal}
-                  setSelectedPostId={setSelectedPostId}
-                  setShowDeleteModal={setShowDeleteModal}
-                  isBookmarked
-                />
+  key={post._id}
+  post={post}
+  user={user}
+  handleLike={handleLike}
+  handleBookmark={handleBookmark}
+  handleComment={handleComment}
+  handleReply={handleReply}
+  handleShare={handleShare}
+  handleEdit={handleEdit}
+  handleDelete={handleDelete}
+  activeCommentPost={activeCommentPost}
+  setActiveCommentPost={setActiveCommentPost}
+  commentText={commentText}
+  setCommentText={setCommentText}
+  expandedComments={expandedComments}
+  setExpandedComments={setExpandedComments}
+  activeReplyComment={activeReplyComment}
+  setActiveReplyComment={setActiveReplyComment}
+  replyText={replyText}
+  setReplyText={setReplyText}
+  setSelectedComment={setSelectedComment}
+  setShowDeleteCommentModal={setShowDeleteCommentModal}
+  setSelectedReply={setSelectedReply}
+  setShowDeleteReplyModal={setShowDeleteReplyModal}
+  setSelectedPostId={setSelectedPostId}
+  setShowDeleteModal={setShowDeleteModal}
+  selectedPostId={selectedPostId}
+  showDeleteModal={showDeleteModal}
+  isBookmarked
+/>
               ))}
             </div>
           )}

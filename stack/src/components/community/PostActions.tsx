@@ -1,11 +1,13 @@
 import { useTranslation } from "react-i18next";
+import type { Post, User } from "@/types/community";
+
 interface PostActionsProps {
-  post: any;
-  user: any;
+  post: Post;
+  user: User | null;
   onDelete: (postId: string) => void;
-  setSelectedPostId: any;
-  setShowDeleteModal: any;
-  onEdit: (post: any) => void;
+  setSelectedPostId: (id: string | null) => void;
+  setShowDeleteModal: (show: boolean) => void;
+  onEdit: (post: Post) => void;
 }
 
 export default function PostActions({
@@ -13,18 +15,21 @@ export default function PostActions({
   user,
   onDelete,
   onEdit,
-   setSelectedPostId,
+  setSelectedPostId,
   setShowDeleteModal,
 }: PostActionsProps) {
   const { t } = useTranslation();
-  const currentUserId = user?.id || user?._id || user?.userId;
-  const postAuthorId = post.authorId || post.userId || post.userid;
+
+  const currentUserId =
+    user?.id || user?._id || user?.userId;
+
+  const postAuthorId =
+    post.authorId || post.userId || post.userid;
 
   return (
     <>
       {String(currentUserId) === String(postAuthorId) && (
-
-<div className="flex gap-3">
+        <div className="flex gap-3">
           <button
             onClick={(e) => {
               e.stopPropagation();

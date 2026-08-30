@@ -5,26 +5,37 @@ import {
   Bookmark,
   Bot,
   Building,
+  Crown,
   FileText,
   Home,
   MessageSquare,
   MessageSquareIcon,
+  ShieldAlert,
   Tag,
   Trophy,
   Users,
   UsersRound,
-  Crown
 } from "lucide-react";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Badge } from "./ui/badge";
-import { ShieldAlert } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import { useTranslation } from "react-i18next";
 
-const Sidebar = ({ isopen }:any) => {
+interface SidebarProps {
+  isopen: boolean;
+}
+
+interface SavedQuestion {
+  _id: string;
+  questiontitle?: string;
+  isBookmarked?: boolean;
+}
+
+const Sidebar = ({ isopen }: SidebarProps) => {
   const { user } = useAuth();
   const { t } = useTranslation();
+
   return (
     <div
       className={cn(
@@ -51,6 +62,7 @@ const Sidebar = ({ isopen }:any) => {
                 {t("sidebar.home")}
               </Link>
             </li>
+
             <li>
               <Link
                 href="/questions"
@@ -60,6 +72,7 @@ const Sidebar = ({ isopen }:any) => {
                 {t("sidebar.questions")}
               </Link>
             </li>
+
             <li>
               <Link
                 href="/ai-assist"
@@ -67,11 +80,16 @@ const Sidebar = ({ isopen }:any) => {
               >
                 <Bot className="w-4 h-4 mr-2 lg:mr-3" />
                 {t("sidebar.aiAssist")}
-                <Badge variant="secondary" className="ml-auto text-xs">
+
+                <Badge
+                  variant="secondary"
+                  className="ml-auto text-xs"
+                >
                   {t("sidebar.labs")}
                 </Badge>
               </Link>
             </li>
+
             <li>
               <Link
                 href="/tags"
@@ -81,6 +99,7 @@ const Sidebar = ({ isopen }:any) => {
                 {t("tag.tags")}
               </Link>
             </li>
+
             <li>
               <Link
                 href="/users"
@@ -90,6 +109,7 @@ const Sidebar = ({ isopen }:any) => {
                 {t("sidebar.users")}
               </Link>
             </li>
+
             <li>
               <Link
                 href="/community"
@@ -99,6 +119,7 @@ const Sidebar = ({ isopen }:any) => {
                 {t("sidebar.community")}
               </Link>
             </li>
+
             <li>
               <Link
                 href="/?panel=saves"
@@ -108,6 +129,7 @@ const Sidebar = ({ isopen }:any) => {
                 {t("sidebar.saves")}
               </Link>
             </li>
+
             <li>
               <Link
                 href="#"
@@ -115,14 +137,16 @@ const Sidebar = ({ isopen }:any) => {
               >
                 <Trophy className="w-4 h-4 mr-2 lg:mr-3" />
                 {t("sidebar.challenges")}
+
                 <Badge
                   variant="secondary"
                   className="ml-auto text-xs bg-orange-100 text-orange-800"
                 >
-                 {t("sidebar.new")}
+                  {t("sidebar.new")}
                 </Badge>
               </Link>
             </li>
+
             <li>
               <Link
                 href="#"
@@ -132,6 +156,7 @@ const Sidebar = ({ isopen }:any) => {
                 {t("sidebar.chat")}
               </Link>
             </li>
+
             <li>
               <Link
                 href="#"
@@ -151,29 +176,31 @@ const Sidebar = ({ isopen }:any) => {
                 {t("sidebar.companies")}
               </Link>
             </li>
-          <li>
-  <Link
-    href="/subscription"
-    className="flex items-center px-2 py-2 text-gray-700 hover:bg-gray-100 rounded text-sm"
-  >
-    <Crown className="w-4 h-4 mr-2 lg:mr-3" />
-    {t("sidebar.subscription")}
-  </Link>
-</li>
 
+            <li>
+              <Link
+                href="/subscription"
+                className="flex items-center px-2 py-2 text-gray-700 hover:bg-gray-100 rounded text-sm"
+              >
+                <Crown className="w-4 h-4 mr-2 lg:mr-3" />
+                {t("sidebar.subscription")}
+              </Link>
+            </li>
 
             {user?.role === "admin" && (
-  <li>
-    <Link
-      href="/admin"
-      className="flex items-center px-2 py-2 text-gray-700 hover:bg-gray-100 rounded text-sm"
-    >
-      <ShieldAlert className="w-4 h-4 mr-2 lg:mr-3 text-red-600" />
-      {t("sidebar.admin")}
-    </Link>
-  </li>
-)}
+              <li>
+                <Link
+                  href="/admin"
+                  className="flex items-center px-2 py-2 text-gray-700 hover:bg-gray-100 rounded text-sm"
+                >
+                  <ShieldAlert className="w-4 h-4 mr-2 lg:mr-3 text-red-600" />
+                  {t("sidebar.admin")}
+                </Link>
+              </li>
+            )}
           </ul>
+
+          <SavedList />
         </nav>
       </aside>
     </div>
@@ -183,40 +210,93 @@ const Sidebar = ({ isopen }:any) => {
 export default Sidebar;
 
 function SavedList() {
-  const {t} = useTranslation();
-  const [saved, setSaved] = useState([]);
+  const { t } = useTranslation();
+
+  const [saved, setSaved] =
+    useState<SavedQuestion[]>([]);
+
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined") {
+      return;
+    }
+
     try {
-      const stored = JSON.parse(localStorage.getItem("mockQuestions") || "[]");
-      const list = stored.filter((q:any) => q.isBookmarked);
+      const stored: SavedQuestion[] =
+        JSON.parse(
+          localStorage.getItem("mockQuestions") || "[]"
+        );
+
+      const list = stored.filter(
+        (question: SavedQuestion) =>
+          question.isBookmarked
+      );
+
       setSaved(list.slice(0, 6));
-    } catch (e) {
+    } catch (error) {
+      console.error(
+        "Failed to load saved questions:",
+        error
+      );
+
       setSaved([]);
     }
   }, []);
+
   useEffect(() => {
     const handler = () => {
       try {
-        const stored = JSON.parse(localStorage.getItem("mockQuestions") || "[]");
-        const list = stored.filter((q:any) => q.isBookmarked);
+        const stored: SavedQuestion[] =
+          JSON.parse(
+            localStorage.getItem("mockQuestions") || "[]"
+          );
+
+        const list = stored.filter(
+          (question: SavedQuestion) =>
+            question.isBookmarked
+        );
+
         setSaved(list.slice(0, 6));
-      } catch (e) {
+      } catch (error) {
+        console.error(
+          "Failed to update saved questions:",
+          error
+        );
+
         setSaved([]);
       }
     };
-    window.addEventListener("mockQuestionsUpdated", handler);
-    return () => window.removeEventListener("mockQuestionsUpdated", handler);
+
+    window.addEventListener(
+      "mockQuestionsUpdated",
+      handler
+    );
+
+    return () => {
+      window.removeEventListener(
+        "mockQuestionsUpdated",
+        handler
+      );
+    };
   }, []);
-  if (!saved || saved.length === 0) {
-    return <div className="text-xs text-gray-500 mt-2">{t("community.no_saved_question")}</div>;
+
+  if (saved.length === 0) {
+    return (
+      <div className="text-xs text-gray-500 mt-2">
+        {t("community.no_saved_question")}
+      </div>
+    );
   }
+
   return (
     <ul className="mt-2 space-y-2 text-sm">
-      {saved.map((q:any) => (
-        <li key={q._id}>
-          <Link href={`/questions/${q._id}`} className="text-blue-600 hover:underline">
-            {q.questiontitle?.slice(0, 60) || "(no title)"}
+      {saved.map((question: SavedQuestion) => (
+        <li key={question._id}>
+          <Link
+            href={`/questions/${question._id}`}
+            className="text-blue-600 hover:underline"
+          >
+            {question.questiontitle?.slice(0, 60) ||
+              "(no title)"}
           </Link>
         </li>
       ))}

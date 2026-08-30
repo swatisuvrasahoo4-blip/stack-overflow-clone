@@ -755,15 +755,28 @@ export const getPostById = async (req, res) => {
   }
 };
 
-// Search community posts
+// Search community posts with cursor pagination
 export const searchPosts = async (req, res) => {
   try {
-    const { q, type } = req.query;
+    const {
+      q,
+      type,
+      cursor,
+    } = req.query;
+
+    const limit = Math.min(
+      Number(req.query.limit) || 10,
+      50
+    );
 
     if (!q || !String(q).trim()) {
       return res.status(200).json({
         success: true,
         data: [],
+        pagination: {
+          hasMore: false,
+          nextCursor: null,
+        },
       });
     }
 
@@ -786,24 +799,111 @@ export const searchPosts = async (req, res) => {
       ],
     };
 
-    // Apply post type filter only when provided
+    // Post type filter
     if (type && type !== "All") {
       query.postType = type;
     }
 
+    // Decode cursor
+    let decodedCursor = null;
+
+    if (cursor) {
+      try {
+        decodedCursor = JSON.parse(
+          Buffer.from(
+            cursor,
+            "base64"
+          ).toString("utf-8")
+        );
+      } catch (error) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid cursor",
+        });
+      }
+    }
+
+    // Cursor condition
+    if (decodedCursor) {
+      const cursorCondition = [
+        {
+          createdAt: {
+            $lt: new Date(
+              decodedCursor.createdAt
+            ),
+          },
+        },
+        {
+          createdAt: new Date(
+            decodedCursor.createdAt
+          ),
+          _id: {
+            $lt: decodedCursor._id,
+          },
+        },
+      ];
+
+      // Preserve search conditions
+      query.$and = [
+        {
+          $or: query.$or,
+        },
+        {
+          $or: cursorCondition,
+        },
+      ];
+
+      delete query.$or;
+    }
+
+    // Fetch one extra result
     const posts = await Post.find(query)
-      .sort({ createdAt: -1 });
+      .sort({
+        createdAt: -1,
+        _id: -1,
+      })
+      .limit(limit + 1);
+
+    const hasMore =
+      posts.length > limit;
+
+    const data = hasMore
+      ? posts.slice(0, limit)
+      : posts;
+
+    let nextCursor = null;
+
+    if (hasMore && data.length > 0) {
+      const last =
+        data[data.length - 1];
+
+      nextCursor = Buffer.from(
+        JSON.stringify({
+          createdAt: last.createdAt,
+          _id: last._id.toString(),
+        })
+      ).toString("base64");
+    }
 
     return res.status(200).json({
       success: true,
-      data: posts,
+      data,
+      pagination: {
+        limit,
+        hasMore,
+        nextCursor,
+      },
     });
   } catch (error) {
-    console.error("Post Search Error:", error);
+    console.error(
+      "Post Search Error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
-      message: "Something went wrong while searching posts",
+      message:
+        "Something went wrong while searching posts",
     });
   }
 };

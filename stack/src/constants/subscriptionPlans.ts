@@ -1,4 +1,20 @@
-export const subscriptionPlans = [
+export type PlanName =
+  | "Free"
+  | "Bronze"
+  | "Silver"
+  | "Gold";
+
+interface SubscriptionPlan {
+  id: number;
+  name: PlanName;
+  price: string;
+  description: string;
+  features: string[];
+  isCurrent: boolean;
+  isPopular: boolean;
+}
+
+export const subscriptionPlans: SubscriptionPlan[] = [
   {
     id: 1,
     name: "Free",
