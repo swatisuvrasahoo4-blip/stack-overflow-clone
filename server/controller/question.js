@@ -23,31 +23,111 @@ export const Askquestion = async (req, res) => {
 
 export const getallquestion = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const limit = Math.min(
+      parseInt(req.query.limit) || 10,
+      50
+    );
 
-    const skip = (page - 1) * limit;
+    const cursor = req.query.cursor || null;
 
-    const total = await question.countDocuments();
+    let query = {};
 
-    const allquestion = await question
-      .find()
-      .sort({ askedon: -1 })
-      .skip(skip)
-      .limit(limit);
-      
-    res.status(200).json({
-      data: allquestion,
+    if (cursor) {
+      try {
+        const decodedCursor = JSON.parse(
+          Buffer.from(cursor, "base64").toString("utf-8")
+        );
+
+        const cursorDate = new Date(
+          decodedCursor.askedon
+        );
+
+        const cursorId =
+          decodedCursor.id;
+
+        if (
+          !cursorDate ||
+          !cursorId ||
+          !mongoose.Types.ObjectId.isValid(cursorId)
+        ) {
+          return res.status(400).json({
+            message: "Invalid cursor",
+          });
+        }
+
+        query = {
+          $or: [
+            {
+              askedon: {
+                $lt: cursorDate,
+              },
+            },
+            {
+              askedon: cursorDate,
+              _id: {
+                $lt: new mongoose.Types.ObjectId(
+                  cursorId
+                ),
+              },
+            },
+          ],
+        };
+      } catch (error) {
+        return res.status(400).json({
+          message: "Invalid cursor",
+        });
+      }
+    }
+
+    const questions = await question
+      .find(query)
+      .sort({
+        askedon: -1,
+        _id: -1,
+      })
+      .limit(limit + 1);
+
+    const hasMore =
+      questions.length > limit;
+
+    const data = hasMore
+      ? questions.slice(0, limit)
+      : questions;
+
+    let nextCursor = null;
+
+    if (hasMore && data.length > 0) {
+      const lastQuestion =
+        data[data.length - 1];
+
+      const cursorData = {
+        askedon:
+          lastQuestion.askedon,
+        id:
+          lastQuestion._id.toString(),
+      };
+
+      nextCursor = Buffer.from(
+        JSON.stringify(cursorData)
+      ).toString("base64");
+    }
+
+    return res.status(200).json({
+      data,
       pagination: {
-        page,
         limit,
-        total,
-        hasMore: skip + allquestion.length < total,
+        hasMore,
+        nextCursor,
       },
     });
   } catch (error) {
-    res.status(500).json({
-      message: "something went wrong..",
+    console.error(
+      "Get all questions error:",
+      error
+    );
+
+    return res.status(500).json({
+      message: "Something went wrong..",
     });
   }
 };

@@ -70,4 +70,7 @@ closedAt: {
   },
   { timestamps: true }
 );
+
+questionschema.index({ askedon: -1, _id: -1 });
+
 export default mongoose.model("question", questionschema);

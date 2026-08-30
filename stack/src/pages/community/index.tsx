@@ -124,69 +124,64 @@ const [editCodeSnippet, setEditCodeSnippet] = useState("");
   setActiveReplyComment,
 });
 
-  const [page, setPage] = useState(1);
-const [hasMore, setHasMore] = useState(true);
-const [loadingMore, setLoadingMore] = useState(false);
-const loadMoreRef = useRef<HTMLDivElement | null>(null);
+  const [cursor, setCursor] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
-const fetchPosts = async (pageNumber = 1) => {
-  try {
-    const response = await getPosts(pageNumber, 10);
-    console.log("response",response);
-    
+  const fetchPosts = async (cursorToUse: string | null = null) => {
+    try {
+      const response = await getPosts("trending", cursorToUse, 10);
 
-    if (pageNumber === 1) {
-      setPosts(response.data || []);
-    } else {
-      setPosts((prev) => {
-  const existingIds = new Set(prev.map((p: any) => p._id));
-
-  const newPosts = (response.data || []).filter(
-    (p: any) => !existingIds.has(p._id)
-  );
-
-  return [...prev, ...newPosts];
-});
-    }
-
-    setHasMore(response.pagination.hasMore);
-    setPage(pageNumber);
-     setLoadingMore(false)
-  } catch (error) {
-    console.log(error);
-    setLoadingMore(false)
-  }
-};
-
-useEffect(() => {
-  fetchPosts(1);
-}, []);
-
-useEffect(() => {
-  if (!hasMore || loadingMore) return;
-
-  const observer = new IntersectionObserver(
-    async (entries) => {
-      if (entries[0].isIntersecting && hasMore && !loadingMore) {
-        setLoadingMore(true);
-        await fetchPosts(page + 1);
-        setLoadingMore(false);
+      if (cursorToUse === null) {
+        setPosts(response.data || []);
+      } else {
+        setPosts((prev) => {
+          const existingIds = new Set(prev.map((p: any) => p._id));
+          const newPosts = (response.data || []).filter(
+            (p: any) => !existingIds.has(p._id)
+          );
+          return [...prev, ...newPosts];
+        });
       }
-    },
-    { threshold: 1 }
-  );
 
-  if (loadMoreRef.current) {
-    observer.observe(loadMoreRef.current);
-  }
-
-  return () => {
-    if (loadMoreRef.current) {
-      observer.unobserve(loadMoreRef.current);
+      setHasMore(response.pagination?.hasMore ?? false);
+      setCursor(response.pagination?.nextCursor ?? null);
+      setLoadingMore(false);
+    } catch (error) {
+      console.log(error);
+      setLoadingMore(false);
     }
-    observer.disconnect();
   };
-}, [hasMore, page, loadingMore]);
+
+  useEffect(() => {
+    fetchPosts(null);
+  }, []);
+
+  useEffect(() => {
+    if (!hasMore || loadingMore) return;
+
+    const observer = new IntersectionObserver(
+      async (entries) => {
+        if (entries[0].isIntersecting && hasMore && !loadingMore) {
+          setLoadingMore(true);
+          await fetchPosts(cursor);
+        }
+      },
+      { threshold: 1 }
+    );
+
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+
+    return () => {
+      if (loadMoreRef.current) {
+        observer.unobserve(loadMoreRef.current);
+      }
+      observer.disconnect();
+    };
+  }, [hasMore, cursor, loadingMore]);
 
 const handleDeleteReply = async (
   postId: string,

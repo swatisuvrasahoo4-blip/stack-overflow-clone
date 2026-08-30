@@ -24,6 +24,7 @@ import AnswerVote from "./AnswerVote";
 import ReportQuestionButton from "./reports/ReportQuestionButton";
 import VoteToClose from "./question/close-vote/VoteToClose";
 import { useTranslation } from "react-i18next";
+import AnswerShareButton from "./answer/AnswerShareButton";
 
 const QuestionDetail = ({ questionId }: any) => {
   const router = useRouter();
@@ -489,7 +490,7 @@ const hasAcceptedAnswer =
 </h2>
         <div className="space-y-6">
           {(question.answer || []).map((ans: any) => (
-            <Card key={ans._id} className={""}>
+            <Card key={ans._id} id={`answer-${ans._id}`} className={""}>
               <CardContent className="p-0">
                 <div className="flex flex-col sm:flex-row">
                   <AnswerVote
@@ -532,14 +533,11 @@ const hasAcceptedAnswer =
                     </div>
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                       <div className="flex gap-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-gray-600 hover:text-gray-800"
-                        >
-                          <Share className="w-4 h-4 mr-1" />
-                          {t("community.share")}
-                        </Button>
+                        <AnswerShareButton
+  questionId={String(question._id)}
+  answerId={String(ans._id)}
+  questionTitle={question.questiontitle}
+/>
                         <Button
                           variant="ghost"
                           size="sm"

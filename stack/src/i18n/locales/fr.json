@@ -90,6 +90,10 @@
   "mentionedUsers":"Utilisateurs mentionnés",
   "communityPosts": "Publications de la communauté",
   "community_feed": "Fil d'actualité de la communauté",
+  "copy": "Copier",
+  "copied": "Copié",
+  "post_not_found": "Publication introuvable.",
+
   "share_updates_projects_code_snippets_and_learning_achievements": "Partagez des mises à jour, des projets, des extraits de code et des réussites d'apprentissage."
 },
 "tag":{
@@ -475,7 +479,8 @@
     "password_must_contain_at_least_8_characters_including_atleast_1_letter_and_1_number": "Le mot de passe doit contenir au moins 8 caractères, dont au moins 1 lettre et 1 chiffre.",
     "please_choose_an_available_username": "Veuillez choisir un nom d'utilisateur disponible.",
     "profile_updated_successfully": "Profil mis à jour avec succès !",
-    "profile_updated": "Profil mis à jour."
+    "profile_updated": "Profil mis à jour.",
+  "you_cannot_vote_to_close_your_own_question": "Vous ne pouvez pas voter pour fermer votre propre question."
   },
   "window": {
     "are_you_sure_you_want_to_delete_this_question": "Êtes-vous sûr de vouloir supprimer cette question ?",
@@ -515,5 +520,65 @@
     "forgot_your_password": "Mot de passe oublié?",
     "dont_have_an_account": "Vous n'avez pas de compte ?",
     "sign_up": "S'inscrire"
+  },
+  "search": {
+  "search_results": "Résultats de recherche",
+  "results_for": "Résultats pour",
+  "all": "Tous",
+  "posts": "Publications",
+  "questions": "Questions",
+  "filter_by_post_type": "Filtrer par type de publication",
+  "all_types": "Tous les types",
+  "technical_update": "Mise à jour technique",
+  "project_showcase": "Présentation de projet",
+  "learning_achievement": "Réussite d'apprentissage",
+  "code_snippet": "Extrait de code",
+  "searching": "Recherche en cours...",
+  "no_posts_matched_your_search": "Aucune publication ne correspond à votre recherche.",
+  "no_questions_matched_your_search": "Aucune question ne correspond à votre recherche.",
+  "no_title": "(sans titre)",
+  "answers": "réponses",
+  "views": "vues",
+  "no_posts_or_questions_matched_your_search": "Aucune publication ou question ne correspond à votre recherche."
+},
+  "editquestion": {
+    "edit_question": "Modifier la question",
+    "title": "Titre",
+    "question": "Question",
+    "tags_maximum_5": "Étiquettes (5 maximum)",
+    "enter_a_tag": "Entrez une étiquette",
+    "cancel": "Annuler",
+    "save_changes": "Enregistrer les modifications",
+    "loading_more_questions": "Chargement de plus de questions...",
+    "no_more_questions": "Plus aucune question"
+  },
+  "feed": {
+    "loading_questions": "Chargement des questions...",
+    "loading_posts": "Chargement des publications...",
+    "no_posts_yet": "Aucune publication pour le moment.",
+    "loading": "Chargement..."
+  },
+  "votetoclose": {
+    "vote_to_close_question": "Voter pour fermer la question",
+    "select_the_reason": "Sélectionnez la raison pour laquelle vous pensez que cette question devrait être fermée.",
+    "duplicate_question": "Question en double",
+    "off_topic": "Hors sujet",
+    "unclear": "Pas claire",
+    "needs_more_details": "Nécessite plus de détails",
+    "other": "Autre",
+    "cancel": "Annuler",
+    "submitting": "Envoi en cours...",
+    "submit_vote": "Soumettre le vote"
+  },
+  "message": {
+    "please_select_a_reason_for_closing_this_question": "Veuillez sélectionner une raison pour fermer cette question.",
+    "user_not_found": "Utilisateur introuvable",
+    "you_need_at_least_250_reputation_to_vote_to_close_questions": "Vous devez avoir au moins 250 points de réputation pour voter afin de fermer des questions.",
+    "question_not_found": "Question introuvable",
+    "this_question_is_already_closed": "Cette question est déjà fermée",
+    "you_have_already_voted_to_close_this_question": "Vous avez déjà voté pour fermer cette question",
+    "question_has_been_closed": "La question a été fermée",
+    "your_close_vote_has_been_recorded": "Votre vote de fermeture a été enregistré",
+    "failed_to_vote_to_close_question": "Échec du vote pour fermer la question"
   }
 }

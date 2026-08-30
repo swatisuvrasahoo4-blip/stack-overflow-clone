@@ -5,10 +5,11 @@ import { searchPosts } from "@/components/services/communityService";
 import { searchQuestions } from "@/components/services/questionService";
 import { getSubscription } from "@/components/services/subscriptionService";
 import PostFeed from "@/components/feed/PostFeed";
-import Link from "next/link";
+import { useTranslation } from "react-i18next";
 
 export default function SearchPage() {
   const router = useRouter();
+  const {t} = useTranslation();
   const { q } = router.query;
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -100,8 +101,8 @@ setResults(response?.data || []);
     <Mainlayout>
       <main className="min-w-0 p-4 lg:p-6">
         <div className="mb-6">
-          <h1 className="text-2xl font-semibold">Search results</h1>
-          <p className="mt-2 text-gray-600">Results for “{query}”.</p>
+          <h1 className="text-2xl font-semibold">{t("search.search_results")}</h1>
+          <p className="mt-2 text-gray-600">{t("search.results_for")} “{query}”.</p>
           <div className="flex gap-2 mt-4">
   {(["All", "Posts", "Questions"] as const).map((type) => (
     <button
@@ -119,7 +120,7 @@ setResults(response?.data || []);
           : "bg-gray-100 text-gray-700 hover:bg-gray-200"
       }`}
     >
-      {type}
+      {t(`search.${type.toLowerCase()}`)}
     </button>
   ))}
 </div>
@@ -128,7 +129,7 @@ setResults(response?.data || []);
 {hasAdvancedSearch && searchType !== "Questions" && (
   <div className="mb-6">
     <label className="block text-sm font-medium text-gray-700 mb-2">
-      Filter by Post Type
+      {t("search.filter_by_post_type")}
     </label>
 
     <select
@@ -136,21 +137,21 @@ setResults(response?.data || []);
       onChange={(e) => setSelectedType(e.target.value)}
       className="border border-gray-300 rounded-md px-3 py-2 bg-white"
     >
-      <option value="All">All Types</option>
-      <option value="Technical Update">Technical Update</option>
-      <option value="Project Showcase">Project Showcase</option>
-      <option value="Learning Achievement">Learning Achievement</option>
-      <option value="Code Snippet">Code Snippet</option>
+      <option value="All">{t("search.all_types")}</option>
+      <option value="Technical Update">{t("search.technical_update")}</option>
+      <option value="Project Showcase">{t("search.project_showcase")}</option>
+      <option value="Learning Achievement">{t("search.learning_achievement")}</option>
+      <option value="Code Snippet">{t("search.code_snippet")}</option>
     </select>
   </div>
 )}
 
         {loading ? (
-  <p className="text-gray-500">Searching...</p>
+  <p className="text-gray-500">{t("search.searching")}</p>
 ) : searchType === "Posts" ? (
   results.length === 0 ? (
     <p className="text-gray-500">
-      No posts matched your search.
+      {t("search.no_posts_matched_your_search")}
     </p>
   ) : (
     <PostFeed
@@ -161,7 +162,7 @@ setResults(response?.data || []);
 ) : searchType === "Questions" ? (
   questionResults.length === 0 ? (
     <p className="text-gray-500">
-      No questions matched your search.
+      {t("search.no_questions_matched_your_search")}
     </p>
   ) : (
     <div className="space-y-4">
@@ -175,12 +176,12 @@ setResults(response?.data || []);
         >
           <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
             <h2 className="text-blue-600 hover:underline font-medium">
-              {question.questiontitle || "(no title)"}
+              {question.questiontitle || t("search.no_title")}
             </h2>
 
             <div className="text-sm text-gray-600">
-              {question.noofanswer || 0} answers ·{" "}
-              {question.views || 0} views
+              {question.noofanswer || 0} {t("search.answers")} ·{" "}
+              {question.views || 0} {t("search.views")}
             </div>
           </div>
 
@@ -209,7 +210,7 @@ setResults(response?.data || []);
     {results.length > 0 && (
       <>
         <h2 className="text-lg font-semibold mb-3">
-          Posts
+          {t("search.posts")}
         </h2>
 
         <PostFeed
@@ -222,7 +223,7 @@ setResults(response?.data || []);
     {questionResults.length > 0 && (
       <div className="mt-8">
         <h2 className="text-lg font-semibold mb-3">
-          Questions
+          {t("search.questions")}
         </h2>
 
         <div className="space-y-4">
@@ -235,7 +236,7 @@ setResults(response?.data || []);
               className="border rounded-lg bg-white p-4 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
             >
               <h2 className="text-blue-600 font-medium">
-                {question.questiontitle || "(no title)"}
+                {question.questiontitle || t("search.no_title")}
               </h2>
 
               <p className="text-gray-700 mt-2 line-clamp-2">
@@ -263,7 +264,7 @@ setResults(response?.data || []);
     {results.length === 0 &&
       questionResults.length === 0 && (
         <p className="text-gray-500">
-          No posts or questions matched your search.
+          {t("search.no_posts_or_questions_matched_your_search")}
         </p>
       )}
   </>

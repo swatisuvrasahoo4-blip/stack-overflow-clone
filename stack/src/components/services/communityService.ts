@@ -1,22 +1,25 @@
 import axiosInstance from "@/lib/axiosinstance";
 
 export const getPosts = async (
-  page = 1,
+  feed: "trending" | "following",
+  cursor: string | null = null,
   limit = 10,
   followingIds: string[] = []
 ) => {
   const params = new URLSearchParams({
-    page: String(page),
+    feed,
     limit: String(limit),
   });
 
-  if (followingIds.length > 0) {
+  if (cursor) {
+    params.set("cursor", cursor);
+  }
+
+  if (feed === "following") {
     params.set("followingIds", followingIds.join(","));
   }
 
-  const res = await axiosInstance.get(
-    `/post?${params.toString()}`
-  );
+  const res = await axiosInstance.get(`/post?${params.toString()}`);
 
   return res.data;
 };

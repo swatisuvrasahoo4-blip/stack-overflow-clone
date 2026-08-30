@@ -29,7 +29,7 @@ const VoteToClose = ({
     String(question?.userid) === String(user?._id || user?.id);
 
   if (isOwnQuestion) {
-    toast.info("You cannot vote to close your own question.");
+    toast.info(t("toast.you_cannot_vote_to_close_your_own_question"));
     return;
   }
 
@@ -47,34 +47,35 @@ const VoteToClose = ({
 };
 
   const handleSubmit = async () => {
-    if (!reason) return;
+  if (!reason) return;
 
-    try {
-      setLoading(true);
+  try {
+    setLoading(true);
 
-      const data = await voteToCloseQuestion(
-        question._id,
-        reason
-      );
+    const data = await voteToCloseQuestion(
+      question._id,
+      reason
+    );
 
-      toast.success(data.message);
+    toast.success(t(`message.${data.message}`));
 
-      onQuestionUpdate({
-        ...question,
-        isClosed: data.isClosed,
-      });
+    onQuestionUpdate({
+      ...question,
+      isClosed: data.isClosed,
+    });
 
-      setReason("");
-      setIsOpen(false);
-    } catch (error: any) {
-      toast.error(
-        error.response?.data?.message ||
-          t("toast.failed_to_vote_to_close_question")
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+    setReason("");
+    setIsOpen(false);
+  } catch (error: any) {
+    toast.error(
+      error.response?.data?.message
+        ? t(`message.${error.response.data.message}`)
+        : t("message.failed_to_vote_to_close_question")
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
   if (!user || !question) return null;
 

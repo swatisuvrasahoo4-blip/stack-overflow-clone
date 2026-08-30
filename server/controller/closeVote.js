@@ -10,7 +10,7 @@ export const voteToCloseQuestion = async (req, res) => {
     // Check reason
     if (!reason || !reason.trim()) {
       return res.status(400).json({
-        message: "Please select a reason for closing this question",
+        message: "please_select_a_reason_for_closing_this_question",
       });
     }
 
@@ -19,14 +19,15 @@ export const voteToCloseQuestion = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({
-        message: "User not found",
+        message: "user_not_found",
       });
     }
 
     // Reputation privilege check
     if (user.reputation < 250) {
       return res.status(403).json({
-        message: "You need at least 250 reputation to vote to close questions",
+        message:
+          "you_need_at_least_250_reputation_to_vote_to_close_questions",
       });
     }
 
@@ -35,14 +36,14 @@ export const voteToCloseQuestion = async (req, res) => {
 
     if (!question) {
       return res.status(404).json({
-        message: "Question not found",
+        message: "question_not_found",
       });
     }
 
     // Already closed
     if (question.isClosed) {
       return res.status(400).json({
-        message: "This question is already closed",
+        message: "this_question_is_already_closed",
       });
     }
 
@@ -53,7 +54,7 @@ export const voteToCloseQuestion = async (req, res) => {
 
     if (alreadyVoted) {
       return res.status(400).json({
-        message: "You have already voted to close this question",
+        message: "you_have_already_voted_to_close_this_question",
       });
     }
 
@@ -73,8 +74,8 @@ export const voteToCloseQuestion = async (req, res) => {
 
     return res.status(200).json({
       message: question.isClosed
-        ? "Question has been closed"
-        : "Your close vote has been recorded",
+        ? "question_has_been_closed"
+        : "your_close_vote_has_been_recorded",
       closeVoteCount: question.closeVotes.length,
       isClosed: question.isClosed,
     });
@@ -82,7 +83,7 @@ export const voteToCloseQuestion = async (req, res) => {
     console.error("Vote to close error:", error);
 
     return res.status(500).json({
-      message: "Failed to vote to close question",
+      message: "failed_to_vote_to_close_question",
     });
   }
 };

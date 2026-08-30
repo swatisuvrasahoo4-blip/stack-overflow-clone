@@ -10,11 +10,11 @@ interface CloseVoteModalProps {
 }
 
 const reasons = [
-  "Duplicate question",
-  "Off-topic",
-  "Unclear",
-  "Needs more details",
-  "Other",
+  "duplicate_question",
+  "off_topic",
+  "unclear",
+  "needs_more_details",
+  "other",
 ];
 
 const CloseVoteModal = ({
@@ -25,18 +25,18 @@ const CloseVoteModal = ({
   onClose,
   onSubmit,
 }: CloseVoteModalProps) => {
-  const {t} = useTranslation();
+ 
   if (!isOpen) return null;
-
+ const {t} = useTranslation();
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="w-[90%] max-w-md rounded-lg bg-white p-6 shadow-xl">
         <h2 className="text-xl font-semibold text-gray-900">
-          {t("community.VoteToCloseQuestion")}
+          {t("votetoclose.vote_to_close_question")}
         </h2>
 
         <p className="mt-2 text-sm text-gray-600">
-          Select the reason why you think this question should be closed.
+          {t("votetoclose.select_the_reason")}
         </p>
 
         <div className="mt-5 space-y-3">
@@ -53,7 +53,9 @@ const CloseVoteModal = ({
                 onChange={() => onReasonChange(item)}
               />
 
-              <span className="text-sm text-gray-700">{item}</span>
+             <span className="text-sm text-gray-700">
+  {t(`votetoclose.${item}`)}
+</span>
             </label>
           ))}
         </div>
@@ -65,7 +67,7 @@ const CloseVoteModal = ({
             disabled={loading}
             className="rounded-md border px-4 py-2 text-gray-700 hover:bg-gray-50"
           >
-            {t("cancel")}
+            {t("votetoclose.cancel")}
           </button>
 
           <button
@@ -74,7 +76,7 @@ const CloseVoteModal = ({
             disabled={!reason || loading}
             className="rounded-md bg-red-600 px-4 py-2 text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {loading ? "Submitting..." : "Submit Vote"}
+            {loading ? t("votetoclose.submitting") : t("votetoclose.submit_vote")}
           </button>
         </div>
       </div>

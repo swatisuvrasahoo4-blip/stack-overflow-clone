@@ -298,15 +298,11 @@ console.log("EDIT FILE:", req.file);
   }
 };
 
-// Get all community posts
+// Get all community posts (cursor-based pagination)
 export const getAllPosts = async (req, res) => {
   try {
-    const page = Number(req.query.page) || 1;
-    const limit = Number(req.query.limit) || 10;
-
-    const skip = (page - 1) * limit;
-
-    const { type, followingIds } = req.query;
+    const limit = Math.min(Number(req.query.limit) || 10, 50);
+    const { feed = "trending", type, followingIds, cursor } = req.query;
 
     const query = {};
 
@@ -314,32 +310,63 @@ export const getAllPosts = async (req, res) => {
       query.postType = type;
     }
 
-    // Following feed
-    if (followingIds) {
-      const ids = followingIds
+    // Following feed: filter server-side instead of on the frontend
+    if (feed === "following") {
+      const ids = (followingIds || "")
         .split(",")
         .map((id) => id.trim())
         .filter(Boolean);
 
+      if (ids.length === 0) {
+        return res.status(200).json({
+          success: true,
+          data: [],
+          pagination: { hasMore: false, nextCursor: null },
+        });
+      }
+
       query.authorId = { $in: ids };
     }
 
-    const totalPosts = await Post.countDocuments(query);
+    // Decode the cursor from the previous page, if any
+    let decodedCursor = null;
+    if (cursor) {
+      decodedCursor = JSON.parse(
+        Buffer.from(cursor, "base64").toString("utf-8")
+      );
+    }
 
-    const posts = await Post.find(query)
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit);
+    // Sort chronologically for now (trending score comes in a later step)
+    const sort = { createdAt: -1, _id: -1 };
+
+    if (decodedCursor) {
+      query.$or = [
+        { createdAt: { $lt: new Date(decodedCursor.createdAt) } },
+        {
+          createdAt: new Date(decodedCursor.createdAt),
+          _id: { $lt: decodedCursor._id },
+        },
+      ];
+    }
+
+    // Fetch one extra doc so we can tell if there's a next page
+    const posts = await Post.find(query).sort(sort).limit(limit + 1);
+
+    const hasMore = posts.length > limit;
+    const pageItems = hasMore ? posts.slice(0, limit) : posts;
+
+    let nextCursor = null;
+    if (hasMore) {
+      const last = pageItems[pageItems.length - 1];
+      nextCursor = Buffer.from(
+        JSON.stringify({ createdAt: last.createdAt, _id: last._id })
+      ).toString("base64");
+    }
 
     res.status(200).json({
       success: true,
-      data: posts,
-      pagination: {
-        currentPage: page,
-        totalPages: Math.ceil(totalPosts / limit),
-        totalPosts,
-        hasMore: page * limit < totalPosts,
-      },
+      data: pageItems,
+      pagination: { hasMore, nextCursor },
     });
   } catch (error) {
     console.error("Get Posts Error:", error);

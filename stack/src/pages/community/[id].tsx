@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axiosinstance";
 import MainLayout from "@/layout/Mainlayout";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 
 export default function CommunityPostDetail() {
   const router = useRouter();
   const { id } = router.query;
-
+  const {t} = useTranslation();
   const [post, setPost] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
@@ -51,7 +52,7 @@ export default function CommunityPostDetail() {
 }
 
   if (!post) {
-    return <div className="p-6">Post not found.</div>;
+    return <div className="p-6">{t("community.post_not_found")}</div>;
   }
 
   return (
@@ -110,7 +111,7 @@ export default function CommunityPostDetail() {
 }}
       className="absolute right-2 top-2 rounded text-gray-800 bg-gray-700 px-3 py-1 text-xs hover:bg-gray-600"
     >
-      {copied ? "✅ Copied" : "📋 Copy"}
+      {copied ? `✅ ${t("community.copied")}` : `📋 ${t("community.copy")}`}
     </button>
 
     <pre className="overflow-x-auto rounded-lg bg-gray-900 p-4 pt-10 text-sm text-green-400">
