@@ -1,17 +1,5 @@
 import axiosInstance from "@/lib/axiosinstance";
 
-type UpdatePostData = {
-  content?: string;
-  postType?: string;
-  hashtags?: string | string[];
-  codeSnippet?: string;
-  projectTitle?: string;
-  projectLink?: string;
-  achievementTitle?: string;
-  achievementDescription?: string;
-  image?: File;
-};
-
 interface CommentData {
   text: string;
   userName: string;
@@ -22,6 +10,7 @@ interface ReplyData {
   userName: string;
 }
 
+// Fetch posts
 export const getPosts = async (
   feed: "trending" | "following",
   cursor: string | null = null,
@@ -38,19 +27,17 @@ export const getPosts = async (
   }
 
   if (feed === "following") {
-    params.set(
-      "followingIds",
-      followingIds.join(",")
-    );
+    params.set("followingIds", followingIds.join(","));
   }
 
-  const res = await axiosInstance.get(
+  const response = await axiosInstance.get(
     `/post?${params.toString()}`
   );
 
-  return res.data;
+  return response.data;
 };
 
+// Search posts
 export const searchPosts = async (
   query: string,
   type: string = "All",
@@ -70,109 +57,118 @@ export const searchPosts = async (
     params.set("cursor", cursor);
   }
 
-  const res = await axiosInstance.get(
+  const response = await axiosInstance.get(
     `/post/search?${params.toString()}`
   );
 
-  return res.data;
+  return response.data;
 };
 
+// Like or unlike post
 export const toggleLikePost = async (
   postId: string
 ) => {
-  const res = await axiosInstance.put(
+  const response = await axiosInstance.put(
     `/post/like/${postId}`
   );
 
-  return res.data.data;
+  return response.data.data;
 };
 
+// Delete post
 export const deletePost = async (
   postId: string
 ) => {
-  const res = await axiosInstance.delete(
+  const response = await axiosInstance.delete(
     `/post/${postId}`
   );
 
-  return res.data;
+  return response.data;
 };
 
+// Update post
 export const updatePost = async (
   postId: string,
   postData: FormData
 ) => {
-  const res = await axiosInstance.put(
+  const response = await axiosInstance.put(
     `/post/${postId}`,
     postData
   );
 
-  return res.data.data;
+  return response.data.data;
 };
 
+// Create post
 export const createPost = async (
   postData: FormData
 ) => {
-  const res = await axiosInstance.post(
+  const response = await axiosInstance.post(
     "/post/create",
     postData
   );
 
-  return res.data;
+  return response.data;
 };
 
+// Add comment
 export const addComment = async (
   postId: string,
   commentData: CommentData
 ) => {
-  const res = await axiosInstance.post(
+  const response = await axiosInstance.post(
     `/post/comment/${postId}`,
     commentData
   );
 
-  return res.data;
+  return response.data;
 };
 
+// Add reply
 export const addReply = async (
   postId: string,
   commentId: string,
   replyData: ReplyData
 ) => {
-  const res = await axiosInstance.post(
+  const response = await axiosInstance.post(
     `/post/reply/${postId}/${commentId}`,
     replyData
   );
 
-  return res.data;
+  return response.data;
 };
 
+// Delete comment
 export const deleteComment = async (
   postId: string,
   commentId: string
 ) => {
-  const res = await axiosInstance.delete(
+  const response = await axiosInstance.delete(
     `/post/${postId}/comment/${commentId}`
   );
 
-  return res.data;
+  return response.data;
 };
 
+// Delete reply
 export const deleteReply = async (
   postId: string,
   commentId: string,
   replyId: string
 ) => {
-  const res = await axiosInstance.delete(
+  const response = await axiosInstance.delete(
     `/post/${postId}/comment/${commentId}/reply/${replyId}`
   );
 
-  return res.data;
+  return response.data;
 };
 
+// Toggle post bookmark
 export const toggleBookmarkPost = async (
   userId: string,
   postId: string
 ) => {
-  const res = await axiosInstance.post(
+  const response = await axiosInstance.post(
     "/bookmark/toggle",
     {
       userId,
@@ -180,20 +176,16 @@ export const toggleBookmarkPost = async (
     }
   );
 
-  console.log(
-    "BOOKMARK API RESPONSE:",
-    res.data
-  );
-
-  return res.data;
+  return response.data;
 };
 
+// Fetch bookmarked posts
 export const getBookmarkedPosts = async (
   userId: string
 ) => {
-  const res = await axiosInstance.get(
+  const response = await axiosInstance.get(
     `/bookmark/${userId}`
   );
 
-  return res.data.bookmarks;
+  return response.data.bookmarks;
 };

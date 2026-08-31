@@ -1,151 +1,118 @@
 import {
   useEffect,
   useState,
-  useRef,
 } from "react";
 
-import {
-  getPosts,
-  deleteReply,
-} from "@/components/services/communityService";
-
 import { useRouter } from "next/router";
-import PostCard from "../community/PostCard";
-import { useAuth } from "@/lib/AuthContext";
-import usePostActions from "@/hooks/usePostActions";
 import { useTranslation } from "react-i18next";
+
+import PostFeedList from "../community/PostFeedList";
+import EditPostModal from "../community/modals/EditPostModal";
+import DeletePostModal from "../community/modals/DeletePostModal";
+import DeleteReplyModal from "../community/modals/DeleteReplyModal";
+import DeleteCommentModal from "../community/modals/DeleteCommentModal";
+
+import { useAuth } from "@/lib/AuthContext";
+
+import usePostActions from "@/hooks/usePostActions";
+import usePostFeed from "@/hooks/usePostFeed";
+import useEditPostState from "@/hooks/useEditPostState";
+import usePostDelete from "@/hooks/usePostDelete";
 
 import type { Post } from "@/types/community";
 
-type PostComment =
-  NonNullable<Post["comments"]>[number];
-
-type PostReply =
-  NonNullable<PostComment["replies"]>[number];
-
 interface PostFeedProps {
   activeFeed?: "trending" | "following";
+
   followingIds?: string[];
+
   initialPosts?: Post[];
-  onPostCountChange?: (count: number) => void;
+
+  onPostCountChange?: (
+    count: number
+  ) => void;
 }
 
-interface FetchPageResult {
-  items: Post[];
-  hasMore: boolean;
-  nextCursor: string | null;
-}
-
-export default function PostFeed({
+const PostFeed = ({
   activeFeed = "trending",
   followingIds = [],
   initialPosts,
   onPostCountChange,
-}: PostFeedProps) {
-  const { user, updateUser } = useAuth();
+}: PostFeedProps) => {
+  const {
+    user,
+    updateUser,
+  } = useAuth();
+
   const router = useRouter();
   const { t } = useTranslation();
 
-  const [posts, setPosts] =
-    useState<Post[]>(initialPosts ?? []);
+  const {
+    posts,
+    setPosts,
+    loading,
+    hasMore,
+    loadingMore,
+    loadMoreRef,
+  } = usePostFeed({
+    activeFeed,
+    followingIds,
+    initialPosts,
+  });
 
-  const [commentText, setCommentText] =
-    useState("");
+  const {
+    editingPost,
+    setEditingPost,
+    editContent,
+    setEditContent,
+    editHashtags,
+    setEditHashtags,
+    editTagInput,
+    setEditTagInput,
+    editImage,
+    setEditImage,
+    editProjectTitle,
+    setEditProjectTitle,
+    editProjectLink,
+    setEditProjectLink,
+    editAchievementTitle,
+    setEditAchievementTitle,
+    editAchievementDescription,
+    setEditAchievementDescription,
+    editCodeSnippet,
+    setEditCodeSnippet,
+  } = useEditPostState();
+
+  const [
+    commentText,
+    setCommentText,
+  ] = useState("");
 
   const [
     activeCommentPost,
     setActiveCommentPost,
-  ] = useState<string | null>(null);
-
-  const [editingPost, setEditingPost] =
-    useState<Post | null>(null);
-
-  const [editContent, setEditContent] =
-    useState("");
-
-  const [editHashtags, setEditHashtags] =
-    useState("");
-
-  const [editTagInput, setEditTagInput] =
-    useState("");
-
-  const [editImage, setEditImage] =
-    useState<File | null>(null);
+  ] = useState<string | null>(
+    null
+  );
 
   const [
-    editProjectTitle,
-    setEditProjectTitle,
+    replyText,
+    setReplyText,
   ] = useState("");
-
-  const [
-    editProjectLink,
-    setEditProjectLink,
-  ] = useState("");
-
-  const [
-    editAchievementTitle,
-    setEditAchievementTitle,
-  ] = useState("");
-
-  const [
-    editAchievementDescription,
-    setEditAchievementDescription,
-  ] = useState("");
-
-  const [
-    editCodeSnippet,
-    setEditCodeSnippet,
-  ] = useState("");
-
-  const [replyText, setReplyText] =
-    useState("");
 
   const [
     activeReplyComment,
     setActiveReplyComment,
-  ] = useState<string | null>(null);
+  ] = useState<string | null>(
+    null
+  );
 
   const [
     expandedComments,
     setExpandedComments,
-  ] = useState<string[]>([]);
-
-  const [
-    selectedPostId,
-    setSelectedPostId,
-  ] = useState<string | null>(null);
-
-  const [
-    showDeleteModal,
-    setShowDeleteModal,
-  ] = useState(false);
-
-  const [
-    selectedReply,
-    setSelectedReply,
-  ] = useState<{
-    postId: string;
-    commentId: string;
-    replyId: string;
-  } | null>(null);
-
-  const [
-    showDeleteReplyModal,
-    setShowDeleteReplyModal,
-  ] = useState(false);
-
-  const [
-    selectedComment,
-    setSelectedComment,
-  ] = useState<{
-    postId: string;
-    commentId: string;
-  } | null>(null);
-
-  const [
-    showDeleteCommentModal,
-    setShowDeleteCommentModal,
-  ] = useState(false);
+  ] = useState<string[]>(
+    []
+  );
 
   const {
     handleLike,
@@ -158,337 +125,60 @@ export default function PostFeed({
     handleReply,
     handleDeleteComment,
   } = usePostActions({
-    posts,
     setPosts,
     user,
     updateUser,
-
     commentText,
     setCommentText,
     setActiveCommentPost,
-
     editingPost,
     setEditingPost,
-
     editContent,
     setEditContent,
-
     editHashtags,
     setEditHashtags,
-
-    editTagInput,
     setEditTagInput,
-
     editImage,
     setEditImage,
-
     editProjectTitle,
     setEditProjectTitle,
-
     editProjectLink,
     setEditProjectLink,
-
     editAchievementTitle,
     setEditAchievementTitle,
-
     editAchievementDescription,
     setEditAchievementDescription,
-
     editCodeSnippet,
     setEditCodeSnippet,
-
     replyText,
     setReplyText,
-
     setActiveReplyComment,
   });
 
-  const [loading, setLoading] =
-    useState(!initialPosts);
-
-  const [cursor, setCursor] =
-    useState<string | null>(null);
-
-  const [hasMore, setHasMore] =
-    useState(true);
-
-  const [loadingMore, setLoadingMore] =
-    useState(false);
-
-  const loadMoreRef =
-    useRef<HTMLDivElement | null>(null);
-
-  // --------------------------------------------------
-  // FETCH ONE PAGE
-  // --------------------------------------------------
-
-  const fetchPage = async (
-    cursorToUse: string | null
-  ): Promise<FetchPageResult> => {
-    const response = await getPosts(
-      activeFeed,
-      cursorToUse,
-      10,
-      followingIds
-    );
-
-    const items: Post[] =
-      Array.isArray(response?.data)
-        ? response.data
-        : [];
-
-    return {
-      items,
-      hasMore:
-        response?.pagination?.hasMore ??
-        false,
-      nextCursor:
-        response?.pagination
-          ?.nextCursor ?? null,
-    };
-  };
-
-  // --------------------------------------------------
-  // LOAD MORE
-  // --------------------------------------------------
-
-  const loadMore = async () => {
-    if (
-      !hasMore ||
-      loadingMore
-    ) {
-      return;
-    }
-
-    setLoadingMore(true);
-
-    try {
-      const {
-        items,
-        hasMore: more,
-        nextCursor,
-      } = await fetchPage(cursor);
-
-      setPosts(
-        (previousPosts) => {
-          const existingIds =
-            new Set(
-              previousPosts.map(
-                (post) =>
-                  String(post._id)
-              )
-            );
-
-          const newPosts =
-            items.filter(
-              (post) =>
-                !existingIds.has(
-                  String(post._id)
-                )
-            );
-
-          return [
-            ...previousPosts,
-            ...newPosts,
-          ];
-        }
-      );
-
-      setHasMore(more);
-      setCursor(nextCursor);
-    } catch (
-      error: unknown
-    ) {
-      console.error(
-        "Failed to load more posts:",
-        error
-      );
-    } finally {
-      setLoadingMore(false);
-    }
-  };
-
-  // --------------------------------------------------
-  // INFINITE SCROLL
-  // --------------------------------------------------
-
-  useEffect(() => {
-    if (
-      initialPosts ||
-      !hasMore
-    ) {
-      return;
-    }
-
-    const observer =
-      new IntersectionObserver(
-        (entries) => {
-          const entry =
-            entries[0];
-
-          if (
-            entry?.isIntersecting &&
-            !loadingMore &&
-            hasMore
-          ) {
-            void loadMore();
-          }
-        },
-        {
-          rootMargin: "300px",
-        }
-      );
-
-    const element =
-      loadMoreRef.current;
-
-    if (element) {
-      observer.observe(element);
-    }
-
-    return () => {
-      observer.disconnect();
-    };
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    cursor,
-    hasMore,
-    loadingMore,
-    initialPosts,
-  ]);
-
-  // --------------------------------------------------
-  // INITIAL LOAD + RESTORE POST
-  // --------------------------------------------------
-
-  useEffect(() => {
-    if (initialPosts) {
-      setPosts(initialPosts);
-      setLoading(false);
-
-      return;
-    }
-
-    let cancelled = false;
-
-    const loadInitialFeed =
-      async () => {
-        setLoading(true);
-        setCursor(null);
-        setHasMore(true);
-
-        const targetPostId =
-          sessionStorage.getItem(
-            "communitySelectedPostId"
-          );
-
-        try {
-          let accumulated: Post[] =
-            [];
-
-          let currentCursor:
-            | string
-            | null = null;
-
-          let more = true;
-
-          let foundTarget =
-            !targetPostId;
-
-          do {
-            const page =
-              await fetchPage(
-                currentCursor
-              );
-
-            accumulated = [
-              ...accumulated,
-              ...page.items,
-            ];
-
-            currentCursor =
-              page.nextCursor;
-
-            more =
-              page.hasMore;
-
-            if (
-              targetPostId &&
-              page.items.some(
-                (post) =>
-                  String(
-                    post._id
-                  ) === targetPostId
-              )
-            ) {
-              foundTarget =
-                true;
-            }
-          } while (
-            targetPostId &&
-            !foundTarget &&
-            more
-          );
-
-          if (cancelled) {
-            return;
-          }
-
-          setPosts(
-            accumulated
-          );
-
-          setHasMore(
-            more
-          );
-
-          setCursor(
-            currentCursor
-          );
-
-          if (
-            targetPostId &&
-            !foundTarget
-          ) {
-            sessionStorage.removeItem(
-              "communitySelectedPostId"
-            );
-
-            window.scrollTo({
-              top: 0,
-            });
-          }
-        } catch (
-          error: unknown
-        ) {
-          console.error(
-            "Failed to load community feed:",
-            error
-          );
-        } finally {
-          if (!cancelled) {
-            setLoading(false);
-          }
-        }
-      };
-
-    void loadInitialFeed();
-
-    return () => {
-      cancelled = true;
-    };
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    activeFeed,
-    initialPosts,
-    followingIds.join(","),
-  ]);
-
-  // --------------------------------------------------
-  // RESTORE SCROLL POSITION
-  // --------------------------------------------------
+  const {
+    selectedPostId,
+    setSelectedPostId,
+    showDeleteModal,
+    setShowDeleteModal,
+    selectedReply,
+    setSelectedReply,
+    showDeleteReplyModal,
+    setShowDeleteReplyModal,
+    selectedComment,
+    setSelectedComment,
+    showDeleteCommentModal,
+    setShowDeleteCommentModal,
+    closeDeletePostModal,
+    closeDeleteReplyModal,
+    closeDeleteCommentModal,
+    confirmDeletePost,
+    confirmDeleteReply,
+    confirmDeleteComment,
+  } = usePostDelete({
+    setPosts,
+    handleDelete,
+    handleDeleteComment,
+  });
 
   useEffect(() => {
     if (
@@ -538,10 +228,6 @@ export default function PostFeed({
     posts.length,
   ]);
 
-  // --------------------------------------------------
-  // POST COUNT
-  // --------------------------------------------------
-
   useEffect(() => {
     onPostCountChange?.(
       posts.length
@@ -550,10 +236,6 @@ export default function PostFeed({
     posts.length,
     onPostCountChange,
   ]);
-
-  // --------------------------------------------------
-  // LOADING
-  // --------------------------------------------------
 
   if (loading) {
     return (
@@ -575,184 +257,151 @@ export default function PostFeed({
     );
   }
 
-  // --------------------------------------------------
-  // UI
-  // --------------------------------------------------
-
   return (
     <>
-      <div className="mt-6 flex flex-col gap-4">
-        {posts.map(
-          (post) => (
-            <div
-              key={post._id}
-              id={`community-post-${post._id}`}
-              className="rounded-lg transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-200/40"
-              onClick={(
-                event
-              ) => {
-                const target =
-                  event.target as HTMLElement;
+      {/* Post feed */}
+      <PostFeedList
+        posts={posts}
+        user={user}
+        handleLike={
+          handleLike
+        }
+        handleBookmark={
+          handleBookmark
+        }
+        handleComment={
+          handleComment
+        }
+        handleReply={
+          handleReply
+        }
+        handleDelete={
+          handleDelete
+        }
+        handleEdit={
+          handleEdit
+        }
+        handleShare={
+          handleShare
+        }
+        activeCommentPost={
+          activeCommentPost
+        }
+        setActiveCommentPost={
+          setActiveCommentPost
+        }
+        commentText={
+          commentText
+        }
+        setCommentText={
+          setCommentText
+        }
+        activeReplyComment={
+          activeReplyComment
+        }
+        setActiveReplyComment={
+          setActiveReplyComment
+        }
+        replyText={
+          replyText
+        }
+        setReplyText={
+          setReplyText
+        }
+        expandedComments={
+          expandedComments
+        }
+        setExpandedComments={
+          setExpandedComments
+        }
+        setSelectedPostId={
+          setSelectedPostId
+        }
+        setShowDeleteModal={
+          setShowDeleteModal
+        }
+        setSelectedComment={
+          setSelectedComment
+        }
+        setShowDeleteCommentModal={
+          setShowDeleteCommentModal
+        }
+        setSelectedReply={
+          setSelectedReply
+        }
+        setShowDeleteReplyModal={
+          setShowDeleteReplyModal
+        }
+      />
 
-                if (
-                  target.closest(
-                    "button, input, textarea, select, a, [role='button'], [contenteditable='true']"
-                  )
-                ) {
-                  return;
-                }
+      {/* Edit post modal */}
+      <EditPostModal
+        editingPost={
+          editingPost
+        }
+        setEditingPost={
+          setEditingPost
+        }
+        editContent={
+          editContent
+        }
+        setEditContent={
+          setEditContent
+        }
+        editHashtags={
+          editHashtags
+        }
+        setEditHashtags={
+          setEditHashtags
+        }
+        editTagInput={
+          editTagInput
+        }
+        setEditTagInput={
+          setEditTagInput
+        }
+        editImage={
+          editImage
+        }
+        setEditImage={
+          setEditImage
+        }
+        editProjectTitle={
+          editProjectTitle
+        }
+        setEditProjectTitle={
+          setEditProjectTitle
+        }
+        editProjectLink={
+          editProjectLink
+        }
+        setEditProjectLink={
+          setEditProjectLink
+        }
+        editAchievementTitle={
+          editAchievementTitle
+        }
+        setEditAchievementTitle={
+          setEditAchievementTitle
+        }
+        editAchievementDescription={
+          editAchievementDescription
+        }
+        setEditAchievementDescription={
+          setEditAchievementDescription
+        }
+        editCodeSnippet={
+          editCodeSnippet
+        }
+        setEditCodeSnippet={
+          setEditCodeSnippet
+        }
+        handleSaveEdit={
+          handleSaveEdit
+        }
+      />
 
-                sessionStorage.setItem(
-                  "communitySelectedPostId",
-                  String(
-                    post._id
-                  )
-                );
-
-                void router.push(
-                  `/community/${post._id}`
-                );
-              }}
-            >
-              <PostCard
-                post={post}
-                user={user}
-
-                handleLike={
-                  handleLike
-                }
-
-                handleBookmark={
-                  handleBookmark
-                }
-
-                handleComment={
-                  handleComment
-                }
-
-                handleReply={
-                  handleReply
-                }
-
-                handleDelete={
-                  handleDelete
-                }
-
-                handleEdit={
-                  handleEdit
-                }
-
-                editingPost={
-                  editingPost
-                }
-
-                editContent={
-                  editContent
-                }
-
-                setEditContent={
-                  setEditContent
-                }
-
-                handleSaveEdit={
-                  handleSaveEdit
-                }
-
-                setEditingPost={
-                  setEditingPost
-                }
-
-                handleShare={
-                  handleShare
-                }
-
-                activeCommentPost={
-                  activeCommentPost
-                }
-
-                setActiveCommentPost={
-                  setActiveCommentPost
-                }
-
-                commentText={
-                  commentText
-                }
-
-                setCommentText={
-                  setCommentText
-                }
-
-                activeReplyComment={
-                  activeReplyComment
-                }
-
-                setActiveReplyComment={
-                  setActiveReplyComment
-                }
-
-                replyText={
-                  replyText
-                }
-
-                setReplyText={
-                  setReplyText
-                }
-
-                expandedComments={
-                  expandedComments
-                }
-
-                setExpandedComments={
-                  setExpandedComments
-                }
-
-                selectedPostId={
-                  selectedPostId
-                }
-
-                setSelectedPostId={
-                  setSelectedPostId
-                }
-
-                showDeleteModal={
-                  showDeleteModal
-                }
-
-                setShowDeleteModal={
-                  setShowDeleteModal
-                }
-
-                selectedComment={
-                  selectedComment
-                }
-
-                setSelectedComment={
-                  setSelectedComment
-                }
-
-                showDeleteCommentModal={
-                  showDeleteCommentModal
-                }
-
-                setShowDeleteCommentModal={
-                  setShowDeleteCommentModal
-                }
-
-                setSelectedReply={
-                  setSelectedReply
-                }
-
-                setShowDeleteReplyModal={
-                  setShowDeleteReplyModal
-                }
-              />
-            </div>
-          )
-        )}
-      </div>
-
-      {/* INFINITE SCROLL */}
-
+      {/* Infinite scroll */}
       {!initialPosts && (
         <div
           ref={loadMoreRef}
@@ -766,232 +415,51 @@ export default function PostFeed({
         </div>
       )}
 
-      {/* DELETE POST */}
+      {/* Delete post modal */}
+      <DeletePostModal
+        open={
+          showDeleteModal &&
+          Boolean(selectedPostId)
+        }
+        onClose={
+          closeDeletePostModal
+        }
+        onConfirm={
+          confirmDeletePost
+        }
+      />
 
-      {showDeleteModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-xl">
-            <h2 className="text-lg font-semibold">
-              Delete Post
-            </h2>
+      {/* Delete reply modal */}
+      <DeleteReplyModal
+        open={
+          showDeleteReplyModal &&
+          Boolean(selectedReply)
+        }
+        onClose={
+          closeDeleteReplyModal
+        }
+        onConfirm={
+          confirmDeleteReply
+        }
+      />
 
-            <p className="mt-2 text-gray-600">
-              Are you sure you
-              want to delete this
-              post?
-            </p>
-
-            <div className="mt-6 flex justify-end gap-3">
-              <button
-                type="button"
-                onClick={() => {
-                  setShowDeleteModal(
-                    false
-                  );
-
-                  setSelectedPostId(
-                    null
-                  );
-                }}
-                className="rounded-lg border px-4 py-2"
-              >
-                No
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  if (
-                    selectedPostId
-                  ) {
-                    void handleDelete(
-                      selectedPostId
-                    );
-                  }
-
-                  setShowDeleteModal(
-                    false
-                  );
-
-                  setSelectedPostId(
-                    null
-                  );
-                }}
-                className="rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700"
-              >
-                Yes, Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* DELETE REPLY */}
-
-      {showDeleteReplyModal &&
-        selectedReply && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-            <div className="w-350p] rounded-xl bg-white p-6 shadow-xl">
-              <h2 className="text-lg font-semibold">
-                Delete reply
-              </h2>
-
-              <p className="mt-2 text-sm text-gray-600">
-                Are you sure you
-                want to delete this
-                reply?
-              </p>
-
-              <div className="mt-5 flex justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowDeleteReplyModal(
-                      false
-                    );
-
-                    setSelectedReply(
-                      null
-                    );
-                  }}
-                  className="rounded-lg border px-4 py-2 text-sm"
-                >
-                  Cancel
-                </button>
-
-                <button
-                  type="button"
-                  onClick={async () => {
-                    await deleteReply(
-                      selectedReply.postId,
-                      selectedReply.commentId,
-                      selectedReply.replyId
-                    );
-
-                    setPosts(
-                      (
-                        previousPosts
-                      ) =>
-                        previousPosts.map(
-                          (
-                            post
-                          ) =>
-                            post._id ===
-                            selectedReply.postId
-                              ? {
-                                  ...post,
-
-                                  comments:
-                                    (
-                                      post.comments ??
-                                      []
-                                    ).map(
-                                      (
-                                        comment: PostComment
-                                      ) =>
-                                        comment._id ===
-                                        selectedReply.commentId
-                                          ? {
-                                              ...comment,
-
-                                              replies:
-                                                (
-                                                  comment.replies ??
-                                                  []
-                                                ).filter(
-                                                  (
-                                                    reply: PostReply
-                                                  ) =>
-                                                    reply._id !==
-                                                    selectedReply.replyId
-                                                ),
-                                            }
-                                          : comment
-                                    ),
-                                }
-                              : post
-                        )
-                    );
-
-                    setShowDeleteReplyModal(
-                      false
-                    );
-
-                    setSelectedReply(
-                      null
-                    );
-                  }}
-                  className="rounded-lg bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700"
-                >
-                  {t(
-                    "community.delete"
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-      {/* DELETE COMMENT */}
-
-      {showDeleteCommentModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-xl">
-            <h2 className="text-lg font-semibold">
-              Delete Comment
-            </h2>
-
-            <p className="mt-2 text-gray-600">
-              Are you sure you
-              want to delete this
-              comment?
-            </p>
-
-            <div className="mt-6 flex justify-end gap-3">
-              <button
-                type="button"
-                onClick={() => {
-                  setShowDeleteCommentModal(
-                    false
-                  );
-
-                  setSelectedComment(
-                    null
-                  );
-                }}
-                className="rounded-lg border px-4 py-2"
-              >
-                No
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  if (
-                    selectedComment
-                  ) {
-                    void handleDeleteComment(
-                      selectedComment.postId,
-                      selectedComment.commentId
-                    );
-                  }
-
-                  setShowDeleteCommentModal(
-                    false
-                  );
-
-                  setSelectedComment(
-                    null
-                  );
-                }}
-                className="rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700"
-              >
-                Yes, Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Delete comment modal */}
+      <DeleteCommentModal
+        open={
+          showDeleteCommentModal &&
+          Boolean(
+            selectedComment
+          )
+        }
+        onClose={
+          closeDeleteCommentModal
+        }
+        onConfirm={
+          confirmDeleteComment
+        }
+      />
     </>
   );
-}
+};
+
+export default PostFeed;

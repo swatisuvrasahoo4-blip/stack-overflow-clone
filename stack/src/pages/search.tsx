@@ -20,15 +20,14 @@ import {
   getSubscription,
 } from "@/components/services/subscriptionService";
 
-import PostFeed from "@/components/feed/PostFeed";
-import { useTranslation } from "react-i18next";
+import SearchHeader from "@/components/search/SearchHeader";
+import SearchTypeTabs from "@/components/search/SearchTypeTabs";
+import PostTypeFilter from "@/components/search/PostTypeFilter";
+import SearchResults from "@/components/search/SearchResults";
+import SearchLoading from "@/components/search/SearchLoading";
 
 import type { Post } from "@/types/community";
 import type { Question } from "@/types/questions";
-
-/* =========================================
-   TYPES
-========================================= */
 
 type SearchType =
   | "All"
@@ -71,19 +70,10 @@ interface SubscriptionResponse {
 
 const PAGE_LIMIT = 10;
 
-/* =========================================
-   COMPONENT
-========================================= */
-
 export default function SearchPage() {
   const router = useRouter();
-  const { t } = useTranslation();
 
   const { q } = router.query;
-
-  /* =========================================
-     STATE
-  ========================================= */
 
   const [results, setResults] =
     useState<Post[]>([]);
@@ -104,138 +94,94 @@ export default function SearchPage() {
   const [
     currentPlan,
     setCurrentPlan,
-  ] =
-    useState<SubscriptionPlan>(
-      "Free"
-    );
+  ] = useState<SubscriptionPlan>(
+    "Free"
+  );
 
   const [
     selectedType,
     setSelectedType,
-  ] =
-    useState<PostType>(
-      "All"
-    );
+  ] = useState<PostType>("All");
 
   const [
     searchType,
     setSearchType,
-  ] =
-    useState<SearchType>(
-      "All"
-    );
+  ] = useState<SearchType>("All");
 
-  /* =========================================
-     POST PAGINATION
-  ========================================= */
-
+  // Post pagination
   const [
     postCursor,
     setPostCursor,
-  ] =
-    useState<string | null>(
-      null
-    );
+  ] = useState<string | null>(null);
 
   const [
     hasMorePosts,
     setHasMorePosts,
-  ] =
-    useState(true);
+  ] = useState(true);
 
-  /* =========================================
-     QUESTION PAGINATION
-  ========================================= */
-
+  // Question pagination
   const [
     questionCursor,
     setQuestionCursor,
-  ] =
-    useState<string | null>(
-      null
-    );
+  ] = useState<string | null>(null);
 
   const [
     hasMoreQuestions,
     setHasMoreQuestions,
-  ] =
-    useState(true);
+  ] = useState(true);
 
   const loadMoreRef =
     useRef<HTMLDivElement | null>(
       null
     );
 
-  /* =========================================
-     ADVANCED SEARCH
-  ========================================= */
+  // Search query
+  const query = useMemo(() => {
+    if (!q) {
+      return "";
+    }
 
-  const hasAdvancedSearch =
-    [
-      "Bronze",
-      "Silver",
-      "Gold",
-    ].includes(currentPlan);
+    return Array.isArray(q)
+      ? q[0] ?? ""
+      : String(q);
+  }, [q]);
 
-  /* =========================================
-     QUERY
-  ========================================= */
+  // Check advanced search access
+  const hasAdvancedSearch = [
+    "Bronze",
+    "Silver",
+    "Gold",
+  ].includes(currentPlan);
 
-  const query = useMemo(
-    () => {
-      if (!q) {
-        return "";
-      }
-
-      return Array.isArray(q)
-        ? q[0] ?? ""
-        : String(q);
-    },
-    [q]
-  );
-
-  /* =========================================
-     SUBSCRIPTION
-  ========================================= */
-
+  // Load current subscription
   useEffect(() => {
     const loadSubscription =
-      async () => {
+      async (): Promise<void> => {
         try {
           const response =
             (await getSubscription()) as SubscriptionResponse;
 
           setCurrentPlan(
-            response.data?.plan ??
-              "Free"
+            response.data?.plan ?? "Free"
           );
-        } catch (
-          error: unknown
-        ) {
+        } catch (error: unknown) {
           console.error(
             "Failed to load subscription:",
             error
           );
 
-          setCurrentPlan(
-            "Free"
-          );
+          setCurrentPlan("Free");
         }
       };
 
     void loadSubscription();
   }, []);
 
-  /* =========================================
-     FETCH POSTS PAGE
-  ========================================= */
-
+  // Fetch posts
   const fetchPostsPage =
     useCallback(
       async (
-        cursor:
-          | string
-          | null
+        cursor: string | null
       ) => {
         const response =
           (await searchPosts(
@@ -249,18 +195,15 @@ export default function SearchPage() {
 
         return {
           items:
-            response.data ??
-            [],
+            response.data ?? [],
 
           nextCursor:
             response.pagination
-              ?.nextCursor ??
-            null,
+              ?.nextCursor ?? null,
 
           hasMore:
             response.pagination
-              ?.hasMore ??
-            false,
+              ?.hasMore ?? false,
         };
       },
       [
@@ -270,16 +213,11 @@ export default function SearchPage() {
       ]
     );
 
-  /* =========================================
-     FETCH QUESTIONS PAGE
-  ========================================= */
-
+  // Fetch questions
   const fetchQuestionsPage =
     useCallback(
       async (
-        cursor:
-          | string
-          | null
+        cursor: string | null
       ) => {
         const response =
           (await searchQuestions(
@@ -290,27 +228,21 @@ export default function SearchPage() {
 
         return {
           items:
-            response.data ??
-            [],
+            response.data ?? [],
 
           nextCursor:
             response.pagination
-              ?.nextCursor ??
-            null,
+              ?.nextCursor ?? null,
 
           hasMore:
             response.pagination
-              ?.hasMore ??
-            false,
+              ?.hasMore ?? false,
         };
       },
       [query]
     );
 
-  /* =========================================
-     INITIAL SEARCH
-  ========================================= */
-
+  // Initial search
   useEffect(() => {
     if (!router.isReady) {
       return;
@@ -319,23 +251,16 @@ export default function SearchPage() {
     let cancelled = false;
 
     const loadResults =
-      async () => {
+      async (): Promise<void> => {
         if (!query.trim()) {
           setResults([]);
           setQuestionResults([]);
 
           setPostCursor(null);
-          setQuestionCursor(
-            null
-          );
+          setQuestionCursor(null);
 
-          setHasMorePosts(
-            false
-          );
-
-          setHasMoreQuestions(
-            false
-          );
+          setHasMorePosts(false);
+          setHasMoreQuestions(false);
 
           setLoading(false);
 
@@ -348,33 +273,19 @@ export default function SearchPage() {
         setQuestionResults([]);
 
         setPostCursor(null);
-        setQuestionCursor(
-          null
-        );
+        setQuestionCursor(null);
 
-        setHasMorePosts(
-          true
-        );
-
-        setHasMoreQuestions(
-          true
-        );
+        setHasMorePosts(true);
+        setHasMoreQuestions(true);
 
         try {
-          /* =====================
-             POSTS
-          ===================== */
-
+          // Load posts
           if (
-            searchType ===
-              "Posts" ||
-            searchType ===
-              "All"
+            searchType === "Posts" ||
+            searchType === "All"
           ) {
             const postPage =
-              await fetchPostsPage(
-                null
-              );
+              await fetchPostsPage(null);
 
             if (cancelled) {
               return;
@@ -393,21 +304,13 @@ export default function SearchPage() {
             );
           } else {
             setResults([]);
-
-            setHasMorePosts(
-              false
-            );
+            setHasMorePosts(false);
           }
 
-          /* =====================
-             QUESTIONS
-          ===================== */
-
+          // Load questions
           if (
-            searchType ===
-              "Questions" ||
-            searchType ===
-              "All"
+            searchType === "Questions" ||
+            searchType === "All"
           ) {
             const questionPage =
               await fetchQuestionsPage(
@@ -430,45 +333,25 @@ export default function SearchPage() {
               questionPage.hasMore
             );
           } else {
-            setQuestionResults(
-              []
-            );
-
-            setHasMoreQuestions(
-              false
-            );
+            setQuestionResults([]);
+            setHasMoreQuestions(false);
           }
-        } catch (
-          error: unknown
-        ) {
+        } catch (error: unknown) {
           console.error(
             "Search error:",
             error
           );
 
-          if (
-            !cancelled
-          ) {
+          if (!cancelled) {
             setResults([]);
-            setQuestionResults(
-              []
-            );
+            setQuestionResults([]);
 
-            setHasMorePosts(
-              false
-            );
-
-            setHasMoreQuestions(
-              false
-            );
+            setHasMorePosts(false);
+            setHasMoreQuestions(false);
           }
         } finally {
-          if (
-            !cancelled
-          ) {
-            setLoading(
-              false
-            );
+          if (!cancelled) {
+            setLoading(false);
           }
         }
       };
@@ -488,13 +371,10 @@ export default function SearchPage() {
     fetchQuestionsPage,
   ]);
 
-  /* =========================================
-     LOAD MORE
-  ========================================= */
-
+  // Load more results
   const loadMore =
     useCallback(
-      async () => {
+      async (): Promise<void> => {
         if (
           loading ||
           loadingMore
@@ -503,17 +383,13 @@ export default function SearchPage() {
         }
 
         const shouldLoadPosts =
-          (searchType ===
-            "Posts" ||
-            searchType ===
-              "All") &&
+          (searchType === "Posts" ||
+            searchType === "All") &&
           hasMorePosts;
 
         const shouldLoadQuestions =
-          (searchType ===
-            "Questions" ||
-            searchType ===
-              "All") &&
+          (searchType === "Questions" ||
+            searchType === "All") &&
           hasMoreQuestions;
 
         if (
@@ -523,17 +399,13 @@ export default function SearchPage() {
           return;
         }
 
-        setLoadingMore(
-          true
-        );
+        setLoadingMore(true);
 
         try {
-          /* =====================
-             LOAD MORE POSTS
-          ===================== */
-
+          // Load more posts
           if (
-            shouldLoadPosts
+            shouldLoadPosts &&
+            postCursor
           ) {
             const postPage =
               await fetchPostsPage(
@@ -541,15 +413,11 @@ export default function SearchPage() {
               );
 
             setResults(
-              (
-                previous
-              ) => {
+              (previous) => {
                 const existingIds =
                   new Set(
                     previous.map(
-                      (
-                        post
-                      ) =>
+                      (post) =>
                         String(
                           post._id
                         )
@@ -558,9 +426,7 @@ export default function SearchPage() {
 
                 const uniquePosts =
                   postPage.items.filter(
-                    (
-                      post
-                    ) =>
+                    (post) =>
                       !existingIds.has(
                         String(
                           post._id
@@ -584,12 +450,10 @@ export default function SearchPage() {
             );
           }
 
-          /* =====================
-             LOAD MORE QUESTIONS
-          ===================== */
-
+          // Load more questions
           if (
-            shouldLoadQuestions
+            shouldLoadQuestions &&
+            questionCursor
           ) {
             const questionPage =
               await fetchQuestionsPage(
@@ -597,15 +461,11 @@ export default function SearchPage() {
               );
 
             setQuestionResults(
-              (
-                previous
-              ) => {
+              (previous) => {
                 const existingIds =
                   new Set(
                     previous.map(
-                      (
-                        question
-                      ) =>
+                      (question) =>
                         String(
                           question._id
                         )
@@ -614,9 +474,7 @@ export default function SearchPage() {
 
                 const uniqueQuestions =
                   questionPage.items.filter(
-                    (
-                      question
-                    ) =>
+                    (question) =>
                       !existingIds.has(
                         String(
                           question._id
@@ -639,17 +497,13 @@ export default function SearchPage() {
               questionPage.hasMore
             );
           }
-        } catch (
-          error: unknown
-        ) {
+        } catch (error: unknown) {
           console.error(
             "Failed to load more search results:",
             error
           );
         } finally {
-          setLoadingMore(
-            false
-          );
+          setLoadingMore(false);
         }
       },
       [
@@ -665,15 +519,28 @@ export default function SearchPage() {
       ]
     );
 
-  /* =========================================
-     INTERSECTION OBSERVER
-  ========================================= */
-
+  // Infinite scroll
   useEffect(() => {
     const element =
       loadMoreRef.current;
 
     if (!element) {
+      return;
+    }
+
+    if (loading) {
+      return;
+    }
+
+    const hasMore =
+      searchType === "Posts"
+        ? hasMorePosts
+        : searchType === "Questions"
+        ? hasMoreQuestions
+        : hasMorePosts ||
+          hasMoreQuestions;
+
+    if (!hasMore) {
       return;
     }
 
@@ -684,360 +551,106 @@ export default function SearchPage() {
             entries[0];
 
           if (
-            entry
-              ?.isIntersecting
+            entry?.isIntersecting
           ) {
             void loadMore();
           }
         },
         {
-          rootMargin:
-            "300px",
+          rootMargin: "300px",
         }
       );
 
-    observer.observe(
-      element
-    );
+    observer.observe(element);
 
     return () => {
       observer.disconnect();
     };
-  }, [loadMore]);
+  }, [
+    loading,
+    searchType,
+    hasMorePosts,
+    hasMoreQuestions,
+    loadMore,
+  ]);
 
-  /* =========================================
-     HAS MORE
-  ========================================= */
-
+  // Check if more results exist
   const hasMore =
     searchType === "Posts"
       ? hasMorePosts
-      : searchType ===
-        "Questions"
+      : searchType === "Questions"
       ? hasMoreQuestions
       : hasMorePosts ||
         hasMoreQuestions;
 
-  /* =========================================
-     QUESTION CARD
-  ========================================= */
-
-  const renderQuestion = (
-    question: Question
-  ) => (
-    <div
-      key={question._id}
-      onClick={() => {
-        void router.push(
-          `/questions/${question._id}`
-        );
-      }}
-      className="cursor-pointer rounded-lg border bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
-    >
-      <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
-        <h2 className="font-medium text-blue-600 hover:underline">
-          {question.questiontitle ||
-            t(
-              "search.no_title"
-            )}
-        </h2>
-
-        <div className="text-sm text-gray-600">
-          {question.noofanswer ??
-            question.answer
-              ?.length ??
-            0}{" "}
-          {t(
-            "search.answers"
-          )}{" "}
-          ·{" "}
-          {question.views ??
-            0}{" "}
-          {t(
-            "search.views"
-          )}
-        </div>
-      </div>
-
-      <p className="mt-2 line-clamp-2 text-gray-700">
-        {question.questionbody ??
-          ""}
-      </p>
-
-      <div className="mt-3 flex flex-wrap gap-2">
-        {(question.questiontags ??
-          []).map(
-          (
-            tag
-          ) => (
-            <span
-              key={tag}
-              className="rounded bg-blue-100 px-2 py-1 text-sm text-blue-800"
-            >
-              {tag}
-            </span>
-          )
-        )}
-      </div>
-    </div>
-  );
-
-  /* =========================================
-     UI
-  ========================================= */
-
   return (
     <Mainlayout>
       <main className="min-w-0 p-4 lg:p-6">
-        {/* HEADER */}
+        {/* Search header */}
+        <SearchHeader
+          query={query}
+        />
 
-        <div className="mb-6">
-          <h1 className="text-2xl font-semibold">
-            {t(
-              "search.search_results"
-            )}
-          </h1>
+        {/* Search type tabs */}
+        <SearchTypeTabs
+          searchType={searchType}
+          setSearchType={
+            setSearchType
+          }
+          setSelectedType={
+            setSelectedType
+          }
+        />
 
-          <p className="mt-2 text-gray-600">
-            {t(
-              "search.results_for"
-            )}{" "}
-            “{query}”.
-          </p>
-
-          {/* SEARCH TYPE */}
-
-          <div className="mt-4 flex gap-2">
-            {(
-              [
-                "All",
-                "Posts",
-                "Questions",
-              ] as const
-            ).map(
-              (
-                type
-              ) => (
-                <button
-                  key={type}
-                  type="button"
-                  onClick={() => {
-                    setSearchType(
-                      type
-                    );
-
-                    if (
-                      type ===
-                      "Questions"
-                    ) {
-                      setSelectedType(
-                        "All"
-                      );
-                    }
-                  }}
-                  className={`rounded-md px-4 py-2 text-sm font-medium transition ${
-                    searchType ===
-                    type
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
-                >
-                  {t(
-                    `search.${type.toLowerCase()}`
-                  )}
-                </button>
-              )
-            )}
-          </div>
-        </div>
-
-        {/* POST TYPE FILTER */}
-
+        {/* Post type filter */}
         {hasAdvancedSearch &&
           searchType !==
             "Questions" && (
-            <div className="mb-6">
-              <label className="mb-2 block text-sm font-medium text-gray-700">
-                {t(
-                  "search.filter_by_post_type"
-                )}
-              </label>
-
-              <select
-                value={
-                  selectedType
-                }
-                onChange={(
-                  event
-                ) =>
-                  setSelectedType(
-                    event
-                      .target
-                      .value as PostType
-                  )
-                }
-                className="rounded-md border border-gray-300 bg-white px-3 py-2"
-              >
-                <option value="All">
-                  {t(
-                    "search.all_types"
-                  )}
-                </option>
-
-                <option value="Technical Update">
-                  {t(
-                    "search.technical_update"
-                  )}
-                </option>
-
-                <option value="Project Showcase">
-                  {t(
-                    "search.project_showcase"
-                  )}
-                </option>
-
-                <option value="Learning Achievement">
-                  {t(
-                    "search.learning_achievement"
-                  )}
-                </option>
-
-                <option value="Code Snippet">
-                  {t(
-                    "search.code_snippet"
-                  )}
-                </option>
-              </select>
-            </div>
-          )}
-
-        {/* LOADING */}
-
-        {loading ? (
-          <p className="text-gray-500">
-            {t(
-              "search.searching"
-            )}
-          </p>
-        ) : searchType ===
-          "Posts" ? (
-          /* =========================
-             POSTS ONLY
-          ========================= */
-
-          results.length ===
-          0 ? (
-            <p className="text-gray-500">
-              {t(
-                "search.no_posts_matched_your_search"
-              )}
-            </p>
-          ) : (
-            <PostFeed
-              key={`${query}-${selectedType}`}
-              initialPosts={
-                results
+            <PostTypeFilter
+              selectedType={
+                selectedType
+              }
+              setSelectedType={
+                setSelectedType
               }
             />
-          )
-        ) : searchType ===
-          "Questions" ? (
-          /* =========================
-             QUESTIONS ONLY
-          ========================= */
+          )}
 
-          questionResults.length ===
-          0 ? (
-            <p className="text-gray-500">
-              {t(
-                "search.no_questions_matched_your_search"
-              )}
-            </p>
+        {/* Search results */}
+        <div className="mt-6">
+          {loading ? (
+            <SearchLoading />
           ) : (
-            <div className="space-y-4">
-              {questionResults.map(
-                renderQuestion
-              )}
-            </div>
-          )
-        ) : (
-          /* =========================
-             ALL
-          ========================= */
+            <SearchResults
+              searchType={
+                searchType
+              }
+              results={results}
+              questionResults={
+                questionResults
+              }
+              query={query}
+              selectedType={
+                selectedType
+              }
+            />
+          )}
+        </div>
 
-          <>
-            {results.length >
-              0 && (
-              <>
-                <h2 className="mb-3 text-lg font-semibold">
-                  {t(
-                    "search.posts"
-                  )}
-                </h2>
-
-                <PostFeed
-                  key={`${query}-${selectedType}`}
-                  initialPosts={
-                    results
-                  }
-                />
-              </>
-            )}
-
-            {questionResults.length >
-              0 && (
-              <div className="mt-8">
-                <h2 className="mb-3 text-lg font-semibold">
-                  {t(
-                    "search.questions"
-                  )}
-                </h2>
-
-                <div className="space-y-4">
-                  {questionResults.map(
-                    renderQuestion
-                  )}
-                </div>
-              </div>
-            )}
-
-            {results.length ===
-              0 &&
-              questionResults.length ===
-                0 && (
-                <p className="text-gray-500">
-                  {t(
-                    "search.no_posts_or_questions_matched_your_search"
-                  )}
-                </p>
-              )}
-          </>
-        )}
-
-        {/* =================================
-            INFINITE SCROLL TRIGGER
-        ================================= */}
-
+        {/* Infinite scroll */}
         {!loading &&
-          (results.length >
-            0 ||
+          (results.length > 0 ||
             questionResults.length >
               0) && (
             <div
-              ref={
-                loadMoreRef
-              }
+              ref={loadMoreRef}
               className="py-8 text-center text-sm text-gray-500"
             >
               {loadingMore
-                ? t(
-                    "search.loading_more"
-                  )
+                ? "Loading more..."
                 : hasMore
                 ? ""
-                : t(
-                    "search.no_more_results"
-                  )}
+                : "No more results"}
             </div>
           )}
       </main>

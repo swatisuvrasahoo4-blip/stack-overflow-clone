@@ -4,7 +4,7 @@ export type PlanName =
   | "Silver"
   | "Gold";
 
-interface SubscriptionPlan {
+export interface SubscriptionPlan {
   id: number;
   name: PlanName;
   price: string;
@@ -14,6 +14,7 @@ interface SubscriptionPlan {
   isPopular: boolean;
 }
 
+// Subscription plan configuration
 export const subscriptionPlans: SubscriptionPlan[] = [
   {
     id: 1,

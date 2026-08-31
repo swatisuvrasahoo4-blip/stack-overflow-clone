@@ -1,7 +1,11 @@
+import {
+  type Dispatch,
+  type SetStateAction,
+} from "react";
+
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-import { Dispatch, SetStateAction } from "react";
 
 interface Reply {
   _id: string;
@@ -38,6 +42,7 @@ interface SelectedReply {
 
 interface CommentSectionProps {
   post: Post;
+
   user: {
     id?: string;
     _id?: string;
@@ -45,16 +50,23 @@ interface CommentSectionProps {
   } | null;
 
   expandedComments: string[];
+
   setExpandedComments: Dispatch<
     SetStateAction<string[]>
   >;
 
-  activeReplyComment: string | null;
+  activeReplyComment:
+    | string
+    | null;
+
   setActiveReplyComment: Dispatch<
-    SetStateAction<string | null>
+    SetStateAction<
+      string | null
+    >
   >;
 
   replyText: string;
+
   setReplyText: Dispatch<
     SetStateAction<string>
   >;
@@ -65,7 +77,9 @@ interface CommentSectionProps {
   ) => void | Promise<void>;
 
   setSelectedComment: Dispatch<
-    SetStateAction<SelectedComment | null>
+    SetStateAction<
+      SelectedComment | null
+    >
   >;
 
   setShowDeleteCommentModal: Dispatch<
@@ -73,7 +87,9 @@ interface CommentSectionProps {
   >;
 
   setSelectedReply: Dispatch<
-    SetStateAction<SelectedReply | null>
+    SetStateAction<
+      SelectedReply | null
+    >
   >;
 
   setShowDeleteReplyModal: Dispatch<
@@ -81,7 +97,7 @@ interface CommentSectionProps {
   >;
 }
 
-export default function CommentSection({
+const CommentSection = ({
   post,
   user,
   expandedComments,
@@ -95,11 +111,15 @@ export default function CommentSection({
   setShowDeleteCommentModal,
   setSelectedReply,
   setShowDeleteReplyModal,
-}: CommentSectionProps) {
-  const { t } = useTranslation();
-  const router = useRouter();
+}: CommentSectionProps) => {
+  const { t } =
+    useTranslation();
 
-  const comments = post.comments ?? [];
+  const router =
+    useRouter();
+
+  const comments =
+    post.comments ?? [];
 
   const currentUserId =
     user?.id ||
@@ -110,36 +130,48 @@ export default function CommentSection({
     <>
       {comments.length > 0 && (
         <div className="mt-4 space-y-3">
-          {(
-            expandedComments.includes(
-              post._id
-            )
-              ? comments
-              : comments.slice(0, 2)
+          {(expandedComments.includes(
+            post._id
+          )
+            ? comments
+            : comments.slice(
+                0,
+                2
+              )
           ).map((comment) => (
             <div
-              key={comment._id}
-              className="border rounded-lg p-3 bg-gray-50"
+              key={
+                comment._id
+              }
+              className="rounded-lg border bg-gray-50 p-3"
             >
-              <p className="font-semibold text-sm">
-                {comment.userName}
+              {/* Comment content */}
+
+              <p className="text-sm font-semibold">
+                {
+                  comment.userName
+                }
               </p>
 
-              <p className="text-gray-700 mt-1">
+              <p className="mt-1 text-gray-700">
                 {comment.text}
               </p>
 
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="mt-1 text-xs text-gray-500">
                 {new Date(
                   comment.createdAt
                 ).toLocaleString()}
               </p>
 
-              <div className="flex items-center gap-3 mt-2">
-                {/* REPLY BUTTON */}
+              {/* Comment actions */}
+
+              <div className="mt-2 flex items-center gap-3">
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
+                  type="button"
+                  onClick={(
+                    event
+                  ) => {
+                    event.stopPropagation();
 
                     if (!user) {
                       toast.info(
@@ -148,7 +180,10 @@ export default function CommentSection({
                         )
                       );
 
-                      router.push("/auth");
+                      void router.push(
+                        "/auth"
+                      );
+
                       return;
                     }
 
@@ -159,63 +194,89 @@ export default function CommentSection({
                         : comment._id
                     );
                   }}
-                  className="text-blue-600 text-xs hover:underline"
+                  className="text-xs text-blue-600 hover:underline"
                 >
-                  {t("community.reply")}
+                  {t(
+                    "community.reply"
+                  )}
                 </button>
 
-                {/* DELETE COMMENT */}
-                {String(currentUserId) ===
-                  String(comment.userId) && (
+                {String(
+                  currentUserId
+                ) ===
+                  String(
+                    comment.userId
+                  ) && (
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
+                    type="button"
+                    onClick={(
+                      event
+                    ) => {
+                      event.stopPropagation();
 
-                      setSelectedComment({
-                        postId: post._id,
-                        commentId:
-                          comment._id,
-                      });
+                      setSelectedComment(
+                        {
+                          postId:
+                            post._id,
+
+                          commentId:
+                            comment._id,
+                        }
+                      );
 
                       setShowDeleteCommentModal(
                         true
                       );
                     }}
-                    className="text-red-600 text-xs hover:underline"
+                    className="text-xs text-red-600 hover:underline"
                   >
-                    {t("community.delete")}
+                    {t(
+                      "community.delete"
+                    )}
                   </button>
                 )}
               </div>
 
-              {/* REPLY INPUT */}
+              {/* Reply input */}
+
               {activeReplyComment ===
                 comment._id && (
                 <div className="mt-3">
                   <textarea
-                    value={replyText}
-                    onClick={(e) =>
-                      e.stopPropagation()
+                    value={
+                      replyText
                     }
-                    onChange={(e) =>
+                    onClick={(
+                      event
+                    ) =>
+                      event.stopPropagation()
+                    }
+                    onChange={(
+                      event
+                    ) =>
                       setReplyText(
-                        e.target.value
+                        event
+                          .target
+                          .value
                       )
                     }
                     placeholder="Write a reply..."
-                    className="w-full border rounded-lg p-2 text-sm"
+                    className="w-full rounded-lg border p-2 text-sm"
                   />
 
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
+                    type="button"
+                    onClick={(
+                      event
+                    ) => {
+                      event.stopPropagation();
 
-                      handleReply(
+                      void handleReply(
                         post._id,
                         comment._id
                       );
                     }}
-                    className="mt-2 bg-blue-600 text-white px-3 py-1 rounded-lg text-sm"
+                    className="mt-2 rounded-lg bg-blue-600 px-3 py-1 text-sm text-white"
                   >
                     {t(
                       "community.postReply"
@@ -224,25 +285,36 @@ export default function CommentSection({
                 </div>
               )}
 
-              {/* REPLIES */}
+              {/* Replies */}
+
               {comment.replies &&
-                comment.replies.length > 0 && (
+                comment.replies
+                  .length >
+                  0 && (
                   <div className="ml-6 mt-3 space-y-2">
                     {comment.replies.map(
-                      (reply) => (
+                      (
+                        reply
+                      ) => (
                         <div
-                          key={reply._id}
-                          className="bg-white border rounded-lg p-3"
+                          key={
+                            reply._id
+                          }
+                          className="rounded-lg border bg-white p-3"
                         >
-                          <p className="font-semibold text-sm">
+                          <p className="text-sm font-semibold">
                             {
                               reply.userName
                             }
                           </p>
 
-                          <p className="text-gray-700 text-sm mt-1">
-                            {reply.text}
+                          <p className="mt-1 text-sm text-gray-700">
+                            {
+                              reply.text
+                            }
                           </p>
+
+                          {/* Reply actions */}
 
                           {String(
                             currentUserId
@@ -251,15 +323,20 @@ export default function CommentSection({
                               reply.userId
                             ) && (
                             <button
-                              onClick={(e) => {
-                                e.stopPropagation();
+                              type="button"
+                              onClick={(
+                                event
+                              ) => {
+                                event.stopPropagation();
 
                                 setSelectedReply(
                                   {
                                     postId:
                                       post._id,
+
                                     commentId:
                                       comment._id,
+
                                     replyId:
                                       reply._id,
                                   }
@@ -277,7 +354,7 @@ export default function CommentSection({
                             </button>
                           )}
 
-                          <p className="text-xs text-gray-500 mt-1">
+                          <p className="mt-1 text-xs text-gray-500">
                             {new Date(
                               reply.createdAt
                             ).toLocaleString()}
@@ -290,11 +367,16 @@ export default function CommentSection({
             </div>
           ))}
 
-          {/* VIEW ALL / SHOW LESS */}
-          {comments.length > 2 && (
+          {/* Comment visibility */}
+
+          {comments.length >
+            2 && (
             <button
-              onClick={(e) => {
-                e.stopPropagation();
+              type="button"
+              onClick={(
+                event
+              ) => {
+                event.stopPropagation();
 
                 if (
                   expandedComments.includes(
@@ -304,26 +386,34 @@ export default function CommentSection({
                   setExpandedComments(
                     expandedComments.filter(
                       (id) =>
-                        id !== post._id
+                        id !==
+                        post._id
                     )
                   );
-                } else {
-                  setExpandedComments([
+
+                  return;
+                }
+
+                setExpandedComments(
+                  [
                     ...expandedComments,
                     post._id,
-                  ]);
-                }
+                  ]
+                );
               }}
-              className="text-blue-600 text-sm hover:underline"
+              className="text-sm text-blue-600 hover:underline"
             >
               {expandedComments.includes(
                 post._id
               )
-                ? t("community.showLess")
+                ? t(
+                    "community.showLess"
+                  )
                 : `${t(
                     "community.viewAll"
                   )} ${
-                    comments.length - 2
+                    comments.length -
+                    2
                   } ${t(
                     "community.comment"
                   )}`}
@@ -333,4 +423,6 @@ export default function CommentSection({
       )}
     </>
   );
-}
+};
+
+export default CommentSection;

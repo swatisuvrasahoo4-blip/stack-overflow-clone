@@ -4,20 +4,30 @@ interface ReportPostButtonProps {
   onClick: () => void;
 }
 
-export default function ReportPostButton({
+const ReportPostButton = ({
   onClick,
-}: ReportPostButtonProps) {
+}: ReportPostButtonProps) => {
+  const handleClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    onClick();
+  };
+
   return (
     <button
       type="button"
-      onClick={(event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        onClick();
-      }}
-      className="flex items-center gap-2 text-sm text-gray-600 hover:text-red-600 transition"
+      onClick={handleClick}
+      className="flex items-center gap-2 text-sm text-gray-600 transition hover:text-red-600"
+      aria-label="Report post"
     >
+      {/* Report icon */}
+
       <Flag className="h-5 w-5" />
     </button>
   );
-}
+};
+
+export default ReportPostButton;

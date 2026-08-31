@@ -1,79 +1,134 @@
-import Mainlayout from "@/layout/Mainlayout";
+import {
+  useEffect,
+  useState,
+} from "react";
+
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { getTagContent } from "@/components/services/tagService";
-import PostCard from "@/components/community/PostCard";
+
+import Mainlayout from "@/layout/Mainlayout";
+
 import { useAuth } from "@/lib/AuthContext";
+
+import PostCard from "@/components/community/PostCard/PostCard";
+import TagQuestionList from "@/components/tags/TagQuestionList";
+
+import DeletePostModal from "@/components/community/modals/DeletePostModal";
+import DeleteCommentModal from "@/components/community/modals/DeleteCommentModal";
+import DeleteReplyModal from "@/components/community/modals/DeleteReplyModal";
+
+import {
+  getTagContent,
+  type TagPagination,
+  type TagQuestion,
+} from "@/components/services/tagService";
+
 import usePostActions from "@/hooks/usePostActions";
+import useEditPostState from "@/hooks/useEditPostState";
+import usePostDelete from "@/hooks/usePostDelete";
+
 import type { Post } from "@/types/community";
 
-interface TagQuestion {
-  _id: string;
-  questiontitle: string;
-  questionbody: string;
-  questiontags: string[];
-}
+const DEFAULT_PAGINATION: TagPagination = {
+  currentPage: 1,
+  totalPages: 0,
+  totalQuestions: 0,
+  limit: 5,
+  hasNextPage: false,
+  hasPreviousPage: false,
+};
 
-export default function TagDetailPage() {
+const TagDetailPage = () => {
   const router = useRouter();
+
   const { tag } = router.query;
 
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [questions, setQuestions] = useState<TagQuestion[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const [commentText, setCommentText] = useState("");
-
-  const [activeCommentPost, setActiveCommentPost] =
-    useState<string | null>(null);
-
-  const [replyText, setReplyText] = useState("");
-
-  const [activeReplyComment, setActiveReplyComment] =
-    useState<string | null>(null);
-
-  const [expandedComments, setExpandedComments] =
-    useState<string[]>([]);
-
-  const [editingPost, setEditingPost] =
-    useState<Post | null>(null);
-
-  const [editContent, setEditContent] = useState("");
-
-  const [editHashtags, setEditHashtags] = useState("");
-  const [editTagInput, setEditTagInput] = useState("");
-
-  const [editImage, setEditImage] =
-    useState<File | null>(null);
-
-  const [editProjectTitle, setEditProjectTitle] =
-    useState("");
-
-  const [editProjectLink, setEditProjectLink] =
-    useState("");
+  const {
+    user,
+    updateUser,
+  } = useAuth();
 
   const [
+    posts,
+    setPosts,
+  ] = useState<Post[]>([]);
+
+  const [
+    questions,
+    setQuestions,
+  ] = useState<TagQuestion[]>([]);
+
+  const [
+    pagination,
+    setPagination,
+  ] = useState<TagPagination>(
+    DEFAULT_PAGINATION
+  );
+
+  const [
+    loading,
+    setLoading,
+  ] = useState(true);
+
+  const [
+    loadingMore,
+    setLoadingMore,
+  ] = useState(false);
+
+  // Comment state
+  const [
+    commentText,
+    setCommentText,
+  ] = useState("");
+
+  const [
+    activeCommentPost,
+    setActiveCommentPost,
+  ] = useState<string | null>(
+    null
+  );
+
+  const [
+    expandedComments,
+    setExpandedComments,
+  ] = useState<string[]>([]);
+
+  // Reply state
+  const [
+    replyText,
+    setReplyText,
+  ] = useState("");
+
+  const [
+    activeReplyComment,
+    setActiveReplyComment,
+  ] = useState<string | null>(
+    null
+  );
+
+  // Edit post state
+  const {
+    editingPost,
+    setEditingPost,
+    editContent,
+    setEditContent,
+    editHashtags,
+    setEditHashtags,
+    setEditTagInput,
+    editImage,
+    setEditImage,
+    editProjectTitle,
+    setEditProjectTitle,
+    editProjectLink,
+    setEditProjectLink,
     editAchievementTitle,
     setEditAchievementTitle,
-  ] = useState("");
-
-  const [
     editAchievementDescription,
     setEditAchievementDescription,
-  ] = useState("");
+    editCodeSnippet,
+    setEditCodeSnippet,
+  } = useEditPostState();
 
-  const [editCodeSnippet, setEditCodeSnippet] =
-    useState("");
-
-  // Delete post modal states
-  const [selectedPostId, setSelectedPostId] =
-    useState<string | null>(null);
-
-  const [showDeleteModal, setShowDeleteModal] =
-    useState(false);
-
-  const { user, updateUser } = useAuth();
-
+  // Post actions
   const {
     handleLike,
     handleBookmark,
@@ -81,154 +136,244 @@ export default function TagDetailPage() {
     handleShare,
     handleEdit,
     handleDelete,
+    handleDeleteComment,
     handleReply,
   } = usePostActions({
-    posts,
     setPosts,
     user,
     updateUser,
-
     commentText,
     setCommentText,
     setActiveCommentPost,
-
     editingPost,
     setEditingPost,
-
     editContent,
     setEditContent,
-
+    editHashtags,
+    setEditHashtags,
+    setEditTagInput,
+    editImage,
+    setEditImage,
+    editProjectTitle,
+    setEditProjectTitle,
+    editProjectLink,
+    setEditProjectLink,
+    editAchievementTitle,
+    setEditAchievementTitle,
+    editAchievementDescription,
+    setEditAchievementDescription,
+    editCodeSnippet,
+    setEditCodeSnippet,
     replyText,
     setReplyText,
     setActiveReplyComment,
-
-    editHashtags,
-    setEditHashtags,
-
-    editTagInput,
-    setEditTagInput,
-
-    editImage,
-    setEditImage,
-
-    editProjectTitle,
-    setEditProjectTitle,
-
-    editProjectLink,
-    setEditProjectLink,
-
-    editAchievementTitle,
-    setEditAchievementTitle,
-
-    editAchievementDescription,
-    setEditAchievementDescription,
-
-    editCodeSnippet,
-    setEditCodeSnippet,
   });
 
-  useEffect(() => {
-    const loadTagContent = async (): Promise<void> => {
-      const tagName =
-        Array.isArray(tag) ? tag[0] : tag;
+  // Delete state and actions
+  const {
+    selectedPostId,
+    setSelectedPostId,
+    showDeleteModal,
+    setShowDeleteModal,
 
-      if (!tagName) {
-        setPosts([]);
-        setQuestions([]);
-        setLoading(false);
+    selectedReply,
+    setSelectedReply,
+    showDeleteReplyModal,
+    setShowDeleteReplyModal,
+
+    selectedComment,
+    setSelectedComment,
+    showDeleteCommentModal,
+    setShowDeleteCommentModal,
+
+    closeDeletePostModal,
+    closeDeleteReplyModal,
+    closeDeleteCommentModal,
+
+    confirmDeletePost,
+    confirmDeleteReply,
+    confirmDeleteComment,
+  } = usePostDelete({
+    setPosts,
+    handleDelete,
+    handleDeleteComment,
+  });
+
+  const tagName =
+    Array.isArray(tag)
+      ? tag[0]
+      : tag;
+
+  // Load initial tag content
+  useEffect(() => {
+    const loadTagContent =
+      async (): Promise<void> => {
+        if (!tagName) {
+          setPosts([]);
+          setQuestions([]);
+          setPagination(
+            DEFAULT_PAGINATION
+          );
+
+          setLoading(false);
+
+          return;
+        }
+
+        try {
+          setLoading(true);
+
+          const data =
+            await getTagContent(
+              tagName,
+              1,
+              5
+            );
+
+          setPosts(
+            data.posts || []
+          );
+
+          setQuestions(
+            data.questions || []
+          );
+
+          setPagination(
+            data.pagination ??
+              DEFAULT_PAGINATION
+          );
+        } catch (
+          error: unknown
+        ) {
+          console.error(
+            "Tag detail load failed:",
+            error
+          );
+
+          setPosts([]);
+          setQuestions([]);
+          setPagination(
+            DEFAULT_PAGINATION
+          );
+        } finally {
+          setLoading(false);
+        }
+      };
+
+    void loadTagContent();
+  }, [tagName]);
+
+  // Load more questions
+  const handleLoadMore =
+    async (): Promise<void> => {
+      if (
+        !tagName ||
+        loadingMore ||
+        !pagination.hasNextPage
+      ) {
         return;
       }
 
       try {
-        const data = await getTagContent(tagName);
+        setLoadingMore(true);
 
-        setPosts(data.posts || []);
-        setQuestions(data.questions || []);
-      } catch (error: unknown) {
-        console.error(
-          "Tag detail load failed:",
-          error
+        const nextPage =
+          pagination.currentPage +
+          1;
+
+        const data =
+          await getTagContent(
+            tagName,
+            nextPage,
+            pagination.limit
+          );
+
+        setQuestions(
+          (
+            previousQuestions
+          ) => {
+            const existingIds =
+              new Set(
+                previousQuestions.map(
+                  (question) =>
+                    question._id
+                )
+              );
+
+            const newQuestions =
+              (
+                data.questions || []
+              ).filter(
+                (question) =>
+                  !existingIds.has(
+                    question._id
+                  )
+              );
+
+            return [
+              ...previousQuestions,
+              ...newQuestions,
+            ];
+          }
         );
 
-        setPosts([]);
-        setQuestions([]);
+        if (data.pagination) {
+          setPagination(
+            data.pagination
+          );
+        }
+      } catch (
+        error: unknown
+      ) {
+        console.error(
+          "Failed to load more tagged questions:",
+          error
+        );
       } finally {
-        setLoading(false);
+        setLoadingMore(false);
       }
     };
-
-    void loadTagContent();
-  }, [tag]);
-
-  const tagName =
-    Array.isArray(tag) ? tag[0] : tag;
 
   return (
     <Mainlayout>
       <main className="min-w-0 p-4 lg:p-6">
-        {/* Tag Header */}
+        {/* Tag header */}
         <div className="mb-6">
           <h1 className="text-2xl font-semibold">
             #{tagName}
           </h1>
 
           <p className="mt-2 text-gray-600">
-            Questions and community posts tagged with #
+            Questions and community
+            posts tagged with #
             {tagName}.
           </p>
         </div>
 
         {loading ? (
+          /* Loading state */
           <p className="text-gray-500">
             Loading...
           </p>
         ) : (
           <>
             {/* Questions */}
-            {questions.length > 0 && (
-              <div className="mb-8">
-                <h2 className="mb-3 text-lg font-semibold">
-                  Questions
-                </h2>
+            <TagQuestionList
+              questions={
+                questions
+              }
+              pagination={
+                pagination
+              }
+              loadingMore={
+                loadingMore
+              }
+              onLoadMore={
+                handleLoadMore
+              }
+            />
 
-                <div className="space-y-4">
-                  {questions.map((question) => (
-                    <div
-                      key={question._id}
-                      onClick={() =>
-                        void router.push(
-                          `/questions/${question._id}`
-                        )
-                      }
-                      className="cursor-pointer rounded-lg border bg-white p-4 shadow-sm transition hover:shadow-md"
-                    >
-                      <h3 className="font-medium text-blue-600 hover:underline">
-                        {question.questiontitle}
-                      </h3>
-
-                      <p className="mt-2 line-clamp-2 text-sm text-gray-700">
-                        {question.questionbody}
-                      </p>
-
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        {question.questiontags.map(
-                          (questionTag) => (
-                            <span
-                              key={questionTag}
-                              className="rounded bg-blue-100 px-2 py-1 text-xs text-blue-800"
-                            >
-                              {questionTag}
-                            </span>
-                          )
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Community Posts */}
+            {/* Community posts */}
             {posts.length > 0 && (
               <div>
                 <h2 className="mb-3 text-lg font-semibold">
@@ -236,79 +381,153 @@ export default function TagDetailPage() {
                 </h2>
 
                 <div className="space-y-4">
-                  {posts.map((post) => (
-                    <PostCard
-                      key={post._id}
-                      post={post}
-                      user={user}
-                      handleLike={handleLike}
-                      handleBookmark={handleBookmark}
-                      handleComment={handleComment}
-                      handleShare={handleShare}
-                      handleEdit={handleEdit}
-                      handleDelete={handleDelete}
-                      handleReply={handleReply}
-                      activeCommentPost={
-                        activeCommentPost
-                      }
-                      setActiveCommentPost={
-                        setActiveCommentPost
-                      }
-                      commentText={commentText}
-                      setCommentText={
-                        setCommentText
-                      }
-                      expandedComments={
-                        expandedComments
-                      }
-                      setExpandedComments={
-                        setExpandedComments
-                      }
-                      activeReplyComment={
-                        activeReplyComment
-                      }
-                      setActiveReplyComment={
-                        setActiveReplyComment
-                      }
-                      replyText={replyText}
-                      setReplyText={setReplyText}
-                      setSelectedComment={() => {}}
-                      setShowDeleteCommentModal={() =>
-                        {}
-                      }
-                      setSelectedReply={() => {}}
-                      setShowDeleteReplyModal={() =>
-                        {}
-                      }
-                      selectedPostId={
-                        selectedPostId
-                      }
-                      setSelectedPostId={
-                        setSelectedPostId
-                      }
-                      showDeleteModal={
-                        showDeleteModal
-                      }
-                      setShowDeleteModal={
-                        setShowDeleteModal
-                      }
-                    />
-                  ))}
+                  {posts.map(
+                    (post) => (
+                      <PostCard
+                        key={
+                          post._id
+                        }
+                        post={post}
+                        user={user}
+                        handleLike={
+                          handleLike
+                        }
+                        handleBookmark={
+                          handleBookmark
+                        }
+                        handleComment={
+                          handleComment
+                        }
+                        handleShare={
+                          handleShare
+                        }
+                        handleEdit={
+                          handleEdit
+                        }
+                        handleDelete={
+                          handleDelete
+                        }
+                        handleReply={
+                          handleReply
+                        }
+                        activeCommentPost={
+                          activeCommentPost
+                        }
+                        setActiveCommentPost={
+                          setActiveCommentPost
+                        }
+                        commentText={
+                          commentText
+                        }
+                        setCommentText={
+                          setCommentText
+                        }
+                        expandedComments={
+                          expandedComments
+                        }
+                        setExpandedComments={
+                          setExpandedComments
+                        }
+                        activeReplyComment={
+                          activeReplyComment
+                        }
+                        setActiveReplyComment={
+                          setActiveReplyComment
+                        }
+                        replyText={
+                          replyText
+                        }
+                        setReplyText={
+                          setReplyText
+                        }
+                        setSelectedPostId={
+                          setSelectedPostId
+                        }
+                        setShowDeleteModal={
+                          setShowDeleteModal
+                        }
+                        setSelectedComment={
+                          setSelectedComment
+                        }
+                        setShowDeleteCommentModal={
+                          setShowDeleteCommentModal
+                        }
+                        setSelectedReply={
+                          setSelectedReply
+                        }
+                        setShowDeleteReplyModal={
+                          setShowDeleteReplyModal
+                        }
+                      />
+                    )
+                  )}
                 </div>
               </div>
             )}
 
-            {/* Empty State */}
+            {/* Empty state */}
             {posts.length === 0 &&
-              questions.length === 0 && (
+              questions.length ===
+                0 && (
                 <p className="text-gray-500">
-                  No questions or posts found for this
-                  tag.
+                  No questions or
+                  posts found for
+                  this tag.
                 </p>
               )}
           </>
         )}
+
+        {/* Delete post modal */}
+        <DeletePostModal
+          open={
+            showDeleteModal &&
+            Boolean(
+              selectedPostId
+            )
+          }
+          onClose={
+            closeDeletePostModal
+          }
+          onConfirm={
+            confirmDeletePost
+          }
+        />
+
+        {/* Delete comment modal */}
+        <DeleteCommentModal
+          open={
+            showDeleteCommentModal &&
+            Boolean(
+              selectedComment
+            )
+          }
+          onClose={
+            closeDeleteCommentModal
+          }
+          onConfirm={
+            confirmDeleteComment
+          }
+        />
+
+        {/* Delete reply modal */}
+        <DeleteReplyModal
+          open={
+            showDeleteReplyModal &&
+            Boolean(
+              selectedReply
+            )
+          }
+          onClose={
+            closeDeleteReplyModal
+          }
+          onConfirm={
+            confirmDeleteReply
+          }
+        />
       </main>
     </Mainlayout>
   );
-}
+};
+
+export default TagDetailPage;

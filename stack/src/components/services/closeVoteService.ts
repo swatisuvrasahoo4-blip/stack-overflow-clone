@@ -1,10 +1,11 @@
-import axiosinstance from "@/lib/axiosinstance";
+import axiosInstance from "@/lib/axiosinstance";
 
+// Vote to close question
 export const voteToCloseQuestion = async (
   questionId: string,
   reason: string
 ) => {
-  const response = await axiosinstance.put(
+  const response = await axiosInstance.put(
     `/close-vote/${questionId}`,
     { reason }
   );

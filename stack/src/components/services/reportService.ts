@@ -6,6 +6,13 @@ interface CreateReportPayload {
   details?: string;
 }
 
+interface CreateQuestionReportPayload {
+  questionId: string;
+  reason: string;
+  details?: string;
+}
+
+// Create post report
 export const createReport = async ({
   postId,
   reason,
@@ -20,13 +27,17 @@ export const createReport = async ({
   return response.data;
 };
 
+// Get reports
 export const getReports = async () => {
   const response = await axiosInstance.get("/report");
 
   return response.data;
 };
 
-export const checkReportStatus = async (postId: string) => {
+// Check post report status
+export const checkReportStatus = async (
+  postId: string
+) => {
   const response = await axiosInstance.get(
     `/report/check/post/${postId}`
   );
@@ -34,12 +45,7 @@ export const checkReportStatus = async (postId: string) => {
   return response.data;
 };
 
-interface CreateQuestionReportPayload {
-  questionId: string;
-  reason: string;
-  details?: string;
-}
-
+// Create question report
 export const createQuestionReport = async ({
   questionId,
   reason,

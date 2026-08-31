@@ -1,12 +1,18 @@
 import axiosInstance from "@/lib/axiosinstance";
 
+// Get current user's sessions
 export const getMySessions = async () => {
-  const response = await axiosInstance.get("/user/sessions");
+  const response = await axiosInstance.get(
+    "/user/sessions"
+  );
 
   return response.data;
 };
 
-export const revokeSession = async (sessionId: string) => {
+// Revoke user session
+export const revokeSession = async (
+  sessionId: string
+) => {
   const response = await axiosInstance.patch(
     `/user/sessions/${sessionId}/revoke`
   );

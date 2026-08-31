@@ -1,51 +1,85 @@
-import { Dispatch, SetStateAction } from "react";
-import { useTranslation } from "react-i18next";
-type FeedTabsProps = {
-  activeFeed: "trending" | "following";
-  setActiveFeed: Dispatch<
-    SetStateAction<"trending" | "following">
-  >;
-};
+import type {
+  Dispatch,
+  SetStateAction,
+} from "react";
 
-export default function FeedTabs({
+import { useTranslation } from "react-i18next";
+
+type FeedType =
+  | "trending"
+  | "following";
+
+interface FeedTabsProps {
+  activeFeed: FeedType;
+
+  setActiveFeed: Dispatch<
+    SetStateAction<FeedType>
+  >;
+}
+
+const FeedTabs = ({
   activeFeed,
   setActiveFeed,
-}: FeedTabsProps) {
-  const {t} = useTranslation();
+}: FeedTabsProps) => {
+  const { t } =
+    useTranslation();
+
+  const handleFeedChange = (
+    feed: FeedType
+  ) => {
+    sessionStorage.setItem(
+      "homeActiveFeed",
+      feed
+    );
+
+    setActiveFeed(feed);
+  };
+
   return (
-    <div className="flex gap-2 mb-6">
-      <button
-        onClick={() => {
-          sessionStorage.setItem("homeActiveFeed","trending")
-          setActiveFeed("trending")}
-        }
-        className={`px-4 py-2 rounded ${
-          activeFeed === "trending"
-            ? "bg-blue-600 text-white"
-            : "bg-gray-200"
-        }`}
-      >
-        {t("community.trending")}
-      </button>
+    <div className="mb-6 flex gap-2">
+      {/* Trending feed */}
 
       <button
-        onClick={() =>{ 
-          console.log("clicked following");
-          console.log("befote clicked",activeFeed);
-          
-          
-          sessionStorage.setItem("homeActiveFeed","following")
-          console.log(sessionStorage.getItem("homeActiveFeed"));
-          
-          setActiveFeed("following")}}
-        className={`px-4 py-2 rounded ${
-          activeFeed === "following"
+        type="button"
+        onClick={() =>
+          handleFeedChange(
+            "trending"
+          )
+        }
+        className={`rounded px-4 py-2 ${
+          activeFeed ===
+          "trending"
             ? "bg-blue-600 text-white"
             : "bg-gray-200"
         }`}
       >
-        {t("community.following")}
+        {t(
+          "community.trending"
+        )}
+      </button>
+
+      {/* Following feed */}
+
+      <button
+        type="button"
+        onClick={() =>
+          handleFeedChange(
+            "following"
+          )
+        }
+        className={`rounded px-4 py-2 ${
+          activeFeed ===
+          "following"
+            ? "bg-blue-600 text-white"
+            : "bg-gray-200"
+        }`}
+      >
+        {t(
+          "community.following"
+        )}
       </button>
     </div>
   );
-}
+};
+
+export default FeedTabs;

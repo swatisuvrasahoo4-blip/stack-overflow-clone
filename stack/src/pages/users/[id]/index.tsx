@@ -1,54 +1,60 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+
 import Mainlayout from "@/layout/Mainlayout";
+
 import { useAuth } from "@/lib/AuthContext";
 import axiosInstance from "@/lib/axiosinstance";
+
 import {
   Calendar,
   Lock,
-  Edit,
-  Plus,
-  X,
   Shield,
   Crown,
   Award,
 } from "lucide-react";
+
 import { useRouter } from "next/router";
+
 import {
   useEffect,
   useRef,
   useState,
 } from "react";
+
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
+
 import { FollowButton } from "@/components/follow/FollowButton";
 import { FollowStats } from "@/components/follow/FollowStats";
+
 import { getImageUrl } from "@/lib/getImageUrl";
+
 import SubscriptionDashboard from "@/components/subscription/SubscriptionDashboard";
+import PaymentHistory from "@/components/subscription/PaymentHistory";
+
 import {
   getUserSubscription,
   getSubscription,
 } from "@/components/services/subscriptionService";
-import PaymentHistory from "@/components/subscription/PaymentHistory";
+
 import ReputationSummary from "@/components/reputation/ReputationSummary";
 import TransferReputationButton from "@/components/reputation/TransferReputationButton";
-import { useTranslation } from "react-i18next";
+
+import EditProfileDialog from "@/components/profile/EditProfileDialog";
 
 interface SubscriptionBadges {
   gold?: number;
@@ -91,10 +97,16 @@ interface SubscriptionData {
   [key: string]: unknown;
 }
 
-const Index = () => {
+const UserProfilePage = () => {
   const { t } = useTranslation();
-  const { user, updateUser } = useAuth();
+
+  const {
+    user,
+    updateUser,
+  } = useAuth();
+
   const router = useRouter();
+
   const { id } = router.query;
 
   const [users, setUsers] =
@@ -159,8 +171,7 @@ const Index = () => {
       name: users.name || "",
       about: users.about || "",
       tags: users.tags || [],
-      profilePhoto:
-        users.profilePhoto || "",
+      profilePhoto: users.profilePhoto || "",
     });
 
     setProfilePhotoPreview(
@@ -189,7 +200,8 @@ const Index = () => {
             )) as UserSubscriptionResponse;
 
           if (
-            data?.data?.status === "Active"
+            data?.data?.status ===
+            "Active"
           ) {
             setSubscriptionPlan(
               data.data.plan || "Free"
@@ -198,7 +210,7 @@ const Index = () => {
             setSubscriptionPlan("Free");
           }
         } catch (error: unknown) {
-          console.log(
+          console.error(
             "Subscription load error:",
             error
           );
@@ -221,7 +233,10 @@ const Index = () => {
             response.data as SubscriptionData
           );
         } catch (error: unknown) {
-          console.log(error);
+          console.error(
+            "Subscription error:",
+            error
+          );
         }
       };
 
@@ -244,18 +259,19 @@ const Index = () => {
         setUsers(null);
 
         try {
-          const res =
+          const response =
             await axiosInstance.get<UsersResponse>(
               "/user/getalluser"
             );
 
           const matchedUser =
-            res.data.data?.find(
+            response.data.data?.find(
               (profileUser) =>
                 String(
                   profileUser._id ||
                     profileUser.id
-                ) === String(idStr)
+                ) ===
+                String(idStr)
             );
 
           if (matchedUser) {
@@ -264,7 +280,11 @@ const Index = () => {
             setUsers(null);
           }
         } catch (error: unknown) {
-          console.log(error);
+          console.error(
+            "User load error:",
+            error
+          );
+
           setUsers(null);
         } finally {
           setLoading(false);
@@ -277,7 +297,9 @@ const Index = () => {
   if (loading) {
     return (
       <Mainlayout>
-        <div className="h-10 w-10 animate-spin rounded-full border-b-2 border-t-2 border-blue-500" />
+        <div className="flex min-h-48 items-center justify-center">
+          <div className="h-10 w-10 animate-spin rounded-full border-b-2 border-t-2 border-blue-500" />
+        </div>
       </Mainlayout>
     );
   }
@@ -292,10 +314,13 @@ const Index = () => {
     );
   }
 
-  const currentUserId = user?._id;
+  const currentUserId =
+    user?._id;
 
   const profileUserId =
-    users._id || users.id || "";
+    users._id ||
+    users.id ||
+    "";
 
   const routeId =
     Array.isArray(id)
@@ -309,7 +334,8 @@ const Index = () => {
   const handleSaveProfile =
     async (): Promise<void> => {
       try {
-        const formData = new FormData();
+        const formData =
+          new FormData();
 
         formData.append(
           "name",
@@ -340,17 +366,21 @@ const Index = () => {
           );
         }
 
-        const res =
+        const response =
           await axiosInstance.patch<UpdatedUserResponse>(
             `/user/update/${user?._id}`,
             formData
           );
 
         const updatedData =
-          res.data.data;
+          response.data.data;
 
-        if (updatedData) {
-          const updatedUser: ProfileUser = {
+        if (!updatedData) {
+          return;
+        }
+
+        const updatedUser: ProfileUser =
+          {
             ...users,
             ...updatedData,
             tags:
@@ -359,46 +389,50 @@ const Index = () => {
               [],
           };
 
-          setUsers(updatedUser);
-          setIsEditing(false);
+        setUsers(updatedUser);
 
-          toast.success(
-            t(
-              "toast.profile_updated_successfully"
-            )
-          );
+        setIsEditing(false);
 
-          if (isOwnProfile) {
-            updateUser({
-              name:
-                updatedData.name ||
-                users.name,
-              about:
-                updatedData.about ||
-                users.about,
-              tags:
-                updatedData.tags ||
-                users.tags,
-              profilePhoto:
-                updatedData.profilePhoto ||
-                "",
-            });
-          }
+        toast.success(
+          t(
+            "toast.profile_updated_successfully"
+          )
+        );
+
+        if (isOwnProfile) {
+          updateUser({
+            name:
+              updatedData.name ||
+              users.name,
+            about:
+              updatedData.about ||
+              users.about,
+            tags:
+              updatedData.tags ||
+              users.tags,
+            profilePhoto:
+              updatedData.profilePhoto ||
+              "",
+          });
         }
       } catch (error: unknown) {
-        console.log(
-          "profile update failed, applying local fallback",
+        console.error(
+          "Profile update failed, applying local fallback:",
           error
         );
 
-        const updatedUser: ProfileUser = {
-          ...users,
-          name: editForm.name,
-          about: editForm.about,
-          tags: editForm.tags,
-          profilePhoto:
-            profilePhotoPreview,
-        };
+        const updatedUser: ProfileUser =
+          {
+            ...users,
+            name:
+              editForm.name,
+            about:
+              editForm.about,
+            tags:
+              editForm.tags,
+            profilePhoto:
+              profilePhotoPreview,
+          };
 
         setUsers(updatedUser);
 
@@ -414,9 +448,9 @@ const Index = () => {
 
             const stored: ProfileUser[] =
               storedValue
-                ? JSON.parse(
+                ? (JSON.parse(
                     storedValue
-                  ) as ProfileUser[]
+                  ) as ProfileUser[])
                 : [];
 
             const index =
@@ -440,12 +474,14 @@ const Index = () => {
 
               localStorage.setItem(
                 "mockUsers",
-                JSON.stringify(stored)
+                JSON.stringify(
+                  stored
+                )
               );
             }
           }
         } catch (storageError: unknown) {
-          console.log(
+          console.error(
             "Storage update error:",
             storageError
           );
@@ -454,49 +490,63 @@ const Index = () => {
         setIsEditing(false);
 
         toast.success(
-          t("toast.profile_updated")
+          t(
+            "toast.profile_updated"
+          )
         );
       }
     };
 
-  const handleAddTag = (): void => {
-    const trimmedTag =
-      newTag.trim();
+  const handleAddTag =
+    (): void => {
+      const trimmedTag =
+        newTag.trim();
 
-    if (
-      trimmedTag &&
-      !editForm.tags.includes(
-        trimmedTag
-      )
-    ) {
-      setEditForm({
-        ...editForm,
-        tags: [
-          ...editForm.tags,
-          trimmedTag,
-        ],
-      });
+      if (
+        !trimmedTag ||
+        editForm.tags.includes(
+          trimmedTag
+        )
+      ) {
+        return;
+      }
+
+      setEditForm(
+        (previous) => ({
+          ...previous,
+          tags: [
+            ...previous.tags,
+            trimmedTag,
+          ],
+        })
+      );
 
       setNewTag("");
-    }
-  };
+    };
 
   const handleRemoveTag = (
     tagToRemove: string
   ): void => {
-    setEditForm({
-      ...editForm,
-      tags: editForm.tags.filter(
-        (tag) =>
-          tag !== tagToRemove
-      ),
-    });
+    setEditForm(
+      (previous) => ({
+        ...previous,
+        tags:
+          previous.tags.filter(
+            (tag) =>
+              tag !==
+              tagToRemove
+          ),
+      })
+    );
   };
 
   return (
     <Mainlayout>
-      <div className="max-w-6xl">
-        <div className="mb-8 flex flex-col items-start gap-6 lg:flex-row lg:items-center">
+      <div className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6">
+
+        {/* Profile header */}
+        <div className="mb-6 flex flex-col items-start gap-4 lg:flex-row lg:items-center">
+
           <Avatar className="h-24 w-24 lg:h-32 lg:w-32">
             {users.profilePhoto ? (
               <AvatarImage
@@ -520,6 +570,7 @@ const Index = () => {
 
           <div className="min-w-0 flex-1">
             <div className="mb-4 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+
               <div>
                 <h1 className="mb-1 text-2xl font-bold text-gray-800 lg:text-3xl">
                   {users.name}
@@ -577,390 +628,60 @@ const Index = () => {
                 user &&
                 isOwnProfile && (
                   <div className="flex w-fit flex-col gap-2">
-                    <Dialog
-                      open={
+
+                    <EditProfileDialog
+                      isEditing={
                         isEditing
                       }
-                      onOpenChange={
+                      setIsEditing={
                         setIsEditing
                       }
-                    >
-                      <DialogTrigger
-                        render={
-                          <Button
-                            variant="outline"
-                            className="flex items-center gap-2 bg-transparent"
-                          />
-                        }
-                      >
-                        <Edit className="h-4 w-4" />
-
-                        {t(
-                          "user.editProfile"
-                        )}
-                      </DialogTrigger>
-
-                      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto bg-white text-gray-900">
-                        <DialogHeader>
-                          <DialogTitle>
-                            {t(
-                              "profile.edit_profile"
-                            )}
-                          </DialogTitle>
-                        </DialogHeader>
-
-                        <div className="space-y-6 py-4">
-                          <div className="space-y-4">
-                            <h3 className="text-lg font-semibold">
-                              {t(
-                                "profile.basic_information"
-                              )}
-                            </h3>
-
-                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                              <div>
-                                <Label htmlFor="username">
-                                  {t(
-                                    "profile.username"
-                                  )}
-                                </Label>
-
-                                <Input
-                                  id="username"
-                                  value={
-                                    users.username ||
-                                    ""
-                                  }
-                                  disabled
-                                  className="border-gray-300 bg-gray-100 text-gray-600"
-                                />
-                              </div>
-
-                              <div>
-                                <Label htmlFor="name">
-                                  {t(
-                                    "profile.display_name"
-                                  )}
-                                </Label>
-
-                                <Input
-                                  id="name"
-                                  value={
-                                    editForm.name
-                                  }
-                                  onChange={(
-                                    event
-                                  ) =>
-                                    setEditForm(
-                                      {
-                                        ...editForm,
-                                        name: event
-                                          .target
-                                          .value,
-                                      }
-                                    )
-                                  }
-                                  placeholder={t(
-                                    "profile.your_display_name"
-                                  )}
-                                  className="border-gray-300 bg-white"
-                                />
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="space-y-4">
-                            <h3 className="text-lg font-semibold">
-                              {t(
-                                "profile.profile_photo"
-                              )}
-                            </h3>
-
-                            <div>
-                              <Label htmlFor="profilePhoto">
-                                {t(
-                                  "profile.upload_photo"
-                                )}
-                              </Label>
-
-                              <input
-                                ref={
-                                  profilePhotoInputRef
-                                }
-                                id="profilePhoto"
-                                type="file"
-                                accept="image/jpeg,image/png,image/webp"
-                                className="hidden"
-                                onChange={(
-                                  event
-                                ) => {
-                                  const file =
-                                    event
-                                      .target
-                                      .files?.[0] ||
-                                    null;
-
-                                  setProfilePhotoFile(
-                                    file
-                                  );
-
-                                  if (
-                                    file
-                                  ) {
-                                    setRemoveProfilePhoto(
-                                      false
-                                    );
-
-                                    setProfilePhotoPreview(
-                                      URL.createObjectURL(
-                                        file
-                                      )
-                                    );
-                                  }
-                                }}
-                              />
-
-                              <div className="mt-2 flex items-center rounded border p-2">
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    profilePhotoInputRef.current?.click()
-                                  }
-                                  className="rounded bg-gray-100 px-4 py-2 hover:bg-gray-200"
-                                >
-                                  {t(
-                                    "profile.choose_file"
-                                  )}
-                                </button>
-
-                                <span
-                                  className={`ml-3 text-sm ${
-                                    profilePhotoFile
-                                      ? "text-gray-700"
-                                      : "text-red-600"
-                                  }`}
-                                >
-                                  {profilePhotoFile
-                                    ? t(
-                                        "profile.file_selected"
-                                      )
-                                    : t(
-                                        "profile.no_file_chosen"
-                                      )}
-                                </span>
-
-                                {profilePhotoFile && (
-                                  <button
-                                    type="button"
-                                    className="ml-auto text-xl font-bold text-red-600 hover:text-red-800"
-                                    onClick={() => {
-                                      setProfilePhotoFile(
-                                        null
-                                      );
-
-                                      setProfilePhotoPreview(
-                                        users.profilePhoto ||
-                                          ""
-                                      );
-
-                                      if (
-                                        profilePhotoInputRef.current
-                                      ) {
-                                        profilePhotoInputRef.current.value =
-                                          "";
-                                      }
-                                    }}
-                                  >
-                                    <X className="h-3 w-3" />
-                                  </button>
-                                )}
-                              </div>
-
-                              {profilePhotoPreview && (
-                                <img
-                                  src={
-                                    profilePhotoPreview
-                                  }
-                                  alt="Profile preview"
-                                  className="mt-3 h-24 w-24 rounded-full border object-cover"
-                                />
-                              )}
-
-                              {profilePhotoPreview && (
-                                <button
-                                  type="button"
-                                  className="mt-3 rounded-md bg-red-500 px-4 py-2 text-white hover:bg-red-600"
-                                  onClick={() => {
-                                    setProfilePhotoPreview(
-                                      ""
-                                    );
-
-                                    setProfilePhotoFile(
-                                      null
-                                    );
-
-                                    setRemoveProfilePhoto(
-                                      true
-                                    );
-                                  }}
-                                >
-                                  {t(
-                                    "profile.delete_profile_photo"
-                                  )}
-                                </button>
-                              )}
-                            </div>
-                          </div>
-
-                          <div className="space-y-4">
-                            <h3 className="text-lg font-semibold">
-                              {t(
-                                "profile.about"
-                              )}
-                            </h3>
-
-                            <Textarea
-                              id="about"
-                              value={
-                                editForm.about
-                              }
-                              onChange={(
-                                event
-                              ) =>
-                                setEditForm(
-                                  {
-                                    ...editForm,
-                                    about:
-                                      event
-                                        .target
-                                        .value,
-                                  }
-                                )
-                              }
-                              placeholder={t(
-                                "profile.tell_us_about_yourself"
-                              )}
-                              className="min-h-32 border-gray-300 bg-white"
-                            />
-                          </div>
-
-                          <div className="space-y-4">
-                            <h3 className="text-lg font-semibold">
-                              {t(
-                                "profile.skills_and_technologies"
-                              )}
-                            </h3>
-
-                            <div className="space-y-3">
-                              <div className="flex gap-2">
-                                <Input
-                                  value={
-                                    newTag
-                                  }
-                                  onChange={(
-                                    event
-                                  ) =>
-                                    setNewTag(
-                                      event
-                                        .target
-                                        .value
-                                    )
-                                  }
-                                  placeholder={t(
-                                    "profile.add_a_skill_or_technology"
-                                  )}
-                                  onKeyDown={(
-                                    event
-                                  ) => {
-                                    if (
-                                      event.key ===
-                                      "Enter"
-                                    ) {
-                                      event.preventDefault();
-                                      handleAddTag();
-                                    }
-                                  }}
-                                  className="border-gray-300 bg-white"
-                                />
-
-                                <Button
-                                  type="button"
-                                  onClick={
-                                    handleAddTag
-                                  }
-                                  variant="outline"
-                                  size="sm"
-                                  className="bg-orange-600 text-white"
-                                >
-                                  <Plus className="h-4 w-4" />
-                                </Button>
-                              </div>
-
-                              <div className="flex flex-wrap gap-2">
-                                {editForm.tags.map(
-                                  (
-                                    tag
-                                  ) => (
-                                    <Badge
-                                      key={
-                                        tag
-                                      }
-                                      variant="secondary"
-                                      className="flex items-center gap-1 bg-orange-100 text-orange-800"
-                                    >
-                                      {
-                                        tag
-                                      }
-
-                                      <button
-                                        type="button"
-                                        onClick={() =>
-                                          handleRemoveTag(
-                                            tag
-                                          )
-                                        }
-                                        className="ml-1 hover:text-red-600"
-                                      >
-                                        <X className="h-3 w-3" />
-                                      </button>
-                                    </Badge>
-                                  )
-                                )}
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="flex justify-end gap-3 border-t pt-4">
-                            <Button
-                              type="button"
-                              variant="outline"
-                              onClick={() =>
-                                setIsEditing(
-                                  false
-                                )
-                              }
-                              className="bg-white text-gray-800 hover:text-gray-900"
-                            >
-                              {t(
-                                "profile.cancel"
-                              )}
-                            </Button>
-
-                            <Button
-                              type="button"
-                              onClick={
-                                handleSaveProfile
-                              }
-                              className="bg-blue-600 hover:bg-blue-700"
-                            >
-                              {t(
-                                "profile.save_changes"
-                              )}
-                            </Button>
-                          </div>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
+                      username={
+                        users.username
+                      }
+                      editForm={
+                        editForm
+                      }
+                      setEditForm={
+                        setEditForm
+                      }
+                      newTag={
+                        newTag
+                      }
+                      setNewTag={
+                        setNewTag
+                      }
+                      profilePhotoFile={
+                        profilePhotoFile
+                      }
+                      setProfilePhotoFile={
+                        setProfilePhotoFile
+                      }
+                      profilePhotoPreview={
+                        profilePhotoPreview
+                      }
+                      setProfilePhotoPreview={
+                        setProfilePhotoPreview
+                      }
+                      setRemoveProfilePhoto={
+                        setRemoveProfilePhoto
+                      }
+                      currentProfilePhoto={
+                        users.profilePhoto
+                      }
+                      profilePhotoInputRef={
+                        profilePhotoInputRef
+                      }
+                      handleAddTag={
+                        handleAddTag
+                      }
+                      handleRemoveTag={
+                        handleRemoveTag
+                      }
+                      handleSaveProfile={
+                        handleSaveProfile
+                      }
+                    />
 
                     <Button
                       type="button"
@@ -1011,6 +732,7 @@ const Index = () => {
                 )}
             </div>
 
+            {/* Join date */}
             <div className="mb-4 flex flex-wrap items-center gap-4 text-sm text-gray-600">
               <div className="flex items-center">
                 <Calendar className="mr-1 h-4 w-4" />
@@ -1029,13 +751,14 @@ const Index = () => {
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center space-x-6 text-sm">
+            {/* Badges */}
+            <div className="flex flex-wrap items-center gap-6 text-sm">
+
               <div className="flex items-center">
                 <div className="mr-2 h-3 w-3 rounded-full bg-yellow-500" />
 
                 <span className="font-semibold">
-                  {users
-                    .subscriptionBadges
+                  {users.subscriptionBadges
                     ?.gold || 0}
                 </span>
 
@@ -1050,8 +773,7 @@ const Index = () => {
                 <div className="mr-2 h-3 w-3 rounded-full bg-gray-400" />
 
                 <span className="font-semibold">
-                  {users
-                    .subscriptionBadges
+                  {users.subscriptionBadges
                     ?.silver || 0}
                 </span>
 
@@ -1066,8 +788,7 @@ const Index = () => {
                 <div className="mr-2 h-3 w-3 rounded-full bg-amber-600" />
 
                 <span className="font-semibold">
-                  {users
-                    .subscriptionBadges
+                  {users.subscriptionBadges
                     ?.bronze || 0}
                 </span>
 
@@ -1081,12 +802,18 @@ const Index = () => {
           </div>
         </div>
 
+        {/* Profile content */}
         <div className="grid grid-cols-1 gap-6">
+
+          {/* About */}
           <div className="space-y-6 lg:col-span-2">
+
             <Card>
               <CardHeader>
                 <CardTitle>
-                  {t("user.about")}
+                  {t(
+                    "user.about"
+                  )}
                 </CardTitle>
               </CardHeader>
 
@@ -1098,18 +825,25 @@ const Index = () => {
                 </div>
               </CardContent>
             </Card>
+
           </div>
 
+          {/* Right content */}
           <div className="space-y-6">
+
+            {/* Top tags */}
             <Card>
               <CardHeader>
                 <CardTitle>
-                  {t("user.topTags")}
+                  {t(
+                    "user.topTags"
+                  )}
                 </CardTitle>
               </CardHeader>
 
               <CardContent>
                 <div className="space-y-3">
+
                   {(users.tags || []).map(
                     (tag) => (
                       <div
@@ -1125,14 +859,15 @@ const Index = () => {
                       </div>
                     )
                   )}
+
                 </div>
               </CardContent>
             </Card>
 
+            {/* Reputation */}
             <ReputationSummary
               reputation={
-                users.reputation ||
-                0
+                users.reputation || 0
               }
               onViewActivity={() => {
                 void router.push(
@@ -1141,6 +876,7 @@ const Index = () => {
               }}
             />
 
+            {/* Subscription */}
             {isOwnProfile &&
               subscription &&
               [
@@ -1152,9 +888,11 @@ const Index = () => {
               ) && (
                 <>
                   <SubscriptionDashboard />
+
                   <PaymentHistory />
                 </>
               )}
+
           </div>
         </div>
       </div>
@@ -1162,4 +900,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default UserProfilePage;

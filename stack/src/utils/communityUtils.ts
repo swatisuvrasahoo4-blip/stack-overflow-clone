@@ -5,16 +5,19 @@ interface BookmarkResult {
   message: string;
 }
 
+// Save post to local bookmarks
 export const savePostToBookmarks = (
   post: Post
 ): BookmarkResult => {
-  const savedPosts: Post[] = JSON.parse(
-    localStorage.getItem("savedPosts") || "[]"
-  ) as Post[];
+  const savedPosts: Post[] =
+    JSON.parse(
+      localStorage.getItem("savedPosts") || "[]"
+    ) as Post[];
 
-  const alreadySaved = savedPosts.some(
-    (item) => item._id === post._id
-  );
+  const alreadySaved =
+    savedPosts.some(
+      (item) => item._id === post._id
+    );
 
   if (alreadySaved) {
     return {
@@ -36,11 +39,13 @@ export const savePostToBookmarks = (
   };
 };
 
+// Share community post
 export const shareCommunityPost = async (
   postId: string,
   t: (key: string) => string
 ): Promise<void> => {
-  const shareUrl = `${window.location.origin}/community/${postId}`;
+  const shareUrl =
+    `${window.location.origin}/community/${postId}`;
 
   if (navigator.share) {
     try {
@@ -50,17 +55,24 @@ export const shareCommunityPost = async (
         url: shareUrl,
       });
     } catch (error: unknown) {
-      console.error("Share failed:", error);
+      console.error(
+        "Share failed:",
+        error
+      );
     }
 
     return;
   }
 
   try {
-    await navigator.clipboard.writeText(shareUrl);
+    await navigator.clipboard.writeText(
+      shareUrl
+    );
 
     alert(
-      t("alert.link_copied_to_clipboard")
+      t(
+        "alert.link_copied_to_clipboard"
+      )
     );
   } catch (error: unknown) {
     console.error(

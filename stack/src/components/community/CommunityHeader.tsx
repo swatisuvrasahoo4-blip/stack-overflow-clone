@@ -1,40 +1,62 @@
-import { useAuth } from "@/lib/AuthContext";
-import Link from "next/link"
 import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-import { useTranslation } from "react-i18next"
 
-export default function CommunityHeader(){
-  const {t} = useTranslation();
+import { useAuth } from "@/lib/AuthContext";
+
+const CommunityHeader = () => {
+  const { t } = useTranslation();
   const router = useRouter();
-  const {user} = useAuth();
-    return (
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-          <div>
-            <h1 className="text-2xl font-semibold">
-              {t("community.community_feed")}
-            </h1>
+  const { user } = useAuth();
 
-            <p className="text-gray-500 text-sm mt-1">
-              {t("community.share_updates_projects_code_snippets_and_learning_achievements")}
-            </p>
-          </div>
-
-         <button
-  type="button"
-  onClick={() => {
+  const handleCreatePost = () => {
     if (!user) {
-      toast.info(t("toast.please_login_to_continue"));
-      router.push("/auth");
+      toast.info(
+        t("toast.please_login_to_continue")
+      );
+
+      void router.push("/auth");
       return;
     }
 
-    router.push("/community/create");
-  }}
-  className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 text-center rounded-lg transition-colors text-sm font-medium"
->
-  {t("community.createPost")}
-</button>
-        </div>
-    )
-}
+    void router.push(
+      "/community/create"
+    );
+  };
+
+  return (
+    <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+      {/* Community heading */}
+
+      <div>
+        <h1 className="text-2xl font-semibold">
+          {t(
+            "community.community_feed"
+          )}
+        </h1>
+
+        <p className="mt-1 text-sm text-gray-500">
+          {t(
+            "community.share_updates_projects_code_snippets_and_learning_achievements"
+          )}
+        </p>
+      </div>
+
+      {/* Create post button */}
+
+      <button
+        type="button"
+        onClick={
+          handleCreatePost
+        }
+        className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-3 py-1.5 text-center text-sm font-medium text-white transition-colors hover:bg-blue-700"
+      >
+        {t(
+          "community.createPost"
+        )}
+      </button>
+    </div>
+  );
+};
+
+export default CommunityHeader;

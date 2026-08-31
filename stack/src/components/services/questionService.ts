@@ -1,76 +1,97 @@
-import axiosInstance from "@/lib/axiosinstance";
 import axios from "axios";
+import axiosInstance from "@/lib/axiosinstance";
 
+interface AnswerData {
+  answerbody: string;
+  useranswered: string;
+  userid: string;
+}
+
+// Submit answer
 export const submitAnswer = async (
   questionId: string,
-  answerData: {
-    answerbody: string;
-    useranswered: string;
-    userid: string;
-  }
+  answerData: AnswerData
 ) => {
-  const res = await axiosInstance.post(
+  const response = await axiosInstance.post(
     `/question/answer/${questionId}`,
     answerData
   );
 
-  return res.data;
+  return response.data;
 };
+
+// Toggle question bookmark
 export const toggleQuestionBookmark = async (
   userId: string,
   questionId: string
 ) => {
-  const res = await axiosInstance.post("/question-bookmark/toggle", {
-    userId,
-    questionId,
-  });
+  const response = await axiosInstance.post(
+    "/question-bookmark/toggle",
+    {
+      userId,
+      questionId,
+    }
+  );
 
-  return res.data;
+  return response.data;
 };
-export const getQuestionBookmarks = async (userId?: string) => {
-  if (!userId) return [];
 
-  try {
-    const res = await axiosInstance.get(
-      `/question-bookmark/get/${userId}`
-    );
-
-    return res.data.questionBookmarks || [];
-  } catch (error: unknown) {
-  if (
-    axios.isAxiosError(error) &&
-    error.response?.status === 401
-  ) {
+// Get question bookmarks
+export const getQuestionBookmarks = async (
+  userId?: string
+) => {
+  if (!userId) {
     return [];
   }
 
-  throw error;
-}
+  try {
+    const response = await axiosInstance.get(
+      `/question-bookmark/get/${userId}`
+    );
+
+    return response.data.questionBookmarks || [];
+  } catch (error: unknown) {
+    if (
+      axios.isAxiosError(error) &&
+      error.response?.status === 401
+    ) {
+      return [];
+    }
+
+    throw error;
+  }
 };
 
-export const getQuestionById = async (questionId: string) => {
-  const res = await axiosInstance.get(`/question/${questionId}`);
+// Get question by ID
+export const getQuestionById = async (
+  questionId: string
+) => {
+  const response = await axiosInstance.get(
+    `/question/${questionId}`
+  );
 
-  return res.data.data;
+  return response.data.data;
 };
 
+// Accept answer
 export const acceptAnswer = async (
   questionId: string,
   answerId: string
 ) => {
-  const res = await axiosInstance.patch(
+  const response = await axiosInstance.patch(
     `/answer/accept/${questionId}/${answerId}`
   );
 
-  return res.data;
+  return response.data;
 };
 
+// Vote on question
 export const voteQuestion = async (
   questionId: string,
   value: "upvote" | "downvote",
   userId: string
 ) => {
-  const res = await axiosInstance.patch(
+  const response = await axiosInstance.patch(
     `/question/vote/${questionId}`,
     {
       value,
@@ -78,10 +99,13 @@ export const voteQuestion = async (
     }
   );
 
-  return res.data;
+  return response.data;
 };
 
-export const checkQuestionReportStatus = async (questionId: string) => {
+// Check question report status
+export const checkQuestionReportStatus = async (
+  questionId: string
+) => {
   const response = await axiosInstance.get(
     `/report/check/question/${questionId}`
   );
@@ -89,18 +113,22 @@ export const checkQuestionReportStatus = async (questionId: string) => {
   return response.data;
 };
 
+// Search questions
 export const searchQuestions = async (
   query: string,
   cursor: string | null = null,
   limit = 10
 ) => {
-  const res = await axiosInstance.get("/question/search", {
-    params: {
-      q: query,
-      cursor: cursor || undefined,
-      limit,
-    },
-  });
+  const response = await axiosInstance.get(
+    "/question/search",
+    {
+      params: {
+        q: query,
+        cursor: cursor || undefined,
+        limit,
+      },
+    }
+  );
 
-  return res.data;
+  return response.data;
 };

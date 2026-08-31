@@ -24,31 +24,44 @@ const Navbar = ({ handleslidein }: NavbarProps) => {
     setHasMounted(true);
   }, []);
 
-  const handlelogout = () => {
+  const handleLogout = () => {
     Logout();
 
     try {
-      router.push("/");
+      void router.push("/");
     } catch (error: unknown) {
+      console.error("Logout redirect failed:", error);
       window.location.href = "/";
     }
   };
 
+  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const query = searchTerm.trim();
+
+    if (!query) {
+      return;
+    }
+
+    void router.push(
+      `/search?q=${encodeURIComponent(query)}`
+    );
+  };
+
   return (
-    <div className="fixed inset-x-0 top-0 z-50 h-53px w-full bg-white border-t-[3px] border-[#ef8236] shadow-[0_1px_5px_#00000033] flex items-center justify-center">
+    <div className="fixed inset-x-0 top-0 z-50 flex h-53px w-full items-center justify-center border-t-[3px] border-[#ef8236] bg-white shadow-[0_1px_5px_#00000033]">
       <div className="mx-auto flex w-[90%] max-w-1440px items-center justify-between py-1">
-
         {/* Left Section */}
-        <div className="flex items-center gap-2 flex-1">
-
+        <div className="flex flex-1 items-center gap-2">
           {/* Sidebar Button */}
           <button
             type="button"
             aria-label="Toggle sidebar"
-            className="sm:block p-2 rounded hover:bg-gray-100 transition"
+            className="rounded p-2 transition hover:bg-gray-100 sm:block"
             onClick={handleslidein}
           >
-            <Menu className="w-4 h-5 text-gray-800" />
+            <Menu className="h-5 w-4 text-gray-800" />
           </button>
 
           {/* Logo */}
@@ -61,7 +74,7 @@ const Navbar = ({ handleslidein }: NavbarProps) => {
           </Link>
 
           {/* Navigation Links */}
-          <div className="hidden sm:flex gap-1">
+          <div className="hidden gap-1 sm:flex">
             {[
               t("navbar.about"),
               t("navbar.products"),
@@ -70,7 +83,7 @@ const Navbar = ({ handleslidein }: NavbarProps) => {
               <Link
                 key={item}
                 href="/"
-                className="text-sm text-[#454545] font-medium px-4 py-2 rounded hover:bg-gray-200 transition"
+                className="rounded px-4 py-2 text-sm font-medium text-[#454545] transition hover:bg-gray-200"
               >
                 {item}
               </Link>
@@ -80,29 +93,17 @@ const Navbar = ({ handleslidein }: NavbarProps) => {
           {/* Search */}
           <div className="hidden flex-1 items-center px-4 lg:flex">
             <form
-              onSubmit={(e) => {
-                e.preventDefault();
-
-                const query = searchTerm.trim();
-
-                if (!query) {
-                  return;
-                }
-
-                router.push(
-                  `/search?q=${encodeURIComponent(query)}`
-                );
-              }}
+              onSubmit={handleSearch}
               className="relative flex-1"
             >
               <input
                 type="text"
                 value={searchTerm}
-                onChange={(e) =>
-                  setSearchTerm(e.target.value)
+                onChange={(event) =>
+                  setSearchTerm(event.target.value)
                 }
                 placeholder={t("navbar.search")}
-                className="w-90 rounded border border-gray-300 py-2 pl-10 pr-1 ml-0 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="ml-0 w-90 rounded border border-gray-300 py-2 pl-10 pr-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
 
               <Search className="absolute left-4 top-2.5 h-4 w-4 text-gray-600" />
@@ -111,42 +112,39 @@ const Navbar = ({ handleslidein }: NavbarProps) => {
 
           {/* Right Section */}
           <div className="flex items-center gap-7 pt-2">
-
             {/* Notifications */}
             {hasMounted && user ? (
               <NotificationBell />
             ) : null}
 
             <div className="flex items-center gap-3">
-
               {/* Logged Out */}
               {!hasMounted ? null : !user ? (
                 <div className="flex gap-2">
-
                   <Link
                     href="/auth"
-                    className="text-sm font-medium text-[#454545] bg-[#e7f8fe] hover:bg-[#d3e4eb] border border-blue-500 px-4 py-1.5 rounded transition"
+                    className="rounded border border-blue-500 bg-[#e7f8fe] px-4 py-1.5 text-sm font-medium text-[#454545] transition hover:bg-[#d3e4eb]"
                   >
                     {t("navbar.login")}
                   </Link>
 
                   <Link
                     href="/signup"
-                    className="text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md transition-colors"
+                    className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
                   >
                     {t("navbar.signup")}
                   </Link>
-
                 </div>
               ) : (
-
                 /* Logged In */
                 <>
                   {/* Profile */}
                   <button
                     type="button"
                     onClick={() =>
-                      router.push(`/users/${user._id}`)
+                      void router.push(
+                        `/users/${user._id}`
+                      )
                     }
                     className="cursor-pointer rounded-full transition-transform duration-200 hover:scale-105"
                   >
@@ -157,7 +155,7 @@ const Navbar = ({ handleslidein }: NavbarProps) => {
                         className="h-10 w-10 rounded-full object-cover"
                       />
                     ) : (
-                      <div className="h-10 w-10 rounded-full bg-orange-600 text-white flex items-center justify-center font-semibold">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-600 font-semibold text-white">
                         {user.name
                           ?.charAt(0)
                           .toUpperCase()}
@@ -168,14 +166,13 @@ const Navbar = ({ handleslidein }: NavbarProps) => {
                   {/* Logout */}
                   <button
                     type="button"
-                    onClick={handlelogout}
-                    className="text-sm font-medium text-[#454545] bg-[#e7f8fe] hover:bg-[#d3e4eb] border border-blue-500 px-1 w-22 py-1.5 rounded transition"
+                    onClick={handleLogout}
+                    className="w-22 rounded border border-blue-500 bg-[#e7f8fe] px-1 py-1.5 text-sm font-medium text-[#454545] transition hover:bg-[#d3e4eb]"
                   >
                     {t("navbar.logout")}
                   </button>
                 </>
               )}
-
             </div>
           </div>
         </div>

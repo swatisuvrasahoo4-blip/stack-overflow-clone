@@ -1,4 +1,9 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 interface BillingDetailsProps {
   name: string;
@@ -7,18 +12,20 @@ interface BillingDetailsProps {
   amount: number;
 }
 
-export default function BillingDetails({
+const BillingDetails = ({
   name,
   email,
   plan,
   amount,
-}: BillingDetailsProps) {
+}: BillingDetailsProps) => {
   return (
     <Card className="mt-8">
+      {/* Billing details header */}
       <CardHeader>
         <CardTitle>Billing Details</CardTitle>
       </CardHeader>
 
+      {/* Billing information */}
       <CardContent className="space-y-3">
         <div className="flex justify-between">
           <span className="text-gray-500">Name</span>
@@ -42,4 +49,6 @@ export default function BillingDetails({
       </CardContent>
     </Card>
   );
-}
+};
+
+export default BillingDetails;

@@ -1,15 +1,19 @@
-import axiosinstance from "@/lib/axiosinstance";
+import axiosInstance from "@/lib/axiosinstance";
 
+// Change user password
 export const changePassword = async (
   currentPassword: string,
   newPassword: string,
   confirmPassword: string
 ) => {
-  const response = await axiosinstance.put("/change-password", {
-    currentPassword,
-    newPassword,
-    confirmPassword,
-  });
+  const response = await axiosInstance.put(
+    "/change-password",
+    {
+      currentPassword,
+      newPassword,
+      confirmPassword,
+    }
+  );
 
   return response.data;
 };

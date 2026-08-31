@@ -6,9 +6,16 @@ import {
 import { Input } from "@/components/ui/input";
 import Mainlayout from "@/layout/Mainlayout";
 import axiosInstance from "@/lib/axiosinstance";
-import { Calendar, Search, Star } from "lucide-react";
+import {
+  Calendar,
+  Search,
+  Star,
+} from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
 import { FollowButton } from "@/components/follow/FollowButton";
 import { useAuth } from "@/lib/AuthContext";
 import { useTranslation } from "react-i18next";
@@ -101,7 +108,9 @@ const Index = () => {
   if (loading) {
     return (
       <Mainlayout>
-        <div className="h-10 w-10 animate-spin rounded-full border-b-2 border-t-2 border-blue-500" />
+        <div className="flex min-h-48 items-center justify-center">
+          <div className="h-10 w-10 animate-spin rounded-full border-b-2 border-t-2 border-blue-500" />
+        </div>
       </Mainlayout>
     );
   }
@@ -118,7 +127,8 @@ const Index = () => {
 
   return (
     <Mainlayout>
-      <div className="max-w-6xl">
+      <div className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6">
+
         <h1 className="mb-6 text-xl font-semibold lg:text-2xl">
           {t("user.users")}
         </h1>
@@ -137,6 +147,7 @@ const Index = () => {
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+
           {users.map((profileUser) => {
             const userId =
               profileUser._id ||
@@ -171,7 +182,9 @@ const Index = () => {
                         : "border-gray-200"
                   }`}
                 >
+
                   <div className="mb-3 flex items-start justify-between">
+
                     <Avatar className="mr-3 h-12 w-12">
                       <AvatarImage
                         src={
@@ -198,7 +211,9 @@ const Index = () => {
                     </Avatar>
 
                     <div className="min-w-0 flex-1">
+
                       <div className="absolute right-4 top-4 flex flex-col items-center gap-2">
+
                         {!isCurrentUser && (
                           <FollowButton
                             userId={
@@ -216,9 +231,11 @@ const Index = () => {
                             <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
                           </div>
                         )}
+
                       </div>
 
                       <div className="pr-8">
+
                         <h3 className="flex items-center gap-1 truncate font-semibold text-blue-600 hover:text-blue-800">
                           {
                             profileUser.name
@@ -230,11 +247,15 @@ const Index = () => {
                           {profileUser.username ||
                             profileUser.name}
                         </p>
+
                       </div>
+
                     </div>
+
                   </div>
 
                   <div className="mb-3 flex items-center text-sm text-gray-600">
+
                     <Calendar className="mr-1 h-4 w-4" />
 
                     <span>
@@ -245,11 +266,14 @@ const Index = () => {
                           ).getFullYear()
                         : "-"}
                     </span>
+
                   </div>
+
                 </div>
               </Link>
             );
           })}
+
         </div>
       </div>
     </Mainlayout>

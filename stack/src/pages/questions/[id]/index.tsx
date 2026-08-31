@@ -1,7 +1,7 @@
 import QuestionDetail from "@/components/QuestionDetail";
 import Mainlayout from "@/layout/Mainlayout";
+
 import { useRouter } from "next/router";
-import React from "react";
 
 const QuestionPage = () => {
   const router = useRouter();
@@ -12,17 +12,10 @@ const QuestionPage = () => {
     ? id[0]
     : id;
 
-  const handleBack = (): void => {
-    void router.push(
-      "/questions",
-      undefined,
-      { scroll: false }
-    );
-  };
-
   if (!router.isReady || !questionId) {
     return (
       <Mainlayout>
+        {/* Loading state */}
         <div>Loading...</div>
       </Mainlayout>
     );
@@ -30,12 +23,11 @@ const QuestionPage = () => {
 
   return (
     <Mainlayout>
-      <div>
-        <QuestionDetail
-          questionId={questionId}
-          key={questionId}
-        />
-      </div>
+      {/* Question details */}
+      <QuestionDetail
+        questionId={questionId}
+        key={questionId}
+      />
     </Mainlayout>
   );
 };

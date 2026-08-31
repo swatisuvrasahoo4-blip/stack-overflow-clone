@@ -1,16 +1,32 @@
-import React, {
+import {
   useEffect,
   useRef,
   useState,
 } from "react";
+
+import type {
+  ChangeEvent,
+  FormEvent,
+} from "react";
+
 import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
+
+import CreatePostFeaturedOption from "@/components/community/create/CreatePostFeaturedOption";
+import CreatePostHashtags from "@/components/community/create/CreatePostHashtags";
+import CreatePostImageUpload from "@/components/community/create/CreatePostImageUpload";
+import CreatePostMentions from "@/components/community/create/CreatePostMentions";
+import CreatePostTypeFields from "@/components/community/create/CreatePostTypeFields";
+
+import MentionText from "@/components/mentions/MentionText";
+
+import { createPost } from "@/components/services/communityService";
+import { getSubscription } from "@/components/services/subscriptionService";
+
 import Mainlayout from "@/layout/Mainlayout";
+
 import axiosInstance from "@/lib/axiosinstance";
 import { useAuth } from "@/lib/AuthContext";
-import { createPost } from "@/components/services/communityService";
-import MentionText from "@/components/mentions/MentionText";
-import { getSubscription } from "@/components/services/subscriptionService";
-import { useTranslation } from "react-i18next";
 
 interface CommunityUser {
   username?: string;
@@ -30,42 +46,41 @@ interface GetUsersResponse {
   data?: CommunityUser[];
 }
 
-export default function CreatePost() {
+interface CreatePostForm {
+  content: string;
+  postType: string;
+  isFeatured: boolean;
+  image: File | null;
+  codeSnippet: string;
+  projectTitle: string;
+  projectLink: string;
+  achievementTitle: string;
+  achievementDescription: string;
+}
+
+const CreatePost = () => {
   const router = useRouter();
+
   const { user } = useAuth();
   const { t } = useTranslation();
 
   const imageInputRef =
     useRef<HTMLInputElement>(null);
 
-  const [mentionInput, setMentionInput] =
-    useState<string>("");
-
   const [
-    mentionInputMatches,
-    setMentionInputMatches,
-  ] = useState<string[]>([]);
-
-  const [isGoldUser, setIsGoldUser] =
-    useState<boolean>(false);
-
-  const [form, setForm] = useState({
+    form,
+    setForm,
+  ] = useState<CreatePostForm>({
     content: "",
     postType: "Technical Update",
     isFeatured: false,
-    image: null as File | null,
+    image: null,
     codeSnippet: "",
-    hashtags: "",
     projectTitle: "",
     projectLink: "",
     achievementTitle: "",
     achievementDescription: "",
-    codeLanguage: "javascript",
-    codeTitle: "",
   });
-
-  const [mentionQuery, setMentionQuery] =
-    useState<string>("");
 
   const [
     mentionMatches,
@@ -77,100 +92,159 @@ export default function CreatePost() {
     setAllUsernames,
   ] = useState<string[]>([]);
 
-  const [loading, setLoading] =
-    useState<boolean>(false);
-
-  const [tagInput, setTagInput] =
-    useState<string>("");
-
-  const [tags, setTags] =
-    useState<string[]>([]);
-
   const [
     selectedMentions,
     setSelectedMentions,
   ] = useState<string[]>([]);
 
+  const [
+    tags,
+    setTags,
+  ] = useState<string[]>([]);
+
+  const [
+    isGoldUser,
+    setIsGoldUser,
+  ] = useState(false);
+
+  const [
+    loading,
+    setLoading,
+  ] = useState(false);
+
+  // Update normal form fields
   const handleChange = (
-    e: React.ChangeEvent<
+    event: ChangeEvent<
       | HTMLInputElement
       | HTMLTextAreaElement
       | HTMLSelectElement
     >
   ): void => {
-    const { name, value } = e.target;
+    const {
+      name,
+      value,
+    } = event.target;
 
-    const nextForm = {
-      ...form,
-      [name]: value,
-    };
-
-    if (name === "content") {
-      const mentionMatch =
-        nextForm.content.match(
-          /(?:^|\s)@([a-zA-Z0-9_]{0,20})$/
-        );
-
-      const query =
-        mentionMatch?.[1] ?? "";
-
-      setMentionQuery(query);
-
-      if (query.length > 0) {
-        const filtered =
-          allUsernames.filter(
-            (username) =>
-              username
-                .toLowerCase()
-                .startsWith(
-                  query.toLowerCase()
-                ) &&
-              username !==
-                user?.username
-          );
-
-        setMentionMatches(
-          filtered.slice(0, 5)
-        );
-      } else {
-        setMentionMatches([]);
-      }
-    }
-
-    setForm(nextForm);
+    setForm(
+      (previousForm) => ({
+        ...previousForm,
+        [name]: value,
+      })
+    );
   };
 
-  const addTag = (): void => {
-    const tag = tagInput.trim();
+  // Update main post content and mention suggestions
+  const handleContentChange = (
+    content: string
+  ): void => {
+    setForm(
+      (previousForm) => ({
+        ...previousForm,
+        content,
+      })
+    );
 
-    if (!tag) {
+    const mentionMatch =
+      content.match(
+        /(?:^|\s)@([a-zA-Z0-9_]{0,20})$/
+      );
+
+    const query =
+      mentionMatch?.[1] ?? "";
+
+    if (!query) {
+      setMentionMatches([]);
       return;
     }
 
-    if (!tags.includes(tag)) {
-      setTags((previousTags) => [
-        ...previousTags,
-        tag,
-      ]);
-    }
+    const filteredUsers =
+      allUsernames
+        .filter(
+          (username) =>
+            username
+              .toLowerCase()
+              .startsWith(
+                query.toLowerCase()
+              ) &&
+            username !==
+              user?.username
+        )
+        .slice(0, 5);
 
-    setTagInput("");
+    setMentionMatches(
+      filteredUsers
+    );
   };
 
+  // Add mention selected from MentionText
+  const handleSelectMention = (
+    username: string
+  ): void => {
+    if (
+      selectedMentions.includes(
+        username
+      )
+    ) {
+      return;
+    }
+
+    setSelectedMentions(
+      (previousMentions) => [
+        ...previousMentions,
+        username,
+      ]
+    );
+  };
+
+  // Remove selected mention
+  const handleRemoveMention = (
+    username: string
+  ): void => {
+    setSelectedMentions(
+      (previousMentions) =>
+        previousMentions.filter(
+          (mention) =>
+            mention !== username
+        )
+    );
+
+    setForm(
+      (previousForm) => ({
+        ...previousForm,
+        content:
+          previousForm.content
+            .replace(
+              new RegExp(
+                `@${username}\\b`,
+                "gi"
+              ),
+              ""
+            )
+            .replace(
+              /\s{2,}/g,
+              " "
+            )
+            .trim(),
+      })
+    );
+  };
+
+  // Load usernames
   useEffect(() => {
     const loadUsernames =
       async (): Promise<void> => {
         try {
-          const res =
+          const response =
             await axiosInstance.get<GetUsersResponse>(
               "/user/getalluser"
             );
 
           const usernames =
-            (res.data.data ?? [])
+            (response.data.data ??
+              [])
               .map(
                 (
-                  currentUser: CommunityUser
+                  currentUser
                 ) =>
                   currentUser.username
               )
@@ -181,10 +255,12 @@ export default function CreatePost() {
                   Boolean(username)
               );
 
-          setAllUsernames(usernames);
+          setAllUsernames(
+            usernames
+          );
         } catch (error: unknown) {
           console.error(
-            "Failed to load usernames",
+            "Failed to load usernames:",
             error
           );
         }
@@ -193,6 +269,7 @@ export default function CreatePost() {
     void loadUsernames();
   }, []);
 
+  // Check Gold subscription
   useEffect(() => {
     const checkSubscription =
       async (): Promise<void> => {
@@ -205,7 +282,8 @@ export default function CreatePost() {
             await getSubscription();
 
           setIsGoldUser(
-            response.data.plan?.toLowerCase() ===
+            response.data.plan
+              ?.toLowerCase() ===
               "gold"
           );
         } catch (error: unknown) {
@@ -214,17 +292,20 @@ export default function CreatePost() {
             error
           );
 
-          setIsGoldUser(false);
+          setIsGoldUser(
+            false
+          );
         }
       };
 
     void checkSubscription();
   }, [user]);
 
+  // Submit post
   const handleSubmit = async (
-    e: React.FormEvent<HTMLFormElement>
+    event: FormEvent<HTMLFormElement>
   ): Promise<void> => {
-    e.preventDefault();
+    event.preventDefault();
 
     setLoading(true);
 
@@ -301,7 +382,9 @@ export default function CreatePost() {
       ) {
         formData.append(
           "mentions",
-          selectedMentions.join(",")
+          selectedMentions.join(
+            ","
+          )
         );
       }
 
@@ -348,53 +431,11 @@ export default function CreatePost() {
     }
   };
 
-  const handleAddMention =
-    (): void => {
-      const username =
-        mentionInput
-          .trim()
-          .replace(/^@/, "")
-          .toLowerCase();
-
-      if (!username) {
-        return;
-      }
-
-      if (
-        !allUsernames.includes(
-          username
-        )
-      ) {
-        alert(
-          t(
-            "alert.user_not_found"
-          )
-        );
-
-        return;
-      }
-
-      if (
-        !selectedMentions.includes(
-          username
-        )
-      ) {
-        setSelectedMentions(
-          (previousMentions) => [
-            ...previousMentions,
-            username,
-          ]
-        );
-      }
-
-      setMentionInput("");
-      setMentionInputMatches([]);
-    };
-
   return (
     <Mainlayout>
-      <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow">
-        <h1 className="text-2xl font-bold mb-6">
+      <div className="mx-auto max-w-2xl rounded-lg bg-white p-6 shadow">
+        {/* Page heading */}
+        <h1 className="mb-6 text-2xl font-bold">
           {t(
             "createpost.create_community_post"
           )}
@@ -404,41 +445,26 @@ export default function CreatePost() {
           onSubmit={handleSubmit}
           className="space-y-6"
         >
+          {/* Post content */}
           <MentionText
             value={form.content}
-            matches={mentionMatches}
-            onChange={(content) =>
-              setForm(
-                (previousForm) => ({
-                  ...previousForm,
-                  content,
-                })
+            matches={
+              mentionMatches
+            }
+            onChange={
+              handleContentChange
+            }
+            onSelectMention={
+              handleSelectMention
+            }
+            onClearSuggestions={() =>
+              setMentionMatches(
+                []
               )
             }
-            onSelectMention={(
-              username
-            ) => {
-              if (
-                !selectedMentions.includes(
-                  username
-                )
-              ) {
-                setSelectedMentions(
-                  (
-                    previousMentions
-                  ) => [
-                    ...previousMentions,
-                    username,
-                  ]
-                );
-              }
-            }}
-            onClearSuggestions={() => {
-              setMentionQuery("");
-              setMentionMatches([]);
-            }}
           />
 
+          {/* Selected mentions */}
           {selectedMentions.length >
             0 && (
             <div className="mt-3 flex flex-wrap gap-2">
@@ -452,42 +478,11 @@ export default function CreatePost() {
 
                     <button
                       type="button"
-                      onClick={() => {
-                        setSelectedMentions(
-                          (
-                            previousMentions
-                          ) =>
-                            previousMentions.filter(
-                              (
-                                mention
-                              ) =>
-                                mention !==
-                                username
-                            )
-                        );
-
-                        setForm(
-                          (
-                            previousForm
-                          ) => ({
-                            ...previousForm,
-                            content:
-                              previousForm.content
-                                .replace(
-                                  new RegExp(
-                                    `@${username}\\b`,
-                                    "gi"
-                                  ),
-                                  ""
-                                )
-                                .replace(
-                                  /\s{2,}/g,
-                                  " "
-                                )
-                                .trim(),
-                          })
-                        );
-                      }}
+                      onClick={() =>
+                        handleRemoveMention(
+                          username
+                        )
+                      }
                       className="font-semibold hover:text-purple-900"
                     >
                       ×
@@ -498,11 +493,12 @@ export default function CreatePost() {
             </div>
           )}
 
+          {/* Post type */}
           <select
             name="postType"
             value={form.postType}
             onChange={handleChange}
-            className="w-full border rounded p-2"
+            className="w-full rounded border p-2"
           >
             <option value="Technical Update">
               {t(
@@ -529,422 +525,102 @@ export default function CreatePost() {
             </option>
           </select>
 
-          {isGoldUser ? (
-            <label className="flex items-center gap-3 rounded-lg border border-yellow-300 bg-yellow-50 p-3 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={
-                  form.isFeatured
-                }
-                onChange={(e) =>
-                  setForm(
-                    (previousForm) => ({
-                      ...previousForm,
-                      isFeatured:
-                        e.target
-                          .checked,
-                    })
-                  )
-                }
-                className="h-4 w-4 accent-yellow-500"
-              />
+          {/* Featured option */}
+          <CreatePostFeaturedOption
+            isGoldUser={
+              isGoldUser
+            }
+            isFeatured={
+              form.isFeatured
+            }
+            onFeaturedChange={(
+              isFeatured
+            ) =>
+              setForm(
+                (
+                  previousForm
+                ) => ({
+                  ...previousForm,
+                  isFeatured,
+                })
+              )
+            }
+          />
 
-              <div>
-                <p className="font-medium text-yellow-800">
-                  {t(
-                    "createpost.feature_this_post"
-                  )}
-                </p>
+          {/* Image upload */}
+          <CreatePostImageUpload
+            postType={
+              form.postType
+            }
+            image={
+              form.image
+            }
+            imageInputRef={
+              imageInputRef
+            }
+            onImageChange={(
+              image
+            ) =>
+              setForm(
+                (
+                  previousForm
+                ) => ({
+                  ...previousForm,
+                  image,
+                })
+              )
+            }
+          />
 
-                <p className="text-sm text-yellow-700">
-                  {t(
-                    "createpost.give_this_post_premium_visibility_in_the_community"
-                  )}
-                </p>
-              </div>
-            </label>
-          ) : (
-            <div
-              onClick={() =>
-                router.push(
-                  "/subscription"
-                )
-              }
-              className="flex cursor-pointer items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 p-3"
-            >
-              <input
-                type="checkbox"
-                disabled
-                className="h-4 w-4 cursor-not-allowed"
-              />
+          {/* Post-specific fields */}
+          <CreatePostTypeFields
+            postType={
+              form.postType
+            }
+            projectTitle={
+              form.projectTitle
+            }
+            projectLink={
+              form.projectLink
+            }
+            achievementTitle={
+              form.achievementTitle
+            }
+            achievementDescription={
+              form.achievementDescription
+            }
+            codeSnippet={
+              form.codeSnippet
+            }
+            onChange={
+              handleChange
+            }
+          />
 
-              <div>
-                <p className="font-medium text-gray-700">
-                  {t(
-                    "createpost.feature_this_post"
-                  )}
-                </p>
+          {/* Manual mentions */}
+          <CreatePostMentions
+            allUsernames={
+              allUsernames
+            }
+            selectedMentions={
+              selectedMentions
+            }
+            setSelectedMentions={
+              setSelectedMentions
+            }
+          />
 
-                <p className="text-sm text-gray-500">
-                  {t(
-                    "createpost.gold_feature_-_upgrade_to_gold_to_feature_your_posts"
-                  )}
-                </p>
-              </div>
-            </div>
-          )}
+          {/* Hashtags */}
+          <CreatePostHashtags
+            tags={tags}
+            setTags={setTags}
+          />
 
-          <div className="space-y-2">
-            <input
-              ref={imageInputRef}
-              type="file"
-              accept="image/jpeg,image/png,image/webp"
-              className="hidden"
-              onChange={(e) => {
-                const file =
-                  e.target.files?.[0] ??
-                  null;
-
-                setForm(
-                  (previousForm) => ({
-                    ...previousForm,
-                    image: file,
-                  })
-                );
-              }}
-            />
-
-            {form.postType !==
-              "Code Snippet" && (
-              <div className="flex items-center rounded border p-2">
-                <button
-                  type="button"
-                  className="cursor-pointer rounded bg-gray-100 px-4 py-2 hover:bg-gray-200"
-                  onClick={() =>
-                    imageInputRef.current?.click()
-                  }
-                >
-                  {t(
-                    "createpost.choose_file"
-                  )}
-                </button>
-
-                <span
-                  className={`ml-auto truncate px-3 text-sm ${
-                    form.image
-                      ? "text-gray-700"
-                      : "text-red-600"
-                  }`}
-                >
-                  {form.image
-                    ? form.image.name
-                    : t(
-                        "createpost.no_file_choosen"
-                      )}
-                </span>
-
-                {form.image && (
-                  <button
-                    type="button"
-                    className="cursor-pointer px-2 text-xl font-bold text-red-600 hover:text-red-800"
-                    aria-label="Remove selected image"
-                    onClick={() => {
-                      setForm(
-                        (
-                          previousForm
-                        ) => ({
-                          ...previousForm,
-                          image: null,
-                        })
-                      );
-
-                      if (
-                        imageInputRef.current
-                      ) {
-                        imageInputRef.current.value =
-                          "";
-                      }
-                    }}
-                  >
-                    ×
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-
-          {form.postType ===
-            "Project Showcase" && (
-            <>
-              <input
-                type="text"
-                name="projectTitle"
-                placeholder={t(
-                  "createpost.project_title"
-                )}
-                value={
-                  form.projectTitle
-                }
-                onChange={
-                  handleChange
-                }
-                className="w-full rounded border p-2"
-              />
-
-              <input
-                type="url"
-                name="projectLink"
-                placeholder={t(
-                  "createpost.github_or_live_demo_url"
-                )}
-                value={
-                  form.projectLink
-                }
-                onChange={
-                  handleChange
-                }
-                className="w-full rounded border p-2"
-              />
-            </>
-          )}
-
-          {form.postType ===
-            "Learning Achievement" && (
-            <>
-              <input
-                type="text"
-                name="achievementTitle"
-                placeholder={t(
-                  "createpost.achievement_title"
-                )}
-                value={
-                  form.achievementTitle
-                }
-                onChange={
-                  handleChange
-                }
-                className="w-full rounded border p-2"
-              />
-
-              <textarea
-                name="achievementDescription"
-                placeholder={t(
-                  "createpost.describe_your_achievement"
-                )}
-                value={
-                  form.achievementDescription
-                }
-                onChange={
-                  handleChange
-                }
-                rows={3}
-                className="w-full rounded border p-2"
-              />
-            </>
-          )}
-
-          {form.postType ===
-            "Code Snippet" && (
-            <textarea
-              name="codeSnippet"
-              value={
-                form.codeSnippet
-              }
-              onChange={
-                handleChange
-              }
-              placeholder={t(
-                "createpost.paste_your_code_snippet"
-              )}
-              className="min-h-40 w-full rounded border p-3 font-mono"
-            />
-          )}
-
-          <div className="relative space-y-2">
-            <label className="text-sm font-medium">
-              {t(
-                "createpost.mention_users"
-              )}
-            </label>
-
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={
-                  mentionInput
-                }
-                onChange={(e) => {
-                  const value =
-                    e.target.value;
-
-                  setMentionInput(
-                    value
-                  );
-
-                  const query =
-                    value
-                      .trim()
-                      .replace(
-                        /^@/,
-                        ""
-                      )
-                      .toLowerCase();
-
-                  if (!query) {
-                    setMentionInputMatches(
-                      []
-                    );
-
-                    return;
-                  }
-
-                  const filteredUsers =
-                    allUsernames
-                      .filter(
-                        (
-                          username
-                        ) => {
-                          const lowerUsername =
-                            username.toLowerCase();
-
-                          return (
-                            lowerUsername.startsWith(
-                              query
-                            ) &&
-                            !selectedMentions.includes(
-                              username
-                            )
-                          );
-                        }
-                      )
-                      .slice(
-                        0,
-                        5
-                      );
-
-                  setMentionInputMatches(
-                    filteredUsers
-                  );
-                }}
-                placeholder={t(
-                  "createpost.type_a_username"
-                )}
-                className="w-full rounded-md border px-3 py-2"
-              />
-
-              <button
-                type="button"
-                onClick={
-                  handleAddMention
-                }
-                className="rounded-md bg-purple-600 px-4 py-2 text-white"
-              >
-                +
-              </button>
-            </div>
-
-            {mentionInputMatches.length >
-              0 && (
-              <div className="absolute left-0 right-14 top-full z-50 mt-1 overflow-hidden rounded-md border bg-white shadow-lg">
-                {mentionInputMatches.map(
-                  (username) => (
-                    <button
-                      key={
-                        username
-                      }
-                      type="button"
-                      onClick={() => {
-                        setMentionInput(
-                          username
-                        );
-
-                        setMentionInputMatches(
-                          []
-                        );
-                      }}
-                      className="block w-full px-3 py-2 text-left text-sm hover:bg-gray-100"
-                    >
-                      @{username}
-                    </button>
-                  )
-                )}
-              </div>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <label className="block text-sm font-medium">
-              {t(
-                "createpost.hashtags"
-              )}
-            </label>
-
-            <div className="grid w-full grid-cols-[minmax(0,1fr)_44px] gap-2">
-              <input
-                type="text"
-                placeholder={t(
-                  "createpost.eg_react"
-                )}
-                value={tagInput}
-                onChange={(e) =>
-                  setTagInput(
-                    e.target.value
-                  )
-                }
-                className="h-11 min-w-0 w-full rounded-md border px-3 text-sm"
-              />
-
-              <button
-                type="button"
-                onClick={addTag}
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-blue-600 text-white hover:bg-blue-700"
-              >
-                +
-              </button>
-            </div>
-
-            {tags.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {tags.map(
-                  (tag) => (
-                    <span
-                      key={tag}
-                      className="inline-flex items-center gap-1 rounded-md bg-blue-100 px-3 py-1 text-sm text-blue-700"
-                    >
-                      #{tag}
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setTags(
-                            (
-                              previousTags
-                            ) =>
-                              previousTags.filter(
-                                (
-                                  existingTag
-                                ) =>
-                                  existingTag !==
-                                  tag
-                              )
-                          );
-                        }}
-                        className="ml-1 font-bold text-blue-600 hover:text-red-600"
-                        aria-label={`Remove ${tag} hashtag`}
-                      >
-                        ×
-                      </button>
-                    </span>
-                  )
-                )}
-              </div>
-            )}
-          </div>
-
+          {/* Submit */}
           <button
             type="submit"
             disabled={loading}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded bg-blue-600 px-6 py-2 text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading
               ? t(
@@ -958,4 +634,6 @@ export default function CreatePost() {
       </div>
     </Mainlayout>
   );
-}
+};
+
+export default CreatePost;

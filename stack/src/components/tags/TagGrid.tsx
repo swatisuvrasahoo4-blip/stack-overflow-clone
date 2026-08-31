@@ -6,9 +6,10 @@ interface TagGridProps {
   tags: Tag[];
 }
 
-export default function TagGrid({ tags }: TagGridProps) {
-  const {t} = useTranslation();
-    if (tags.length === 0) {
+const TagGrid = ({ tags }: TagGridProps) => {
+  const { t } = useTranslation();
+
+  if (tags.length === 0) {
     return (
       <div className="rounded-lg border bg-white p-8 text-center">
         <h2 className="text-lg font-semibold text-gray-800">
@@ -16,7 +17,9 @@ export default function TagGrid({ tags }: TagGridProps) {
         </h2>
 
         <p className="mt-2 text-sm text-gray-600">
-          {t("tag.realHashtagFromCommunityPostsWillAppearHere")}
+          {t(
+            "tag.realHashtagFromCommunityPostsWillAppearHere"
+          )}
         </p>
       </div>
     );
@@ -29,4 +32,6 @@ export default function TagGrid({ tags }: TagGridProps) {
       ))}
     </div>
   );
-}
+};
+
+export default TagGrid;

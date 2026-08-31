@@ -1,5 +1,10 @@
-import React from "react";
-import { Trophy, MessageCircle, Pencil, ArrowUp, Flag } from "lucide-react";
+import {
+  Trophy,
+  MessageCircle,
+  Pencil,
+  ArrowUp,
+  Flag,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface ReputationSummaryProps {
@@ -11,7 +16,8 @@ const ReputationSummary = ({
   reputation,
   onViewActivity,
 }: ReputationSummaryProps) => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
+
   const privileges = [
     {
       name: "unrestricted_commenting",
@@ -36,10 +42,11 @@ const ReputationSummary = ({
   ];
 
   return (
-    <div className="border rounded-xl p-6 bg-white shadow-sm">
-      <div className="flex items-center justify-between mb-6">
+    <div className="rounded-xl border bg-white p-6 shadow-sm">
+      {/* Reputation header */}
+      <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Trophy className="w-6 h-6 text-yellow-600" />
+          <Trophy className="h-6 w-6 text-yellow-600" />
 
           <h2 className="text-2xl font-semibold">
             {t("reputation.reputation")}
@@ -47,17 +54,18 @@ const ReputationSummary = ({
         </div>
 
         <button
+          type="button"
           onClick={onViewActivity}
-          className="border border-green-600 text-green-700 px-4 py-2 rounded-lg hover:bg-green-50 transition"
+          className="rounded-lg border border-green-600 px-4 py-2 text-green-700 transition hover:bg-green-50"
         >
           {t("reputation.view_reputation_activity")}
         </button>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid gap-6 md:grid-cols-2">
         {/* Reputation total */}
         <div className="flex items-center gap-4">
-          <Trophy className="w-10 h-10 text-yellow-500" />
+          <Trophy className="h-10 w-10 text-yellow-500" />
 
           <div>
             <p className="text-sm text-gray-500">
@@ -70,9 +78,9 @@ const ReputationSummary = ({
           </div>
         </div>
 
-        {/* Privileges */}
+        {/* Community privileges */}
         <div>
-          <h3 className="font-semibold mb-3">
+          <h3 className="mb-3 font-semibold">
             {t("reputation.community_privileges")}
           </h3>
 
@@ -88,7 +96,7 @@ const ReputationSummary = ({
                 >
                   <div className="flex items-center gap-2">
                     <Icon
-                      className={`w-4 h-4 ${
+                      className={`h-4 w-4 ${
                         unlocked
                           ? "text-green-600"
                           : "text-gray-400"
@@ -102,7 +110,7 @@ const ReputationSummary = ({
                           : "text-gray-400"
                       }
                     >
-                     {t(`reputation.${privilege.name.toLowerCase()}`)}
+                      {t(`reputation.${privilege.name}`)}
                     </span>
                   </div>
 

@@ -1,32 +1,39 @@
 import { useTranslation } from "react-i18next";
+
 import MentionSuggestions from "./MentionSuggestions";
 
 interface MentionTextProps {
   value: string;
   matches: string[];
   onChange: (value: string) => void;
-    onSelectMention:(username: string) => void;
+  onSelectMention: (username: string) => void;
   onClearSuggestions: () => void;
-
 }
 
-export default function MentionText({
+const MentionText = ({
   value,
   matches,
   onChange,
   onSelectMention,
   onClearSuggestions,
-}: MentionTextProps) {
-  const {t} = useTranslation();
-  const replaceMention = (username: string) => {
-    const updatedContent = value.replace(
-      /(?:^|\s)@([a-zA-Z0-9_]{0,20})$/,
-      (matchedText) => {
-        const leadingSpace = matchedText.startsWith(" ") ? " " : "";
+}: MentionTextProps) => {
+  const { t } = useTranslation();
 
-        return `${leadingSpace}@${username} `;
-      }
-    );
+  const replaceMention = (
+    username: string
+  ) => {
+    const updatedContent =
+      value.replace(
+        /(?:^|\s)@([a-zA-Z0-9_]{0,20})$/,
+        (matchedText) => {
+          const leadingSpace =
+            matchedText.startsWith(" ")
+              ? " "
+              : "";
+
+          return `${leadingSpace}@${username} `;
+        }
+      );
 
     onChange(updatedContent);
     onSelectMention(username);
@@ -35,15 +42,23 @@ export default function MentionText({
 
   return (
     <div className="relative">
+      {/* Mention text */}
+
       <textarea
         name="content"
         rows={5}
-        placeholder={t("createpost.share_something_with_the_community")}
+        placeholder={t(
+          "createpost.share_something_with_the_community"
+        )}
         value={value}
-        onChange={(event) => onChange(event.target.value)}
+        onChange={(event) =>
+          onChange(event.target.value)
+        }
         className="w-full rounded border p-3"
         required
       />
+
+      {/* Mention suggestions */}
 
       <MentionSuggestions
         matches={matches}
@@ -51,4 +66,6 @@ export default function MentionText({
       />
     </div>
   );
-}
+};
+
+export default MentionText;

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 import {
   Card,
   CardContent,
@@ -10,7 +11,6 @@ import {
   getMySessions,
   revokeSession,
 } from "../services/sessionService";
-import { useTranslation } from "react-i18next";
 
 interface Session {
   _id: string;
@@ -33,16 +33,13 @@ const ActiveSessions = () => {
     try {
       await revokeSession(sessionId);
 
-      setSessions((prev) =>
-        prev.filter(
+      setSessions((previousSessions) =>
+        previousSessions.filter(
           (session) => session._id !== sessionId
         )
       );
     } catch (error: unknown) {
-      console.error(
-        "Failed to revoke session:",
-        error
-      );
+      console.error("Failed to revoke session:", error);
 
       if (axios.isAxiosError(error)) {
         alert(
@@ -50,9 +47,7 @@ const ActiveSessions = () => {
             t("alert.failed_to_revoke_session")
         );
       } else {
-        alert(
-          t("alert.failed_to_revoke_session")
-        );
+        alert(t("alert.failed_to_revoke_session"));
       }
     }
   };
@@ -61,19 +56,15 @@ const ActiveSessions = () => {
     const fetchSessions = async () => {
       try {
         const response = await getMySessions();
-
         setSessions(response?.data || []);
       } catch (error: unknown) {
-        console.error(
-          "Failed to fetch sessions:",
-          error
-        );
+        console.error("Failed to fetch sessions:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchSessions();
+    void fetchSessions();
   }, []);
 
   if (loading) {
@@ -105,9 +96,7 @@ const ActiveSessions = () => {
       <CardContent className="space-y-4">
         {sessions.length === 0 ? (
           <p className="text-sm text-gray-500">
-            {t(
-              "logactivity.no_active_sessions_found"
-            )}
+            {t("logactivity.no_active_sessions_found")}
           </p>
         ) : (
           sessions.map((session) => (
@@ -115,36 +104,31 @@ const ActiveSessions = () => {
               key={session._id}
               className="rounded-lg border p-4"
             >
+              {/* Session header */}
               <div className="flex items-center justify-between gap-2">
                 <p className="font-medium">
-                  {session.browser} ·{" "}
-                  {session.operatingSystem}
+                  {session.browser} · {session.operatingSystem}
                 </p>
 
                 {session.isCurrent && (
                   <span className="text-sm font-medium text-green-600">
-                    {t(
-                      "logactivity.current_session"
-                    )}
+                    {t("logactivity.current_session")}
                   </span>
                 )}
               </div>
 
+              {/* Session details */}
               <p className="text-sm text-gray-600">
-                {t("logactivity.device")}:{" "}
-                {session.deviceType}
+                {t("logactivity.device")}: {session.deviceType}
               </p>
 
               <p className="text-sm text-gray-600">
-                {t("logactivity.ip")}:{" "}
-                {session.ipAddress}
+                {t("logactivity.ip")}: {session.ipAddress}
               </p>
 
               <p className="text-sm text-gray-500">
                 {t("logactivity.login")}:{" "}
-                {new Date(
-                  session.loginAt
-                ).toLocaleString()}
+                {new Date(session.loginAt).toLocaleString()}
               </p>
 
               <p className="text-sm text-gray-500">
@@ -154,11 +138,12 @@ const ActiveSessions = () => {
                 ).toLocaleString()}
               </p>
 
+              {/* Revoke session */}
               {!session.isCurrent && (
                 <button
                   type="button"
                   onClick={() =>
-                    handleRevoke(session._id)
+                    void handleRevoke(session._id)
                   }
                   className="mt-3 rounded-md border border-red-500 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50"
                 >

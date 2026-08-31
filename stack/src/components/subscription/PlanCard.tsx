@@ -6,10 +6,7 @@ import { useAuth } from "@/lib/AuthContext";
 import { toast } from "react-toastify";
 import type { PlanName } from "@/constants/subscriptionPlans";
 
-type PaidPlan =
-  | "Bronze"
-  | "Silver"
-  | "Gold";
+type PaidPlan = "Bronze" | "Silver" | "Gold";
 
 interface PlanCardProps {
   name: PlanName;
@@ -24,7 +21,7 @@ interface PlanCardProps {
   ) => void | Promise<void>;
 }
 
-export default function PlanCard({
+const PlanCard = ({
   name,
   price,
   description,
@@ -33,7 +30,7 @@ export default function PlanCard({
   isPopular = false,
   currentPlan,
   onUpgrade,
-}: PlanCardProps) {
+}: PlanCardProps) => {
   const router = useRouter();
   const { user } = useAuth();
   const { t } = useTranslation();
@@ -45,31 +42,24 @@ export default function PlanCard({
     Gold: 3,
   };
 
-  const currentPlanLevel =
-    currentPlan
-      ? planOrder[currentPlan]
-      : -1;
+  const currentPlanLevel = currentPlan
+    ? planOrder[currentPlan]
+    : -1;
 
   const canUpgrade =
     planOrder[name] > currentPlanLevel;
 
-  const handleUpgradeClick = (): void => {
+  const handleUpgradeClick = () => {
     if (!user) {
       toast.info(
-        t(
-          "toast.please_login_to_continue"
-        )
+        t("toast.please_login_to_continue")
       );
 
       void router.push("/auth");
       return;
     }
 
-    if (!canUpgrade) {
-      return;
-    }
-
-    if (name === "Free") {
+    if (!canUpgrade || name === "Free") {
       return;
     }
 
@@ -84,14 +74,14 @@ export default function PlanCard({
           : "border-gray-200 shadow-md"
       }`}
     >
+      {/* Popular plan badge */}
       {isPopular && (
         <span className="absolute right-4 top-4 rounded-full bg-yellow-500 px-3 py-1 text-xs font-semibold text-white">
-          {t(
-            "subscription.most_popular"
-          )}
+          {t("subscription.most_popular")}
         </span>
       )}
 
+      {/* Plan name */}
       <h2
         className={`text-3xl font-bold ${
           name === "Free"
@@ -103,11 +93,10 @@ export default function PlanCard({
                 : "text-yellow-600"
         }`}
       >
-        {t(
-          `subscription.${name.toLowerCase()}`
-        )}
+        {t(`subscription.${name.toLowerCase()}`)}
       </h2>
 
+      {/* Plan price */}
       <p
         className={`mb-3 mt-4 text-5xl font-extrabold ${
           name === "Free"
@@ -125,44 +114,42 @@ export default function PlanCard({
         )}
       </p>
 
+      {/* Plan description */}
       <p className="mt-4 text-base text-gray-600">
-        {t(
-          `subscription.${description}`
-        )}
+        {t(`subscription.${description}`)}
       </p>
 
+      {/* Plan features */}
       <div className="mt-8 space-y-4">
-        {features.map(
-          (feature) => (
-            <div
-              key={feature}
-              className="flex items-center gap-2"
-            >
-              <Check
-                className={`h-5 w-5 ${
-                  name === "Free"
-                    ? "text-purple-600"
-                    : name === "Bronze"
-                      ? "text-amber-600"
-                      : name === "Silver"
-                        ? "text-slate-500"
-                        : "text-yellow-500"
-                }`}
-              />
+        {features.map((feature) => (
+          <div
+            key={feature}
+            className="flex items-center gap-2"
+          >
+            <Check
+              className={`h-5 w-5 ${
+                name === "Free"
+                  ? "text-purple-600"
+                  : name === "Bronze"
+                    ? "text-amber-600"
+                    : name === "Silver"
+                      ? "text-slate-500"
+                      : "text-yellow-500"
+              }`}
+            />
 
-              <span className="text-sm font-medium text-gray-700">
-                {t(
-                  `subscription.${feature}`
-                )}
-              </span>
-            </div>
-          )
-        )}
+            <span className="text-sm font-medium text-gray-700">
+              {t(`subscription.${feature}`)}
+            </span>
+          </div>
+        ))}
       </div>
 
+      {/* Plan action */}
       <div className="mt-8">
         {isCurrent ? (
           <Button
+            type="button"
             disabled
             className={`w-full font-semibold text-white ${
               name === "Free"
@@ -174,19 +161,14 @@ export default function PlanCard({
                     : "bg-yellow-500 hover:bg-yellow-500"
             }`}
           >
-            {t(
-              "subscription.current_plan"
-            )}
+            {t("subscription.current_plan")}
           </Button>
         ) : (
           <Button
             type="button"
-            onClick={
-              handleUpgradeClick
-            }
+            onClick={handleUpgradeClick}
             disabled={
-              Boolean(user) &&
-              !canUpgrade
+              Boolean(user) && !canUpgrade
             }
             className={`w-full font-semibold text-white transition-all duration-300 ${
               name === "Bronze"
@@ -198,20 +180,14 @@ export default function PlanCard({
                     : "bg-purple-600 hover:bg-purple-700"
             }`}
           >
-            {!user
-              ? t(
-                  "subscription.upgrade"
-                )
-              : canUpgrade
-                ? t(
-                    "subscription.upgrade"
-                  )
-                : t(
-                    "subscription.lower_plan"
-                  )}
+            {!user || canUpgrade
+              ? t("subscription.upgrade")
+              : t("subscription.lower_plan")}
           </Button>
         )}
       </div>
     </div>
   );
-}
+};
+
+export default PlanCard;

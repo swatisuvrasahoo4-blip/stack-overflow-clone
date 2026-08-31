@@ -6,6 +6,7 @@ export interface ReputationTransferData {
   reason: string;
 }
 
+// Transfer reputation to another user
 export const transferReputation = async (
   data: ReputationTransferData
 ) => {

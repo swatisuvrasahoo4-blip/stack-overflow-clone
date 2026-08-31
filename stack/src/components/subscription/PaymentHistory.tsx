@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   getSubscription,
   getPaymentHistory,
@@ -10,7 +11,6 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import InvoiceModal from "./InvoiceModal";
-import { useTranslation } from "react-i18next";
 
 interface Subscription {
   _id?: string;
@@ -40,7 +40,9 @@ interface Payment {
   updatedAt?: string;
 }
 
-export default function PaymentHistory() {
+const PaymentHistory = () => {
+  const { t } = useTranslation();
+
   const [subscription, setSubscription] =
     useState<Subscription | null>(null);
 
@@ -52,25 +54,38 @@ export default function PaymentHistory() {
 
   const [open, setOpen] = useState(false);
 
-  const { t } = useTranslation();
-
   useEffect(() => {
     const loadHistory = async () => {
       try {
-        const response = await getSubscription();
+        const subscriptionResponse =
+          await getSubscription();
 
-        setSubscription(response.data);
+        setSubscription(subscriptionResponse.data);
 
-        const paymentResponse = await getPaymentHistory();
+        const paymentResponse =
+          await getPaymentHistory();
 
         setPayments(paymentResponse.data);
-      } catch (error) {
-        console.log(error);
+      } catch (error: unknown) {
+        console.error(
+          "Failed to load payment history:",
+          error
+        );
       }
     };
 
-    loadHistory();
+    void loadHistory();
   }, []);
+
+  const handleViewInvoice = (payment: Payment) => {
+    setSelectedPayment(payment);
+    setOpen(true);
+  };
+
+  const handleCloseInvoice = () => {
+    setOpen(false);
+    setSelectedPayment(null);
+  };
 
   if (!subscription) {
     return null;
@@ -86,30 +101,31 @@ export default function PaymentHistory() {
         </CardHeader>
 
         <CardContent>
+          {/* Payment history table */}
           <table className="w-full">
             <thead>
               <tr className="border-b">
-                <th className="text-left py-2">
+                <th className="py-2 text-left">
                   {t("subscription.invoice")}
                 </th>
 
-                <th className="text-left py-2">
+                <th className="py-2 text-left">
                   {t("subscription.plan")}
                 </th>
 
-                <th className="text-left py-2">
+                <th className="py-2 text-left">
                   {t("subscription.amount")}
                 </th>
 
-                <th className="text-left py-2">
+                <th className="py-2 text-left">
                   {t("subscription.status")}
                 </th>
 
-                <th className="text-left py-2">
+                <th className="py-2 text-left">
                   {t("subscription.date")}
                 </th>
 
-                <th className="text-left py-2">
+                <th className="py-2 text-left">
                   {t("subscription.action")}
                 </th>
               </tr>
@@ -139,10 +155,10 @@ export default function PaymentHistory() {
 
                   <td className="py-3">
                     <button
-                      onClick={() => {
-                        setSelectedPayment(payment);
-                        setOpen(true);
-                      }}
+                      type="button"
+                      onClick={() =>
+                        handleViewInvoice(payment)
+                      }
                       className="text-blue-600 hover:underline"
                     >
                       {t("subscription.view")}
@@ -155,11 +171,14 @@ export default function PaymentHistory() {
         </CardContent>
       </Card>
 
+      {/* Invoice modal */}
       <InvoiceModal
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={handleCloseInvoice}
         payment={selectedPayment}
       />
     </>
   );
-}
+};
+
+export default PaymentHistory;

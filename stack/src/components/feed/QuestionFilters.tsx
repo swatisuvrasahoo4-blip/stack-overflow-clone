@@ -1,13 +1,17 @@
-type QuestionFiltersProps = {
-  children: React.ReactNode;
-};
+import type { ReactNode } from "react";
 
-export default function QuestionFilters({
+interface QuestionFiltersProps {
+  children: ReactNode;
+}
+
+const QuestionFilters = ({
   children,
-}: QuestionFiltersProps) {
+}: QuestionFiltersProps) => {
   return (
     <div className="flex flex-wrap gap-1 sm:gap-2">
       {children}
     </div>
   );
-}
+};
+
+export default QuestionFilters;

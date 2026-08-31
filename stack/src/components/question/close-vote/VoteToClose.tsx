@@ -1,22 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import axios from "axios";
-import { toast } from "react-toastify";
-import VoteToCloseButton from "./VoteToCloseButton";
-import CloseVoteModal from "./CloseVoteModal";
-import { voteToCloseQuestion } from "../../services/closeVoteService";
-import { useTranslation } from "react-i18next";
-import { Question as BaseQuestion } from "@/types/questions";
 
-// Extra fields used only in VoteToClose
+import axios from "axios";
+import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+
+import type { Question as BaseQuestion } from "@/types/questions";
+
+import { voteToCloseQuestion } from "../../services/closeVoteService";
+import CloseVoteModal from "./CloseVoteModal";
+import VoteToCloseButton from "./VoteToCloseButton";
+
 interface CloseVote {
   userId: string;
   reason: string;
   votedAt?: string | Date;
 }
 
-// Extend the shared Question type
 interface VoteCloseQuestion extends BaseQuestion {
   closeVotes?: CloseVote[];
   closedAt?: string | Date | null;
@@ -46,40 +47,60 @@ const VoteToClose = ({
   const [loading, setLoading] = useState(false);
 
   const handleOpenModal = () => {
+    const currentUserId = user._id || user.id;
+
     const isOwnQuestion =
-      String(question.userid) === String(user._id || user.id);
+      String(question.userid) === String(currentUserId);
 
     if (isOwnQuestion) {
       toast.info(
-        t("toast.you_cannot_vote_to_close_your_own_question")
+        t(
+          "toast.you_cannot_vote_to_close_your_own_question"
+        )
       );
+
       return;
     }
 
     const alreadyVoted = question.closeVotes?.some(
       (vote) =>
-        String(vote.userId) === String(user._id || user.id)
+        String(vote.userId) === String(currentUserId)
     );
 
     if (alreadyVoted) {
       toast.info(
-        t("alert.you_have_already_voted_to_close_this_question")
+        t(
+          "alert.you_have_already_voted_to_close_this_question"
+        )
       );
+
       return;
     }
 
     setIsOpen(true);
   };
 
-  const handleSubmit = async () => {
-    if (!reason) return;
+  const handleCloseModal = () => {
+    setIsOpen(false);
+    setReason("");
+  };
+
+  const handleSubmit = async (): Promise<void> => {
+    if (!reason) {
+      return;
+    }
 
     try {
       setLoading(true);
 
-      const data = await voteToCloseQuestion(question._id, reason);
+      const data = await voteToCloseQuestion(
+        question._id,
+        reason
+      );
 
-      toast.success(t(`message.${data.message}`));
+      toast.success(
+        t(`message.${data.message}`)
+      );
 
       onQuestionUpdate({
         ...question,
@@ -95,11 +116,15 @@ const VoteToClose = ({
         toast.error(
           message
             ? t(`message.${message}`)
-            : t("message.failed_to_vote_to_close_question")
+            : t(
+                "message.failed_to_vote_to_close_question"
+              )
         );
       } else {
         toast.error(
-          t("message.failed_to_vote_to_close_question")
+          t(
+            "message.failed_to_vote_to_close_question"
+          )
         );
       }
     } finally {
@@ -107,26 +132,29 @@ const VoteToClose = ({
     }
   };
 
-  if (!user || !question) return null;
+  if (!user || !question) {
+    return null;
+  }
 
   return (
     <>
+      {/* Vote to close button */}
+
       <VoteToCloseButton
         reputation={user.reputation || 0}
         isClosed={question.isClosed || false}
         onClick={handleOpenModal}
       />
 
+      {/* Close vote modal */}
+
       <CloseVoteModal
         isOpen={isOpen}
         reason={reason}
         loading={loading}
         onReasonChange={setReason}
-        onClose={() => {
-          setIsOpen(false);
-          setReason("");
-        }}
-        onSubmit={handleSubmit}
+        onClose={handleCloseModal}
+        onSubmit={() => void handleSubmit()}
       />
     </>
   );

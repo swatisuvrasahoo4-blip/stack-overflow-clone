@@ -1,7 +1,8 @@
 import { Calendar, CreditCard, Crown } from "lucide-react";
 import { useEffect, useState } from "react";
-import { getSubscription } from "../services/subscriptionService";
+import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
+import { getSubscription } from "../services/subscriptionService";
 
 interface Subscription {
   _id?: string;
@@ -17,43 +18,52 @@ interface Subscription {
   updatedAt?: string;
 }
 
-export default function SubscriptionDashboard() {
+const SubscriptionDashboard = () => {
+  const router = useRouter();
+  const { t } = useTranslation();
+
   const [subscription, setSubscription] =
     useState<Subscription | null>(null);
-
-  const { t } = useTranslation();
 
   useEffect(() => {
     const loadSubscription = async () => {
       try {
         const response = await getSubscription();
         setSubscription(response.data);
-      } catch (error) {
-        console.log(error);
+      } catch (error: unknown) {
+        console.error(
+          "Failed to load subscription:",
+          error
+        );
       }
     };
 
-    loadSubscription();
+    void loadSubscription();
   }, []);
+
+  const handleUpgradePlan = () => {
+    void router.push("/subscription");
+  };
 
   return (
     <div className="mt-10 rounded-xl border bg-white p-6 shadow-sm">
-      <div className="flex items-center gap-2 mb-6">
-        <Crown className="w-6 h-6 text-amber-500" />
+      {/* Subscription heading */}
+      <div className="mb-6 flex items-center gap-2">
+        <Crown className="h-6 w-6 text-amber-500" />
 
         <h2 className="text-2xl font-bold">
           {t("subscription.subscription")}
         </h2>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
-
-        {/* Current Plan */}
+      {/* Subscription details */}
+      <div className="grid gap-6 md:grid-cols-2">
+        {/* Current plan */}
         <div className="flex items-center gap-3">
           <CreditCard className="text-blue-600" />
 
           <div>
-            <p className="text-gray-500 text-sm">
+            <p className="text-sm text-gray-500">
               {t("subscription.current_plan")}
             </p>
 
@@ -68,7 +78,7 @@ export default function SubscriptionDashboard() {
 
         {/* Status */}
         <div>
-          <p className="text-gray-500 text-sm">
+          <p className="text-sm text-gray-500">
             {t("subscription.status")}
           </p>
 
@@ -77,8 +87,8 @@ export default function SubscriptionDashboard() {
               subscription?.status === "Expired"
                 ? "bg-red-100 text-red-700"
                 : subscription?.status === "Cancelled"
-                ? "bg-gray-200 text-gray-700"
-                : "bg-green-100 text-green-700"
+                  ? "bg-gray-200 text-gray-700"
+                  : "bg-green-100 text-green-700"
             }`}
           >
             {subscription?.status &&
@@ -90,7 +100,7 @@ export default function SubscriptionDashboard() {
 
         {/* Amount */}
         <div>
-          <p className="text-gray-500 text-sm">
+          <p className="text-sm text-gray-500">
             {t("subscription.amount")}
           </p>
 
@@ -100,12 +110,12 @@ export default function SubscriptionDashboard() {
           </p>
         </div>
 
-        {/* Start Date */}
+        {/* Start date */}
         <div className="flex items-center gap-3">
           <Calendar className="text-purple-500" />
 
           <div>
-            <p className="text-gray-500 text-sm">
+            <p className="text-sm text-gray-500">
               {t("subscription.start_date")}
             </p>
 
@@ -119,12 +129,12 @@ export default function SubscriptionDashboard() {
           </div>
         </div>
 
-        {/* Renewal Date */}
+        {/* Renewal date */}
         <div className="flex items-center gap-3">
           <Calendar className="text-orange-500" />
 
           <div>
-            <p className="text-gray-500 text-sm">
+            <p className="text-sm text-gray-500">
               {t("subscription.renewal_date")}
             </p>
 
@@ -139,14 +149,16 @@ export default function SubscriptionDashboard() {
         </div>
       </div>
 
+      {/* Upgrade plan */}
       <button
-        onClick={() => {
-          window.location.href = "/subscription";
-        }}
-        className="mt-8 rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700 transition"
+        type="button"
+        onClick={handleUpgradePlan}
+        className="mt-8 rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700"
       >
         {t("subscription.upgrade_plan")}
       </button>
     </div>
   );
-}
+};
+
+export default SubscriptionDashboard;

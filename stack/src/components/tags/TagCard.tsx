@@ -6,23 +6,33 @@ interface TagCardProps {
   tag: Tag;
 }
 
-export default function TagCard({ tag }: TagCardProps) {
+const TagCard = ({ tag }: TagCardProps) => {
   return (
     <Link
       href={`/tags/${encodeURIComponent(tag.name)}`}
       className="block rounded-lg border bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
     >
+      {/* Tag information */}
       <div className="mb-3 flex items-center justify-between gap-2">
-        <span className="font-medium text-gray-800">#{tag.name}</span>
+        <span className="font-medium text-gray-800">
+          #{tag.name}
+        </span>
 
-        <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+        <Badge
+          variant="secondary"
+          className="bg-blue-100 text-blue-800"
+        >
           {tag.count} {tag.count === 1 ? "post" : "posts"}
         </Badge>
       </div>
 
+      {/* Tag description */}
       <p className="text-sm text-gray-600">
-        {tag.description || `Explore community posts about ${tag.name}.`}
+        {tag.description ||
+          `Explore community posts about ${tag.name}.`}
       </p>
     </Link>
   );
-}
+};
+
+export default TagCard;

@@ -1,15 +1,24 @@
-import MainLayout from "@/layout/Mainlayout";
-import React, { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
+
+import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
+
+import ReputationActivityList from "@/components/reputation/ReputationActivityList";
+
 import {
   getMyReputationActivity,
   getUserReputationActivity,
 } from "@/components/services/reputationActivityService";
-import ReputationActivityList from "@/components/reputation/ReputationActivityList";
-import { useRouter } from "next/router";
-import { useTranslation } from "react-i18next";
+
+import MainLayout from "@/layout/Mainlayout";
+
+import type { ComponentProps } from "react";
 
 type ReputationActivity =
-  React.ComponentProps<
+  ComponentProps<
     typeof ReputationActivityList
   >["activities"][number];
 
@@ -20,46 +29,60 @@ interface ReputationActivityResponse {
 
 const ReputationActivityPage = () => {
   const router = useRouter();
-  const { userId } = router.query;
   const { t } = useTranslation();
 
-  const [reputation, setReputation] =
-    useState<number>(0);
+  const { userId } = router.query;
 
-  const [activities, setActivities] =
-    useState<ReputationActivity[]>([]);
+  const resolvedUserId =
+    Array.isArray(userId)
+      ? userId[0]
+      : userId;
 
-  const [loading, setLoading] =
-    useState<boolean>(true);
+  const [
+    reputation,
+    setReputation,
+  ] = useState(0);
 
+  const [
+    activities,
+    setActivities,
+  ] = useState<
+    ReputationActivity[]
+  >([]);
+
+  const [
+    loading,
+    setLoading,
+  ] = useState(true);
+
+  // Load reputation activity
   useEffect(() => {
     if (!router.isReady) {
       return;
     }
+
+    let cancelled = false;
 
     const fetchReputationActivity =
       async (): Promise<void> => {
         try {
           setLoading(true);
 
-          let data: ReputationActivityResponse;
+          let data:
+            ReputationActivityResponse;
 
-          if (userId) {
-            const id = Array.isArray(userId)
-              ? userId[0]
-              : userId;
-
-            if (!id) {
-              return;
-            }
-
+          if (resolvedUserId) {
             data =
               await getUserReputationActivity(
-                id
+                resolvedUserId
               );
           } else {
             data =
               await getMyReputationActivity();
+          }
+
+          if (cancelled) {
+            return;
           }
 
           setReputation(
@@ -69,21 +92,33 @@ const ReputationActivityPage = () => {
           setActivities(
             data.activities ?? []
           );
-        } catch (error: unknown) {
+        } catch (
+          error: unknown
+        ) {
           console.error(
             "Failed to load reputation activity:",
             error
           );
         } finally {
-          setLoading(false);
+          if (!cancelled) {
+            setLoading(false);
+          }
         }
       };
 
     void fetchReputationActivity();
-  }, [router.isReady, userId]);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    resolvedUserId,
+    router.isReady,
+  ]);
 
   return (
     <MainLayout>
+      {/* Loading state */}
       {loading ? (
         <p className="mt-6 text-gray-500">
           {t(
@@ -91,6 +126,7 @@ const ReputationActivityPage = () => {
           )}
         </p>
       ) : (
+        /* Reputation activity */
         <div className="mt-6 rounded-xl border bg-white p-6">
           <p className="text-sm text-gray-500">
             {t(

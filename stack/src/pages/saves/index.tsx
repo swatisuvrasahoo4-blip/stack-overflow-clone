@@ -1,9 +1,14 @@
-import SavedList from "@/components/SavedList";
+import SavedList from "@/components/saved/SavedList";
 
 const SavesPage = () => {
   return (
-    <div className="max-w-5xl mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-6">Saves</h1>
+    <div className="mx-auto max-w-5xl px-4 py-8">
+      {/* Page header */}
+      <h1 className="mb-6 text-3xl font-bold">
+        Saves
+      </h1>
+
+      {/* Saved questions and posts */}
       <SavedList />
     </div>
   );

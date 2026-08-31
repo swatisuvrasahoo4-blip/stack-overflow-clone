@@ -1,17 +1,23 @@
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
+
 import { useRouter } from "next/router";
-import QuestionReports from "./reports/QuestionReports";
-import PostReports from "./reports/PostReports";
+
+import { useTranslation } from "react-i18next";
+
+import QuestionReports from "./question/QuestionReports";
+import PostReports from "./post/PostReports";
 
 import {
   getAdminReports,
-  updateAdminReportStatus,
   suspendAdminUser,
   unsuspendAdminUser,
+  updateAdminReportStatus,
 } from "@/components/services/adminService";
 
 import { useAuth } from "@/lib/AuthContext";
-import { useTranslation } from "react-i18next";
 
 type ReportStatus =
   | "pending"
@@ -43,39 +49,26 @@ interface ReportQuestion {
 
 interface ReportItem {
   _id: string;
-
   reason: string;
-
   details?: string;
-
   status: ReportStatus;
-
   createdAt: string;
-
   reporterId?: ReportUser | null;
-
   postAuthorId?: ReportUser | null;
-
   questionAuthorId?: ReportUser | null;
-
   postId?: ReportPost | null;
-
   questionId?: ReportQuestion | null;
-
   violationCount: number;
-
   isRepeatOffender?: boolean;
 }
 
 interface ApiError {
   response?: {
     status?: number;
-
     data?: {
       message?: string;
     };
   };
-
   message?: string;
 }
 
@@ -83,33 +76,48 @@ interface AdminReportsResponse {
   reports?: ReportItem[];
 }
 
-export default function AdminReportsPage() {
+type ReportTab =
+  | "posts"
+  | "questions";
+
+const AdminReportsPage = () => {
   const router = useRouter();
 
   const { user } = useAuth();
-
   const { t } = useTranslation();
 
-  const [reports, setReports] =
-    useState<ReportItem[]>([]);
+  const [
+    reports,
+    setReports,
+  ] = useState<ReportItem[]>([]);
 
-  const [loading, setLoading] =
-    useState<boolean>(true);
+  const [
+    loading,
+    setLoading,
+  ] = useState(true);
 
-  const [updatingId, setUpdatingId] =
-    useState<string | null>(null);
+  const [
+    updatingId,
+    setUpdatingId,
+  ] = useState<string | null>(
+    null
+  );
 
-  const [activeReportTab, setActiveReportTab] =
-    useState<"posts" | "questions">(
-      "posts"
-    );
+  const [
+    activeReportTab,
+    setActiveReportTab,
+  ] = useState<ReportTab>(
+    "posts"
+  );
 
+  // Fetch admin reports
   const fetchReports =
     async (): Promise<void> => {
       try {
         setLoading(true);
 
-        const response: AdminReportsResponse =
+        const response:
+          AdminReportsResponse =
           await getAdminReports();
 
         setReports(
@@ -125,8 +133,8 @@ export default function AdminReportsPage() {
         );
 
         if (
-          apiError.response?.status ===
-          403
+          apiError.response
+            ?.status === 403
         ) {
           alert(
             t(
@@ -134,13 +142,14 @@ export default function AdminReportsPage() {
             )
           );
 
-          router.push("/");
+          void router.push("/");
         }
       } finally {
         setLoading(false);
       }
     };
 
+  // Suspend user
   const handleSuspend = async (
     userId: string
   ): Promise<void> => {
@@ -181,6 +190,7 @@ export default function AdminReportsPage() {
     }
   };
 
+  // Unsuspend user
   const handleUnsuspend = async (
     userId: string
   ): Promise<void> => {
@@ -210,28 +220,29 @@ export default function AdminReportsPage() {
     }
   };
 
-  useEffect(() => {
-    if (!user) {
-      return;
-    }
-
-    void fetchReports();
-  }, [user]);
-
+  // Update report status
   const handleStatusChange =
     async (
       reportId: string,
       status: ReportStatus
     ): Promise<void> => {
       try {
-        setUpdatingId(reportId);
+        setUpdatingId(
+          reportId
+        );
 
         setReports(
-          (previousReports) =>
+          (
+            previousReports
+          ) =>
             previousReports.map(
               (report) =>
-                String(report._id) ===
-                String(reportId)
+                String(
+                  report._id
+                ) ===
+                String(
+                  reportId
+                )
                   ? {
                       ...report,
                       status,
@@ -254,8 +265,8 @@ export default function AdminReportsPage() {
         );
 
         alert(
-          apiError.response?.data
-            ?.message ||
+          apiError.response
+            ?.data?.message ||
             t(
               "alert.failed_to_update_report"
             )
@@ -266,6 +277,14 @@ export default function AdminReportsPage() {
         setUpdatingId(null);
       }
     };
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    void fetchReports();
+  }, [user]);
 
   if (loading) {
     return (
@@ -282,22 +301,26 @@ export default function AdminReportsPage() {
     );
 
   const reportStats = {
-    pending: postReports.filter(
-      (report) =>
-        report.status === "pending"
-    ).length,
+    pending:
+      postReports.filter(
+        (report) =>
+          report.status ===
+          "pending"
+      ).length,
 
-    reviewed: postReports.filter(
-      (report) =>
-        report.status ===
-        "reviewed"
-    ).length,
+    reviewed:
+      postReports.filter(
+        (report) =>
+          report.status ===
+          "reviewed"
+      ).length,
 
-    dismissed: postReports.filter(
-      (report) =>
-        report.status ===
-        "dismissed"
-    ).length,
+    dismissed:
+      postReports.filter(
+        (report) =>
+          report.status ===
+          "dismissed"
+      ).length,
 
     actionTaken:
       postReports.filter(
@@ -310,9 +333,12 @@ export default function AdminReportsPage() {
   return (
     <main className="min-h-screen bg-gray-50 px-4 py-8">
       <div className="mx-auto max-w-6xl">
+        {/* Page header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">
-            {t("admin.reports")}
+            {t(
+              "admin.reports"
+            )}
           </h1>
 
           <p className="mt-2 text-sm text-gray-600">
@@ -321,6 +347,7 @@ export default function AdminReportsPage() {
             )}
           </p>
 
+          {/* Report tabs */}
           <div className="my-6 flex gap-2">
             <button
               type="button"
@@ -361,10 +388,13 @@ export default function AdminReportsPage() {
             </button>
           </div>
 
+          {/* Question reports */}
           {activeReportTab ===
             "questions" && (
             <QuestionReports
-              reports={reports}
+              reports={
+                reports
+              }
               updatingId={
                 updatingId
               }
@@ -380,10 +410,13 @@ export default function AdminReportsPage() {
             />
           )}
 
+          {/* Post reports */}
           {activeReportTab ===
             "posts" && (
             <PostReports
-              reports={reports}
+              reports={
+                reports
+              }
               reportStats={
                 reportStats
               }
@@ -402,4 +435,6 @@ export default function AdminReportsPage() {
       </div>
     </main>
   );
-}
+};
+
+export default AdminReportsPage;

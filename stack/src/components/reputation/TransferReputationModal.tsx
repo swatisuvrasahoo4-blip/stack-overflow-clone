@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import axios from "axios";
+import { Send } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import {
   Dialog,
   DialogContent,
@@ -7,10 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Send } from "lucide-react";
 import { transferReputation } from "../services/reputationTransferService";
-import { useTranslation } from "react-i18next";
-import axios from "axios";
 
 interface TransferReputationModalProps {
   open: boolean;
@@ -25,13 +25,13 @@ const TransferReputationModal = ({
   receiverId,
   receiverName,
 }: TransferReputationModalProps) => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
+
   const [amount, setAmount] = useState("");
   const [reason, setReason] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleTransfer = async () => {
-    
-  try {
     const points = Number(amount);
 
     if (!points || points <= 0) {
@@ -49,35 +49,40 @@ const TransferReputationModal = ({
       return;
     }
 
-    const response = await transferReputation({
-      receiverId,
-      points,
-      reason: reason.trim(),
-    });
+    try {
+      setLoading(true);
 
-    alert(response.message || t("alert.reputation_transferred_successfully"));
+      const response = await transferReputation({
+        receiverId,
+        points,
+        reason: reason.trim(),
+      });
 
-    setAmount("");
-    setReason("");
-    onOpenChange(false);
+      alert(
+        response.message ||
+          t("alert.reputation_transferred_successfully")
+      );
 
-  } catch (error: unknown) {
-  if (axios.isAxiosError(error)) {
-    alert(
-      error.response?.data?.message ||
-        t("alert.failed_to_transfer_reputation")
-    );
-  } else {
-    alert(
-      t("alert.failed_to_transfer_reputation")
-    );
-  }
-}
-};
+      setAmount("");
+      setReason("");
+      onOpenChange(false);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        alert(
+          error.response?.data?.message ||
+            t("alert.failed_to_transfer_reputation")
+        );
+      } else {
+        alert(t("alert.failed_to_transfer_reputation"));
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md bg-white">
+      <DialogContent className="bg-white sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
             Transfer Reputation
@@ -85,7 +90,6 @@ const TransferReputationModal = ({
         </DialogHeader>
 
         <div className="space-y-5 py-3">
-
           {/* Receiver */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700">
@@ -99,7 +103,7 @@ const TransferReputationModal = ({
             </div>
           </div>
 
-          {/* Amount */}
+          {/* Reputation amount */}
           <div className="space-y-2">
             <label
               htmlFor="transferAmount"
@@ -114,7 +118,7 @@ const TransferReputationModal = ({
               min="1"
               max="50"
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
+              onChange={(event) => setAmount(event.target.value)}
               placeholder="Enter points (max 50)"
             />
 
@@ -123,7 +127,7 @@ const TransferReputationModal = ({
             </p>
           </div>
 
-          {/* Reason */}
+          {/* Transfer reason */}
           <div className="space-y-2">
             <label
               htmlFor="transferReason"
@@ -135,7 +139,7 @@ const TransferReputationModal = ({
             <textarea
               id="transferReason"
               value={reason}
-              onChange={(e) => setReason(e.target.value)}
+              onChange={(event) => setReason(event.target.value)}
               placeholder="Why are you transferring reputation?"
               rows={3}
               maxLength={200}
@@ -150,14 +154,13 @@ const TransferReputationModal = ({
           {/* Transfer button */}
           <Button
             type="button"
-            onClick={handleTransfer}
-            disabled={!amount || !reason.trim()}
-            className="w-full flex items-center justify-center gap-2"
+            onClick={() => void handleTransfer()}
+            disabled={loading || !amount || !reason.trim()}
+            className="flex w-full items-center justify-center gap-2"
           >
             <Send className="h-4 w-4" />
-            Transfer Reputation
+            {loading ? "Transferring..." : "Transfer Reputation"}
           </Button>
-
         </div>
       </DialogContent>
     </Dialog>

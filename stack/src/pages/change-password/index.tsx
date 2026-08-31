@@ -1,8 +1,14 @@
-import { useEffect, useState } from "react";
-import { changePassword } from "@/components/services/changePasswordService";
+import {
+  useEffect,
+  useState,
+} from "react";
+
 import { useRouter } from "next/router";
-import { useAuth } from "@/lib/AuthContext";
 import { useTranslation } from "react-i18next";
+
+import { changePassword } from "@/components/services/changePasswordService";
+
+import { useAuth } from "@/lib/AuthContext";
 
 interface ApiError {
   response?: {
@@ -17,64 +23,108 @@ interface ChangePasswordResponse {
   message: string;
 }
 
-export default function ChangePassword() {
+const ChangePassword = () => {
   const router = useRouter();
+
   const { user } = useAuth();
   const { t } = useTranslation();
 
-  const [currentPassword, setCurrentPassword] = useState<string>("");
-  const [newPassword, setNewPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [
+    currentPassword,
+    setCurrentPassword,
+  ] = useState("");
 
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const [successMessage, setSuccessMessage] = useState<string>("");
+  const [
+    newPassword,
+    setNewPassword,
+  ] = useState("");
 
-  const handleChangePassword = async (): Promise<void> => {
-    setErrorMessage("");
-    setSuccessMessage("");
+  const [
+    confirmPassword,
+    setConfirmPassword,
+  ] = useState("");
 
-    if (!currentPassword || !newPassword || !confirmPassword) {
-      setErrorMessage(
-        t("error.please_fill_in_all_fields")
-      );
-      return;
-    }
+  const [
+    loading,
+    setLoading,
+  ] = useState(false);
 
-    try {
-      setLoading(true);
+  const [
+    errorMessage,
+    setErrorMessage,
+  ] = useState("");
 
-      const response: ChangePasswordResponse =
-        await changePassword(
-          currentPassword,
-          newPassword,
-          confirmPassword
+  const [
+    successMessage,
+    setSuccessMessage,
+  ] = useState("");
+
+  // Change password
+  const handleChangePassword =
+    async (): Promise<void> => {
+      setErrorMessage("");
+      setSuccessMessage("");
+
+      if (
+        !currentPassword ||
+        !newPassword ||
+        !confirmPassword
+      ) {
+        setErrorMessage(
+          t(
+            "error.please_fill_in_all_fields"
+          )
         );
 
-      setSuccessMessage(response.message);
+        return;
+      }
 
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
+      try {
+        setLoading(true);
 
-      setTimeout(() => {
-        router.push(`/users/${user?._id}`);
-      }, 1500);
-    } catch (error: unknown) {
-      const apiError = error as ApiError;
+        const response:
+          ChangePasswordResponse =
+          await changePassword(
+            currentPassword,
+            newPassword,
+            confirmPassword
+          );
 
-      setErrorMessage(
-        apiError.response?.data?.message ||
-          t("error.something_went_wrong")
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+        setSuccessMessage(
+          response.message
+        );
 
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+
+        setTimeout(() => {
+          void router.push(
+            `/users/${user?._id}`
+          );
+        }, 1500);
+      } catch (error: unknown) {
+        const apiError =
+          error as ApiError;
+
+        setErrorMessage(
+          apiError.response?.data
+            ?.message ||
+            t(
+              "error.something_went_wrong"
+            )
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+  // Redirect unauthenticated users
   useEffect(() => {
     if (!user) {
-      router.replace("/auth");
+      void router.replace(
+        "/auth"
+      );
     }
   }, [user, router]);
 
@@ -83,89 +133,130 @@ export default function ChangePassword() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-6">
-        <h1 className="text-3xl font-bold text-center mb-2 text-black">
-          {t("changepass.change_password")}
+    <div className="flex min-h-screen items-center justify-center bg-gray-100 px-4">
+      <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-lg">
+        {/* Page header */}
+        <h1 className="mb-2 text-center text-3xl font-bold text-black">
+          {t(
+            "changepass.change_password"
+          )}
         </h1>
 
-        <p className="text-center text-gray-500 mb-6">
+        <p className="mb-6 text-center text-gray-500">
           {t(
             "changepass.update_your_account_password_securely"
           )}
         </p>
 
+        {/* Success message */}
         {successMessage && (
-          <div className="mb-4 rounded-lg bg-green-100 border border-green-300 text-green-700 px-4 py-3 text-sm">
+          <div className="mb-4 rounded-lg border border-green-300 bg-green-100 px-4 py-3 text-sm text-green-700">
             {successMessage}
           </div>
         )}
 
+        {/* Error message */}
         {errorMessage && (
-          <div className="mb-4 rounded-lg bg-red-100 border border-red-300 text-red-700 px-4 py-3 text-sm">
+          <div className="mb-4 rounded-lg border border-red-300 bg-red-100 px-4 py-3 text-sm text-red-700">
             {errorMessage}
           </div>
         )}
 
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
-          {t("changepass.current_password")}
+        {/* Current password */}
+        <label
+          htmlFor="currentPassword"
+          className="mb-2 block text-sm font-semibold text-gray-700"
+        >
+          {t(
+            "changepass.current_password"
+          )}
         </label>
 
         <input
+          id="currentPassword"
           type="password"
           value={currentPassword}
-          onChange={(e) =>
-            setCurrentPassword(e.target.value)
+          onChange={(event) =>
+            setCurrentPassword(
+              event.target.value
+            )
           }
           placeholder={t(
             "changepass.enter_current_password"
           )}
-          className="w-full border rounded-lg text-gray-700 px-4 py-3 mb-4 outline-none focus:ring-2 focus:ring-orange-500"
+          className="mb-4 w-full rounded-lg border px-4 py-3 text-gray-700 outline-none focus:ring-2 focus:ring-orange-500"
         />
 
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
-          {t("changepass.new_password")}
+        {/* New password */}
+        <label
+          htmlFor="newPassword"
+          className="mb-2 block text-sm font-semibold text-gray-700"
+        >
+          {t(
+            "changepass.new_password"
+          )}
         </label>
 
         <input
+          id="newPassword"
           type="password"
           value={newPassword}
-          onChange={(e) =>
-            setNewPassword(e.target.value)
+          onChange={(event) =>
+            setNewPassword(
+              event.target.value
+            )
           }
           placeholder={t(
             "changepass.enter_new_password"
           )}
-          className="w-full border rounded-lg text-gray-700 px-4 py-3 mb-4 outline-none focus:ring-2 focus:ring-orange-500"
+          className="mb-4 w-full rounded-lg border px-4 py-3 text-gray-700 outline-none focus:ring-2 focus:ring-orange-500"
         />
 
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
-          {t("changepass.confirm_password")}
+        {/* Confirm password */}
+        <label
+          htmlFor="confirmPassword"
+          className="mb-2 block text-sm font-semibold text-gray-700"
+        >
+          {t(
+            "changepass.confirm_password"
+          )}
         </label>
 
         <input
+          id="confirmPassword"
           type="password"
           value={confirmPassword}
-          onChange={(e) =>
-            setConfirmPassword(e.target.value)
+          onChange={(event) =>
+            setConfirmPassword(
+              event.target.value
+            )
           }
           placeholder={t(
             "changepass.confirm_new_password"
           )}
-          className="w-full border rounded-lg text-gray-700 px-4 py-3 mb-6 outline-none focus:ring-2 focus:ring-orange-500"
+          className="mb-6 w-full rounded-lg border px-4 py-3 text-gray-700 outline-none focus:ring-2 focus:ring-orange-500"
         />
 
+        {/* Submit */}
         <button
           type="button"
-          onClick={handleChangePassword}
+          onClick={() =>
+            void handleChangePassword()
+          }
           disabled={loading}
-          className="w-full bg-orange-600 hover:bg-orange-700 text-white py-3 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full rounded-lg bg-orange-600 py-3 text-white transition hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {loading
-            ? t("changepass.changing_password")
-            : t("changepass.change_password")}
+            ? t(
+                "changepass.changing_password"
+              )
+            : t(
+                "changepass.change_password"
+              )}
         </button>
       </div>
     </div>
   );
-}
+};
+
+export default ChangePassword;

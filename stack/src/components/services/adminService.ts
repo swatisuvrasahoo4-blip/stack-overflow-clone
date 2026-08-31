@@ -1,21 +1,32 @@
 import axiosInstance from "@/lib/axiosinstance";
 
+export type AdminReportStatus =
+  | "pending"
+  | "reviewed"
+  | "dismissed"
+  | "action_taken";
+
+// Fetch admin reports
 export const getAdminReports = async () => {
   const response = await axiosInstance.get("/report");
+
   return response.data;
 };
 
+// Update report status
 export const updateAdminReportStatus = async (
   reportId: string,
-  status: "pending" | "reviewed" | "dismissed" | "action_taken"
+  status: AdminReportStatus
 ) => {
-  const response = await axiosInstance.patch(`/report/${reportId}`, {
-    status,
-  });
+  const response = await axiosInstance.patch(
+    `/report/${reportId}`,
+    { status }
+  );
 
   return response.data;
 };
 
+// Suspend user
 export const suspendAdminUser = async (
   userId: string,
   reason: string
@@ -28,7 +39,10 @@ export const suspendAdminUser = async (
   return response.data;
 };
 
-export const unsuspendAdminUser = async (userId: string) => {
+// Unsuspend user
+export const unsuspendAdminUser = async (
+  userId: string
+) => {
   const response = await axiosInstance.patch(
     `/admin/users/${userId}/unsuspend`
   );

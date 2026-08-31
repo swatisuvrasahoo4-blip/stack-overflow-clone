@@ -32,7 +32,7 @@ interface VoteResponse {
   };
 }
 
-export default function AnswerVote({
+const AnswerVote = ({
   questionId,
   answerId,
   upvotes,
@@ -40,7 +40,7 @@ export default function AnswerVote({
   currentUserId,
   answerUserId,
   onVoteSuccess,
-}: AnswerVoteProps) {
+}: AnswerVoteProps) => {
   const { t } = useTranslation();
 
   const hasUpvoted = currentUserId
@@ -55,7 +55,7 @@ export default function AnswerVote({
 
   const handleVote = async (
     voteType: "upvote" | "downvote"
-  ) => {
+  ): Promise<void> => {
     if (!currentUserId) {
       toast.error(t("toast.please_login_to_vote"));
       return;
@@ -76,8 +76,8 @@ export default function AnswerVote({
       )) as VoteResponse;
 
       const updatedAnswer = response.data.answer.find(
-        (ans) =>
-          String(ans._id) === String(answerId)
+        (answer) =>
+          String(answer._id) === String(answerId)
       );
 
       if (updatedAnswer) {
@@ -102,7 +102,7 @@ export default function AnswerVote({
   };
 
   return (
-    <div className="flex sm:flex-col items-center justify-center gap-2 p-4 sm:px-5">
+    <div className="flex items-center justify-center gap-2 p-4 sm:flex-col sm:px-5">
       <button
         type="button"
         onClick={() => handleVote("upvote")}
@@ -134,4 +134,6 @@ export default function AnswerVote({
       </button>
     </div>
   );
-}
+};
+
+export default AnswerVote;

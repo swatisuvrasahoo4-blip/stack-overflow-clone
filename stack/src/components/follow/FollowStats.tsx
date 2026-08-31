@@ -1,56 +1,112 @@
-import { useEffect, useState } from "react";
-import { getFollowCounts } from "../services/followService";
+import {
+  useEffect,
+  useState,
+} from "react";
+
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
+
+import { getFollowCounts } from "../services/followService";
 
 interface FollowStatsProps {
   userId: string;
 }
 
-export const FollowStats = ({ userId }: FollowStatsProps) => {
-  const {t} = useTranslation();
-  const [followers, setFollowers] = useState(0);
-  const [following, setFollowing] = useState(0);
-  const router = useRouter();
+export const FollowStats = ({
+  userId,
+}: FollowStatsProps) => {
+  const { t } =
+    useTranslation();
+
+  const router =
+    useRouter();
+
+  const [
+    followers,
+    setFollowers,
+  ] = useState(0);
+
+  const [
+    following,
+    setFollowing,
+  ] = useState(0);
 
   useEffect(() => {
-    const loadFollowCounts = async () => {
-      try {
-        const data = await getFollowCounts(userId);
+    const loadFollowCounts =
+      async (): Promise<void> => {
+        try {
+          const data =
+            await getFollowCounts(
+              userId
+            );
 
-        setFollowers(data.followers || 0);
-        setFollowing(data.following || 0);
-      } catch (error) {
-        console.log("Follow count error:", error);
-      }
-    };
+          setFollowers(
+            data.followers || 0
+          );
+
+          setFollowing(
+            data.following || 0
+          );
+        } catch (
+          error: unknown
+        ) {
+          console.error(
+            "Failed to load follow counts:",
+            error
+          );
+        }
+      };
 
     if (userId) {
-      loadFollowCounts();
+      void loadFollowCounts();
     }
   }, [userId]);
 
+  const handleFollowersClick =
+    () => {
+      void router.push(
+        `/users/${userId}/connections?tab=followers`
+      );
+    };
+
+  const handleFollowingClick =
+    () => {
+      void router.push(
+        `/users/${userId}/connections?tab=following`
+      );
+    };
+
   return (
     <div className="flex items-center gap-5 text-sm">
-     <button
-  type="button"
-  onClick={() =>
-    router.push(`/users/${userId}/connections?tab=followers`)
-  }
-  className="cursor-pointer hover:underline"
->
-  <span className="font-semibold">{followers}</span> {t("user.followers")}
-</button>
+      {/* Followers */}
 
       <button
-  type="button"
-  onClick={() =>
-    router.push(`/users/${userId}/connections?tab=following`)
-  }
-  className="cursor-pointer hover:underline"
->
-  <span className="font-semibold">{following}</span> {t("user.following")}
-</button>
+        type="button"
+        onClick={
+          handleFollowersClick
+        }
+        className="cursor-pointer hover:underline"
+      >
+        <span className="font-semibold">
+          {followers}
+        </span>{" "}
+        {t("user.followers")}
+      </button>
+
+      {/* Following */}
+
+      <button
+        type="button"
+        onClick={
+          handleFollowingClick
+        }
+        className="cursor-pointer hover:underline"
+      >
+        <span className="font-semibold">
+          {following}
+        </span>{" "}
+        {t("user.following")}
+      </button>
     </div>
   );
 };
