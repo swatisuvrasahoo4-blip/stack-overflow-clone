@@ -225,42 +225,33 @@ const SignUpForm = ({
           </p>
         </div>
 
-        {/* Terms */}
+       {/* Terms */}
+<div className="flex items-start gap-3">
+  <Checkbox
+    id="terms"
+    className="mt-1 shrink-0"
+  />
 
-        <div className="flex items-start space-x-2">
-          <Checkbox
-            id="terms"
-            className="mt-1"
-          />
-
-          <Label
-            htmlFor="terms"
-            className="text-sm leading-relaxed"
-          >
-            {t(
-              "legal.i_agree_to_the"
-            )}{" "}
-            <Link
-              href="#"
-              className="text-blue-600 hover:underline"
-            >
-              {t(
-                "legal.terms_of_service"
-              )}
-            </Link>{" "}
-            {t(
-              "legal.and"
-            )}{" "}
-            <Link
-              href="#"
-              className="text-blue-600 hover:underline"
-            >
-              {t(
-                "legal.privacy_policy"
-              )}
-            </Link>
-          </Label>
-        </div>
+  <Label
+    htmlFor="terms"
+    className="block flex-1 cursor-pointer text-sm font-normal leading-6 text-gray-700"
+  >
+    {t("legal.i_agree_to_the")}{" "}
+    <Link
+      href="#"
+      className="text-blue-600 hover:underline"
+    >
+      {t("legal.terms_of_service")}
+    </Link>{" "}
+    {t("legal.and")}{" "}
+    <Link
+      href="#"
+      className="text-blue-600 hover:underline"
+    >
+      {t("legal.privacy_policy")}
+    </Link>
+  </Label>
+</div>
 
         {/* Submit */}
 

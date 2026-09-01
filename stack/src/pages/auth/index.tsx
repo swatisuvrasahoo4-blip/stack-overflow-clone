@@ -239,7 +239,7 @@ const LoginPage = () => {
               >
                 {loading
                   ? t(
-                      "status.logging_in"
+                      "status.loading"
                     )
                   : t(
                       "actions.log_in"
