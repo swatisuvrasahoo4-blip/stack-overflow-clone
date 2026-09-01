@@ -6,7 +6,7 @@
     "plan": "Forfait",
     "amount": "Montant"
   },
-    "invoice": {
+  "invoice": {
     "title": "Détails de la facture",
     "pdf_title": "FACTURE DE PAIEMENT",
     "invoice": "Facture",
@@ -18,16 +18,16 @@
     "amount": "Montant :",
     "payment_id": "ID de paiement :",
     "order_id": "ID de commande :",
-    "thank_you": "Merci d’avoir choisi CodeQuest Premium !"
+    "thank_you": "Merci d'avoir choisi CodeQuest Premium !"
   },
   "actions": {
     "download_invoice": "Télécharger la facture",
-     "view_invoice": "Voir la facture",
-      "current_plan": "Forfait actuel",
-    "upgrade": "Mettre à niveau",
+    "view_invoice": "Voir la facture",
+    "current_plan": "Forfait actuel",
+    "upgrade": "Améliorer",
     "lower_plan": "Forfait inférieur",
-      "upgrade_plan": "Mettre à niveau le forfait",
-       "back": "Retour"
+    "upgrade_plan": "Améliorer le forfait",
+    "back": "Retour"
   },
   "payment_history": {
     "title": "Historique des paiements",
@@ -46,14 +46,38 @@
       "bronze": "Bronze",
       "silver": "Argent",
       "gold": "Or"
+    },
+    "descriptions": {
+      "perfect_for_getting_started": "Parfait pour commencer",
+      "great_for_regular_users": "Idéal pour les utilisateurs réguliers",
+      "best_for_active_community_members": "Idéal pour les membres actifs de la communauté",
+      "unlock_every_premium_feature": "Débloquez toutes les fonctionnalités premium"
+    },
+    "features": {
+      "one_question_per_day": "Une question par jour",
+      "basic_search": "Recherche de base",
+      "five_questions_per_day": "Cinq questions par jour",
+      "bronze_profile_badge": "Badge de profil Bronze",
+      "advanced_search_filters": "Filtres de recherche avancée",
+      "fifteen_questions_per_day": "Quinze questions par jour",
+      "silver_profile_badge": "Badge de profil Argent",
+      "priority_support": "Assistance prioritaire",
+      "enhanced_profile_visibility": "Visibilité du profil améliorée",
+      "unlimited_bookmarks": "Enregistrements illimités",
+      "unlimited_questions": "Questions illimitées",
+      "gold_profile_badge": "Badge de profil Or",
+      "highest_search_priority": "Priorité de recherche maximale",
+      "featured_profile_visibility": "Visibilité du profil mise en avant",
+      "priority_customer_support": "Service client prioritaire",
+      "exclusive_community_features": "Fonctionnalités communautaires exclusives"
     }
   },
   "messages": {
     "please_login_to_continue": "Veuillez vous connecter pour continuer.",
-        "subscription_activated_successfully": "Abonnement activé avec succès.",
+    "subscription_activated_successfully": "Abonnement activé avec succès.",
     "payment_verification_failed": "La vérification du paiement a échoué.",
-    "payment_service_not_loaded": "Le service de paiement n’est pas encore chargé.",
-    "payment_order_failed": "Une erreur s’est produite lors de la création du paiement."
+    "payment_service_not_loaded": "Le service de paiement n'est pas encore chargé.",
+    "payment_order_failed": "Échec de la création de la commande de paiement."
   },
   "dashboard": {
     "title": "Abonnement",
@@ -69,7 +93,7 @@
     "cancelled": "Annulé"
   },
   "why_upgrade": {
-    "title": "Pourquoi passer à un forfait supérieur ?",
+    "title": "Pourquoi améliorer votre forfait ?",
     "benefits": {
       "more_questions": {
         "title": "Plus de questions",
@@ -89,8 +113,8 @@
       }
     }
   },
-    "page": {
-    "subscription_plans": "Forfaits d’abonnement",
+  "page": {
+    "subscription_plans": "Forfaits d'abonnement",
     "upgrade_membership_title": "Choisissez le forfait qui correspond le mieux à vos besoins."
   },
   "payment": {

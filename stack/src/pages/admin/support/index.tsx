@@ -245,8 +245,8 @@ const AdminSupportPage = () => {
                     {request.message}
                   </p>
 
-                  <div className="mt-4 flex items-center justify-between border-t pt-3 text-xs text-gray-500">
-                    <div className="flex items-center gap-3">
+                  <div className="mt-4 flex flex-col gap-3 border-t pt-3 text-xs text-gray-500 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex flex-wrap items-center gap-3">
                       <span
                         className={
                           request.status ===

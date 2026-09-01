@@ -18,7 +18,7 @@
     "amount": "金额：",
     "payment_id": "付款 ID：",
     "order_id": "订单 ID：",
-    "thank_you": "感谢你选择 CodeQuest Premium！"
+    "thank_you": "感谢您选择 CodeQuest Premium！"
   },
   "actions": {
     "download_invoice": "下载发票",
@@ -30,7 +30,7 @@
     "back": "返回"
   },
   "payment_history": {
-    "title": "付款历史",
+    "title": "付款记录",
     "invoice": "发票",
     "plan": "套餐",
     "amount": "金额",
@@ -46,14 +46,38 @@
       "bronze": "青铜",
       "silver": "白银",
       "gold": "黄金"
+    },
+    "descriptions": {
+      "perfect_for_getting_started": "非常适合入门",
+      "great_for_regular_users": "非常适合经常使用的用户",
+      "best_for_active_community_members": "最适合活跃的社区成员",
+      "unlock_every_premium_feature": "解锁所有高级功能"
+    },
+    "features": {
+      "one_question_per_day": "每天一个问题",
+      "basic_search": "基础搜索",
+      "five_questions_per_day": "每天五个问题",
+      "bronze_profile_badge": "青铜个人资料徽章",
+      "advanced_search_filters": "高级搜索筛选",
+      "fifteen_questions_per_day": "每天十五个问题",
+      "silver_profile_badge": "白银个人资料徽章",
+      "priority_support": "优先支持",
+      "enhanced_profile_visibility": "提升个人资料可见度",
+      "unlimited_bookmarks": "无限收藏",
+      "unlimited_questions": "无限提问",
+      "gold_profile_badge": "黄金个人资料徽章",
+      "highest_search_priority": "最高搜索优先级",
+      "featured_profile_visibility": "精选个人资料展示",
+      "priority_customer_support": "优先客户支持",
+      "exclusive_community_features": "专属社区功能"
     }
   },
   "messages": {
-    "please_login_to_continue": "请登录后继续。",
+    "please_login_to_continue": "请登录以继续。",
     "subscription_activated_successfully": "订阅已成功激活。",
     "payment_verification_failed": "付款验证失败。",
     "payment_service_not_loaded": "付款服务尚未加载。",
-    "payment_order_failed": "创建付款时发生错误。"
+    "payment_order_failed": "创建付款订单失败。"
   },
   "dashboard": {
     "title": "订阅",
@@ -73,11 +97,11 @@
     "benefits": {
       "more_questions": {
         "title": "更多问题",
-        "description": "提高你的每日提问上限。"
+        "description": "提高您的每日提问上限。"
       },
       "premium_badges": {
-        "title": "Premium 徽章",
-        "description": "使用专属个人资料徽章彰显身份。"
+        "title": "高级徽章",
+        "description": "使用专属个人资料徽章脱颖而出。"
       },
       "advanced_search": {
         "title": "高级搜索",
@@ -85,13 +109,13 @@
       },
       "unlimited_bookmarks": {
         "title": "无限收藏",
-        "description": "根据需要保存任意数量的问题和发布内容。"
+        "description": "根据需要收藏任意数量的问题和帖子。"
       }
     }
   },
   "page": {
     "subscription_plans": "订阅套餐",
-    "upgrade_membership_title": "选择最适合你需求的套餐。"
+    "upgrade_membership_title": "选择最适合您需求的套餐。"
   },
   "payment": {
     "subscription_description": "{{plan}} 订阅"

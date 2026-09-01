@@ -40,7 +40,8 @@
     "status": {
       "loading_support_requests": "Loading support requests...",
       "resolved": "Resolved",
-      "pending": "Pending"
+      "pending": "Pending",
+      "open": "Open"
     },
     "labels": {
       "user": "User",

@@ -40,7 +40,8 @@
     "status": {
       "loading_support_requests": "正在加载支持请求...",
       "resolved": "已解决",
-      "pending": "待处理"
+      "pending": "待处理",
+      "open": "开放"
     },
     "labels": {
       "user": "用户",

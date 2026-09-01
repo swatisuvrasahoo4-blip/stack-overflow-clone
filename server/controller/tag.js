@@ -1,9 +1,31 @@
 import question from "../models/question.js";
 import Post from "../models/post.js";
 
-// Get all tags
-export const getAllTags = async (req, res) => {
+// Get all tags with pagination
+export const getAllTags = async (
+  req,
+  res
+) => {
   try {
+    const page = Math.max(
+      Number.parseInt(
+        req.query.page,
+        10
+      ) || 1,
+      1
+    );
+
+    const limit = Math.min(
+      Math.max(
+        Number.parseInt(
+          req.query.limit,
+          10
+        ) || 12,
+        1
+      ),
+      50
+    );
+
     const [
       questionTags,
       postTags,
@@ -98,7 +120,7 @@ export const getAllTags = async (req, res) => {
       }
     );
 
-    const tags =
+    const allTags =
       Object.entries(
         tagCountMap
       )
@@ -113,139 +135,190 @@ export const getAllTags = async (req, res) => {
           })
         );
 
-    return res.status(200).json({
-      data: tags,
-    });
+    const totalTags =
+      allTags.length;
+
+    const totalPages =
+      Math.ceil(
+        totalTags / limit
+      );
+
+    const skip =
+      (page - 1) * limit;
+
+    const tags =
+      allTags.slice(
+        skip,
+        skip + limit
+      );
+
+    return res
+      .status(200)
+      .json({
+        data: {
+          tags,
+          pagination: {
+            currentPage: page,
+            totalPages,
+            totalTags,
+            limit,
+            hasNextPage:
+              page < totalPages,
+            hasPreviousPage:
+              page > 1,
+          },
+        },
+      });
   } catch (error) {
     console.error(
       "Failed to fetch tags:",
       error
     );
 
-    return res.status(500).json({
-      message:
-        "Failed to fetch tags",
-    });
+    return res
+      .status(500)
+      .json({
+        message:
+          "Failed to fetch tags",
+      });
   }
 };
 
 // Get content for a specific tag
-export const getTagContent = async (
-  req,
-  res
-) => {
-  try {
-    const { tag } = req.params;
+export const getTagContent =
+  async (
+    req,
+    res
+  ) => {
+    try {
+      const { tag } =
+        req.params;
 
-    const normalizedTag =
-      decodeURIComponent(tag)
-        .replace(/^#/, "")
-        .trim()
-        .toLowerCase();
+      const normalizedTag =
+        decodeURIComponent(tag)
+          .replace(/^#/, "")
+          .trim()
+          .toLowerCase();
 
-    if (!normalizedTag) {
-      return res.status(400).json({
-        message:
-          "Tag is required",
-      });
-    }
+      if (!normalizedTag) {
+        return res
+          .status(400)
+          .json({
+            message:
+              "Tag is required",
+          });
+      }
 
-    // Question pagination
-    const page = Math.max(
-      Number.parseInt(
-        req.query.page,
-        10
-      ) || 1,
-      1
-    );
+      // Question pagination
+      const page =
+        Math.max(
+          Number.parseInt(
+            req.query.page,
+            10
+          ) || 1,
+          1
+        );
 
-    const limit = Math.min(
-      Math.max(
-        Number.parseInt(
-          req.query.limit,
-          10
-        ) || 5,
-        1
-      ),
-      50
-    );
+      const limit =
+        Math.min(
+          Math.max(
+            Number.parseInt(
+              req.query.limit,
+              10
+            ) || 5,
+            1
+          ),
+          50
+        );
 
-    const skip =
-      (page - 1) * limit;
+      const skip =
+        (page - 1) *
+        limit;
 
-    // Tag filters
-    const questionFilter = {
-      questiontags: {
-        $regex: `^${normalizedTag}$`,
-        $options: "i",
-      },
-    };
+      // Tag filters
+      const questionFilter = {
+        questiontags: {
+          $regex:
+            `^${normalizedTag}$`,
+          $options: "i",
+        },
+      };
 
-    const postFilter = {
-      hashtags: {
-        $regex: `^${normalizedTag}$`,
-        $options: "i",
-      },
-    };
+      const postFilter = {
+        hashtags: {
+          $regex:
+            `^${normalizedTag}$`,
+          $options: "i",
+        },
+      };
 
-    const [
-      questions,
-      totalQuestions,
-      posts,
-    ] = await Promise.all([
-      // Current question page
-      question
-        .find(questionFilter)
-        .sort({
-          _id: -1,
-        })
-        .skip(skip)
-        .limit(limit),
+      const [
+        questions,
+        totalQuestions,
+        posts,
+      ] =
+        await Promise.all([
+          // Current question page
+          question
+            .find(
+              questionFilter
+            )
+            .sort({
+              _id: -1,
+            })
+            .skip(skip)
+            .limit(limit),
 
-      // Total question count
-      question.countDocuments(
-        questionFilter
-      ),
+          // Total question count
+          question.countDocuments(
+            questionFilter
+          ),
 
-      // Community posts
-      Post.find(postFilter).sort({
-        _id: -1,
-      }),
-    ]);
+          // Community posts
+          Post.find(
+            postFilter
+          ).sort({
+            _id: -1,
+          }),
+        ]);
 
-    const totalPages =
-      Math.ceil(
-        totalQuestions / limit
+      const totalPages =
+        Math.ceil(
+          totalQuestions /
+            limit
+        );
+
+      return res
+        .status(200)
+        .json({
+          data: {
+            questions,
+            posts,
+            pagination: {
+              currentPage:
+                page,
+              totalPages,
+              totalQuestions,
+              limit,
+              hasNextPage:
+                page <
+                totalPages,
+              hasPreviousPage:
+                page > 1,
+            },
+          },
+        });
+    } catch (error) {
+      console.error(
+        "Failed to fetch tag content:",
+        error
       );
 
-    return res.status(200).json({
-      data: {
-        questions,
-        posts,
-
-        pagination: {
-          currentPage: page,
-          totalPages,
-          totalQuestions,
-          limit,
-
-          hasNextPage:
-            page < totalPages,
-
-          hasPreviousPage:
-            page > 1,
-        },
-      },
-    });
-  } catch (error) {
-    console.error(
-      "Failed to fetch tag content:",
-      error
-    );
-
-    return res.status(500).json({
-      message:
-        "Failed to fetch tag content",
-    });
-  }
-};
+      return res
+        .status(500)
+        .json({
+          message:
+            "Failed to fetch tag content",
+        });
+    }
+  };

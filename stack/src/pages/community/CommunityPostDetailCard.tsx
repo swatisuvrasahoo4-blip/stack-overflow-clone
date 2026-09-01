@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
-
 import type { Post } from "@/types/community";
 
 interface CommunityPostDetailCardProps {
@@ -16,9 +15,9 @@ const CommunityPostDetailCard = ({
   const [copied, setCopied] =
     useState(false);
 
-    if (!post) {
-  return null;
-}
+  if (!post) {
+    return null;
+  }
 
   const handleCopyCode =
     async (): Promise<void> => {
@@ -44,11 +43,16 @@ const CommunityPostDetailCard = ({
       }
     };
 
-  const hashtags = post.hashtags
-    ? Array.isArray(post.hashtags)
-      ? post.hashtags
-      : post.hashtags.split(",")
-    : [];
+  const hashtags: string[] = (
+    Array.isArray(post.hashtags)
+      ? post.hashtags.join(" ")
+      : typeof post.hashtags === "string"
+        ? post.hashtags
+        : ""
+  )
+    .split(/[\s,#]+/)
+    .map((tag) => tag.trim())
+    .filter(Boolean);
 
   const imageUrl =
     post.image &&
@@ -61,7 +65,6 @@ const CommunityPostDetailCard = ({
   return (
     <div className="rounded-lg border bg-white p-5">
       {/* Author */}
-
       <Link
         href={`/users/${post.authorId}`}
         className="text-lg font-semibold hover:text-blue-600"
@@ -71,20 +74,17 @@ const CommunityPostDetailCard = ({
       </Link>
 
       {/* Post type */}
-
       <p className="mt-1 text-sm text-blue-600">
         {post.postType ||
           t("labels.community_post")}
       </p>
 
       {/* Content */}
-
       <p className="mt-4 text-gray-800">
         {post.content}
       </p>
 
       {/* Image */}
-
       {post.image && (
         <img
           src={imageUrl}
@@ -96,22 +96,22 @@ const CommunityPostDetailCard = ({
       )}
 
       {/* Hashtags */}
-
       {hashtags.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-2">
-          {hashtags.map((tag) => (
-            <span
-              key={tag.trim()}
-              className="rounded bg-blue-100 px-2 py-1 text-xs text-blue-700"
-            >
-              #{tag.trim()}
-            </span>
-          ))}
+          {hashtags.map(
+            (tag, index) => (
+              <span
+                key={`${tag}-${index}`}
+                className="rounded bg-blue-100 px-2 py-1 text-xs text-blue-700"
+              >
+                #{tag}
+              </span>
+            )
+          )}
         </div>
       )}
 
       {/* Code snippet */}
-
       {post.codeSnippet && (
         <div className="relative mt-4">
           <button
@@ -139,7 +139,6 @@ const CommunityPostDetailCard = ({
       )}
 
       {/* Created date */}
-
       {post.createdAt && (
         <p className="mt-4 text-xs text-gray-500">
           {new Date(

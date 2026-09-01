@@ -9,6 +9,7 @@ import {
   Bookmark,
   Send,
   ThumbsUp,
+  MessageCircle
 } from "lucide-react";
 
 import { useRouter } from "next/router";
@@ -154,19 +155,23 @@ const PostInteractions = ({
 
       {/* Comment */}
 
-      <button
-        type="button"
-        className="cursor-pointer"
-        onClick={(event) => {
-          event.stopPropagation();
-          handleCommentClick();
-        }}
-      >
-        💬 {commentCount}{" "}
-        {commentCount === 1
-          ? t("labels.comment")
-          : t("labels.comments")}
-      </button>
+     <button
+  type="button"
+  onClick={(event) => {
+    event.stopPropagation();
+    handleCommentClick();
+  }}
+  className="flex cursor-pointer items-center gap-1.5 text-sm text-gray-600 transition hover:text-blue-600"
+>
+  <MessageCircle className="h-4 w-4" />
+
+  <span>
+    {commentCount}{" "}
+    {commentCount === 1
+      ? t("labels.comment")
+      : t("labels.comments")}
+  </span>
+</button>
 
       {/* Bookmark */}
 

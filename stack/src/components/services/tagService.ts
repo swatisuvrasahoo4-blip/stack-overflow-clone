@@ -1,6 +1,7 @@
 import axiosInstance from "@/lib/axiosinstance";
 
 import type { Post } from "@/types/community";
+import type { Tag } from "@/types/tag";
 
 export interface TagQuestion {
   _id: string;
@@ -18,21 +19,54 @@ export interface TagPagination {
   hasPreviousPage: boolean;
 }
 
+export interface TagsPagination {
+  currentPage: number;
+  totalPages: number;
+  totalTags: number;
+  limit: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+
+export interface TagsResponse {
+  tags: Tag[];
+  pagination: TagsPagination;
+}
+
 export interface TagContentResponse {
   questions: TagQuestion[];
   posts: Post[];
   pagination: TagPagination;
 }
 
-// Get all tags
-export const getTags = async () => {
+// Get tags with pagination
+export const getTags = async (
+  page = 1,
+  limit = 12
+): Promise<TagsResponse> => {
   const response =
     await axiosInstance.get(
-      "/tags"
+      "/tags",
+      {
+        params: {
+          page,
+          limit,
+        },
+      }
     );
 
   return (
-    response.data?.data || []
+    response.data?.data || {
+      tags: [],
+      pagination: {
+        currentPage: page,
+        totalPages: 0,
+        totalTags: 0,
+        limit,
+        hasNextPage: false,
+        hasPreviousPage: false,
+      },
+    }
   );
 };
 

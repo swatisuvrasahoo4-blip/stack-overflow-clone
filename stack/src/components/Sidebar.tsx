@@ -73,7 +73,7 @@ const Sidebar = ({
             ? "translate-x-0"
             : "-translate-x-full",
 
-          "md:w-48 md:translate-x-0 lg:w-64"
+          "md:w-48 lg:w-64"
         )}
       >
         {/* Scrollable sidebar without scrollbar */}

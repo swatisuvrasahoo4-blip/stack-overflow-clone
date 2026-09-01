@@ -16,8 +16,8 @@
     "payment_details": "भुगतान विवरण",
     "plan": "प्लान:",
     "amount": "राशि:",
-    "payment_id": "भुगतान ID:",
-    "order_id": "ऑर्डर ID:",
+    "payment_id": "भुगतान आईडी:",
+    "order_id": "ऑर्डर आईडी:",
     "thank_you": "CodeQuest Premium चुनने के लिए धन्यवाद!"
   },
   "actions": {
@@ -40,28 +40,52 @@
   },
   "plans": {
     "most_popular": "सबसे लोकप्रिय",
-    "month": "महीना",
+    "month": "माह",
     "names": {
       "free": "मुफ़्त",
       "bronze": "ब्रॉन्ज़",
       "silver": "सिल्वर",
       "gold": "गोल्ड"
+    },
+    "descriptions": {
+      "perfect_for_getting_started": "शुरुआत करने के लिए उपयुक्त",
+      "great_for_regular_users": "नियमित उपयोगकर्ताओं के लिए उपयुक्त",
+      "best_for_active_community_members": "सक्रिय समुदाय सदस्यों के लिए सर्वोत्तम",
+      "unlock_every_premium_feature": "सभी प्रीमियम सुविधाएँ अनलॉक करें"
+    },
+    "features": {
+      "one_question_per_day": "प्रतिदिन एक प्रश्न",
+      "basic_search": "बेसिक सर्च",
+      "five_questions_per_day": "प्रतिदिन पाँच प्रश्न",
+      "bronze_profile_badge": "ब्रॉन्ज़ प्रोफ़ाइल बैज",
+      "advanced_search_filters": "उन्नत सर्च फ़िल्टर",
+      "fifteen_questions_per_day": "प्रतिदिन पंद्रह प्रश्न",
+      "silver_profile_badge": "सिल्वर प्रोफ़ाइल बैज",
+      "priority_support": "प्राथमिकता सहायता",
+      "enhanced_profile_visibility": "बेहतर प्रोफ़ाइल दृश्यता",
+      "unlimited_bookmarks": "असीमित सेव",
+      "unlimited_questions": "असीमित प्रश्न",
+      "gold_profile_badge": "गोल्ड प्रोफ़ाइल बैज",
+      "highest_search_priority": "सर्वोच्च सर्च प्राथमिकता",
+      "featured_profile_visibility": "विशेष प्रोफ़ाइल दृश्यता",
+      "priority_customer_support": "प्राथमिकता ग्राहक सहायता",
+      "exclusive_community_features": "विशेष समुदाय सुविधाएँ"
     }
   },
   "messages": {
-    "please_login_to_continue": "जारी रखने के लिए कृपया लॉगिन करें।",
-    "subscription_activated_successfully": "सदस्यता सफलतापूर्वक सक्रिय की गई।",
+    "please_login_to_continue": "जारी रखने के लिए कृपया लॉग इन करें।",
+    "subscription_activated_successfully": "सब्सक्रिप्शन सफलतापूर्वक सक्रिय हो गया।",
     "payment_verification_failed": "भुगतान सत्यापन विफल रहा।",
     "payment_service_not_loaded": "भुगतान सेवा अभी लोड नहीं हुई है।",
-    "payment_order_failed": "भुगतान बनाते समय एक त्रुटि हुई।"
+    "payment_order_failed": "भुगतान ऑर्डर बनाने में विफल रहा।"
   },
   "dashboard": {
-    "title": "सदस्यता",
+    "title": "सब्सक्रिप्शन",
     "current_plan": "वर्तमान प्लान",
     "status": "स्थिति",
     "amount": "राशि",
-    "start_date": "प्रारंभ तारीख",
-    "renewal_date": "नवीनीकरण तारीख"
+    "start_date": "आरंभ तिथि",
+    "renewal_date": "नवीनीकरण तिथि"
   },
   "status": {
     "active": "सक्रिय",
@@ -69,7 +93,7 @@
     "cancelled": "रद्द"
   },
   "why_upgrade": {
-    "title": "प्लान अपग्रेड क्यों करें?",
+    "title": "अपना प्लान अपग्रेड क्यों करें?",
     "benefits": {
       "more_questions": {
         "title": "अधिक प्रश्न",
@@ -80,21 +104,21 @@
         "description": "विशेष प्रोफ़ाइल बैज के साथ अलग पहचान बनाएँ।"
       },
       "advanced_search": {
-        "title": "उन्नत खोज",
+        "title": "उन्नत सर्च",
         "description": "शक्तिशाली फ़िल्टर के साथ उत्तर जल्दी खोजें।"
       },
       "unlimited_bookmarks": {
-        "title": "असीमित बुकमार्क",
-        "description": "जितने चाहें उतने प्रश्न और पोस्ट सहेजें।"
+        "title": "असीमित सेव",
+        "description": "जितने चाहें प्रश्न और पोस्ट सेव करें।"
       }
     }
   },
   "page": {
-    "subscription_plans": "सदस्यता प्लान",
-    "upgrade_membership_title": "अपनी आवश्यकताओं के लिए सबसे उपयुक्त प्लान चुनें।"
+    "subscription_plans": "सब्सक्रिप्शन प्लान",
+    "upgrade_membership_title": "अपनी आवश्यकताओं के अनुसार सबसे उपयुक्त प्लान चुनें।"
   },
   "payment": {
-    "subscription_description": "{{plan}} सदस्यता"
+    "subscription_description": "{{plan}} सब्सक्रिप्शन"
   },
   "accessibility": {
     "go_back": "वापस जाएँ"

@@ -196,7 +196,7 @@ const QuestionDetail = ({
     String(currentUserId);
 
   return (
-    <div className="max-w-5xl">
+    <div className="w-full max-w-4xl mx-auto">
       <QuestionHeader
         title={question.questiontitle}
         askedOn={question.askedon}

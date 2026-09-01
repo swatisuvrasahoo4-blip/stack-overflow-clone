@@ -46,6 +46,30 @@
       "bronze": "Bronce",
       "silver": "Plata",
       "gold": "Oro"
+    },
+    "descriptions": {
+      "perfect_for_getting_started": "Perfecto para comenzar",
+      "great_for_regular_users": "Ideal para usuarios habituales",
+      "best_for_active_community_members": "Ideal para miembros activos de la comunidad",
+      "unlock_every_premium_feature": "Desbloquea todas las funciones premium"
+    },
+    "features": {
+      "one_question_per_day": "Una pregunta por día",
+      "basic_search": "Búsqueda básica",
+      "five_questions_per_day": "Cinco preguntas por día",
+      "bronze_profile_badge": "Insignia de perfil Bronce",
+      "advanced_search_filters": "Filtros de búsqueda avanzada",
+      "fifteen_questions_per_day": "Quince preguntas por día",
+      "silver_profile_badge": "Insignia de perfil Plata",
+      "priority_support": "Soporte prioritario",
+      "enhanced_profile_visibility": "Mayor visibilidad del perfil",
+      "unlimited_bookmarks": "Guardados ilimitados",
+      "unlimited_questions": "Preguntas ilimitadas",
+      "gold_profile_badge": "Insignia de perfil Oro",
+      "highest_search_priority": "Máxima prioridad de búsqueda",
+      "featured_profile_visibility": "Visibilidad destacada del perfil",
+      "priority_customer_support": "Atención al cliente prioritaria",
+      "exclusive_community_features": "Funciones exclusivas de la comunidad"
     }
   },
   "messages": {

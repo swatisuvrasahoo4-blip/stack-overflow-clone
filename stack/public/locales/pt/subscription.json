@@ -46,14 +46,38 @@
       "bronze": "Bronze",
       "silver": "Prata",
       "gold": "Ouro"
+    },
+    "descriptions": {
+      "perfect_for_getting_started": "Perfeito para começar",
+      "great_for_regular_users": "Ótimo para usuários frequentes",
+      "best_for_active_community_members": "Ideal para membros ativos da comunidade",
+      "unlock_every_premium_feature": "Desbloqueie todos os recursos premium"
+    },
+    "features": {
+      "one_question_per_day": "Uma pergunta por dia",
+      "basic_search": "Pesquisa básica",
+      "five_questions_per_day": "Cinco perguntas por dia",
+      "bronze_profile_badge": "Emblema de perfil Bronze",
+      "advanced_search_filters": "Filtros de pesquisa avançada",
+      "fifteen_questions_per_day": "Quinze perguntas por dia",
+      "silver_profile_badge": "Emblema de perfil Prata",
+      "priority_support": "Suporte prioritário",
+      "enhanced_profile_visibility": "Maior visibilidade do perfil",
+      "unlimited_bookmarks": "Itens salvos ilimitados",
+      "unlimited_questions": "Perguntas ilimitadas",
+      "gold_profile_badge": "Emblema de perfil Ouro",
+      "highest_search_priority": "Prioridade máxima de pesquisa",
+      "featured_profile_visibility": "Visibilidade de perfil em destaque",
+      "priority_customer_support": "Atendimento prioritário ao cliente",
+      "exclusive_community_features": "Recursos exclusivos da comunidade"
     }
   },
   "messages": {
     "please_login_to_continue": "Faça login para continuar.",
     "subscription_activated_successfully": "Assinatura ativada com sucesso.",
-    "payment_verification_failed": "A verificação do pagamento falhou.",
+    "payment_verification_failed": "Falha na verificação do pagamento.",
     "payment_service_not_loaded": "O serviço de pagamento ainda não foi carregado.",
-    "payment_order_failed": "Ocorreu um erro ao criar o pagamento."
+    "payment_order_failed": "Falha ao criar o pedido de pagamento."
   },
   "dashboard": {
     "title": "Assinatura",
@@ -69,7 +93,7 @@
     "cancelled": "Cancelada"
   },
   "why_upgrade": {
-    "title": "Por que fazer upgrade do plano?",
+    "title": "Por que fazer upgrade do seu plano?",
     "benefits": {
       "more_questions": {
         "title": "Mais perguntas",
@@ -77,11 +101,11 @@
       },
       "premium_badges": {
         "title": "Emblemas Premium",
-        "description": "Destaque-se com emblemas de perfil exclusivos."
+        "description": "Destaque-se com emblemas exclusivos de perfil."
       },
       "advanced_search": {
         "title": "Pesquisa avançada",
-        "description": "Encontre respostas mais rapidamente com filtros poderosos."
+        "description": "Encontre respostas mais rapidamente com filtros avançados."
       },
       "unlimited_bookmarks": {
         "title": "Itens salvos ilimitados",

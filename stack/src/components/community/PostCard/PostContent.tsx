@@ -1,9 +1,7 @@
 "use client";
 
 import { useTranslation } from "react-i18next";
-
 import { getImageUrl } from "@/lib/getImageUrl";
-
 import type { Post } from "@/types/community";
 
 interface PostContentProps {
@@ -13,29 +11,18 @@ interface PostContentProps {
 const PostContent = ({
   post,
 }: PostContentProps) => {
-  const { t } =
-    useTranslation("community");
+  const { t } = useTranslation("community");
 
-  const hashtags: string[] =
+  const hashtags: string[] = (
     Array.isArray(post.hashtags)
-      ? post.hashtags
-          .flatMap((tag: string) =>
-            tag
-              .split(/[,\s]+/)
-              .map((value: string) =>
-                value.trim()
-              )
-          )
-          .filter(Boolean)
-      : typeof post.hashtags ===
-          "string"
+      ? post.hashtags.join(" ")
+      : typeof post.hashtags === "string"
         ? post.hashtags
-            .split(/[,\s]+/)
-            .map((tag: string) =>
-              tag.trim()
-            )
-            .filter(Boolean)
-        : [];
+        : ""
+  )
+    .split(/[\s,#]+/)
+    .map((tag) => tag.trim())
+    .filter(Boolean);
 
   return (
     <>
@@ -109,22 +96,20 @@ const PostContent = ({
         </pre>
       )}
 
-      <div className="mt-4 flex flex-wrap gap-2">
-        {hashtags.map(
-          (tag, index) => (
-            <span
-              key={`${tag}-${index}`}
-              className="rounded bg-blue-100 px-2 py-1 text-xs text-blue-700"
-            >
-              #
-              {tag.replace(
-                /^#/,
-                ""
-              )}
-            </span>
-          )
-        )}
-      </div>
+      {hashtags.length > 0 && (
+        <div className="mt-4 flex flex-wrap gap-2">
+          {hashtags.map(
+            (tag, index) => (
+              <span
+                key={`${tag}-${index}`}
+                className="rounded bg-blue-100 px-2 py-1 text-xs text-blue-700"
+              >
+                #{tag}
+              </span>
+            )
+          )}
+        </div>
+      )}
     </>
   );
 };

@@ -94,7 +94,7 @@ const PlanCard = ({
 
   return (
     <div
-      className={`relative rounded-2xl border bg-white p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl ${
+      className={`relative w-full rounded-2xl border bg-white p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl sm:p-8 ${
         isPopular
           ? "scale-[1.03] border-yellow-400 shadow-xl ring-2 ring-yellow-200"
           : "border-gray-200 shadow-md"

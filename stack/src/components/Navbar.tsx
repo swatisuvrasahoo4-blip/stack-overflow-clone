@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@/lib/AuthContext";
-import { Menu, Search } from "lucide-react";
+import { Menu, Search, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -10,9 +10,13 @@ import { useTranslation } from "react-i18next";
 
 interface NavbarProps {
   handleslidein: () => void;
+  sidebarOpen: boolean;
 }
 
-const Navbar = ({ handleslidein }: NavbarProps) => {
+const Navbar = ({
+  handleslidein,
+  sidebarOpen,
+}: NavbarProps) => {
   const { user, Logout } = useAuth();
   const router = useRouter();
   const { t } = useTranslation("navbar");
@@ -56,13 +60,21 @@ const Navbar = ({ handleslidein }: NavbarProps) => {
         <div className="flex flex-1 items-center gap-2">
           {/* Sidebar Button */}
           <button
-            type="button"
-            aria-label="Toggle sidebar"
-            className="rounded p-2 transition hover:bg-gray-100 sm:block"
-            onClick={handleslidein}
-          >
-            <Menu className="h-5 w-4 text-gray-800" />
-          </button>
+  type="button"
+  aria-label={
+    sidebarOpen
+      ? t("actions.close_sidebar")
+      : t("actions.open_sidebar")
+  }
+  className="rounded p-2 transition hover:bg-gray-100"
+  onClick={handleslidein}
+>
+  {sidebarOpen ? (
+    <X className="h-5 w-5 text-gray-800" />
+  ) : (
+    <Menu className="h-5 w-5 text-gray-800" />
+  )}
+</button>
 
           {/* Logo */}
           <Link href="/" className="px-3 py-1">

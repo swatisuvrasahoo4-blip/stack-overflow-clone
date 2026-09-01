@@ -40,7 +40,8 @@
     "status": {
       "loading_support_requests": "सहायता अनुरोध लोड हो रहे हैं...",
       "resolved": "समाधान किया गया",
-      "pending": "लंबित"
+      "pending": "लंबित",
+      "open": "खुला"
     },
     "labels": {
       "user": "उपयोगकर्ता",

@@ -51,7 +51,7 @@ const QuestionContent = ({
   ]);
 
   return (
-    <div className="flex-1 p-4 sm:p-6">
+    <div className="min-w-0 flex-1 p-4 sm:p-5">
       {/* Question Body */}
 
       <div className="prose mb-6 max-w-none">
@@ -83,7 +83,7 @@ const QuestionContent = ({
 
       {/* Question Actions */}
 
-      <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-start">
         <div className="flex gap-2">
           <Button
             onClick={onShare}
@@ -122,7 +122,7 @@ const QuestionContent = ({
 
         {/* Question User */}
 
-        <div className="flex items-center gap-2 text-sm">
+        <div className="flex items-center gap-2 text-sm sm:ml-auto">
           <span className="text-gray-600">
             {t("labels.asked", {
               ns: "questions",

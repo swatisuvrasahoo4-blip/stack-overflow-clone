@@ -40,7 +40,8 @@
     "status": {
       "loading_support_requests": "Chargement des demandes d’assistance...",
       "resolved": "Résolue",
-      "pending": "En attente"
+      "pending": "En attente",
+      "open": "Ouvert"
     },
     "labels": {
       "user": "Utilisateur",
