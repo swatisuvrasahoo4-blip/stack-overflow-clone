@@ -1,0 +1,21 @@
+{
+  "links": {
+    "home": "Home",
+    "questions": "Questions",
+    "ai_assist": "AI Assist",
+    "labs": "Labs",
+    "tags": "Tags",
+    "users": "Users",
+    "community": "Community",
+    "saves": "Saves",
+    "challenges": "Challenges",
+    "chat": "Chat",
+    "articles": "Articles",
+    "companies": "Companies",
+    "subscription": "Subscription",
+    "admin": "Admin"
+  },
+  "badges": {
+    "new": "NEW"
+  }
+}

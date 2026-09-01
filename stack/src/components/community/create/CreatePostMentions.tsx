@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 interface CreatePostMentionsProps {
   allUsernames: string[];
   selectedMentions: string[];
-
   setSelectedMentions: (
     mentions: string[]
   ) => void;
@@ -18,7 +17,8 @@ const CreatePostMentions = ({
   selectedMentions,
   setSelectedMentions,
 }: CreatePostMentionsProps) => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("create_post");
 
   const [
     mentionInput,
@@ -30,7 +30,6 @@ const CreatePostMentions = ({
     setMentionInputMatches,
   ] = useState<string[]>([]);
 
-  // Update mention search
   const handleMentionChange = (
     value: string
   ): void => {
@@ -68,7 +67,6 @@ const CreatePostMentions = ({
     );
   };
 
-  // Add mention
   const handleAddMention =
     (): void => {
       const username =
@@ -88,7 +86,7 @@ const CreatePostMentions = ({
       ) {
         alert(
           t(
-            "alert.user_not_found"
+            "mentions.user_not_found"
           )
         );
 
@@ -112,14 +110,12 @@ const CreatePostMentions = ({
 
   return (
     <div className="relative space-y-2">
-      {/* Label */}
       <label className="text-sm font-medium">
         {t(
-          "createpost.mention_users"
+          "mentions.mention_users"
         )}
       </label>
 
-      {/* Mention input */}
       <div className="flex gap-2">
         <input
           type="text"
@@ -130,7 +126,7 @@ const CreatePostMentions = ({
             )
           }
           placeholder={t(
-            "createpost.type_a_username"
+            "mentions.type_username"
           )}
           className="w-full rounded-md border px-3 py-2"
         />
@@ -141,12 +137,14 @@ const CreatePostMentions = ({
             handleAddMention
           }
           className="rounded-md bg-purple-600 px-4 py-2 text-white"
+          aria-label={t(
+            "mentions.add_user"
+          )}
         >
           +
         </button>
       </div>
 
-      {/* Mention suggestions */}
       {mentionInputMatches.length >
         0 && (
         <div className="absolute left-0 right-14 top-full z-50 mt-1 overflow-hidden rounded-md border bg-white shadow-lg">

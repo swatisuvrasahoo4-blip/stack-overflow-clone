@@ -70,7 +70,8 @@ interface UseUserProfileProps {
 const useUserProfile = ({
   id,
 }: UseUserProfileProps) => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("profile");
 
   const {
     user,
@@ -175,19 +176,16 @@ const useUserProfile = ({
           )
     );
 
-  // Track client mount
   useEffect(() => {
     setHasMounted(true);
   }, []);
 
-  // Close edit dialog after logout
   useEffect(() => {
     if (!user) {
       setIsEditing(false);
     }
   }, [user]);
 
-  // Sync edit state with profile
   useEffect(() => {
     if (!users) {
       return;
@@ -221,7 +219,6 @@ const useUserProfile = ({
     setNewTag("");
   }, [users]);
 
-  // Load profile user
   useEffect(() => {
     const fetchUser =
       async (): Promise<void> => {
@@ -273,7 +270,6 @@ const useUserProfile = ({
     void fetchUser();
   }, [routeId]);
 
-  // Load profile subscription plan
   useEffect(() => {
     const fetchSubscription =
       async (): Promise<void> => {
@@ -322,7 +318,6 @@ const useUserProfile = ({
     void fetchSubscription();
   }, [profileUserId]);
 
-  // Load current user's subscription
   useEffect(() => {
     const loadSubscription =
       async (): Promise<void> => {
@@ -348,7 +343,6 @@ const useUserProfile = ({
     void loadSubscription();
   }, []);
 
-  // Save profile
   const handleSaveProfile =
     async (): Promise<void> => {
       if (
@@ -426,7 +420,7 @@ const useUserProfile = ({
 
         toast.success(
           t(
-            "toast.profile_updated_successfully"
+            "messages.profile_updated_successfully"
           )
         );
 
@@ -539,13 +533,12 @@ const useUserProfile = ({
 
         toast.success(
           t(
-            "toast.profile_updated"
+            "messages.profile_updated_successfully"
           )
         );
       }
     };
 
-  // Add profile tag
   const handleAddTag =
     (): void => {
       const trimmedTag =
@@ -575,7 +568,6 @@ const useUserProfile = ({
       setNewTag("");
     };
 
-  // Remove profile tag
   const handleRemoveTag = (
     tagToRemove: string
   ): void => {

@@ -29,13 +29,18 @@ const ReportQuestionModal = ({
   onClose,
   onSubmit,
 }: ReportQuestionModalProps) => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("reports");
 
-  const [reason, setReason] =
-    useState("");
+  const [
+    reason,
+    setReason,
+  ] = useState("");
 
-  const [details, setDetails] =
-    useState("");
+  const [
+    details,
+    setDetails,
+  ] = useState("");
 
   useEffect(() => {
     if (!open) {
@@ -60,15 +65,16 @@ const ReportQuestionModal = ({
     onClose();
   };
 
-  const handleSubmit = async () => {
-    await onSubmit(
-      reason,
-      details
-    );
+  const handleSubmit =
+    async () => {
+      await onSubmit(
+        reason,
+        details
+      );
 
-    setReason("");
-    setDetails("");
-  };
+      setReason("");
+      setDetails("");
+    };
 
   if (!open) {
     return null;
@@ -77,9 +83,7 @@ const ReportQuestionModal = ({
   return (
     <div
       className="fixed inset-0 z-100 flex items-center justify-center bg-black/40 px-4"
-      onClick={
-        handleClose
-      }
+      onClick={handleClose}
     >
       <div
         className="max-h-[85vh] w-full max-w-md overflow-y-auto rounded-lg bg-white p-6 shadow-xl"
@@ -87,21 +91,17 @@ const ReportQuestionModal = ({
           event.stopPropagation()
         }
       >
-        {/* Report heading */}
-
         <h2 className="text-lg font-semibold">
           {t(
-            "report.report_question"
+            "question.title"
           )}
         </h2>
 
         <p className="mt-1 text-sm text-gray-600">
           {t(
-            "report.select_the_reason_for_reporting_this_question"
+            "question.select_reason"
           )}
         </p>
-
-        {/* Report reasons */}
 
         <div className="mt-4 space-y-3">
           {reasons.map(
@@ -115,15 +115,13 @@ const ReportQuestionModal = ({
                   name="questionReportReason"
                   value={item}
                   checked={
-                    reason ===
-                    item
+                    reason === item
                   }
                   onChange={(
                     event
                   ) =>
                     setReason(
-                      event
-                        .target
+                      event.target
                         .value
                     )
                   }
@@ -131,7 +129,7 @@ const ReportQuestionModal = ({
 
                 <span className="text-sm text-gray-700">
                   {t(
-                    `report.${item}`
+                    `reasons.${item}`
                   )}
                 </span>
               </label>
@@ -139,14 +137,10 @@ const ReportQuestionModal = ({
           )}
         </div>
 
-        {/* Other reason details */}
-
         {reason ===
           "other" && (
           <textarea
-            value={
-              details
-            }
+            value={details}
             onChange={(
               event
             ) =>
@@ -156,24 +150,20 @@ const ReportQuestionModal = ({
               )
             }
             placeholder={t(
-              "report.explain_the_issue"
+              "question.explain_issue"
             )}
             className="mt-4 min-h-24 w-full rounded-md border p-3 text-sm outline-none focus:ring-2 focus:ring-blue-500"
           />
         )}
 
-        {/* Modal actions */}
-
         <div className="mt-6 flex justify-end gap-3">
           <button
             type="button"
-            onClick={
-              handleClose
-            }
+            onClick={handleClose}
             className="rounded-md border px-4 py-2 text-sm hover:bg-gray-100"
           >
             {t(
-              "report.cancel"
+              "actions.cancel"
             )}
           </button>
 
@@ -191,7 +181,7 @@ const ReportQuestionModal = ({
             className="rounded-md bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {t(
-              "report.submit_report"
+              "actions.submit_report"
             )}
           </button>
         </div>

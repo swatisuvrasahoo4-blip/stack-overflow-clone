@@ -1,11 +1,21 @@
 "use client";
 
-import { Flag, Share, Trash } from "lucide-react";
+import {
+  Share,
+  Trash,
+} from "lucide-react";
+
 import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+} from "@/components/ui/avatar";
+
 import { useTranslation } from "react-i18next";
+
 import ReportQuestionButton from "../reports/ReportQuestionButton";
 
 interface QuestionContentProps {
@@ -35,15 +45,18 @@ const QuestionContent = ({
   onShare,
   onDelete,
 }: QuestionContentProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation([
+    "questions",
+    "community",
+  ]);
 
   return (
     <div className="flex-1 p-4 sm:p-6">
       {/* Question Body */}
 
-      <div className="prose max-w-none mb-6">
+      <div className="prose mb-6 max-w-none">
         <div
-          className="text-gray-800 leading-relaxed"
+          className="leading-relaxed text-gray-800"
           dangerouslySetInnerHTML={{
             __html: questionBody || "",
           }}
@@ -52,7 +65,7 @@ const QuestionContent = ({
 
       {/* Tags */}
 
-      <div className="flex flex-wrap gap-2 mb-6">
+      <div className="mb-6 flex flex-wrap gap-2">
         {questionTags.map((tag) => (
           <Link
             key={tag}
@@ -60,7 +73,7 @@ const QuestionContent = ({
           >
             <Badge
               variant="secondary"
-              className="bg-blue-100 text-blue-800 hover:bg-blue-200 cursor-pointer"
+              className="cursor-pointer bg-blue-100 text-blue-800 hover:bg-blue-200"
             >
               {tag}
             </Badge>
@@ -70,7 +83,7 @@ const QuestionContent = ({
 
       {/* Question Actions */}
 
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div className="flex gap-2">
           <Button
             onClick={onShare}
@@ -78,8 +91,11 @@ const QuestionContent = ({
             size="sm"
             className="text-gray-600 hover:text-gray-800"
           >
-            <Share className="w-4 h-4 mr-1" />
-            {t("community.share")}
+            <Share className="mr-1 h-4 w-4" />
+
+            {t("actions.share", {
+              ns: "community",
+            })}
           </Button>
 
           <ReportQuestionButton
@@ -87,46 +103,62 @@ const QuestionContent = ({
             reputation={reputation}
           />
 
-          {hasMounted && isOwnQuestion && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onDelete}
-              className="text-red-600 hover:text-red-800"
-            >
-              <Trash className="w-4 h-4 mr-1" />
-              {t("community.delete")}
-            </Button>
-          )}
+          {hasMounted &&
+            isOwnQuestion && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onDelete}
+                className="text-red-600 hover:text-red-800"
+              >
+                <Trash className="mr-1 h-4 w-4" />
+
+                {t("actions.delete", {
+                  ns: "community",
+                })}
+              </Button>
+            )}
         </div>
 
         {/* Question User */}
 
         <div className="flex items-center gap-2 text-sm">
           <span className="text-gray-600">
-            {t("community.asked")}{" "}
+            {t("labels.asked", {
+              ns: "questions",
+            })}{" "}
             {askedOn &&
-            !isNaN(new Date(askedOn).getTime())
+            !isNaN(
+              new Date(
+                askedOn
+              ).getTime()
+            )
               ? new Date(askedOn)
                   .toISOString()
                   .split("T")[0]
-              : "Date unavailable"}
+              : t(
+                  "messages.date_unavailable",
+                  {
+                    ns: "questions",
+                  }
+                )}
           </span>
 
           <Link
             href={`/users/${userId}`}
-            className="flex items-center gap-2 hover:bg-blue-50 p-2 rounded"
+            className="flex items-center gap-2 rounded p-2 hover:bg-blue-50"
           >
-            <Avatar className="w-8 h-8">
+            <Avatar className="h-8 w-8">
               <AvatarFallback className="text-sm">
                 {userPosted
                   ?.charAt(0)
-                  .toUpperCase() || "U"}
+                  .toUpperCase() ||
+                  "U"}
               </AvatarFallback>
             </Avatar>
 
             <div>
-              <div className="text-blue-600 hover:text-blue-800 font-medium">
+              <div className="font-medium text-blue-600 hover:text-blue-800">
                 {userPosted}
               </div>
             </div>

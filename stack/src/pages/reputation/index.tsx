@@ -4,6 +4,7 @@ import {
 } from "react";
 
 import { useRouter } from "next/router";
+
 import { useTranslation } from "react-i18next";
 
 import ReputationActivityList from "@/components/reputation/ReputationActivityList";
@@ -29,7 +30,9 @@ interface ReputationActivityResponse {
 
 const ReputationActivityPage = () => {
   const router = useRouter();
-  const { t } = useTranslation();
+
+  const { t } =
+    useTranslation("reputation");
 
   const { userId } = router.query;
 
@@ -56,6 +59,7 @@ const ReputationActivityPage = () => {
   ] = useState(true);
 
   // Load reputation activity
+
   useEffect(() => {
     if (!router.isReady) {
       return;
@@ -119,18 +123,20 @@ const ReputationActivityPage = () => {
   return (
     <MainLayout>
       {/* Loading state */}
+
       {loading ? (
         <p className="mt-6 text-gray-500">
           {t(
-            "reputation.loading_reputation"
+            "status.loading_reputation"
           )}
         </p>
       ) : (
         /* Reputation activity */
+
         <div className="mt-6 rounded-xl border bg-white p-6">
           <p className="text-sm text-gray-500">
             {t(
-              "reputation.current_reputation"
+              "labels.current_reputation"
             )}
           </p>
 
@@ -139,9 +145,12 @@ const ReputationActivityPage = () => {
           </p>
 
           <p className="mt-2 text-sm text-gray-500">
-            {activities.length}{" "}
             {t(
-              "reputation.reputation_activities"
+              "labels.reputation_activities",
+              {
+                count:
+                  activities.length,
+              }
             )}
           </p>
 

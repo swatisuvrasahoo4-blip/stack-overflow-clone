@@ -1,27 +1,25 @@
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-
 import { useAuth } from "@/lib/AuthContext";
 
 const CommunityHeader = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("community");
   const router = useRouter();
   const { user } = useAuth();
 
   const handleCreatePost = () => {
     if (!user) {
       toast.info(
-        t("toast.please_login_to_continue")
+        t("messages.please_login_to_continue")
       );
 
       void router.push("/auth");
+
       return;
     }
 
-    void router.push(
-      "/community/create"
-    );
+    void router.push("/community/create");
   };
 
   return (
@@ -30,14 +28,12 @@ const CommunityHeader = () => {
 
       <div>
         <h1 className="text-2xl font-semibold">
-          {t(
-            "community.community_feed"
-          )}
+          {t("feed.community_feed")}
         </h1>
 
         <p className="mt-1 text-sm text-gray-500">
           {t(
-            "community.share_updates_projects_code_snippets_and_learning_achievements"
+            "messages.share_updates_projects_code_snippets_and_learning_achievements"
           )}
         </p>
       </div>
@@ -46,14 +42,10 @@ const CommunityHeader = () => {
 
       <button
         type="button"
-        onClick={
-          handleCreatePost
-        }
+        onClick={handleCreatePost}
         className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-3 py-1.5 text-center text-sm font-medium text-white transition-colors hover:bg-blue-700"
       >
-        {t(
-          "community.createPost"
-        )}
+        {t("feed.create_post")}
       </button>
     </div>
   );

@@ -4,6 +4,7 @@ import {
 } from "react";
 
 import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
 
 import Mainlayout from "@/layout/Mainlayout";
 
@@ -40,6 +41,8 @@ const DEFAULT_PAGINATION: TagPagination = {
 const TagDetailPage = () => {
   const router = useRouter();
 
+  const { t } = useTranslation("tag");
+
   const { tag } = router.query;
 
   const {
@@ -74,7 +77,6 @@ const TagDetailPage = () => {
     setLoadingMore,
   ] = useState(false);
 
-  // Comment state
   const [
     commentText,
     setCommentText,
@@ -92,7 +94,6 @@ const TagDetailPage = () => {
     setExpandedComments,
   ] = useState<string[]>([]);
 
-  // Reply state
   const [
     replyText,
     setReplyText,
@@ -105,7 +106,6 @@ const TagDetailPage = () => {
     null
   );
 
-  // Edit post state
   const {
     editingPost,
     setEditingPost,
@@ -128,7 +128,6 @@ const TagDetailPage = () => {
     setEditCodeSnippet,
   } = useEditPostState();
 
-  // Post actions
   const {
     handleLike,
     handleBookmark,
@@ -169,7 +168,6 @@ const TagDetailPage = () => {
     setActiveReplyComment,
   });
 
-  // Delete state and actions
   const {
     selectedPostId,
     setSelectedPostId,
@@ -204,7 +202,6 @@ const TagDetailPage = () => {
       ? tag[0]
       : tag;
 
-  // Load initial tag content
   useEffect(() => {
     const loadTagContent =
       async (): Promise<void> => {
@@ -263,7 +260,6 @@ const TagDetailPage = () => {
     void loadTagContent();
   }, [tagName]);
 
-  // Load more questions
   const handleLoadMore =
     async (): Promise<void> => {
       if (
@@ -338,26 +334,32 @@ const TagDetailPage = () => {
     <Mainlayout>
       <main className="min-w-0 p-4 lg:p-6">
         {/* Tag header */}
+
         <div className="mb-6">
           <h1 className="text-2xl font-semibold">
             #{tagName}
           </h1>
 
           <p className="mt-2 text-gray-600">
-            Questions and community
-            posts tagged with #
-            {tagName}.
+            {t(
+              "messages.questions_and_community_posts_tagged_with",
+              {
+                tag: tagName,
+              }
+            )}
           </p>
         </div>
 
         {loading ? (
-          /* Loading state */
           <p className="text-gray-500">
-            Loading...
+            {t(
+              "status.loading"
+            )}
           </p>
         ) : (
           <>
             {/* Questions */}
+
             <TagQuestionList
               questions={
                 questions
@@ -374,10 +376,13 @@ const TagDetailPage = () => {
             />
 
             {/* Community posts */}
+
             {posts.length > 0 && (
               <div>
                 <h2 className="mb-3 text-lg font-semibold">
-                  Community Posts
+                  {t(
+                    "labels.community_posts"
+                  )}
                 </h2>
 
                 <div className="space-y-4">
@@ -466,19 +471,19 @@ const TagDetailPage = () => {
             )}
 
             {/* Empty state */}
+
             {posts.length === 0 &&
               questions.length ===
                 0 && (
                 <p className="text-gray-500">
-                  No questions or
-                  posts found for
-                  this tag.
+                  {t(
+                    "messages.no_questions_or_posts_found_for_tag"
+                  )}
                 </p>
               )}
           </>
         )}
 
-        {/* Delete post modal */}
         <DeletePostModal
           open={
             showDeleteModal &&
@@ -494,7 +499,6 @@ const TagDetailPage = () => {
           }
         />
 
-        {/* Delete comment modal */}
         <DeleteCommentModal
           open={
             showDeleteCommentModal &&
@@ -510,7 +514,6 @@ const TagDetailPage = () => {
           }
         />
 
-        {/* Delete reply modal */}
         <DeleteReplyModal
           open={
             showDeleteReplyModal &&

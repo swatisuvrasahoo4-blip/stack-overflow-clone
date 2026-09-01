@@ -1,0 +1,65 @@
+{
+  "actions": {
+    "edit_profile": "Modifier le profil",
+    "choose_file": "Choisir un fichier",
+    "delete_profile_photo": "Supprimer la photo de profil",
+    "cancel": "Annuler",
+    "save_changes": "Enregistrer les modifications",
+      "back": "Retour",
+    "view_profile": "Voir le profil",
+        "login_sessions": "Sessions de connexion",
+    "change_password": "Changer le mot de passe"
+  },
+  "sections": {
+    "basic_information": "Informations de base",
+    "profile_photo": "Photo de profil",
+    "about": "À propos",
+    "skills_and_technologies": "Compétences et technologies",
+        "top_tags": "Principaux tags"
+  },
+  "labels": {
+    "username": "Nom d’utilisateur",
+    "display_name": "Nom d’affichage",
+    "upload_photo": "Télécharger une photo",
+        "unknown_user": "Utilisateur inconnu",
+        "member_since": "Membre depuis",
+    "gold_badges": "badges or",
+    "silver_badges": "badges argent",
+    "bronze_badges": "badges bronze",
+        "users": "Utilisateurs",
+    "joined": "Inscrit en"
+  },
+  "placeholders": {
+    "display_name": "Votre nom d’affichage",
+    "about": "Parlez-nous de vous",
+    "add_skill_or_technology": "Ajouter une compétence ou une technologie",
+        "filter_by_user": "Filtrer par utilisateur"
+  },
+  "status": {
+    "file_selected": "Fichier sélectionné",
+    "no_file_chosen": "Aucun fichier sélectionné",
+        "loading_connections": "Chargement des connexions..."
+  },
+  "accessibility": {
+    "profile_preview": "Aperçu de la photo de profil",
+    "clear_selected_photo": "Effacer la photo sélectionnée",
+    "add_skill": "Ajouter une compétence",
+    "remove_skill": "Supprimer la compétence {{tag}}",
+        "user_profile_photo": "Photo de profil de {{name}}",
+          "featured_gold_user": "Utilisateur Gold mis en avant"
+  },
+  "messages": {
+    "profile_updated_successfully": "Profil mis à jour avec succès.",
+        "no_user_found": "Aucun utilisateur trouvé.",
+            "no_users_found": "Aucun utilisateur trouvé."
+  },
+  "connections": {
+    "followers": "Abonnés",
+    "following": "Abonnements",
+    "no_followers_found": "Aucun abonné trouvé",
+    "no_following_found": "Aucun abonnement trouvé",
+    "no_followers_to_display": "Il n’y a aucun abonné à afficher pour le moment.",
+    "no_following_to_display": "Il n’y a aucun abonnement à afficher pour le moment."
+  }
+
+}

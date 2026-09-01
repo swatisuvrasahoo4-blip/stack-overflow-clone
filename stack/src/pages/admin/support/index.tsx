@@ -16,6 +16,7 @@ import {
 
 interface SupportRequest {
   _id: string;
+
   subject: string;
   message: string;
   plan: string;
@@ -31,7 +32,10 @@ interface SupportRequest {
 }
 
 const AdminSupportPage = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation([
+    "support",
+    "subscription",
+  ]);
 
   const [
     requests,
@@ -70,6 +74,7 @@ const AdminSupportPage = () => {
   }, []);
 
   // Resolve support request
+
   const handleResolve = async (
     id: string
   ): Promise<void> => {
@@ -99,7 +104,10 @@ const AdminSupportPage = () => {
 
       alert(
         t(
-          "alert.failed_to_resolve_support_request"
+          "admin.messages.failed_to_resolve_support_request",
+          {
+            ns: "support",
+          }
         )
       );
     }
@@ -109,7 +117,10 @@ const AdminSupportPage = () => {
     return (
       <div className="p-6 text-gray-500">
         {t(
-          "support.loading_support_requests"
+          "admin.status.loading_support_requests",
+          {
+            ns: "support",
+          }
         )}
       </div>
     );
@@ -118,7 +129,6 @@ const AdminSupportPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="mx-auto max-w-6xl">
-        {/* Page header */}
         <div className="mb-6 flex items-center gap-3">
           <div className="rounded-full bg-orange-100 p-3">
             <Headphones className="h-6 w-6 text-orange-600" />
@@ -127,27 +137,34 @@ const AdminSupportPage = () => {
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
               {t(
-                "support.support_requests"
+                "admin.title.support_requests",
+                {
+                  ns: "support",
+                }
               )}
             </h1>
 
             <p className="text-sm text-gray-500">
               {t(
-                "support.manage_priority_customer_support_requests"
+                "admin.messages.manage_priority_customer_support_requests",
+                {
+                  ns: "support",
+                }
               )}
             </p>
           </div>
         </div>
 
-        {/* Empty state */}
         {requests.length === 0 ? (
           <div className="rounded-xl border bg-white p-8 text-center text-gray-500">
             {t(
-              "support.no_support_requests_yet"
+              "admin.messages.no_support_requests_yet",
+              {
+                ns: "support",
+              }
             )}
           </div>
         ) : (
-          /* Support requests */
           <div className="space-y-4">
             {requests.map(
               (request) => (
@@ -155,7 +172,6 @@ const AdminSupportPage = () => {
                   key={request._id}
                   className="rounded-xl border bg-white p-5 shadow-sm"
                 >
-                  {/* Request header */}
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
                       <h2 className="font-semibold text-gray-900">
@@ -168,7 +184,12 @@ const AdminSupportPage = () => {
                         {request
                           .userId
                           ?.name ||
-                          "User"}
+                          t(
+                            "admin.labels.user",
+                            {
+                              ns: "support",
+                            }
+                          )}
 
                         {request
                           .userId
@@ -177,7 +198,6 @@ const AdminSupportPage = () => {
                       </p>
                     </div>
 
-                    {/* Plan and priority */}
                     <div className="flex gap-2">
                       <span
                         className={`rounded-full px-3 py-1 text-xs font-semibold ${
@@ -188,7 +208,10 @@ const AdminSupportPage = () => {
                         }`}
                       >
                         {t(
-                          `subscription.${request.plan.toLowerCase()}`
+                          `plans.names.${request.plan.toLowerCase()}`,
+                          {
+                            ns: "subscription",
+                          }
                         )}
                       </span>
 
@@ -203,21 +226,25 @@ const AdminSupportPage = () => {
                         {request.priority ===
                         "highest"
                           ? t(
-                              "support.highest_priority"
+                              "admin.priority.highest_priority",
+                              {
+                                ns: "support",
+                              }
                             )
                           : t(
-                              "support.priority"
+                              "admin.priority.priority",
+                              {
+                                ns: "support",
+                              }
                             )}
                       </span>
                     </div>
                   </div>
 
-                  {/* Request message */}
                   <p className="mt-4 text-sm text-gray-700">
                     {request.message}
                   </p>
 
-                  {/* Request footer */}
                   <div className="mt-4 flex items-center justify-between border-t pt-3 text-xs text-gray-500">
                     <div className="flex items-center gap-3">
                       <span
@@ -229,11 +256,17 @@ const AdminSupportPage = () => {
                         }
                       >
                         {t(
-                          "support.status"
+                          "admin.labels.status",
+                          {
+                            ns: "support",
+                          }
                         )}
                         :{" "}
                         {t(
-                          `support.${request.status}`
+                          `admin.status.${request.status}`,
+                          {
+                            ns: "support",
+                          }
                         )}
                       </span>
 
@@ -249,7 +282,10 @@ const AdminSupportPage = () => {
                           className="rounded-md bg-green-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-700"
                         >
                           {t(
-                            "support.resolve"
+                            "admin.actions.resolve",
+                            {
+                              ns: "support",
+                            }
                           )}
                         </button>
                       )}

@@ -1,0 +1,110 @@
+{
+  "messages": {
+    "question_report_reputation_required": "Vous devez avoir au moins 500 points de réputation pour signaler un contenu inapproprié. Votre réputation actuelle est de {{reputation}}.",
+    "question_already_reported": "Vous avez déjà signalé cette question.",
+    "failed_to_check_report_status": "Impossible de vérifier l’état du signalement.",
+    "question_reported_successfully": "Question signalée avec succès.",
+    "failed_to_report_question": "Impossible de signaler la question.",
+        "post_report_reputation_required": "Vous devez avoir au moins 500 points de réputation pour signaler un contenu inapproprié. Votre réputation actuelle est de {{reputation}}.",
+    "post_already_reported": "Vous avez déjà signalé cette publication.",
+    "post_reported_successfully": "Publication signalée avec succès.",
+    "failed_to_report_post": "Impossible de signaler la publication."
+  },
+  "post": {
+    "title": "Signaler la publication",
+    "select_reason": "Sélectionnez la raison pour laquelle vous signalez cette publication.",
+    "explain_issue": "Expliquez le problème"
+  },
+  "reasons": {
+    "spam": "Spam",
+    "harassment_or_hate": "Harcèlement ou contenu haineux",
+    "violence": "Violence",
+    "nudity_or_sexual_content": "Nudité ou contenu sexuel",
+    "misinformation": "Désinformation",
+    "copyright": "Violation des droits d’auteur",
+    "other": "Autre"
+  },
+  "actions": {
+    "cancel": "Annuler",
+    "submit_report": "Envoyer le signalement"
+  },
+  "accessibility": {
+  "report_post": "Signaler la publication"
+},
+"question": {
+  "title": "Signaler la question",
+  "select_reason": "Sélectionnez la raison pour laquelle vous signalez cette question.",
+  "explain_issue": "Expliquez le problème"
+},
+  "admin": {
+    "post": {
+      "no_reports_found": "Aucun signalement de publication trouvé.",
+      "new_reported_posts_will_appear_here": "Les nouvelles publications signalées apparaîtront ici.",
+       "reported_post": "Publication signalée",
+      "reported_post_unavailable": "La publication signalée n’est pas disponible.",
+      "post_author": "Auteur de la publication",
+      "user_suspended": "Utilisateur suspendu"
+    },
+        "page": {
+      "reports": "Signalements",
+      "review_reports_moderate_content_manage_suspended_users": "Examinez les signalements, modérez le contenu et gérez les utilisateurs suspendus.",
+      "post_reports": "Signalements de publications",
+      "question_reports": "Signalements de questions"
+    },
+    "status": {
+      "loading_reports": "Chargement des signalements..."
+    },
+    "prompts": {
+      "reason_for_suspension": "Indiquez la raison de la suspension :"
+    },
+    "messages": {
+      "admin_access_required": "Un accès administrateur est requis.",
+      "user_suspended_successfully": "Utilisateur suspendu avec succès.",
+      "failed_to_suspend_user": "Impossible de suspendre l’utilisateur.",
+      "user_unsuspended_successfully": "Utilisateur réactivé avec succès.",
+      "failed_to_unsuspend_user": "Impossible de réactiver l’utilisateur.",
+      "failed_to_update_report": "Impossible de mettre à jour le signalement."
+    },
+     "stats": {
+      "pending": "En attente",
+      "reviewed": "Examinés",
+      "dismissed": "Rejetés",
+      "action_taken": "Action effectuée"
+    },
+     "question": {
+      "reported_question": "Question signalée",
+      "reported_question_unavailable": "La question signalée n’est pas disponible.",
+      "question_author": "Auteur de la question",
+      "no_reports_found": "Aucun signalement de question trouvé."
+    },
+    "common": {
+      "additional_details": "Détails supplémentaires",
+      "reporter": "Auteur du signalement",
+      "unknown_user": "Utilisateur inconnu"
+    },
+    "violations": {
+      "repeat_offender": "⚠️ Récidiviste",
+      "previous_violation": "⚠️ Violation précédente",
+      "confirmed_violation": "{{count}} violation confirmée",
+      "confirmed_violations": "{{count}} violations confirmées"
+    },
+    "actions": {
+      "mark_reviewed": "Marquer comme examiné",
+      "dismiss": "Rejeter",
+      "suspend_user": "Suspendre l’utilisateur",
+      "unsuspend_user": "Réactiver l’utilisateur"
+    },
+    "accessibility": {
+      "reporter": "Auteur du signalement",
+      "question_author": "Auteur de la question",
+         "reported_post": "Publication signalée",
+      "post_author": "Auteur de la publication"
+    },
+      "dashboard": {
+      "title": "Tableau de bord administrateur",
+      "description": "Gérez les signalements, l’assistance et l’activité de connexion.",
+      "reports": "Signalements",
+         "back": "Retour"
+    }
+  }
+}

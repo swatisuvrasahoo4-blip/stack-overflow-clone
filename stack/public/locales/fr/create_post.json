@@ -1,0 +1,56 @@
+{
+  "featured": {
+    "feature_this_post": "Mettre cette publication en vedette",
+    "premium_visibility": "Donnez à cette publication une visibilité premium dans la communauté.",
+    "gold_upgrade_required": "Fonctionnalité Gold — passez à l’abonnement Gold pour mettre vos publications en vedette."
+  },
+  "hashtags": {
+    "label": "Hashtags",
+    "placeholder": "Ex. react",
+    "add_hashtag": "Ajouter un hashtag",
+    "remove_hashtag": "Supprimer le hashtag {{tag}}"
+  },
+  "image_upload": {
+    "choose_file": "Choisir un fichier",
+    "no_file_chosen": "Aucun fichier sélectionné",
+    "remove_selected_image": "Supprimer l’image sélectionnée"
+  },
+  "mentions": {
+    "mention_users": "Mentionner des utilisateurs",
+    "type_username": "Saisissez un nom d’utilisateur",
+    "user_not_found": "Utilisateur introuvable.",
+    "add_user": "Ajouter un utilisateur"
+  },
+  "type_fields": {
+    "project_title": "Titre du projet",
+    "github_or_live_demo_url": "URL GitHub ou de démonstration en ligne",
+    "achievement_title": "Titre de la réussite",
+    "describe_achievement": "Décrivez votre réussite",
+    "paste_code_snippet": "Collez votre extrait de code"
+  },
+  "content": {
+    "share_something_with_the_community": "Partagez quelque chose avec la communauté..."
+  },
+    "title": {
+    "create_community_post": "Créer une publication communautaire"
+  },
+  "post_types": {
+    "technical_update": "Mise à jour technique",
+    "project_showcase": "Présentation de projet",
+    "learning_achievement": "Réussite d’apprentissage",
+    "code_snippet": "Extrait de code"
+  },
+  "actions": {
+    "create_post": "Créer la publication"
+  },
+  "status": {
+    "posting": "Publication..."
+  },
+  "messages": {
+    "post_created_successfully": "Publication créée avec succès.",
+    "failed_to_create_post": "Impossible de créer la publication. Veuillez réessayer."
+  },
+  "accessibility": {
+    "remove_mention": "Supprimer la mention @{{username}}"
+  }
+}

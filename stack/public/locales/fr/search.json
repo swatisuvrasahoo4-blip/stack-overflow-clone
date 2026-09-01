@@ -1,0 +1,38 @@
+{
+  "filters": {
+    "filter_by_post_type": "Filtrer par type de publication"
+  },
+  "post_types": {
+    "all_types": "Tous les types",
+    "technical_update": "Mise à jour technique",
+    "project_showcase": "Présentation de projet",
+    "learning_achievement": "Réussite d’apprentissage",
+    "code_snippet": "Extrait de code"
+  },
+  "labels": {
+    "answers": "réponses",
+    "views": "vues",
+    "posts": "Publications",
+"questions": "Questions"
+  },
+  "messages": {
+    "no_title": "(sans titre)",
+    "no_posts_matched": "Aucune publication ne correspond à votre recherche.",
+"no_questions_matched": "Aucune question ne correspond à votre recherche.",
+"no_posts_or_questions_matched": "Aucune publication ni question ne correspond à votre recherche.",
+"results_for": "Résultats pour « {{query}} ».",
+    "no_more_results": "Il n’y a plus de résultats."
+  },
+    "status": {
+    "loading_more_results": "Chargement de plus de résultats...",
+      "searching": "Recherche..."
+  },
+  "title": {
+  "search_results": "Résultats de recherche"
+},
+"tabs": {
+  "all": "Tout",
+  "posts": "Publications",
+  "questions": "Questions"
+}
+}

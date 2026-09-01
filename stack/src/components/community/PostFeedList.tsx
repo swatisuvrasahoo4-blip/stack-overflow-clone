@@ -16,6 +16,7 @@ import type {
 
 interface PostFeedListProps {
   posts: Post[];
+
   user: User | null;
 
   handleLike: (
@@ -119,7 +120,6 @@ interface PostFeedListProps {
 const PostFeedList = ({
   posts,
   user,
-
   handleLike,
   handleBookmark,
   handleComment,
@@ -127,28 +127,20 @@ const PostFeedList = ({
   handleDelete,
   handleEdit,
   handleShare,
-
   activeCommentPost,
   setActiveCommentPost,
-
   commentText,
   setCommentText,
-
   activeReplyComment,
   setActiveReplyComment,
-
   replyText,
   setReplyText,
-
   expandedComments,
   setExpandedComments,
-
   setSelectedPostId,
   setShowDeleteModal,
-
   setSelectedComment,
   setShowDeleteCommentModal,
-
   setSelectedReply,
   setShowDeleteReplyModal,
 }: PostFeedListProps) => {
@@ -183,8 +175,6 @@ const PostFeedList = ({
             );
           }}
         >
-          {/* Post card */}
-
           <PostCard
             post={post}
             user={user}

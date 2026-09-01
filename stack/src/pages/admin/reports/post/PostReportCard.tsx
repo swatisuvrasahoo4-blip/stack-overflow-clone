@@ -56,13 +56,17 @@ const PostReportCard = ({
   handleSuspend,
   handleUnsuspend,
 }: PostReportCardProps) => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("reports");
+
+  if (!report) {
+    return null;
+  }
 
   return (
     <article className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition hover:shadow-md">
       <div className="p-6">
         <div className="flex flex-col gap-5">
-          {/* Report header */}
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-2">
               <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
@@ -83,9 +87,8 @@ const PostReportCard = ({
                         : "bg-green-100 text-green-700"
                 }`}
               >
-                {report.status.replace(
-                  "_",
-                  " "
+                {t(
+                  `admin.stats.${report.status}`
                 )}
               </span>
 
@@ -93,7 +96,7 @@ const PostReportCard = ({
                 ?.isSuspended && (
                 <span className="rounded-full bg-red-600 px-3 py-1 text-xs font-semibold text-white">
                   {t(
-                    "report.user_suspended"
+                    "admin.post.user_suspended"
                   )}
                 </span>
               )}
@@ -106,11 +109,10 @@ const PostReportCard = ({
             </p>
           </div>
 
-          {/* Reported post */}
           <div className="rounded-xl border border-gray-100 bg-gray-50 p-5">
             <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
               {t(
-                "report.reported_post"
+                "admin.post.reported_post"
               )}
             </p>
 
@@ -118,7 +120,7 @@ const PostReportCard = ({
               {report.postId
                 ?.content ||
                 t(
-                  "reported_post_unavailable"
+                  "admin.post.reported_post_unavailable"
                 )}
             </p>
 
@@ -129,19 +131,18 @@ const PostReportCard = ({
                   report.postId.image
                 }
                 alt={t(
-                  "Reported_post"
+                  "admin.accessibility.reported_post"
                 )}
                 className="mt-4 max-h-72 w-full rounded-lg object-cover"
               />
             )}
           </div>
 
-          {/* Additional details */}
           {report.details && (
             <div className="rounded-lg border border-orange-100 bg-orange-50 p-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-orange-700">
                 {t(
-                  "report.additionalDetails"
+                  "admin.common.additional_details"
                 )}
               </p>
 
@@ -151,12 +152,11 @@ const PostReportCard = ({
             </div>
           )}
 
-          {/* Reporter and author */}
           <div className="grid gap-4 rounded-xl border border-gray-100 p-4 sm:grid-cols-2">
             <div>
               <p className="mb-2 text-xs font-medium uppercase text-gray-400">
                 {t(
-                  "report.reporter"
+                  "admin.common.reporter"
                 )}
               </p>
 
@@ -174,7 +174,7 @@ const PostReportCard = ({
                           .profilePhoto
                       }
                       alt={t(
-                        "reporter"
+                        "admin.accessibility.reporter"
                       )}
                       className="h-10 w-10 rounded-full object-cover"
                     />
@@ -196,7 +196,10 @@ const PostReportCard = ({
                     {report.reporterId
                       .name ||
                       report.reporterId
-                        .username}
+                        .username ||
+                      t(
+                        "admin.common.unknown_user"
+                      )}
                   </span>
                 </Link>
               )}
@@ -205,7 +208,7 @@ const PostReportCard = ({
             <div>
               <p className="mb-2 text-xs font-medium uppercase text-gray-400">
                 {t(
-                  "report.post_author"
+                  "admin.post.post_author"
                 )}
               </p>
 
@@ -225,7 +228,7 @@ const PostReportCard = ({
                             .profilePhoto
                         }
                         alt={t(
-                          "report.author"
+                          "admin.accessibility.post_author"
                         )}
                         className="h-10 w-10 rounded-full object-cover"
                       />
@@ -249,7 +252,10 @@ const PostReportCard = ({
                         .name ||
                         report
                           .postAuthorId
-                          .username}
+                          .username ||
+                        t(
+                          "admin.common.unknown_user"
+                        )}
                     </span>
                   </Link>
 
@@ -264,19 +270,31 @@ const PostReportCard = ({
                         }`}
                       >
                         {report.isRepeatOffender
-                          ? "⚠️ Repeat Offender"
-                          : "⚠️ Previous Violation"}
+                          ? t(
+                              "admin.violations.repeat_offender"
+                            )
+                          : t(
+                              "admin.violations.previous_violation"
+                            )}
                       </span>
 
                       <span className="text-xs text-gray-500">
-                        {
-                          report.violationCount
-                        }{" "}
-                        confirmed{" "}
                         {report.violationCount ===
                         1
-                          ? "violation"
-                          : "violations"}
+                          ? t(
+                              "admin.violations.confirmed_violation",
+                              {
+                                count:
+                                  report.violationCount,
+                              }
+                            )
+                          : t(
+                              "admin.violations.confirmed_violations",
+                              {
+                                count:
+                                  report.violationCount,
+                              }
+                            )}
                       </span>
                     </div>
                   )}
@@ -287,7 +305,6 @@ const PostReportCard = ({
         </div>
       </div>
 
-      {/* Report actions */}
       <div className="flex flex-wrap gap-3 border-t border-gray-200 bg-gray-50 px-6 py-4">
         <button
           type="button"
@@ -308,10 +325,10 @@ const PostReportCard = ({
           {report.status ===
           "reviewed"
             ? t(
-                "report.reviewed"
+                "admin.stats.reviewed"
               )
             : t(
-                "report.markReviewed"
+                "admin.actions.mark_reviewed"
               )}
         </button>
 
@@ -334,10 +351,10 @@ const PostReportCard = ({
           {report.status ===
           "dismissed"
             ? t(
-                "report.dismissed"
+                "admin.stats.dismissed"
               )
             : t(
-                "report.dismiss"
+                "admin.actions.dismiss"
               )}
         </button>
 
@@ -358,7 +375,7 @@ const PostReportCard = ({
           className="rounded-lg bg-orange-600 px-4 py-2 text-sm font-medium text-white hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-40"
         >
           {t(
-            "report.actionTaken"
+            "admin.stats.action_taken"
           )}
         </button>
 
@@ -376,7 +393,7 @@ const PostReportCard = ({
               className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
             >
               {t(
-                "report.unsuspendUser"
+                "admin.actions.unsuspend_user"
               )}
             </button>
           ) : (
@@ -391,7 +408,7 @@ const PostReportCard = ({
               className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
             >
               {t(
-                "report.suspendUser"
+                "admin.actions.suspend_user"
               )}
             </button>
           ))}

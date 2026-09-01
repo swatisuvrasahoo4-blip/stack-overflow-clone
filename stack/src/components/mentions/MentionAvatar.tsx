@@ -1,7 +1,5 @@
 import { useState } from "react";
-
 import Link from "next/link";
-
 import { Users } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -14,7 +12,8 @@ interface MentionAvatarProps {
 const MentionAvatar = ({
   mentions,
 }: MentionAvatarProps) => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("community");
 
   const [open, setOpen] =
     useState(false);
@@ -42,7 +41,9 @@ const MentionAvatar = ({
             );
           }}
           className="flex h-8 w-8 items-center justify-center rounded-full bg-black text-white transition hover:bg-blue-700"
-          aria-label="View mentioned users"
+          aria-label={t(
+            "accessibility.view_mentioned_users"
+          )}
         >
           <Users size={16} />
         </button>
@@ -59,9 +60,7 @@ const MentionAvatar = ({
       {open && (
         <div className="absolute left-0 z-50 mt-2 w-56 rounded-lg border bg-white shadow-lg">
           <div className="border-b px-3 py-2 text-sm font-semibold">
-            {t(
-              "community.mentionedUsers"
-            )}
+            {t("mentioned_users")}
           </div>
 
           {mentions.map(

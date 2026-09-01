@@ -15,7 +15,7 @@ interface NavbarProps {
 const Navbar = ({ handleslidein }: NavbarProps) => {
   const { user, Logout } = useAuth();
   const router = useRouter();
-  const { t } = useTranslation();
+  const { t } = useTranslation("navbar");
 
   const [searchTerm, setSearchTerm] = useState("");
   const [hasMounted, setHasMounted] = useState(false);
@@ -76,9 +76,9 @@ const Navbar = ({ handleslidein }: NavbarProps) => {
           {/* Navigation Links */}
           <div className="hidden gap-1 sm:flex">
             {[
-              t("navbar.about"),
-              t("navbar.products"),
-              t("navbar.forTeams"),
+              t("links.about"),
+              t("links.products"),
+              t("links.for_teams"),
             ].map((item) => (
               <Link
                 key={item}
@@ -102,7 +102,7 @@ const Navbar = ({ handleslidein }: NavbarProps) => {
                 onChange={(event) =>
                   setSearchTerm(event.target.value)
                 }
-                placeholder={t("navbar.search")}
+                placeholder={t("placeholders.search")}
                 className="ml-0 w-90 rounded border border-gray-300 py-2 pl-10 pr-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
               />
 
@@ -125,14 +125,14 @@ const Navbar = ({ handleslidein }: NavbarProps) => {
                     href="/auth"
                     className="rounded border border-blue-500 bg-[#e7f8fe] px-4 py-1.5 text-sm font-medium text-[#454545] transition hover:bg-[#d3e4eb]"
                   >
-                    {t("navbar.login")}
+                    {t("actions.login")}
                   </Link>
 
                   <Link
                     href="/signup"
                     className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700"
                   >
-                    {t("navbar.signup")}
+                    {t("actions.signup")}
                   </Link>
                 </div>
               ) : (
@@ -169,7 +169,7 @@ const Navbar = ({ handleslidein }: NavbarProps) => {
                     onClick={handleLogout}
                     className="w-22 rounded border border-blue-500 bg-[#e7f8fe] px-1 py-1.5 text-sm font-medium text-[#454545] transition hover:bg-[#d3e4eb]"
                   >
-                    {t("navbar.logout")}
+                    {t("actions.logout")}
                   </button>
                 </>
               )}

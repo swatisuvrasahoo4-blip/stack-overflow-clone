@@ -30,7 +30,7 @@ const LanguageOtpModal = ({
   onVerified,
 }: LanguageOtpModalProps) => {
   const { t, i18n } =
-    useTranslation();
+    useTranslation("language");
 
   const [
     otp,
@@ -136,7 +136,7 @@ const LanguageOtpModal = ({
       if (otp.length !== 6) {
         setError(
           t(
-            "error.please_enter_a_6-digit_otp"
+            "errors.please_enter_6_digit_otp"
           )
         );
 
@@ -146,7 +146,7 @@ const LanguageOtpModal = ({
       if (!language) {
         setError(
           t(
-            "error.language_not_selected"
+            "errors.language_not_selected"
           )
         );
 
@@ -197,38 +197,22 @@ const LanguageOtpModal = ({
             error
           )
         ) {
-          const message =
-            error.response?.data
-              ?.message;
-
-          setError(
-            typeof message ===
-              "string"
-              ? message
-              : t(
-                  "error.invalid_or_expired_otp"
-                )
-          );
-
           console.error(
             "OTP verification failed:",
-            error.response
-              ?.data ||
+            error.response?.data ||
               error
           );
-
-          return;
+        } else {
+          console.error(
+            "OTP verification failed:",
+            error
+          );
         }
 
         setError(
           t(
-            "error.invalid_or_expired_otp"
+            "errors.invalid_or_expired_otp"
           )
-        );
-
-        console.error(
-          "OTP verification failed:",
-          error
         );
       }
     };
@@ -239,35 +223,31 @@ const LanguageOtpModal = ({
 
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/40">
-      <div className="relative w-380px rounded-2xl bg-white p-7 shadow-2xl">
-        {/* Close button */}
-
+      <div className="relative w-[380px] rounded-2xl bg-white p-7 shadow-2xl">
         <button
           type="button"
           onClick={
             handleClose
           }
           className="absolute right-5 top-4 text-2xl text-gray-400 hover:text-gray-700"
-          aria-label="Close OTP modal"
+          aria-label={t(
+            "accessibility.close_otp_modal"
+          )}
         >
           ×
         </button>
 
-        {/* OTP heading */}
-
         <h2 className="text-xl font-semibold text-gray-800">
           {t(
-            "language.verify_language_change"
+            "otp.verify_language_change"
           )}
         </h2>
 
         <p className="mt-2 text-sm text-gray-500">
           {t(
-            "language.enter_the_6-digit_otp_sent_to_your_device"
+            "otp.enter_6_digit_otp_sent_to_device"
           )}
         </p>
-
-        {/* OTP input */}
 
         <input
           type="text"
@@ -282,20 +262,16 @@ const LanguageOtpModal = ({
             )
           }
           placeholder={t(
-            "language.enter_6-digit_otp"
+            "otp.enter_6_digit_otp"
           )}
           className="mt-6 w-full rounded-lg border border-gray-300 px-4 py-3 text-center text-sm tracking-[0.3em] text-black outline-none focus:border-orange-500"
         />
-
-        {/* OTP error */}
 
         {error && (
           <p className="mt-2 text-sm text-red-500">
             {error}
           </p>
         )}
-
-        {/* Verify OTP */}
 
         <button
           type="button"
@@ -309,25 +285,23 @@ const LanguageOtpModal = ({
           className="mt-5 w-full rounded-lg bg-orange-500 py-3 font-medium text-white hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {t(
-            "language.verify_otp"
+            "otp.verify_otp"
           )}
         </button>
-
-        {/* OTP timer */}
 
         <p className="mt-4 text-center text-xs text-gray-800">
           {!expiresAt ||
           sending ? (
             <span className="font-semibold text-gray-600">
               {t(
-                "language.sending_otp"
+                "otp.sending_otp"
               )}
             </span>
           ) : timeLeft >
             0 ? (
             <>
               {t(
-                "language.otp_expires_in"
+                "otp.otp_expires_in"
               )}{" "}
               <span className="font-semibold">
                 {String(
@@ -348,7 +322,7 @@ const LanguageOtpModal = ({
           ) : (
             <span className="font-semibold text-red-500">
               {t(
-                "language.otp_expired"
+                "otp.otp_expired"
               )}
             </span>
           )}

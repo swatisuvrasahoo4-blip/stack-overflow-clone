@@ -29,7 +29,9 @@ export const FollowButton = ({
   showText = false,
 }: FollowButtonProps) => {
   const { user } = useAuth();
-  const { t } = useTranslation();
+
+  const { t } =
+    useTranslation("community");
 
   const [
     checkingStatus,
@@ -85,7 +87,7 @@ export const FollowButton = ({
       if (!user) {
         alert(
           t(
-            "alert.please_log_in_to_follow_users"
+            "messages.please_log_in_to_follow_users"
           )
         );
 
@@ -117,8 +119,7 @@ export const FollowButton = ({
         ) {
           console.error(
             "Follow request failed:",
-            error.response
-              ?.data
+            error.response?.data
           );
 
           return;
@@ -137,11 +138,14 @@ export const FollowButton = ({
         type="button"
         disabled
         className="cursor-wait rounded-md bg-gray-200 p-1.5 text-sm font-medium text-gray-500"
+        aria-label={t(
+          "follow.checking"
+        )}
       >
-        {/* Follow status */}
-
         {showText ? (
-          "Checking..."
+          t(
+            "follow.checking"
+          )
         ) : (
           <UserPlus className="h-4 w-4 animate-pulse" />
         )}
@@ -160,14 +164,25 @@ export const FollowButton = ({
           ? "bg-gray-200 text-gray-700"
           : "bg-blue-600 text-white hover:bg-blue-700"
       }`}
+      aria-label={
+        isFollowing
+          ? t(
+              "follow.following"
+            )
+          : t(
+              "follow.follow"
+            )
+      }
     >
-      {/* Follow button content */}
-
       {showText ? (
         isFollowing ? (
-          "Following"
+          t(
+            "follow.following"
+          )
         ) : (
-          "Follow"
+          t(
+            "follow.follow"
+          )
         )
       ) : isFollowing ? (
         <UserCheck className="h-4 w-4" />

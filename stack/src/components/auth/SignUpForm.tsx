@@ -5,6 +5,8 @@ import type {
 
 import Link from "next/link";
 
+import { useTranslation } from "react-i18next";
+
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -47,6 +49,9 @@ const SignUpForm = ({
   onUsernameSelect,
   onSubmit,
 }: SignUpFormProps) => {
+  const { t } =
+    useTranslation("auth");
+
   return (
     <form
       onSubmit={(event) =>
@@ -55,40 +60,51 @@ const SignUpForm = ({
     >
       <div className="space-y-4">
         {/* Display name */}
+
         <div className="space-y-2">
           <Label
             htmlFor="name"
             className="text-sm"
           >
-            Display name
+            {t(
+              "labels.display_name"
+            )}
           </Label>
 
           <Input
             id="name"
-            placeholder="Enter your display name"
+            placeholder={t(
+              "placeholders.enter_display_name"
+            )}
             value={form.name}
             onChange={onChange}
           />
         </div>
 
         {/* Username */}
+
         <div className="space-y-2">
           <Label
             htmlFor="username"
             className="text-sm"
           >
-            Username
+            {t(
+              "labels.username"
+            )}
           </Label>
 
           <Input
             id="username"
-            placeholder="Choose a username"
+            placeholder={t(
+              "placeholders.choose_username"
+            )}
             value={form.username}
             onChange={onChange}
           />
         </div>
 
         {/* Username status */}
+
         {usernameMessage && (
           <p
             className={`text-sm ${
@@ -106,11 +122,14 @@ const SignUpForm = ({
         )}
 
         {/* Username suggestions */}
+
         {usernameSuggestions.length >
           0 && (
           <div>
             <p className="text-sm text-gray-600">
-              Try one of these:
+              {t(
+                "messages.try_one_of_these"
+              )}
             </p>
 
             <div className="mt-2 flex flex-wrap gap-2">
@@ -135,48 +154,61 @@ const SignUpForm = ({
         )}
 
         {/* Email */}
+
         <div className="space-y-2">
           <Label
             htmlFor="email"
             className="text-sm"
           >
-            Email
+            {t(
+              "labels.email"
+            )}
           </Label>
 
           <Input
             id="email"
             type="email"
-            placeholder="m@example.com"
+            placeholder={t(
+              "placeholders.email_example"
+            )}
             value={form.email}
             onChange={onChange}
           />
         </div>
 
         {/* Mobile */}
+
         <div className="space-y-2">
           <Label
             htmlFor="mobile"
             className="text-sm"
           >
-            Mobile Number
+            {t(
+              "labels.mobile_number"
+            )}
           </Label>
 
           <Input
             id="mobile"
             type="tel"
-            placeholder="Enter your mobile number"
+            placeholder={t(
+              "placeholders.enter_mobile_number"
+            )}
             value={form.mobile}
             onChange={onChange}
           />
         </div>
 
         {/* Password */}
+
         <div className="space-y-2">
           <Label
             htmlFor="password"
             className="text-sm"
           >
-            Password
+            {t(
+              "labels.password"
+            )}
           </Label>
 
           <Input
@@ -187,14 +219,14 @@ const SignUpForm = ({
           />
 
           <p className="text-xs text-gray-600">
-            Passwords must contain at
-            least eight characters,
-            including at least 1 letter
-            and 1 number.
+            {t(
+              "messages.password_requirements"
+            )}
           </p>
         </div>
 
         {/* Terms */}
+
         <div className="flex items-start space-x-2">
           <Checkbox
             id="terms"
@@ -205,24 +237,33 @@ const SignUpForm = ({
             htmlFor="terms"
             className="text-sm leading-relaxed"
           >
-            I agree to the{" "}
+            {t(
+              "legal.i_agree_to_the"
+            )}{" "}
             <Link
               href="#"
               className="text-blue-600 hover:underline"
             >
-              Terms of Service
+              {t(
+                "legal.terms_of_service"
+              )}
             </Link>{" "}
-            and{" "}
+            {t(
+              "legal.and"
+            )}{" "}
             <Link
               href="#"
               className="text-blue-600 hover:underline"
             >
-              Privacy Policy
+              {t(
+                "legal.privacy_policy"
+              )}
             </Link>
           </Label>
         </div>
 
         {/* Submit */}
+
         <Button
           type="submit"
           disabled={
@@ -233,18 +274,27 @@ const SignUpForm = ({
           className="w-full bg-blue-600 text-sm hover:bg-blue-700"
         >
           {loading
-            ? "Signing up..."
-            : "Sign up"}
+            ? t(
+                "status.signing_up"
+              )
+            : t(
+                "actions.sign_up"
+              )}
         </Button>
 
         {/* Login link */}
+
         <div className="text-center text-sm">
-          Already have an account?{" "}
+          {t(
+            "messages.already_have_account"
+          )}{" "}
           <Link
             href="/auth"
             className="text-blue-600 hover:underline"
           >
-            Log in
+            {t(
+              "actions.log_in"
+            )}
           </Link>
         </div>
       </div>

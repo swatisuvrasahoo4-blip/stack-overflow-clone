@@ -55,14 +55,10 @@ interface CommentSectionProps {
     SetStateAction<string[]>
   >;
 
-  activeReplyComment:
-    | string
-    | null;
+  activeReplyComment: string | null;
 
   setActiveReplyComment: Dispatch<
-    SetStateAction<
-      string | null
-    >
+    SetStateAction<string | null>
   >;
 
   replyText: string;
@@ -77,9 +73,7 @@ interface CommentSectionProps {
   ) => void | Promise<void>;
 
   setSelectedComment: Dispatch<
-    SetStateAction<
-      SelectedComment | null
-    >
+    SetStateAction<SelectedComment | null>
   >;
 
   setShowDeleteCommentModal: Dispatch<
@@ -87,9 +81,7 @@ interface CommentSectionProps {
   >;
 
   setSelectedReply: Dispatch<
-    SetStateAction<
-      SelectedReply | null
-    >
+    SetStateAction<SelectedReply | null>
   >;
 
   setShowDeleteReplyModal: Dispatch<
@@ -112,14 +104,11 @@ const CommentSection = ({
   setSelectedReply,
   setShowDeleteReplyModal,
 }: CommentSectionProps) => {
-  const { t } =
-    useTranslation();
+  const { t } = useTranslation("community");
 
-  const router =
-    useRouter();
+  const router = useRouter();
 
-  const comments =
-    post.comments ?? [];
+  const comments = post.comments ?? [];
 
   const currentUserId =
     user?.id ||
@@ -130,27 +119,18 @@ const CommentSection = ({
     <>
       {comments.length > 0 && (
         <div className="mt-4 space-y-3">
-          {(expandedComments.includes(
-            post._id
-          )
+          {(expandedComments.includes(post._id)
             ? comments
-            : comments.slice(
-                0,
-                2
-              )
+            : comments.slice(0, 2)
           ).map((comment) => (
             <div
-              key={
-                comment._id
-              }
+              key={comment._id}
               className="rounded-lg border bg-gray-50 p-3"
             >
               {/* Comment content */}
 
               <p className="text-sm font-semibold">
-                {
-                  comment.userName
-                }
+                {comment.userName}
               </p>
 
               <p className="mt-1 text-gray-700">
@@ -168,21 +148,17 @@ const CommentSection = ({
               <div className="mt-2 flex items-center gap-3">
                 <button
                   type="button"
-                  onClick={(
-                    event
-                  ) => {
+                  onClick={(event) => {
                     event.stopPropagation();
 
                     if (!user) {
                       toast.info(
                         t(
-                          "toast.please_login_to_continue"
+                          "messages.please_login_to_continue"
                         )
                       );
 
-                      void router.push(
-                        "/auth"
-                      );
+                      void router.push("/auth");
 
                       return;
                     }
@@ -196,33 +172,21 @@ const CommentSection = ({
                   }}
                   className="text-xs text-blue-600 hover:underline"
                 >
-                  {t(
-                    "community.reply"
-                  )}
+                  {t("actions.reply")}
                 </button>
 
-                {String(
-                  currentUserId
-                ) ===
-                  String(
-                    comment.userId
-                  ) && (
+                {String(currentUserId) ===
+                  String(comment.userId) && (
                   <button
                     type="button"
-                    onClick={(
-                      event
-                    ) => {
+                    onClick={(event) => {
                       event.stopPropagation();
 
-                      setSelectedComment(
-                        {
-                          postId:
-                            post._id,
-
-                          commentId:
-                            comment._id,
-                        }
-                      );
+                      setSelectedComment({
+                        postId: post._id,
+                        commentId:
+                          comment._id,
+                      });
 
                       setShowDeleteCommentModal(
                         true
@@ -230,9 +194,7 @@ const CommentSection = ({
                     }}
                     className="text-xs text-red-600 hover:underline"
                   >
-                    {t(
-                      "community.delete"
-                    )}
+                    {t("actions.delete")}
                   </button>
                 )}
               </div>
@@ -243,32 +205,24 @@ const CommentSection = ({
                 comment._id && (
                 <div className="mt-3">
                   <textarea
-                    value={
-                      replyText
-                    }
-                    onClick={(
-                      event
-                    ) =>
+                    value={replyText}
+                    onClick={(event) =>
                       event.stopPropagation()
                     }
-                    onChange={(
-                      event
-                    ) =>
+                    onChange={(event) =>
                       setReplyText(
-                        event
-                          .target
-                          .value
+                        event.target.value
                       )
                     }
-                    placeholder="Write a reply..."
+                    placeholder={t(
+                      "placeholders.write_reply"
+                    )}
                     className="w-full rounded-lg border p-2 text-sm"
                   />
 
                   <button
                     type="button"
-                    onClick={(
-                      event
-                    ) => {
+                    onClick={(event) => {
                       event.stopPropagation();
 
                       void handleReply(
@@ -278,9 +232,7 @@ const CommentSection = ({
                     }}
                     className="mt-2 rounded-lg bg-blue-600 px-3 py-1 text-sm text-white"
                   >
-                    {t(
-                      "community.postReply"
-                    )}
+                    {t("actions.post_reply")}
                   </button>
                 </div>
               )}
@@ -288,30 +240,21 @@ const CommentSection = ({
               {/* Replies */}
 
               {comment.replies &&
-                comment.replies
-                  .length >
+                comment.replies.length >
                   0 && (
                   <div className="ml-6 mt-3 space-y-2">
                     {comment.replies.map(
-                      (
-                        reply
-                      ) => (
+                      (reply) => (
                         <div
-                          key={
-                            reply._id
-                          }
+                          key={reply._id}
                           className="rounded-lg border bg-white p-3"
                         >
                           <p className="text-sm font-semibold">
-                            {
-                              reply.userName
-                            }
+                            {reply.userName}
                           </p>
 
                           <p className="mt-1 text-sm text-gray-700">
-                            {
-                              reply.text
-                            }
+                            {reply.text}
                           </p>
 
                           {/* Reply actions */}
@@ -333,10 +276,8 @@ const CommentSection = ({
                                   {
                                     postId:
                                       post._id,
-
                                     commentId:
                                       comment._id,
-
                                     replyId:
                                       reply._id,
                                   }
@@ -349,7 +290,7 @@ const CommentSection = ({
                               className="mt-1 text-xs text-red-600 hover:underline"
                             >
                               {t(
-                                "community.delete"
+                                "actions.delete"
                               )}
                             </button>
                           )}
@@ -369,13 +310,10 @@ const CommentSection = ({
 
           {/* Comment visibility */}
 
-          {comments.length >
-            2 && (
+          {comments.length > 2 && (
             <button
               type="button"
-              onClick={(
-                event
-              ) => {
+              onClick={(event) => {
                 event.stopPropagation();
 
                 if (
@@ -386,37 +324,38 @@ const CommentSection = ({
                   setExpandedComments(
                     expandedComments.filter(
                       (id) =>
-                        id !==
-                        post._id
+                        id !== post._id
                     )
                   );
 
                   return;
                 }
 
-                setExpandedComments(
-                  [
-                    ...expandedComments,
-                    post._id,
-                  ]
-                );
+                setExpandedComments([
+                  ...expandedComments,
+                  post._id,
+                ]);
               }}
               className="text-sm text-blue-600 hover:underline"
             >
               {expandedComments.includes(
                 post._id
               )
-                ? t(
-                    "community.showLess"
-                  )
+                ? t("actions.show_less")
                 : `${t(
-                    "community.viewAll"
+                    "actions.view_all"
                   )} ${
-                    comments.length -
-                    2
-                  } ${t(
-                    "community.comment"
-                  )}`}
+                    comments.length - 2
+                  } ${
+                    comments.length - 2 ===
+                    1
+                      ? t(
+                          "labels.comment"
+                        )
+                      : t(
+                          "labels.comments"
+                        )
+                  }`}
             </button>
           )}
         </div>

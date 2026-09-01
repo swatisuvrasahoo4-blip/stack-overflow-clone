@@ -2,9 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 
+import { useTranslation } from "react-i18next";
+
 import { Card, CardContent } from "./ui/card";
 
 import { useAuth } from "@/lib/AuthContext";
+
 import { Question } from "@/types/questions";
 
 import QuestionHeader from "./question/QuestionHeader";
@@ -35,6 +38,9 @@ interface QuestionDetailProps {
 const QuestionDetail = ({
   questionId,
 }: QuestionDetailProps) => {
+  const { t } =
+    useTranslation("questions");
+
   const [question, setQuestion] =
     useState<Question | null>(null);
 
@@ -51,14 +57,6 @@ const QuestionDetail = ({
   const currentUserId =
     user?._id || user?.id;
 
-  /*
-   * Question actions are handled by the
-   * useQuestionActions custom hook.
-   *
-   * question! is used here because the actions
-   * are only triggered after the question has
-   * successfully loaded.
-   */
   const {
     handleVote,
     handleBookmark,
@@ -71,17 +69,9 @@ const QuestionDetail = ({
     setQuestion,
   });
 
-  /*
-   * Mount
-   */
-
   useEffect(() => {
     setHasMounted(true);
   }, []);
-
-  /*
-   * Load Question
-   */
 
   useEffect(() => {
     const loadQuestion = async () => {
@@ -110,29 +100,30 @@ const QuestionDetail = ({
               String(userId)
             );
 
-          isBookmarked =
-            Array.isArray(savedQuestions)
-              ? savedQuestions.some(
-                  (
-                    saved:
-                      | string
-                      | { _id?: string }
-                  ) => {
-                    const savedId =
-                      typeof saved ===
-                      "string"
-                        ? saved
-                        : saved?._id;
+          isBookmarked = Array.isArray(
+            savedQuestions
+          )
+            ? savedQuestions.some(
+                (
+                  saved:
+                    | string
+                    | { _id?: string }
+                ) => {
+                  const savedId =
+                    typeof saved ===
+                    "string"
+                      ? saved
+                      : saved?._id;
 
-                    return (
-                      String(savedId) ===
-                      String(
-                        questionData?._id
-                      )
-                    );
-                  }
-                )
-              : false;
+                  return (
+                    String(savedId) ===
+                    String(
+                      questionData?._id
+                    )
+                  );
+                }
+              )
+            : false;
         }
 
         setQuestion({
@@ -176,7 +167,7 @@ const QuestionDetail = ({
     };
 
     if (questionId) {
-      loadQuestion();
+      void loadQuestion();
     }
   }, [
     questionId,
@@ -184,58 +175,40 @@ const QuestionDetail = ({
     user?.id,
   ]);
 
-  /*
-   * Loading
-   */
-
   if (loading) {
     return (
-      <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500" />
+      <div className="h-10 w-10 animate-spin rounded-full border-b-2 border-t-2 border-blue-500" />
     );
   }
-
-  /*
-   * Question Not Found
-   */
 
   if (!question) {
     return (
-      <div className="text-center text-gray-500 mt-4">
-        No question found.
+      <div className="mt-4 text-center text-gray-500">
+        {t(
+          "messages.no_question_found"
+        )}
       </div>
     );
   }
-
-  /*
-   * Own Question
-   */
 
   const isOwnQuestion =
     String(question.userid) ===
     String(currentUserId);
 
-  /*
-   * Render
-   */
-
   return (
     <div className="max-w-5xl">
-      {/* Question Header */}
-
       <QuestionHeader
         title={question.questiontitle}
         askedOn={question.askedon}
       />
 
-      {/* Question Content */}
-
       <Card className="mb-8">
         <CardContent className="p-0">
           <div className="flex flex-col sm:flex-row">
-            {/* Question Sidebar */}
-
             <QuestionSidebar
-              upvotes={question.upvote || []}
+              upvotes={
+                question.upvote || []
+              }
               downvotes={
                 question.downvote || []
               }
@@ -256,8 +229,6 @@ const QuestionDetail = ({
                 setQuestion
               }
             />
-
-            {/* Question Body */}
 
             <QuestionContent
               questionBody={
@@ -295,8 +266,6 @@ const QuestionDetail = ({
           </div>
         </CardContent>
       </Card>
-
-      {/* Answer Section */}
 
       <AnswerSection
         question={question}

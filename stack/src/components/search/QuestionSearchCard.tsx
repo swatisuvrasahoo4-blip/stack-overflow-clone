@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
-import type { Question } from "@/types/questions";
 import { useTranslation } from "react-i18next";
+
+import type { Question } from "@/types/questions";
 
 interface QuestionSearchCardProps {
   question: Question;
@@ -10,7 +11,7 @@ const QuestionSearchCard = ({
   question,
 }: QuestionSearchCardProps) => {
   const router = useRouter();
-  const { t } = useTranslation();
+  const { t } = useTranslation("search");
 
   const questionId = question._id;
 
@@ -32,16 +33,16 @@ const QuestionSearchCard = ({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <h2 className="font-medium text-blue-600 hover:underline">
           {question.questiontitle ||
-            t("search.no_title")}
+            t("messages.no_title")}
         </h2>
 
         <div className="flex-shrink-0 text-sm text-gray-600">
           {question.noofanswer ??
             question.answer?.length ??
             0}{" "}
-          {t("search.answers")} ·{" "}
+          {t("labels.answers")} ·{" "}
           {question.views ?? 0}{" "}
-          {t("search.views")}
+          {t("labels.views")}
         </div>
       </div>
 

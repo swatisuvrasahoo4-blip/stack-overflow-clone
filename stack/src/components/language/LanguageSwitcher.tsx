@@ -18,7 +18,7 @@ import LanguageOtpModal from "./LanguageOtpModal";
 
 const LanguageSwitcher = () => {
   const { i18n, t } =
-    useTranslation();
+    useTranslation("language");
 
   const router =
     useRouter();
@@ -77,7 +77,7 @@ const LanguageSwitcher = () => {
       if (!user) {
         toast.info(
           t(
-            "toast.please_login_to_continue"
+            "messages.please_login_to_continue"
           )
         );
 
@@ -138,7 +138,14 @@ const LanguageSwitcher = () => {
           error
         );
 
+        toast.error(
+          t(
+            "errors.failed_to_send_otp"
+          )
+        );
+
         setOtpOpen(false);
+        setExpiresAt(null);
 
         setSelectedLanguage(
           null
@@ -189,20 +196,22 @@ const LanguageSwitcher = () => {
           "Failed to change language:",
           error
         );
+
+        toast.error(
+          t(
+            "errors.failed_to_change_language"
+          )
+        );
       }
     };
 
   return (
     <>
-      {/* Language button */}
-
       <LanguageButton
         onClick={
           handleLanguageButtonClick
         }
       />
-
-      {/* Language menu */}
 
       <LanguageMenu
         open={open}
@@ -213,8 +222,6 @@ const LanguageSwitcher = () => {
           handleLanguageSelect
         }
       />
-
-      {/* Language OTP modal */}
 
       <LanguageOtpModal
         open={otpOpen}

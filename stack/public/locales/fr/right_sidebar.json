@@ -1,0 +1,25 @@
+{
+  "blog": {
+    "title": "Le blog d'Overflow",
+    "post_1": "Une nouvelle ère pour Stack Overflow",
+    "post_2": "Comment votre film préféré change la technologie de l'apprentissage des langues"
+  },
+  "meta": {
+    "title": "Mis en avant sur Meta",
+    "post_1": "Résultats du Sprint des questions de la communauté de juin 2025",
+    "post_2": "Nous aiderez-vous à construire notre nouvelle identité visuelle ?",
+    "post_3": "Politique : L'IA générative (ex. ChatGPT) est bannie"
+  },
+  "filters": {
+    "title": "Filtres personnalisés",
+    "create": "Créer un filtre personnalisé"
+  },
+  "watched_tags": {
+    "title": "Balises suivies",
+    "description": "Suivez des balises pour personnaliser votre liste de questions.",
+    "watch_tag": "Suivre une balise"
+  },
+  "actions": {
+    "logout": "Se déconnecter"
+  }
+}

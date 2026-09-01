@@ -9,7 +9,8 @@ import axiosInstance from "@/lib/axiosinstance";
 
 import type { Question } from "@/types/questions";
 
-export interface StoredQuestion extends Partial<Question> {
+export interface StoredQuestion
+  extends Partial<Question> {
   id?: string;
   title?: string;
   questionTitle?: string;
@@ -33,7 +34,10 @@ export interface NormalizedQuestion {
   tags: string[];
   author: string;
   authorId: string;
-  timeAgo: string;
+
+  timeAgoKey: string;
+  timeAgoCount?: number;
+
   votes: number;
   answers: number;
   views: number;
@@ -41,6 +45,7 @@ export interface NormalizedQuestion {
 
 interface QuestionsResponse {
   data?: StoredQuestion[];
+
   pagination?: {
     nextCursor?: string | null;
     hasMore?: boolean;
@@ -57,7 +62,6 @@ interface UseQuestionsFeedProps {
   disabled?: boolean;
 }
 
-// Normalize backend question data
 export const normalizeStoredQuestion = (
   question: StoredQuestion
 ): NormalizedQuestion => {
@@ -75,7 +79,7 @@ export const normalizeStoredQuestion = (
     question.questiontitle ||
     question.title ||
     question.questionTitle ||
-    "(no title)";
+    "";
 
   const content =
     question.questionbody ||
@@ -91,14 +95,19 @@ export const normalizeStoredQuestion = (
   const author =
     question.userposted ||
     question.author ||
-    "Unknown";
+    "";
 
   const authorId =
     question.userid ||
     question.authorId ||
     "";
 
-  let timeAgo = "just now";
+  let timeAgoKey =
+    "time.just_now";
+
+  let timeAgoCount:
+    | number
+    | undefined;
 
   try {
     const date = new Date(
@@ -112,37 +121,51 @@ export const normalizeStoredQuestion = (
       Date.now() -
       date.getTime();
 
-    const minutes =
-      Math.floor(
-        difference / 60000
-      );
+    const minutes = Math.floor(
+      difference / 60000
+    );
 
     if (minutes <= 0) {
-      timeAgo = "just now";
+      timeAgoKey =
+        "time.just_now";
     } else if (minutes < 60) {
-      timeAgo =
-        `${minutes} mins ago`;
+      timeAgoCount =
+        minutes;
+
+      timeAgoKey =
+        minutes === 1
+          ? "time.minute_ago"
+          : "time.minutes_ago";
     } else {
-      const hours =
-        Math.floor(
-          minutes / 60
-        );
+      const hours = Math.floor(
+        minutes / 60
+      );
 
       if (hours < 24) {
-        timeAgo =
-          `${hours} hours ago`;
-      } else {
-        const days =
-          Math.floor(
-            hours / 24
-          );
+        timeAgoCount =
+          hours;
 
-        timeAgo =
-          `${days} days ago`;
+        timeAgoKey =
+          hours === 1
+            ? "time.hour_ago"
+            : "time.hours_ago";
+      } else {
+        const days = Math.floor(
+          hours / 24
+        );
+
+        timeAgoCount =
+          days;
+
+        timeAgoKey =
+          days === 1
+            ? "time.day_ago"
+            : "time.days_ago";
       }
     }
   } catch {
-    timeAgo = "just now";
+    timeAgoKey =
+      "time.just_now";
   }
 
   const upvotes =
@@ -176,7 +199,8 @@ export const normalizeStoredQuestion = (
     tags,
     author,
     authorId,
-    timeAgo,
+    timeAgoKey,
+    timeAgoCount,
     votes:
       upvotes - downvotes,
     answers,
@@ -224,7 +248,6 @@ const useQuestionsFeed = ({
   const loadingMoreRef =
     useRef(false);
 
-  // Fetch one page of questions
   const fetchPage =
     useCallback(
       async (
@@ -278,7 +301,6 @@ const useQuestionsFeed = ({
       []
     );
 
-  // Load initial questions
   useEffect(() => {
     if (disabled) {
       setLoading(false);
@@ -408,7 +430,6 @@ const useQuestionsFeed = ({
     fetchPage,
   ]);
 
-  // Load next page
   const loadMore =
     useCallback(
       async (): Promise<void> => {
@@ -488,7 +509,6 @@ const useQuestionsFeed = ({
       ]
     );
 
-  // Infinite scroll
   useEffect(() => {
     if (
       disabled ||
@@ -541,7 +561,6 @@ const useQuestionsFeed = ({
     loading,
   ]);
 
-  // Restore selected question
   useEffect(() => {
     if (
       disabled ||

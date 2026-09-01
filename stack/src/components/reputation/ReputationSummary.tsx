@@ -5,6 +5,7 @@ import {
   ArrowUp,
   Flag,
 } from "lucide-react";
+
 import { useTranslation } from "react-i18next";
 
 interface ReputationSummaryProps {
@@ -16,7 +17,8 @@ const ReputationSummary = ({
   reputation,
   onViewActivity,
 }: ReputationSummaryProps) => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("reputation");
 
   const privileges = [
     {
@@ -43,13 +45,14 @@ const ReputationSummary = ({
 
   return (
     <div className="rounded-xl border bg-white p-6 shadow-sm">
-      {/* Reputation header */}
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Trophy className="h-6 w-6 text-yellow-600" />
 
           <h2 className="text-2xl font-semibold">
-            {t("reputation.reputation")}
+            {t(
+              "title.reputation"
+            )}
           </h2>
         </div>
 
@@ -58,18 +61,21 @@ const ReputationSummary = ({
           onClick={onViewActivity}
           className="rounded-lg border border-green-600 px-4 py-2 text-green-700 transition hover:bg-green-50"
         >
-          {t("reputation.view_reputation_activity")}
+          {t(
+            "actions.view_reputation_activity"
+          )}
         </button>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        {/* Reputation total */}
         <div className="flex items-center gap-4">
           <Trophy className="h-10 w-10 text-yellow-500" />
 
           <div>
             <p className="text-sm text-gray-500">
-              {t("reputation.total_reputation")}
+              {t(
+                "labels.total_reputation"
+              )}
             </p>
 
             <p className="text-4xl font-bold text-green-600">
@@ -78,48 +84,65 @@ const ReputationSummary = ({
           </div>
         </div>
 
-        {/* Community privileges */}
         <div>
           <h3 className="mb-3 font-semibold">
-            {t("reputation.community_privileges")}
+            {t(
+              "labels.community_privileges"
+            )}
           </h3>
 
           <div className="space-y-3">
-            {privileges.map((privilege) => {
-              const Icon = privilege.icon;
-              const unlocked = reputation >= privilege.required;
+            {privileges.map(
+              (privilege) => {
+                const Icon =
+                  privilege.icon;
 
-              return (
-                <div
-                  key={privilege.required}
-                  className="flex items-center justify-between"
-                >
-                  <div className="flex items-center gap-2">
-                    <Icon
-                      className={`h-4 w-4 ${
-                        unlocked
-                          ? "text-green-600"
-                          : "text-gray-400"
-                      }`}
-                    />
+                const unlocked =
+                  reputation >=
+                  privilege.required;
 
-                    <span
-                      className={
-                        unlocked
-                          ? "text-gray-800"
-                          : "text-gray-400"
-                      }
-                    >
-                      {t(`reputation.${privilege.name}`)}
+                return (
+                  <div
+                    key={
+                      privilege.required
+                    }
+                    className="flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Icon
+                        className={`h-4 w-4 ${
+                          unlocked
+                            ? "text-green-600"
+                            : "text-gray-400"
+                        }`}
+                      />
+
+                      <span
+                        className={
+                          unlocked
+                            ? "text-gray-800"
+                            : "text-gray-400"
+                        }
+                      >
+                        {t(
+                          `privileges.${privilege.name}`
+                        )}
+                      </span>
+                    </div>
+
+                    <span className="text-sm font-medium">
+                      {t(
+                        "labels.points",
+                        {
+                          count:
+                            privilege.required,
+                        }
+                      )}
                     </span>
                   </div>
-
-                  <span className="text-sm font-medium">
-                    {privilege.required} pts
-                  </span>
-                </div>
-              );
-            })}
+                );
+              }
+            )}
           </div>
         </div>
       </div>

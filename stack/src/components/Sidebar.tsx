@@ -34,7 +34,7 @@ const Sidebar = ({
   onClose,
 }: SidebarProps) => {
   const { user } = useAuth();
-  const { t } = useTranslation();
+  const { t } = useTranslation("sidebar");
 
   const linkClass =
     "flex items-center rounded px-2 py-2 text-sm text-gray-700 hover:bg-gray-100";
@@ -97,7 +97,7 @@ const Sidebar = ({
                   className={linkClass}
                 >
                   <Home className="mr-3 h-4 w-4 shrink-0" />
-                  {t("sidebar.home")}
+                  {t("links.home")}
                 </Link>
               </li>
 
@@ -108,7 +108,7 @@ const Sidebar = ({
                   className={linkClass}
                 >
                   <MessageSquareIcon className="mr-3 h-4 w-4 shrink-0" />
-                  {t("sidebar.questions")}
+                  {t("links.questions")}
                 </Link>
               </li>
 
@@ -120,13 +120,13 @@ const Sidebar = ({
                 >
                   <Bot className="mr-3 h-4 w-4 shrink-0" />
 
-                  {t("sidebar.aiAssist")}
+                  {t("links.ai_assist")}
 
                   <Badge
                     variant="secondary"
                     className="ml-auto text-xs"
                   >
-                    {t("sidebar.labs")}
+                    {t("links.labs")}
                   </Badge>
                 </Link>
               </li>
@@ -138,7 +138,7 @@ const Sidebar = ({
                   className={linkClass}
                 >
                   <Tag className="mr-3 h-4 w-4 shrink-0" />
-                  {t("tag.tags")}
+                  {t("links.tags")}
                 </Link>
               </li>
 
@@ -149,7 +149,7 @@ const Sidebar = ({
                   className={linkClass}
                 >
                   <Users className="mr-3 h-4 w-4 shrink-0" />
-                  {t("sidebar.users")}
+                  {t("links.users")}
                 </Link>
               </li>
 
@@ -160,7 +160,7 @@ const Sidebar = ({
                   className={linkClass}
                 >
                   <UsersRound className="mr-3 h-4 w-4 shrink-0" />
-                  {t("sidebar.community")}
+                  {t("links.community")}
                 </Link>
               </li>
 
@@ -171,7 +171,7 @@ const Sidebar = ({
                   className={linkClass}
                 >
                   <Bookmark className="mr-3 h-4 w-4 shrink-0" />
-                  {t("sidebar.saves")}
+                  {t("links.saves")}
                 </Link>
               </li>
 
@@ -183,13 +183,13 @@ const Sidebar = ({
                 >
                   <Trophy className="mr-3 h-4 w-4 shrink-0" />
 
-                  {t("sidebar.challenges")}
+                  {t("links.challenges")}
 
                   <Badge
                     variant="secondary"
                     className="ml-auto bg-orange-100 text-xs text-orange-800"
                   >
-                    {t("sidebar.new")}
+                    {t("badges.new")}
                   </Badge>
                 </Link>
               </li>
@@ -201,7 +201,7 @@ const Sidebar = ({
                   className={linkClass}
                 >
                   <MessageSquare className="mr-3 h-4 w-4 shrink-0" />
-                  {t("sidebar.chat")}
+                  {t("links.chat")}
                 </Link>
               </li>
 
@@ -212,7 +212,7 @@ const Sidebar = ({
                   className={linkClass}
                 >
                   <FileText className="mr-3 h-4 w-4 shrink-0" />
-                  {t("sidebar.articles")}
+                  {t("links.articles")}
                 </Link>
               </li>
 
@@ -223,7 +223,7 @@ const Sidebar = ({
                   className={linkClass}
                 >
                   <Building className="mr-3 h-4 w-4 shrink-0" />
-                  {t("sidebar.companies")}
+                  {t("links.companies")}
                 </Link>
               </li>
 
@@ -234,7 +234,7 @@ const Sidebar = ({
                   className={linkClass}
                 >
                   <Crown className="mr-3 h-4 w-4 shrink-0" />
-                  {t("sidebar.subscription")}
+                  {t("links.subscription")}
                 </Link>
               </li>
 
@@ -246,7 +246,7 @@ const Sidebar = ({
                     className={linkClass}
                   >
                     <ShieldAlert className="mr-3 h-4 w-4 shrink-0 text-red-600" />
-                    {t("sidebar.admin")}
+                    {t("links.admin")}
                   </Link>
                 </li>
               )}

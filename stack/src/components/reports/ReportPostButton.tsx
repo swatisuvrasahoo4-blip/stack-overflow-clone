@@ -1,4 +1,5 @@
 import { Flag } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface ReportPostButtonProps {
   onClick: () => void;
@@ -7,6 +8,9 @@ interface ReportPostButtonProps {
 const ReportPostButton = ({
   onClick,
 }: ReportPostButtonProps) => {
+  const { t } =
+    useTranslation("reports");
+
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
@@ -21,10 +25,10 @@ const ReportPostButton = ({
       type="button"
       onClick={handleClick}
       className="flex items-center gap-2 text-sm text-gray-600 transition hover:text-red-600"
-      aria-label="Report post"
+      aria-label={t(
+        "accessibility.report_post"
+      )}
     >
-      {/* Report icon */}
-
       <Flag className="h-5 w-5" />
     </button>
   );

@@ -1,0 +1,121 @@
+{
+  "actions": {
+    "like": "J’aime",
+    "reply": "Répondre",
+    "comment": "Commentaire",
+    "share": "Partager",
+    "bookmark": "Enregistrer",
+    "flag": "Signaler",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "post_reply": "Répondre",
+    "delete_reply": "Supprimer la réponse",
+    "copy": "Copier",
+     "show_less": "Voir moins",
+    "view_all": "Voir tout",
+    "no": "Non",
+    "yes_delete": "Oui, supprimer",
+    "view_project": "Voir le projet"
+  },
+  "status": {
+    "edited": "Modifié",
+    "copied": "Copié",
+    "posting": "Publication...",
+    "loading": "Chargement..."
+  },
+  "feed": {
+    "trending": "Tendances",
+    "following": "Abonnements",
+    "create_post": "Créer une publication",
+    "posts": "Publications",
+    "community_posts": "Publications de la communauté",
+    "community_feed": "Fil d'actualité de la communauté",
+    "loading_more_posts": "Chargement de plus de publications...",
+"no_more_posts": "Il n’y a plus de publications.",
+"loading_posts": "Chargement des publications..."
+  },
+  "messages": {
+    "post_not_found": "Publication introuvable.",
+    "share_updates_projects_code_snippets_and_learning_achievements": "Partagez des mises à jour, des projets, des extraits de code et des réussites d'apprentissage.",
+    "please_login_to_continue": "Veuillez vous connecter pour continuer.",
+    "comment_reputation_required": "Vous devez avoir au moins 50 points de réputation pour commenter. Votre réputation actuelle est de {{reputation}}.",
+    "please_log_in_to_follow_users": "Veuillez vous connecter pour suivre des utilisateurs.",
+    "no_saved_community_posts": "Aucune publication de la communauté enregistrée.",
+    "unable_to_update_bookmark": "Impossible de mettre à jour l’enregistrement. Veuillez réessayer.",
+    "post_deleted_successfully": "Publication supprimée avec succès.",
+    "unable_to_delete_post": "Impossible de supprimer la publication.",
+    "reply_reputation_required": "Vous devez avoir au moins 50 points de réputation pour répondre. Votre réputation actuelle est de {{reputation}}.",
+    "unable_to_delete_comment": "Impossible de supprimer le commentaire.",
+    "edit_reputation_required": "Vous devez avoir au moins 100 points de réputation pour modifier les publications de la communauté.",
+    "post_content_cannot_be_empty": "Le contenu de la publication ne peut pas être vide.",
+    "session_expired": "Votre session a expiré. Veuillez vous reconnecter.",
+    "can_only_edit_own_post": "Vous pouvez uniquement modifier votre propre publication.",
+    "failed_to_update_post": "Une erreur s’est produite lors de la mise à jour de la publication.",
+       "link_copied_to_clipboard": "Lien copié dans le presse-papiers."
+  },
+  "mentioned_users": "Utilisateurs mentionnés",
+  "labels": {
+    "comment": "commentaire",
+    "comments": "commentaires",
+     "unknown_user": "Utilisateur inconnu",
+    "community_post": "Publication de la communauté",
+    "saves": "Enregistrements"
+  },
+  "placeholders": {
+    "write_reply": "Écrivez une réponse...",
+    "write_comment": "Écrivez un commentaire..."
+  },
+  "delete_reply": {
+  "title": "Supprimer la réponse",
+  "confirmation": "Êtes-vous sûr de vouloir supprimer cette réponse ?"
+},
+"badges": {
+  "featured": "En vedette"
+},
+"accessibility": {
+  "view_mentioned_users": "Voir les utilisateurs mentionnés",
+  "post_image": "Image de la publication"
+},
+"delete_comment": {
+    "title": "Supprimer le commentaire",
+    "confirmation": "Êtes-vous sûr de vouloir supprimer ce commentaire ?"
+  },
+  "delete_post": {
+    "title": "Supprimer la publication",
+    "confirmation": "Êtes-vous sûr de vouloir supprimer cette publication ?"
+  },
+  "edit_post": {
+    "title": "Modifier la publication",
+    "close_modal": "Fermer la fenêtre de modification",
+    "content": "Contenu",
+    "edit_post_placeholder": "Modifiez votre publication...",
+    "hashtags": "Hashtags",
+    "add_hashtag": "Ajouter un hashtag",
+    "remove_hashtag": "Supprimer le hashtag {{tag}}",
+    "image": "Image",
+    "remove_image": "Supprimer l’image",
+    "no_file_chosen": "Aucun fichier sélectionné",
+    "selected_file": "Sélectionné : {{fileName}}",
+    "project_showcase": "Présentation du projet",
+    "project_title": "Titre du projet",
+    "project_link": "Lien du projet",
+    "learning_achievement": "Réussite d’apprentissage",
+    "achievement_title": "Titre de la réussite",
+    "achievement_description": "Description de la réussite",
+    "code_snippet": "Extrait de code",
+    "edit_code": "Modifiez votre code...",
+    "save_changes": "Enregistrer les modifications"
+  },
+  "follow": {
+  "checking": "Vérification...",
+  "follow": "Suivre",
+  "following": "Abonnements",
+  "followers": "Abonnés"
+},
+  "share": {
+    "community_post": "Publication de la communauté",
+    "check_out_community_post": "Découvrez cette publication de la communauté !"
+  }
+}

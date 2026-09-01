@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 
 import AskQuestionForm from "./AskQuestionForm";
+
 import AskQuestionPreview from "./AskQuestionPreview";
 
 interface ApiError {
@@ -40,7 +41,8 @@ interface AskQuestionResponse {
 const AskQuestionPage = () => {
   const router = useRouter();
 
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("questions");
 
   const [
     title,
@@ -68,6 +70,7 @@ const AskQuestionPage = () => {
   ] = useState(false);
 
   // Add tag
+
   const addTag = (
     value: string
   ): void => {
@@ -99,6 +102,7 @@ const AskQuestionPage = () => {
   };
 
   // Remove tag
+
   const removeTag = (
     tag: string
   ): void => {
@@ -112,6 +116,7 @@ const AskQuestionPage = () => {
   };
 
   // Handle tag keyboard input
+
   const handleKeyDown = (
     event: KeyboardEvent<HTMLInputElement>
   ): void => {
@@ -162,6 +167,7 @@ const AskQuestionPage = () => {
   };
 
   // Post question
+
   const handlePost =
     async (): Promise<void> => {
       try {
@@ -196,9 +202,8 @@ const AskQuestionPage = () => {
         ) {
           toast.error(
             t(
-              "alert.something_went_wrong"
-            ) ||
-              "Something went wrong."
+              "ask_question.something_went_wrong"
+            )
           );
 
           return;
@@ -211,18 +216,21 @@ const AskQuestionPage = () => {
         const apiError =
           error as ApiError;
 
+        console.error(
+          "Failed to post question:",
+          apiError
+        );
+
         toast.error(
-          apiError.response
-            ?.data?.message ||
-            t(
-              "alert.something_went_wrong"
-            ) ||
-            "Something went wrong."
+          t(
+            "ask_question.something_went_wrong"
+          )
         );
       }
     };
 
   // Cancel question
+
   const handleCancel = (): void => {
     void router.push("/");
   };
@@ -234,13 +242,13 @@ const AskQuestionPage = () => {
         <div className="mb-4">
           <h1 className="text-2xl font-semibold">
             {t(
-              "askquestion.ask_a_public_question"
+              "ask_question.ask_a_public_question"
             )}
           </h1>
 
           <p className="mt-1 text-sm text-gray-600">
             {t(
-              "askquestion.other_users_will_be_able_to_see_and_answer_your_question"
+              "ask_question.other_users_will_be_able_to_see_and_answer_your_question"
             )}
           </p>
         </div>

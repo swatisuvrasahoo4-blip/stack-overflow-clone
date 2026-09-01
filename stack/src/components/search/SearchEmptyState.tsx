@@ -7,23 +7,23 @@ interface SearchEmptyStateProps {
 const SearchEmptyState = ({
   type,
 }: SearchEmptyStateProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("search");
 
   const getMessage = (): string => {
     if (type === "posts") {
       return t(
-        "search.no_posts_matched_your_search"
+        "messages.no_posts_matched"
       );
     }
 
     if (type === "questions") {
       return t(
-        "search.no_questions_matched_your_search"
+        "messages.no_questions_matched"
       );
     }
 
     return t(
-      "search.no_posts_or_questions_matched_your_search"
+      "messages.no_posts_or_questions_matched"
     );
   };
 

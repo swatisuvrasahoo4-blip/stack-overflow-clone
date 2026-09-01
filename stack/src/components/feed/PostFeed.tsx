@@ -23,11 +23,8 @@ import type { Post } from "@/types/community";
 
 interface PostFeedProps {
   activeFeed?: "trending" | "following";
-
   followingIds?: string[];
-
   initialPosts?: Post[];
-
   onPostCountChange?: (
     count: number
   ) => void;
@@ -45,7 +42,9 @@ const PostFeed = ({
   } = useAuth();
 
   const router = useRouter();
-  const { t } = useTranslation();
+
+  const { t } =
+    useTranslation("community");
 
   const {
     posts,
@@ -259,7 +258,6 @@ const PostFeed = ({
 
   return (
     <>
-      {/* Post feed */}
       <PostFeedList
         posts={posts}
         user={user}
@@ -334,7 +332,6 @@ const PostFeed = ({
         }
       />
 
-      {/* Edit post modal */}
       <EditPostModal
         editingPost={
           editingPost
@@ -401,7 +398,6 @@ const PostFeed = ({
         }
       />
 
-      {/* Infinite scroll */}
       {!initialPosts && (
         <div
           ref={loadMoreRef}
@@ -409,13 +405,16 @@ const PostFeed = ({
         >
           {hasMore
             ? loadingMore
-              ? "Loading more posts..."
+              ? t(
+                  "feed.loading_more_posts"
+                )
               : ""
-            : "No more posts"}
+            : t(
+                "feed.no_more_posts"
+              )}
         </div>
       )}
 
-      {/* Delete post modal */}
       <DeletePostModal
         open={
           showDeleteModal &&
@@ -429,7 +428,6 @@ const PostFeed = ({
         }
       />
 
-      {/* Delete reply modal */}
       <DeleteReplyModal
         open={
           showDeleteReplyModal &&
@@ -443,7 +441,6 @@ const PostFeed = ({
         }
       />
 
-      {/* Delete comment modal */}
       <DeleteCommentModal
         open={
           showDeleteCommentModal &&

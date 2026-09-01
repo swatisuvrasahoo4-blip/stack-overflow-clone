@@ -1,0 +1,26 @@
+{
+  "messages": {
+    "no_hashtags_available": "Aucun hashtag disponible",
+    "real_hashtags_from_community_posts_will_appear_here": "Les vrais hashtags des publications de la communauté apparaîtront ici.",
+    "explore_popular_hashtags_and_community_topics": "Explorez les hashtags populaires et les sujets de la communauté",
+    "explore_community_posts_about_tag": "Explorez les publications de la communauté sur {{tag}}.",
+    "questions_and_community_posts_tagged_with": "Questions et publications de la communauté avec le hashtag #{{tag}}.",
+    "no_questions_or_posts_found_for_tag": "Aucune question ni publication trouvée pour ce hashtag.",
+    "no_more_questions": "Il n’y a plus de questions."
+  },
+  "labels": {
+    "tags": "Balises",
+    "post": "publication",
+    "posts": "publications",
+     "community_posts": "Publications de la communauté",
+     "questions": "Questions",
+    "question": "question",
+    "questions_lowercase": "questions"
+  },
+  "status": {
+    "loading": "Chargement..."
+  },
+  "actions": {
+    "load_more": "Charger plus"
+  }
+}

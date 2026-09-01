@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+
 import {
   getSubscription,
   getPaymentHistory,
 } from "@/components/services/subscriptionService";
+
 import {
   Card,
   CardHeader,
   CardTitle,
   CardContent,
 } from "@/components/ui/card";
+
 import InvoiceModal from "./InvoiceModal";
 
 interface Subscription {
@@ -41,7 +44,7 @@ interface Payment {
 }
 
 const PaymentHistory = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("subscription");
 
   const [subscription, setSubscription] =
     useState<Subscription | null>(null);
@@ -60,12 +63,16 @@ const PaymentHistory = () => {
         const subscriptionResponse =
           await getSubscription();
 
-        setSubscription(subscriptionResponse.data);
+        setSubscription(
+          subscriptionResponse.data
+        );
 
         const paymentResponse =
           await getPaymentHistory();
 
-        setPayments(paymentResponse.data);
+        setPayments(
+          paymentResponse.data
+        );
       } catch (error: unknown) {
         console.error(
           "Failed to load payment history:",
@@ -77,7 +84,9 @@ const PaymentHistory = () => {
     void loadHistory();
   }, []);
 
-  const handleViewInvoice = (payment: Payment) => {
+  const handleViewInvoice = (
+    payment: Payment
+  ) => {
     setSelectedPayment(payment);
     setOpen(true);
   };
@@ -96,86 +105,125 @@ const PaymentHistory = () => {
       <Card className="mt-8">
         <CardHeader>
           <CardTitle>
-            {t("subscription.payment_history")}
+            {t(
+              "payment_history.title"
+            )}
           </CardTitle>
         </CardHeader>
 
         <CardContent>
-          {/* Payment history table */}
           <table className="w-full">
             <thead>
               <tr className="border-b">
                 <th className="py-2 text-left">
-                  {t("subscription.invoice")}
+                  {t(
+                    "payment_history.invoice"
+                  )}
                 </th>
 
                 <th className="py-2 text-left">
-                  {t("subscription.plan")}
+                  {t(
+                    "payment_history.plan"
+                  )}
                 </th>
 
                 <th className="py-2 text-left">
-                  {t("subscription.amount")}
+                  {t(
+                    "payment_history.amount"
+                  )}
                 </th>
 
                 <th className="py-2 text-left">
-                  {t("subscription.status")}
+                  {t(
+                    "payment_history.status"
+                  )}
                 </th>
 
                 <th className="py-2 text-left">
-                  {t("subscription.date")}
+                  {t(
+                    "payment_history.date"
+                  )}
                 </th>
 
                 <th className="py-2 text-left">
-                  {t("subscription.action")}
+                  {t(
+                    "payment_history.action"
+                  )}
                 </th>
               </tr>
             </thead>
 
             <tbody>
-              {payments.map((payment) => (
-                <tr
-                  key={payment._id}
-                  className="border-b"
-                >
-                  <td className="py-3">
-                    {payment.invoiceNumber}
-                  </td>
-
-                  <td>{payment.plan}</td>
-
-                  <td>₹{payment.amount}</td>
-
-                  <td>{payment.status}</td>
-
-                  <td>
-                    {new Date(
-                      payment.paymentDate
-                    ).toLocaleDateString()}
-                  </td>
-
-                  <td className="py-3">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleViewInvoice(payment)
+              {payments.map(
+                (payment) => (
+                  <tr
+                    key={
+                      payment._id
+                    }
+                    className="border-b"
+                  >
+                    <td className="py-3">
+                      {
+                        payment.invoiceNumber
                       }
-                      className="text-blue-600 hover:underline"
-                    >
-                      {t("subscription.view")}
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+
+                    <td>
+                      {
+                        payment.plan
+                      }
+                    </td>
+
+                    <td>
+                      ₹
+                      {
+                        payment.amount
+                      }
+                    </td>
+
+                    <td>
+                      {
+                        payment.status
+                      }
+                    </td>
+
+                    <td>
+                      {new Date(
+                        payment.paymentDate
+                      ).toLocaleDateString()}
+                    </td>
+
+                    <td className="py-3">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleViewInvoice(
+                            payment
+                          )
+                        }
+                        className="text-blue-600 hover:underline"
+                      >
+                        {t(
+                          "actions.view_invoice"
+                        )}
+                      </button>
+                    </td>
+                  </tr>
+                )
+              )}
             </tbody>
           </table>
         </CardContent>
       </Card>
 
-      {/* Invoice modal */}
       <InvoiceModal
         open={open}
-        onClose={handleCloseInvoice}
-        payment={selectedPayment}
+        onClose={
+          handleCloseInvoice
+        }
+        payment={
+          selectedPayment
+        }
       />
     </>
   );

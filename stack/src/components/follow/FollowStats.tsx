@@ -16,7 +16,7 @@ export const FollowStats = ({
   userId,
 }: FollowStatsProps) => {
   const { t } =
-    useTranslation();
+    useTranslation("community");
 
   const router =
     useRouter();
@@ -78,8 +78,6 @@ export const FollowStats = ({
 
   return (
     <div className="flex items-center gap-5 text-sm">
-      {/* Followers */}
-
       <button
         type="button"
         onClick={
@@ -90,10 +88,10 @@ export const FollowStats = ({
         <span className="font-semibold">
           {followers}
         </span>{" "}
-        {t("user.followers")}
+        {t(
+          "follow.followers"
+        )}
       </button>
-
-      {/* Following */}
 
       <button
         type="button"
@@ -105,7 +103,9 @@ export const FollowStats = ({
         <span className="font-semibold">
           {following}
         </span>{" "}
-        {t("user.following")}
+        {t(
+          "follow.following"
+        )}
       </button>
     </div>
   );

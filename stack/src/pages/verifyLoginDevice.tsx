@@ -1,11 +1,17 @@
 import { useState } from "react";
+
 import { useRouter } from "next/router";
+
 import axios from "axios";
+
 import { toast } from "react-toastify";
+
 import { useTranslation } from "react-i18next";
 
 import { useAuth } from "@/lib/AuthContext";
+
 import axiosInstance from "@/lib/axiosinstance";
+
 import VerifyLoginDeviceForm from "@/components/auth/VerifyLoginDeviceForm";
 
 interface LoginVerificationData {
@@ -15,10 +21,16 @@ interface LoginVerificationData {
 
 const VerifyLoginDevice = () => {
   const router = useRouter();
-  const { t } = useTranslation();
-  const { completeLogin } = useAuth();
 
-  const [otp, setOtp] = useState("");
+  const { t } =
+    useTranslation("auth");
+
+  const { completeLogin } =
+    useAuth();
+
+  const [otp, setOtp] =
+    useState("");
+
   const [loading, setLoading] =
     useState(false);
 
@@ -34,11 +46,14 @@ const VerifyLoginDevice = () => {
         if (!storedData) {
           toast.error(
             t(
-              "toast.login_verification_session_not_found"
+              "login_device.messages.verification_session_not_found"
             )
           );
 
-          void router.push("/auth");
+          void router.push(
+            "/auth"
+          );
+
           return;
         }
 
@@ -58,7 +73,7 @@ const VerifyLoginDevice = () => {
         ) {
           toast.error(
             t(
-              "toast.please_enter_the_6_digit_otp"
+              "login_device.messages.enter_6_digit_otp"
             )
           );
 
@@ -99,31 +114,42 @@ const VerifyLoginDevice = () => {
 
         toast.success(
           t(
-            "toast.device_verified_and_login_successful"
+            "login_device.messages.device_verified_login_successful"
           )
         );
 
         void router.push("/");
+
       } catch (error: unknown) {
         if (
           axios.isAxiosError(
             error
           )
         ) {
-          toast.error(
+          console.error(
+            "Login device verification failed:",
             error.response?.data
               ?.message ||
-              t(
-                "toast.otp_verification_failed"
-              )
+              error.message
+          );
+
+          toast.error(
+            t(
+              "login_device.messages.otp_verification_failed"
+            )
           );
 
           return;
         }
 
+        console.error(
+          "Login device verification failed:",
+          error
+        );
+
         toast.error(
           t(
-            "toast.otp_verification_failed"
+            "login_device.messages.otp_verification_failed"
           )
         );
       } finally {

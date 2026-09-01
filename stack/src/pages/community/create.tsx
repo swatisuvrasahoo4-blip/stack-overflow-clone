@@ -62,7 +62,9 @@ const CreatePost = () => {
   const router = useRouter();
 
   const { user } = useAuth();
-  const { t } = useTranslation();
+
+  const { t } =
+    useTranslation("create_post");
 
   const imageInputRef =
     useRef<HTMLInputElement>(null);
@@ -401,7 +403,7 @@ const CreatePost = () => {
 
       alert(
         t(
-          "alert.post_created_successfully"
+          "messages.post_created_successfully"
         )
       );
 
@@ -416,15 +418,16 @@ const CreatePost = () => {
 
       console.error(
         "Failed to create post:",
-        error
+        apiError.response?.data
+          ?.message ||
+          apiError.message ||
+          error
       );
 
       alert(
-        apiError.response?.data
-          ?.message ||
-          t(
-            "alert.failed_to_create_post"
-          )
+        t(
+          "messages.failed_to_create_post"
+        )
       );
     } finally {
       setLoading(false);
@@ -437,7 +440,7 @@ const CreatePost = () => {
         {/* Page heading */}
         <h1 className="mb-6 text-2xl font-bold">
           {t(
-            "createpost.create_community_post"
+            "title.create_community_post"
           )}
         </h1>
 
@@ -483,6 +486,12 @@ const CreatePost = () => {
                           username
                         )
                       }
+                      aria-label={t(
+                        "accessibility.remove_mention",
+                        {
+                          username,
+                        }
+                      )}
                       className="font-semibold hover:text-purple-900"
                     >
                       ×
@@ -502,25 +511,25 @@ const CreatePost = () => {
           >
             <option value="Technical Update">
               {t(
-                "createpost.technical_update"
+                "post_types.technical_update"
               )}
             </option>
 
             <option value="Project Showcase">
               {t(
-                "createpost.project_showcase"
+                "post_types.project_showcase"
               )}
             </option>
 
             <option value="Learning Achievement">
               {t(
-                "createpost.learning_achievement"
+                "post_types.learning_achievement"
               )}
             </option>
 
             <option value="Code Snippet">
               {t(
-                "createpost.code_snippet"
+                "post_types.code_snippet"
               )}
             </option>
           </select>
@@ -624,10 +633,10 @@ const CreatePost = () => {
           >
             {loading
               ? t(
-                  "createpost.posting"
+                  "status.posting"
                 )
               : t(
-                  "createpost.create_post"
+                  "actions.create_post"
                 )}
           </button>
         </form>

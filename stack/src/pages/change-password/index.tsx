@@ -4,6 +4,7 @@ import {
 } from "react";
 
 import { useRouter } from "next/router";
+
 import { useTranslation } from "react-i18next";
 
 import { changePassword } from "@/components/services/changePasswordService";
@@ -27,7 +28,9 @@ const ChangePassword = () => {
   const router = useRouter();
 
   const { user } = useAuth();
-  const { t } = useTranslation();
+
+  const { t } =
+    useTranslation("auth");
 
   const [
     currentPassword,
@@ -60,6 +63,7 @@ const ChangePassword = () => {
   ] = useState("");
 
   // Change password
+
   const handleChangePassword =
     async (): Promise<void> => {
       setErrorMessage("");
@@ -72,7 +76,7 @@ const ChangePassword = () => {
       ) {
         setErrorMessage(
           t(
-            "error.please_fill_in_all_fields"
+            "change_password.messages.fill_all_fields"
           )
         );
 
@@ -90,8 +94,15 @@ const ChangePassword = () => {
             confirmPassword
           );
 
-        setSuccessMessage(
+        console.log(
+          "Change password response:",
           response.message
+        );
+
+        setSuccessMessage(
+          t(
+            "change_password.messages.password_changed_successfully"
+          )
         );
 
         setCurrentPassword("");
@@ -107,12 +118,18 @@ const ChangePassword = () => {
         const apiError =
           error as ApiError;
 
-        setErrorMessage(
+        console.error(
+          "Failed to change password:",
           apiError.response?.data
             ?.message ||
-            t(
-              "error.something_went_wrong"
-            )
+            apiError.message ||
+            error
+        );
+
+        setErrorMessage(
+          t(
+            "change_password.messages.failed_to_change_password"
+          )
         );
       } finally {
         setLoading(false);
@@ -120,6 +137,7 @@ const ChangePassword = () => {
     };
 
   // Redirect unauthenticated users
+
   useEffect(() => {
     if (!user) {
       void router.replace(
@@ -138,13 +156,13 @@ const ChangePassword = () => {
         {/* Page header */}
         <h1 className="mb-2 text-center text-3xl font-bold text-black">
           {t(
-            "changepass.change_password"
+            "change_password.title"
           )}
         </h1>
 
         <p className="mb-6 text-center text-gray-500">
           {t(
-            "changepass.update_your_account_password_securely"
+            "change_password.description"
           )}
         </p>
 
@@ -168,7 +186,7 @@ const ChangePassword = () => {
           className="mb-2 block text-sm font-semibold text-gray-700"
         >
           {t(
-            "changepass.current_password"
+            "change_password.labels.current_password"
           )}
         </label>
 
@@ -182,7 +200,7 @@ const ChangePassword = () => {
             )
           }
           placeholder={t(
-            "changepass.enter_current_password"
+            "change_password.placeholders.enter_current_password"
           )}
           className="mb-4 w-full rounded-lg border px-4 py-3 text-gray-700 outline-none focus:ring-2 focus:ring-orange-500"
         />
@@ -193,7 +211,7 @@ const ChangePassword = () => {
           className="mb-2 block text-sm font-semibold text-gray-700"
         >
           {t(
-            "changepass.new_password"
+            "change_password.labels.new_password"
           )}
         </label>
 
@@ -207,7 +225,7 @@ const ChangePassword = () => {
             )
           }
           placeholder={t(
-            "changepass.enter_new_password"
+            "change_password.placeholders.enter_new_password"
           )}
           className="mb-4 w-full rounded-lg border px-4 py-3 text-gray-700 outline-none focus:ring-2 focus:ring-orange-500"
         />
@@ -218,7 +236,7 @@ const ChangePassword = () => {
           className="mb-2 block text-sm font-semibold text-gray-700"
         >
           {t(
-            "changepass.confirm_password"
+            "change_password.labels.confirm_password"
           )}
         </label>
 
@@ -232,7 +250,7 @@ const ChangePassword = () => {
             )
           }
           placeholder={t(
-            "changepass.confirm_new_password"
+            "change_password.placeholders.confirm_new_password"
           )}
           className="mb-6 w-full rounded-lg border px-4 py-3 text-gray-700 outline-none focus:ring-2 focus:ring-orange-500"
         />
@@ -248,10 +266,10 @@ const ChangePassword = () => {
         >
           {loading
             ? t(
-                "changepass.changing_password"
+                "change_password.status.changing_password"
               )
             : t(
-                "changepass.change_password"
+                "change_password.actions.change_password"
               )}
         </button>
       </div>

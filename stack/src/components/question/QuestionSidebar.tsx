@@ -19,7 +19,9 @@ interface QuestionSidebarProps {
   downvotes: string[];
   currentUserId?: string;
   isBookmarked: boolean;
-  onVote: (vote: "upvote" | "downvote") => void;
+  onVote: (
+    vote: "upvote" | "downvote"
+  ) => void;
   onBookmark: () => void;
   question: Question;
   user: User | null;
@@ -57,7 +59,9 @@ const QuestionSidebar = ({
         <VoteToClose
           question={question}
           user={user}
-          onQuestionUpdate={onQuestionUpdate}
+          onQuestionUpdate={
+            onQuestionUpdate
+          }
         />
       )}
     </div>

@@ -6,15 +6,11 @@ import { useTranslation } from "react-i18next";
 
 interface CreatePostTypeFieldsProps {
   postType: string;
-
   projectTitle: string;
   projectLink: string;
-
   achievementTitle: string;
   achievementDescription: string;
-
   codeSnippet: string;
-
   onChange: (
     event: ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement
@@ -31,11 +27,11 @@ const CreatePostTypeFields = ({
   codeSnippet,
   onChange,
 }: CreatePostTypeFieldsProps) => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("create_post");
 
   return (
     <>
-      {/* Project showcase fields */}
       {postType ===
         "Project Showcase" && (
         <>
@@ -43,7 +39,7 @@ const CreatePostTypeFields = ({
             type="text"
             name="projectTitle"
             placeholder={t(
-              "createpost.project_title"
+              "type_fields.project_title"
             )}
             value={projectTitle}
             onChange={onChange}
@@ -54,7 +50,7 @@ const CreatePostTypeFields = ({
             type="url"
             name="projectLink"
             placeholder={t(
-              "createpost.github_or_live_demo_url"
+              "type_fields.github_or_live_demo_url"
             )}
             value={projectLink}
             onChange={onChange}
@@ -63,7 +59,6 @@ const CreatePostTypeFields = ({
         </>
       )}
 
-      {/* Learning achievement fields */}
       {postType ===
         "Learning Achievement" && (
         <>
@@ -71,7 +66,7 @@ const CreatePostTypeFields = ({
             type="text"
             name="achievementTitle"
             placeholder={t(
-              "createpost.achievement_title"
+              "type_fields.achievement_title"
             )}
             value={achievementTitle}
             onChange={onChange}
@@ -81,7 +76,7 @@ const CreatePostTypeFields = ({
           <textarea
             name="achievementDescription"
             placeholder={t(
-              "createpost.describe_your_achievement"
+              "type_fields.describe_achievement"
             )}
             value={
               achievementDescription
@@ -93,7 +88,6 @@ const CreatePostTypeFields = ({
         </>
       )}
 
-      {/* Code snippet field */}
       {postType ===
         "Code Snippet" && (
         <textarea
@@ -101,7 +95,7 @@ const CreatePostTypeFields = ({
           value={codeSnippet}
           onChange={onChange}
           placeholder={t(
-            "createpost.paste_your_code_snippet"
+            "type_fields.paste_code_snippet"
           )}
           className="min-h-40 w-full rounded border p-3 font-mono"
         />

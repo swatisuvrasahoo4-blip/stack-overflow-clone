@@ -4,13 +4,17 @@ import {
 } from "react";
 
 import Script from "next/script";
+
 import { useRouter } from "next/router";
 
 import { useTranslation } from "react-i18next";
+
 import { toast } from "react-toastify";
 
 import PlanCard from "@/components/subscription/PlanCard";
+
 import WhyUpgrade from "@/components/subscription/WhyUpgrade";
+
 import { ArrowLeft } from "lucide-react";
 
 import {
@@ -56,16 +60,13 @@ interface RazorpayOptions {
   name: string;
   description: string;
   order_id: string;
-
   handler: (
     response: RazorpayPaymentResponse
   ) => void | Promise<void>;
-
   prefill?: {
     name?: string;
     email?: string;
   };
-
   theme?: {
     color?: string;
   };
@@ -93,8 +94,11 @@ type PaidPlan =
   | "Gold";
 
 const SubscriptionPage = () => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("subscription");
+
   const router = useRouter();
+
   const { user } = useAuth();
 
   const [
@@ -103,6 +107,7 @@ const SubscriptionPage = () => {
   ] = useState(subscriptionPlans);
 
   // Load current subscription
+
   useEffect(() => {
     const loadSubscription =
       async (): Promise<void> => {
@@ -115,7 +120,6 @@ const SubscriptionPage = () => {
               previousPlans.map(
                 (plan) => ({
                   ...plan,
-
                   isCurrent:
                     plan.name.toLowerCase() ===
                     response.data.plan.toLowerCase(),
@@ -143,13 +147,14 @@ const SubscriptionPage = () => {
     )?.name ?? "";
 
   // Upgrade subscription
+
   const handleUpgrade = async (
     plan: PaidPlan
   ): Promise<void> => {
     if (!user) {
       toast.info(
         t(
-          "toast.please_login_to_continue"
+          "messages.please_login_to_continue"
         )
       );
 
@@ -176,7 +181,12 @@ const SubscriptionPage = () => {
           currency:
             order.currency,
           name: "CodeQuest",
-          description: `${plan} Subscription`,
+          description: t(
+            "payment.subscription_description",
+            {
+              plan,
+            }
+          ),
           order_id: order.id,
 
           handler: async (
@@ -190,7 +200,7 @@ const SubscriptionPage = () => {
 
               alert(
                 t(
-                  "alert.subscription_activated_successfully"
+                  "messages.subscription_activated_successfully"
                 )
               );
             } catch (
@@ -203,7 +213,7 @@ const SubscriptionPage = () => {
 
               alert(
                 t(
-                  "alert.payment_verification_failed"
+                  "messages.payment_verification_failed"
                 )
               );
             }
@@ -223,7 +233,9 @@ const SubscriptionPage = () => {
         !window.Razorpay
       ) {
         toast.error(
-          "Payment service is not loaded yet"
+          t(
+            "messages.payment_service_not_loaded"
+          )
         );
 
         return;
@@ -245,7 +257,7 @@ const SubscriptionPage = () => {
 
       toast.error(
         t(
-          "alert.something_went_wrong"
+          "messages.payment_order_failed"
         )
       );
     }
@@ -254,6 +266,7 @@ const SubscriptionPage = () => {
   return (
     <>
       {/* Razorpay checkout */}
+
       <Script
         src="https://checkout.razorpay.com/v1/checkout.js"
         strategy="afterInteractive"
@@ -261,37 +274,45 @@ const SubscriptionPage = () => {
 
       <div className="min-h-screen bg-gray-50">
         <div className="mx-auto max-w-7xl px-6 py-8">
-        
           {/* Back button */}
-<button
-  type="button"
-  onClick={() => router.back()}
-  aria-label="Go back"
-  className="fixed left-4 top-4 z-50 inline-flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white shadow-md transition hover:bg-gray-100 md:static md:mb-6 md:h-auto md:w-auto md:gap-2 md:rounded-lg md:px-4 md:py-2 md:text-sm md:font-medium md:text-gray-700 md:shadow-sm"
->
-  <ArrowLeft className="h-5 w-5 md:h-4 md:w-4 text-black" />
 
-  <span className="hidden md:inline">
-    Back
-  </span>
-</button>
+          <button
+            type="button"
+            onClick={() =>
+              router.back()
+            }
+            aria-label={t(
+              "accessibility.go_back"
+            )}
+            className="fixed left-4 top-4 z-50 inline-flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white shadow-md transition hover:bg-gray-100 md:static md:mb-6 md:h-auto md:w-auto md:gap-2 md:rounded-lg md:px-4 md:py-2 md:text-sm md:font-medium md:text-gray-700 md:shadow-sm"
+          >
+            <ArrowLeft className="h-5 w-5 text-black md:h-4 md:w-4" />
+
+            <span className="hidden md:inline">
+              {t(
+                "actions.back"
+              )}
+            </span>
+          </button>
 
           {/* Page header */}
+
           <div className="mb-12 text-center">
             <h1 className="text-4xl font-bold text-black">
               {t(
-                "subscription.subscriptionPlans"
+                "page.subscription_plans"
               )}
             </h1>
 
             <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
               {t(
-                "subscription.upgrade_membership_title"
+                "page.upgrade_membership_title"
               )}
             </p>
           </div>
 
           {/* Subscription plans */}
+
           <div className="mt-14 grid gap-8 md:grid-cols-2 xl:grid-cols-4">
             {plans.map(
               (plan) => (
@@ -327,6 +348,7 @@ const SubscriptionPage = () => {
           </div>
 
           {/* Upgrade benefits */}
+
           <WhyUpgrade />
         </div>
       </div>

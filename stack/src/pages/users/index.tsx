@@ -3,21 +3,30 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar";
+
 import { Input } from "@/components/ui/input";
+
 import Mainlayout from "@/layout/Mainlayout";
+
 import axiosInstance from "@/lib/axiosinstance";
+
 import {
   Calendar,
   Search,
   Star,
 } from "lucide-react";
+
 import Link from "next/link";
+
 import {
   useEffect,
   useState,
 } from "react";
+
 import { FollowButton } from "@/components/follow/FollowButton";
+
 import { useAuth } from "@/lib/AuthContext";
+
 import { useTranslation } from "react-i18next";
 
 type SubscriptionPlan =
@@ -43,7 +52,8 @@ interface UsersResponse {
 }
 
 const Index = () => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("profile");
 
   const [users, setUsers] =
     useState<UserItem[]>([]);
@@ -94,8 +104,10 @@ const Index = () => {
           });
 
           setUsers(sortedUsers);
+
         } catch (error: unknown) {
           console.log(error);
+
           setUsers([]);
         } finally {
           setLoading(false);
@@ -103,6 +115,7 @@ const Index = () => {
       };
 
     void fetchUsers();
+
   }, []);
 
   if (loading) {
@@ -119,7 +132,9 @@ const Index = () => {
     return (
       <Mainlayout>
         <div className="mt-4 text-center text-gray-500">
-          No users found.
+          {t(
+            "messages.no_users_found"
+          )}
         </div>
       </Mainlayout>
     );
@@ -130,19 +145,23 @@ const Index = () => {
       <div className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6">
 
         <h1 className="mb-6 text-xl font-semibold lg:text-2xl">
-          {t("user.users")}
+          {t(
+            "labels.users"
+          )}
         </h1>
 
         <div className="mb-6">
           <div className="relative max-w-md">
+
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
 
             <Input
               placeholder={t(
-                "user.filterByUser"
+                "placeholders.filter_by_user"
               )}
               className="pl-10"
             />
+
           </div>
         </div>
 
@@ -226,7 +245,9 @@ const Index = () => {
                           "Gold" && (
                           <div
                             className="flex h-8 w-8 items-center justify-center rounded-full bg-yellow-100"
-                            aria-label="Featured Gold User"
+                            aria-label={t(
+                              "accessibility.featured_gold_user"
+                            )}
                           >
                             <Star className="h-4 w-4 fill-yellow-500 text-yellow-500" />
                           </div>
@@ -249,9 +270,7 @@ const Index = () => {
                         </p>
 
                       </div>
-
                     </div>
-
                   </div>
 
                   <div className="mb-3 flex items-center text-sm text-gray-600">
@@ -259,7 +278,10 @@ const Index = () => {
                     <Calendar className="mr-1 h-4 w-4" />
 
                     <span>
-                      {t("user.joined")}{" "}
+                      {t(
+                        "labels.joined"
+                      )}{" "}
+
                       {profileUser.joinDate
                         ? new Date(
                             profileUser.joinDate
@@ -268,7 +290,6 @@ const Index = () => {
                     </span>
 
                   </div>
-
                 </div>
               </Link>
             );

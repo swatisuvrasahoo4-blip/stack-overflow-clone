@@ -4,6 +4,7 @@ import {
 } from "lucide-react";
 
 import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
 
 import {
   useEffect,
@@ -59,6 +60,9 @@ interface NotificationItem {
 
 const NotificationBell = () => {
   const router = useRouter();
+
+  const { t } =
+    useTranslation("notifications");
 
   const { user } =
     useAuth();
@@ -300,8 +304,6 @@ const NotificationBell = () => {
 
   return (
     <div className="relative">
-      {/* Notification button */}
-
       <button
         type="button"
         onClick={() =>
@@ -313,7 +315,9 @@ const NotificationBell = () => {
           )
         }
         className="relative flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-100"
-        aria-label="Notifications"
+        aria-label={t(
+          "accessibility.notifications"
+        )}
       >
         <Bell className="h-5 w-5" />
 
@@ -326,13 +330,13 @@ const NotificationBell = () => {
         )}
       </button>
 
-      {/* Notification menu */}
-
       {open && (
         <div className="absolute right-0 z-50 mt-2 w-80 overflow-hidden rounded-lg border bg-white shadow-xl sm:w-96">
           <div className="flex items-center justify-between border-b px-4 py-3">
             <h3 className="font-semibold">
-              Notifications
+              {t(
+                "title.notifications"
+              )}
             </h3>
 
             {unreadCount >
@@ -344,7 +348,9 @@ const NotificationBell = () => {
                 }
                 className="text-xs font-medium text-blue-600 hover:underline"
               >
-                Mark all as read
+                {t(
+                  "actions.mark_all_as_read"
+                )}
               </button>
             )}
           </div>
@@ -352,14 +358,16 @@ const NotificationBell = () => {
           <div className="max-h-96 overflow-y-auto">
             {loading ? (
               <p className="px-4 py-6 text-center text-sm text-gray-500">
-                Loading
-                notifications...
+                {t(
+                  "status.loading_notifications"
+                )}
               </p>
             ) : notifications.length ===
               0 ? (
               <p className="px-4 py-6 text-center text-sm text-gray-500">
-                No notifications
-                yet.
+                {t(
+                  "messages.no_notifications_yet"
+                )}
               </p>
             ) : (
               notifications.map(
@@ -373,7 +381,9 @@ const NotificationBell = () => {
                     notification
                       .senderId
                       ?.username ||
-                    "Someone";
+                    t(
+                      "labels.someone"
+                    );
 
                   return (
                     <div
@@ -395,8 +405,6 @@ const NotificationBell = () => {
                           : "bg-blue-50"
                       }`}
                     >
-                      {/* Sender avatar */}
-
                       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-100 font-semibold text-blue-700">
                         {senderName
                           .charAt(
@@ -404,8 +412,6 @@ const NotificationBell = () => {
                           )
                           .toUpperCase()}
                       </div>
-
-                      {/* Notification content */}
 
                       <div className="min-w-0 flex-1">
                         <p className="text-sm text-gray-800">
@@ -426,8 +432,6 @@ const NotificationBell = () => {
                         </p>
                       </div>
 
-                      {/* Delete notification */}
-
                       <button
                         type="button"
                         onClick={(
@@ -439,7 +443,9 @@ const NotificationBell = () => {
                           )
                         }
                         className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-red-600"
-                        aria-label="Delete notification"
+                        aria-label={t(
+                          "accessibility.delete_notification"
+                        )}
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>

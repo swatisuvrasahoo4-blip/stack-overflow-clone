@@ -29,11 +29,13 @@ interface AnswerItemProps {
   hasMounted: boolean;
   isQuestionOwner: boolean;
   hasAcceptedAnswer: boolean;
+
   onAnswerVoteSuccess: (
     answerId: string,
     upvotes: string[],
     downvotes: string[]
   ) => void;
+
   onDeleteAnswer: (answerId: string) => void;
   onAcceptAnswer: (answerId: string) => void;
 }
@@ -50,12 +52,10 @@ const AnswerItem = ({
   onDeleteAnswer,
   onAcceptAnswer,
 }: AnswerItemProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["answers", "community"]);
 
   return (
-    <Card
-      id={`answer-${answer._id}`}
-    >
+    <Card id={`answer-${answer._id}`}>
       <CardContent className="p-0">
         <div className="flex flex-col sm:flex-row">
           <AnswerVote
@@ -92,56 +92,63 @@ const AnswerItem = ({
                   className="text-gray-600 hover:text-gray-800"
                 >
                   <Flag className="w-4 h-4 mr-1" />
-                  {t("community.flag")}
+
+                  {t("actions.flag", {
+                    ns: "community",
+                  })}
                 </Button>
 
                 {hasMounted &&
-                  String(answer.userid) ===
-                    String(currentUserId) && (
+                  String(answer.userid) === String(currentUserId) && (
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() =>
-                        onDeleteAnswer(answer._id)
-                      }
+                      onClick={() => onDeleteAnswer(answer._id)}
                       className="text-red-600 hover:text-red-800"
                     >
                       <Trash className="w-4 h-4 mr-1" />
-                      {t("community.delete")}
+
+                      {t("actions.delete", {
+                        ns: "community",
+                      })}
                     </Button>
                   )}
 
                 {isQuestionOwner &&
-                  String(answer.userid) !==
-                    String(currentUserId) &&
+                  String(answer.userid) !== String(currentUserId) &&
                   !hasAcceptedAnswer && (
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() =>
-                        onAcceptAnswer(answer._id)
-                      }
+                      onClick={() => onAcceptAnswer(answer._id)}
                       className="text-green-600 bg-amber-50 border-green-600 hover:bg-green-50 hover:text-black"
                     >
-                      {t("community.acceptAnswer")}
+                      {t("actions.accept", {
+                        ns: "answers",
+                      })}
                     </Button>
                   )}
 
                 {answer.isAccepted && (
                   <span className="text-green-600 font-semibold text-sm">
-                    ✓ {t("community.acceptedAnswer")}
+                    ✓{" "}
+                    {t("status.accepted", {
+                      ns: "answers",
+                    })}
                   </span>
                 )}
               </div>
 
               <div className="flex items-center gap-2 text-sm">
                 <span className="text-gray-600">
-                  {t("community.answered")}{" "}
+                  {t("labels.answered", {
+                    ns: "answers",
+                  })}{" "}
                   {answer.answeredon
-                    ? new Date(
-                        answer.answeredon
-                      ).toLocaleDateString()
-                    : "Unknown date"}
+                    ? new Date(answer.answeredon).toLocaleDateString()
+                    : t("messages.unknown_date", {
+                        ns: "answers",
+                      })}
                 </span>
 
                 <Link
@@ -150,9 +157,7 @@ const AnswerItem = ({
                 >
                   <Avatar className="w-8 h-8">
                     <AvatarFallback className="text-sm">
-                      {answer.useranswered
-                        ?.charAt(0)
-                        .toUpperCase() || "U"}
+                      {answer.useranswered?.charAt(0).toUpperCase() || "U"}
                     </AvatarFallback>
                   </Avatar>
 

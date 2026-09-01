@@ -1,0 +1,15 @@
+{
+  "links": {
+    "about": "About",
+    "products": "Products",
+    "for_teams": "For Teams"
+  },
+  "actions": {
+    "login": "Log in",
+    "signup": "Sign up",
+    "logout": "Log out"
+  },
+  "placeholders": {
+    "search": "Search..."
+  }
+}

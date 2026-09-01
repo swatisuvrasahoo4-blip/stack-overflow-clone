@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { useTranslation } from "react-i18next";
 
 import {
   searchPosts,
@@ -71,6 +72,9 @@ interface SubscriptionResponse {
 const PAGE_LIMIT = 10;
 
 export default function SearchPage() {
+  const { t } =
+    useTranslation("search");
+
   const router = useRouter();
 
   const { q } = router.query;
@@ -647,10 +651,14 @@ export default function SearchPage() {
               className="py-8 text-center text-sm text-gray-500"
             >
               {loadingMore
-                ? "Loading more..."
+                ? t(
+                    "status.loading_more_results"
+                  )
                 : hasMore
                 ? ""
-                : "No more results"}
+                : t(
+                    "messages.no_more_results"
+                  )}
             </div>
           )}
       </main>

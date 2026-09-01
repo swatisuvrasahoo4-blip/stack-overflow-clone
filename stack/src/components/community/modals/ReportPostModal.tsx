@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 
 interface ReportPostModalProps {
   open: boolean;
+
   onClose: () => void;
 
   onSubmit: (
@@ -23,7 +24,8 @@ const ReportPostModal = ({
   onClose,
   onSubmit,
 }: ReportPostModalProps) => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("reports");
 
   const [reason, setReason] =
     useState("");
@@ -66,12 +68,19 @@ const ReportPostModal = ({
     }
   }, [open]);
 
-  if (
-    !mounted ||
-    !open
-  ) {
+  if (!mounted || !open) {
     return null;
   }
+
+  const reportReasons = [
+    "spam",
+    "harassment_or_hate",
+    "violence",
+    "nudity_or_sexual_content",
+    "misinformation",
+    "copyright",
+    "other",
+  ] as const;
 
   return createPortal(
     <div
@@ -84,60 +93,44 @@ const ReportPostModal = ({
           event.stopPropagation()
         }
       >
-        {/* Modal header */}
-
         <h2 className="text-lg font-semibold text-black">
-          {t(
-            "report.report_post"
-          )}
+          {t("post.title")}
         </h2>
 
         <p className="mt-1 text-sm text-gray-600">
-          {t(
-            "report.select_the_reason_for_reporting_this_post"
-          )}
+          {t("post.select_reason")}
         </p>
 
-        {/* Report reasons */}
-
         <div className="mt-4 space-y-3">
-          {[
-            "spam",
-            "harassment_or_hate",
-            "violence",
-            "nudity_or_sexual_content",
-            "misinformation",
-            "copyright",
-            "other",
-          ].map((item) => (
-            <label
-              key={item}
-              className="flex cursor-pointer items-center gap-3 rounded-md border p-3 hover:bg-gray-50"
-            >
-              <input
-                type="radio"
-                name="reportReason"
-                value={item}
-                checked={
-                  reason === item
-                }
-                onChange={(event) =>
-                  setReason(
-                    event.target.value
-                  )
-                }
-              />
+          {reportReasons.map(
+            (item) => (
+              <label
+                key={item}
+                className="flex cursor-pointer items-center gap-3 rounded-md border p-3 hover:bg-gray-50"
+              >
+                <input
+                  type="radio"
+                  name="reportReason"
+                  value={item}
+                  checked={
+                    reason === item
+                  }
+                  onChange={(event) =>
+                    setReason(
+                      event.target.value
+                    )
+                  }
+                />
 
-              <span className="text-sm text-gray-700">
-                {t(
-                  `report.${item}`
-                )}
-              </span>
-            </label>
-          ))}
+                <span className="text-sm text-gray-700">
+                  {t(
+                    `reasons.${item}`
+                  )}
+                </span>
+              </label>
+            )
+          )}
         </div>
-
-        {/* Other reason details */}
 
         {reason === "other" && (
           <textarea
@@ -148,23 +141,19 @@ const ReportPostModal = ({
               )
             }
             placeholder={t(
-              "report.explain_the_issue"
+              "post.explain_issue"
             )}
             className="mt-4 min-h-24 w-full rounded-md border p-3 text-sm outline-none focus:ring-2 focus:ring-blue-500"
           />
         )}
 
-        {/* Modal actions */}
-
         <div className="mt-6 flex justify-end gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md border px-4 py-2 text-sm hover:bg-gray-100 text-black"
+            className="rounded-md border px-4 py-2 text-sm text-black hover:bg-gray-100"
           >
-            {t(
-              "report.cancel"
-            )}
+            {t("actions.cancel")}
           </button>
 
           <button
@@ -183,7 +172,7 @@ const ReportPostModal = ({
             className="rounded-md bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {t(
-              "report.submit_report"
+              "actions.submit_report"
             )}
           </button>
         </div>

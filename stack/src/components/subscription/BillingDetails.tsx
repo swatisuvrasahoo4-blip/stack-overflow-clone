@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 import {
   Card,
   CardContent,
@@ -18,33 +20,60 @@ const BillingDetails = ({
   plan,
   amount,
 }: BillingDetailsProps) => {
+  const { t } =
+    useTranslation("subscription");
+
   return (
     <Card className="mt-8">
-      {/* Billing details header */}
       <CardHeader>
-        <CardTitle>Billing Details</CardTitle>
+        <CardTitle>
+          {t(
+            "billing.title"
+          )}
+        </CardTitle>
       </CardHeader>
 
-      {/* Billing information */}
       <CardContent className="space-y-3">
         <div className="flex justify-between">
-          <span className="text-gray-500">Name</span>
+          <span className="text-gray-500">
+            {t(
+              "billing.name"
+            )}
+          </span>
+
           <span>{name}</span>
         </div>
 
         <div className="flex justify-between">
-          <span className="text-gray-500">Email</span>
+          <span className="text-gray-500">
+            {t(
+              "billing.email"
+            )}
+          </span>
+
           <span>{email}</span>
         </div>
 
         <div className="flex justify-between">
-          <span className="text-gray-500">Plan</span>
+          <span className="text-gray-500">
+            {t(
+              "billing.plan"
+            )}
+          </span>
+
           <span>{plan}</span>
         </div>
 
         <div className="flex justify-between">
-          <span className="text-gray-500">Amount</span>
-          <span>₹{amount}</span>
+          <span className="text-gray-500">
+            {t(
+              "billing.amount"
+            )}
+          </span>
+
+          <span>
+            ₹{amount}
+          </span>
         </div>
       </CardContent>
     </Card>

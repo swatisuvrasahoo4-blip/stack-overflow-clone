@@ -30,7 +30,7 @@ const PostActions = ({
   setShowDeleteModal,
 }: PostActionsProps) => {
   const { t } =
-    useTranslation();
+    useTranslation("community");
 
   const currentUserId =
     user?.id ||
@@ -52,8 +52,6 @@ const PostActions = ({
 
   return (
     <div className="flex gap-3">
-      {/* Edit post */}
-
       <button
         type="button"
         onClick={(event) => {
@@ -62,10 +60,8 @@ const PostActions = ({
         }}
         className="text-sm text-blue-600 hover:underline"
       >
-        {t("community.edit")}
+        {t("actions.edit")}
       </button>
-
-      {/* Delete post */}
 
       <button
         type="button"
@@ -82,7 +78,7 @@ const PostActions = ({
         }}
         className="text-sm text-red-600 hover:underline"
       >
-        {t("community.delete")}
+        {t("actions.delete")}
       </button>
     </div>
   );

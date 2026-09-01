@@ -9,10 +9,8 @@ import PostHeader from "./PostHeader";
 import PostContent from "./PostContent";
 import PostInteractions from "./PostInteractions";
 import PostCommentInput from "./PostCommentInput";
-
 import CommentSection from "../CommentSection";
 import ReportPostModal from "../modals/ReportPostModal";
-
 import usePostReport from "@/hooks/usePostReport";
 
 import type {
@@ -125,10 +123,10 @@ const PostCard = ({
     user?._id ||
     user?.userId;
 
+  void handleDelete;
+
   return (
     <>
-      {/* Post card */}
-
       <div
         className={`mb-4 rounded-lg border p-5 ${
           post.isFeatured
@@ -136,16 +134,11 @@ const PostCard = ({
             : "bg-white"
         }`}
       >
-        {/* Post header */}
-
         <PostHeader
           post={post}
           user={user}
           currentUserId={
             currentUserId
-          }
-          handleDelete={
-            handleDelete
           }
           handleEdit={
             handleEdit
@@ -161,13 +154,9 @@ const PostCard = ({
           }
         />
 
-        {/* Post content */}
-
         <PostContent
           post={post}
         />
-
-        {/* Post interactions */}
 
         <PostInteractions
           post={post}
@@ -201,15 +190,11 @@ const PostCard = ({
           }
         />
 
-        {/* Comment input */}
-
         <PostCommentInput
           postId={
             post._id
           }
-          user={
-            user
-          }
+          user={user}
           commentText={
             commentText
           }
@@ -224,15 +209,9 @@ const PostCard = ({
           }
         />
 
-        {/* Comments and replies */}
-
         <CommentSection
-          post={
-            post
-          }
-          user={
-            user
-          }
+          post={post}
+          user={user}
           expandedComments={
             expandedComments
           }
@@ -268,8 +247,6 @@ const PostCard = ({
           }
         />
       </div>
-
-      {/* Report post modal */}
 
       <ReportPostModal
         open={

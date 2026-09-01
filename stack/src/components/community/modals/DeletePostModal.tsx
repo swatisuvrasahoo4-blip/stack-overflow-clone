@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 interface DeletePostModalProps {
   open: boolean;
   onClose: () => void;
@@ -9,6 +11,9 @@ const DeletePostModal = ({
   onClose,
   onConfirm,
 }: DeletePostModalProps) => {
+  const { t } =
+    useTranslation("community");
+
   if (!open) {
     return null;
   }
@@ -16,17 +21,17 @@ const DeletePostModal = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-xl">
-        {/* Modal content */}
-
         <h2 className="text-lg font-semibold">
-          Delete Post
+          {t(
+            "delete_post.title"
+          )}
         </h2>
 
         <p className="mt-2 text-gray-600">
-          Are you sure you want to delete this post?
+          {t(
+            "delete_post.confirmation"
+          )}
         </p>
-
-        {/* Modal actions */}
 
         <div className="mt-6 flex justify-end gap-3">
           <button
@@ -34,7 +39,9 @@ const DeletePostModal = ({
             onClick={onClose}
             className="rounded-lg border px-4 py-2"
           >
-            No
+            {t(
+              "actions.no"
+            )}
           </button>
 
           <button
@@ -44,7 +51,9 @@ const DeletePostModal = ({
             }}
             className="rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700"
           >
-            Yes, Delete
+            {t(
+              "actions.yes_delete"
+            )}
           </button>
         </div>
       </div>

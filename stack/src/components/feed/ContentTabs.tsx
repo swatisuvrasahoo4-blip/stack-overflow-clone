@@ -22,18 +22,17 @@ const ContentTabs = ({
   activeContent,
   setActiveContent,
 }: ContentTabsProps) => {
-  const { t } =
-    useTranslation();
+  const { t } = useTranslation([
+    "questions",
+    "community",
+  ]);
 
-  const router =
-    useRouter();
+  const router = useRouter();
 
   const handleContentChange = (
     content: ContentType
   ) => {
-    setActiveContent(
-      content
-    );
+    setActiveContent(content);
 
     void router.push(
       {
@@ -67,9 +66,9 @@ const ContentTabs = ({
             : "bg-gray-200 text-gray-700 hover:bg-gray-300"
         }`}
       >
-        {t(
-          "community.questions"
-        )}
+        {t("labels.questions", {
+          ns: "questions",
+        })}
       </button>
 
       {/* Posts tab */}
@@ -88,9 +87,9 @@ const ContentTabs = ({
             : "bg-gray-200 text-gray-700 hover:bg-gray-300"
         }`}
       >
-        {t(
-          "community.posts"
-        )}
+        {t("feed.posts", {
+          ns: "community",
+        })}
       </button>
     </div>
   );

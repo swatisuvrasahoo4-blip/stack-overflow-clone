@@ -1,18 +1,22 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
+
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+
 import { createSupportRequest } from "@/components/services/supportService";
 import { getSubscription } from "../services/subscriptionService";
 
@@ -26,13 +30,22 @@ const SupportModal = ({
   onOpenChange,
 }: SupportModalProps) => {
   const router = useRouter();
-  const { t } = useTranslation();
 
-  const [subject, setSubject] = useState("");
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { t } =
+    useTranslation("support");
+
+  const [subject, setSubject] =
+    useState("");
+
+  const [message, setMessage] =
+    useState("");
+
+  const [loading, setLoading] =
+    useState(false);
+
   const [currentPlan, setCurrentPlan] =
     useState("Free");
+
   const [planLoading, setPlanLoading] =
     useState(true);
 
@@ -49,7 +62,8 @@ const SupportModal = ({
       try {
         setPlanLoading(true);
 
-        const response = await getSubscription();
+        const response =
+          await getSubscription();
 
         setCurrentPlan(
           response.data.plan || "Free"
@@ -70,12 +84,16 @@ const SupportModal = ({
   }, [open]);
 
   const handleSubmit = async () => {
-    if (!subject.trim() || !message.trim()) {
+    if (
+      !subject.trim() ||
+      !message.trim()
+    ) {
       alert(
         t(
-          "alert.please_enter_subject_and_message"
+          "messages.please_enter_subject_and_message"
         )
       );
+
       return;
     }
 
@@ -92,26 +110,29 @@ const SupportModal = ({
 
       alert(
         t(
-          "alert.support_request_submitted_successfully"
+          "messages.support_request_submitted_successfully"
         )
       );
 
       onOpenChange(false);
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        alert(
-          error.response?.data?.message ||
-            t(
-              "alert.failed_to_submit_support_request"
-            )
+        console.error(
+          "Failed to submit support request:",
+          error.response?.data?.message
         );
       } else {
-        alert(
-          t(
-            "alert.failed_to_submit_support_request"
-          )
+        console.error(
+          "Failed to submit support request:",
+          error
         );
       }
+
+      alert(
+        t(
+          "messages.failed_to_submit_support_request"
+        )
+      );
     } finally {
       setLoading(false);
     }
@@ -130,29 +151,31 @@ const SupportModal = ({
       <DialogContent className="bg-white text-gray-900 sm:max-w-md">
         <DialogHeader>
           <DialogTitle>
-            {t("support.help_&_support")}
+            {t("title.help_and_support")}
           </DialogTitle>
         </DialogHeader>
 
-        {/* Subscription loading */}
         {planLoading ? (
           <div className="py-8 text-center text-gray-500">
-            {t("support.checking_your_plan")}
+            {t(
+              "status.checking_your_plan"
+            )}
           </div>
         ) : !hasPrioritySupport ? (
-          /* Upgrade required */
           <div className="space-y-4 py-3">
             <div className="rounded-lg bg-orange-50 p-4">
               <p className="font-medium text-gray-900">
-                {t("support.priority_support")}
+                {t(
+                  "priority.priority_support"
+                )}
               </p>
 
               <p className="mt-2 text-sm text-gray-600">
                 {t(
-                  "support.priority_support_is_available_for_silver_and_gold_members"
+                  "priority.available_for_silver_and_gold"
                 )}{" "}
                 {t(
-                  "support.upgrade_your_plan_to_contact_our_priority_support_team"
+                  "priority.upgrade_to_contact_team"
                 )}
               </p>
             </div>
@@ -162,54 +185,67 @@ const SupportModal = ({
               onClick={handleUpgradePlan}
               className="w-full bg-orange-500 text-white hover:bg-orange-600"
             >
-              {t("support.upgrade_plan")}
+              {t(
+                "actions.upgrade_plan"
+              )}
             </Button>
           </div>
         ) : (
-          /* Support request form */
           <div className="space-y-4">
             <p className="text-sm text-gray-500">
               {currentPlan === "Gold"
                 ? `${t(
-                    "support.gold_member"
+                    "members.gold_member"
                   )} — ${t(
-                    "support.highest_priority_support"
+                    "priority.highest_priority_support"
                   )}`
                 : `${t(
-                    "support.silver_member"
+                    "members.silver_member"
                   )} — ${t(
-                    "support.priority_support"
+                    "priority.priority_support"
                   )}`}
             </p>
 
             <Input
-              placeholder={t("support.subject")}
+              placeholder={t(
+                "placeholders.subject"
+              )}
               value={subject}
               onChange={(event) =>
-                setSubject(event.target.value)
+                setSubject(
+                  event.target.value
+                )
               }
             />
 
             <Textarea
               placeholder={t(
-                "support.describe_your_issue"
+                "placeholders.describe_your_issue"
               )}
               value={message}
               onChange={(event) =>
-                setMessage(event.target.value)
+                setMessage(
+                  event.target.value
+                )
               }
               rows={5}
             />
 
             <Button
               type="button"
-              onClick={() => void handleSubmit()}
+              onClick={() =>
+                void handleSubmit()
+              }
               disabled={loading}
               className="w-full bg-orange-500 text-white hover:bg-orange-600"
             >
               {loading
-                ? t("support.submitting")
-                : t("support.submit_request")}
+                ? t(
+                    "status.submitting"
+                  )
+                : t(
+                    "actions.submit_request"
+                  )}
             </Button>
           </div>
         )}

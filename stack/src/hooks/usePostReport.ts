@@ -21,7 +21,11 @@ const usePostReport = ({
   user,
 }: UsePostReportProps) => {
   const router = useRouter();
-  const { t } = useTranslation();
+
+  const { t } = useTranslation([
+    "community",
+    "reports",
+  ]);
 
   const [
     showReportModal,
@@ -33,12 +37,14 @@ const usePostReport = ({
       if (!user) {
         toast.info(
           t(
-            "toast.please_login_to_continue"
+            "messages.please_login_to_continue",
+            {
+              ns: "community",
+            }
           )
         );
 
         void router.push("/auth");
-
         return;
       }
 
@@ -49,7 +55,11 @@ const usePostReport = ({
       if (reputation < 500) {
         alert(
           t(
-            `alert.you_need_atleast_least_500_reputation_points_to_report_inappropriate_content_your_current_reputation_is,${reputation}`
+            "messages.post_report_reputation_required",
+            {
+              ns: "reports",
+              reputation,
+            }
           )
         );
 
@@ -67,7 +77,10 @@ const usePostReport = ({
         ) {
           alert(
             t(
-              "alert.you_have_already_reported_this_post"
+              "messages.post_already_reported",
+              {
+                ns: "reports",
+              }
             )
           );
 
@@ -83,41 +96,53 @@ const usePostReport = ({
 
         alert(
           t(
-            "alert.failed_to_check_report_status"
+            "messages.failed_to_check_report_status",
+            {
+              ns: "reports",
+            }
           )
         );
       }
     };
 
-  const handleReportSubmit = async (
-    reason: string,
-    details: string
-  ): Promise<void> => {
-    try {
-      await createReport({
-        postId,
-        reason,
-        details,
-      });
+  const handleReportSubmit =
+    async (
+      reason: string,
+      details: string
+    ): Promise<void> => {
+      try {
+        await createReport({
+          postId,
+          reason,
+          details,
+        });
 
-      alert(
-        t(
-          "alert.post_reported_successfully"
-        )
-      );
+        alert(
+          t(
+            "messages.post_reported_successfully",
+            {
+              ns: "reports",
+            }
+          )
+        );
 
-      setShowReportModal(false);
-    } catch (error: unknown) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : t(
-              "alert.failed_to_report_post"
-            );
+        setShowReportModal(false);
+      } catch (error: unknown) {
+        console.error(
+          "Failed to report post:",
+          error
+        );
 
-      alert(message);
-    }
-  };
+        alert(
+          t(
+            "messages.failed_to_report_post",
+            {
+              ns: "reports",
+            }
+          )
+        );
+      }
+    };
 
   const handleCloseReport = () => {
     setShowReportModal(false);

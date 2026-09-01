@@ -43,7 +43,8 @@ type ConnectionTab =
   | "following";
 
 const ConnectionsPage = () => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("profile");
 
   const router = useRouter();
 
@@ -168,7 +169,9 @@ const ConnectionsPage = () => {
 
           setProfileName(
             matchedUser?.name ||
-              "User"
+              t(
+                "labels.unknown_user"
+              )
           );
         } catch (
           error: unknown
@@ -179,13 +182,15 @@ const ConnectionsPage = () => {
           );
 
           setProfileName(
-            "User"
+            t(
+              "labels.unknown_user"
+            )
           );
         }
       };
 
     void loadProfileName();
-  }, [id]);
+  }, [id, t]);
 
   // Change connection tab
   const handleTabChange = (
@@ -245,23 +250,31 @@ const ConnectionsPage = () => {
       <main className="min-h-screen w-full bg-gray-50 px-4 py-6 sm:px-6 lg:px-8">
         <div className="mx-auto w-full max-w-2xl">
           {/* Back button */}
+
           <button
             type="button"
             onClick={
               handleBack
             }
+            aria-label={t(
+              "actions.back"
+            )}
             className="mb-4 inline-flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-200 hover:text-gray-900"
           >
             <ArrowLeft className="h-5 w-5" />
 
             <span>
-              Back
+              {t(
+                "actions.back"
+              )}
             </span>
           </button>
 
           {/* Connections card */}
+
           <section className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
             {/* Header */}
+
             <div className="border-b border-gray-200 px-5 py-5 sm:px-6">
               <div className="flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-full bg-blue-100 text-blue-600">
@@ -277,10 +290,10 @@ const ConnectionsPage = () => {
                     {activeTab ===
                     "followers"
                       ? t(
-                          "user.followers"
+                          "connections.followers"
                         )
                       : t(
-                          "user.following"
+                          "connections.following"
                         )}
                   </p>
                 </div>
@@ -288,6 +301,7 @@ const ConnectionsPage = () => {
             </div>
 
             {/* Tabs */}
+
             <div className="flex border-b border-gray-200 px-5 sm:px-6">
               <button
                 type="button"
@@ -304,7 +318,7 @@ const ConnectionsPage = () => {
                 }`}
               >
                 {t(
-                  "user.followers"
+                  "connections.followers"
                 )}
 
                 {activeTab ===
@@ -328,7 +342,7 @@ const ConnectionsPage = () => {
                 }`}
               >
                 {t(
-                  "user.following"
+                  "connections.following"
                 )}
 
                 {activeTab ===
@@ -339,36 +353,52 @@ const ConnectionsPage = () => {
             </div>
 
             {/* Connections list */}
+
             <div className="p-4 sm:p-5">
               {loading ? (
                 /* Loading state */
+
                 <div className="flex min-h-40 items-center justify-center">
                   <p className="text-sm text-gray-500">
-                    Loading...
+                    {t(
+                      "status.loading_connections"
+                    )}
                   </p>
                 </div>
               ) : validUsers.length ===
                 0 ? (
                 /* Empty state */
+
                 <div className="flex min-h-40 flex-col items-center justify-center text-center">
                   <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
                     <UserRound className="h-6 w-6 text-gray-400" />
                   </div>
 
                   <p className="font-medium text-gray-700">
-                    No{" "}
-                    {activeTab}{" "}
-                    found
+                    {activeTab ===
+                    "followers"
+                      ? t(
+                          "connections.no_followers_found"
+                        )
+                      : t(
+                          "connections.no_following_found"
+                        )}
                   </p>
 
                   <p className="mt-1 text-sm text-gray-500">
-                    There are no{" "}
-                    {activeTab}{" "}
-                    to display yet.
+                    {activeTab ===
+                    "followers"
+                      ? t(
+                          "connections.no_followers_to_display"
+                        )
+                      : t(
+                          "connections.no_following_to_display"
+                        )}
                   </p>
                 </div>
               ) : (
                 /* Users */
+
                 <div className="space-y-3">
                   {validUsers.map(
                     (item) => {
@@ -398,6 +428,7 @@ const ConnectionsPage = () => {
                           className="group flex w-full items-center gap-4 rounded-xl border border-gray-200 bg-white p-4 text-left transition hover:border-blue-200 hover:bg-blue-50/40 hover:shadow-sm"
                         >
                           {/* Avatar */}
+
                           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-blue-100 text-lg font-semibold text-blue-700">
                             {profileUser.name
                               .charAt(
@@ -407,6 +438,7 @@ const ConnectionsPage = () => {
                           </div>
 
                           {/* User information */}
+
                           <div className="min-w-0 flex-1">
                             <p className="truncate font-semibold text-gray-900 transition group-hover:text-blue-600">
                               {
@@ -434,8 +466,11 @@ const ConnectionsPage = () => {
                           </div>
 
                           {/* View user */}
+
                           <span className="hidden text-sm font-medium text-blue-600 sm:block">
-                            View profile
+                            {t(
+                              "actions.view_profile"
+                            )}
                           </span>
                         </button>
                       );

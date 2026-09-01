@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
-
 import type {
   Dispatch,
   SetStateAction,
 } from "react";
+import { useTranslation } from "react-i18next";
 
 import type { Post } from "@/types/community";
 
@@ -107,6 +107,9 @@ const EditPostModal = ({
 
   handleSaveEdit,
 }: EditPostModalProps) => {
+  const { t } =
+    useTranslation("community");
+
   useEffect(() => {
     if (!editingPost) {
       return;
@@ -197,27 +200,26 @@ const EditPostModal = ({
           event.stopPropagation()
         }
       >
-        {/* Modal header */}
-
         <div className="mb-5 flex items-center justify-between">
           <h2 className="text-xl font-semibold">
-            Edit Post
+            {t("edit_post.title")}
           </h2>
 
           <button
             type="button"
             onClick={handleClose}
             className="text-2xl leading-none text-gray-500 hover:text-gray-800"
+            aria-label={t(
+              "edit_post.close_modal"
+            )}
           >
             ×
           </button>
         </div>
 
-        {/* Main post content */}
-
         <div>
           <label className="mb-2 block text-sm font-medium text-gray-700">
-            Content
+            {t("edit_post.content")}
           </label>
 
           <textarea
@@ -231,15 +233,15 @@ const EditPostModal = ({
               event.stopPropagation()
             }
             className="min-h-160px w-full resize-y rounded-md border p-3 outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Edit your post..."
+            placeholder={t(
+              "edit_post.edit_post_placeholder"
+            )}
           />
         </div>
 
-        {/* Hashtags */}
-
         <div className="mt-5">
           <label className="mb-2 block text-sm font-medium text-gray-700">
-            Hashtags
+            {t("edit_post.hashtags")}
           </label>
 
           <div className="flex gap-2">
@@ -263,7 +265,9 @@ const EditPostModal = ({
                   handleAddTag();
                 }
               }}
-              placeholder="Add a hashtag"
+              placeholder={t(
+                "edit_post.add_hashtag"
+              )}
               className="flex-1 rounded-md border px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
             />
 
@@ -275,6 +279,9 @@ const EditPostModal = ({
                 handleAddTag();
               }}
               className="rounded-md bg-blue-600 px-4 py-2 text-xl font-semibold text-white hover:bg-blue-700"
+              aria-label={t(
+                "edit_post.add_hashtag"
+              )}
             >
               +
             </button>
@@ -304,6 +311,12 @@ const EditPostModal = ({
                         );
                       }}
                       className="ml-1 text-base font-semibold text-blue-600 hover:text-red-600"
+                      aria-label={t(
+                        "edit_post.remove_hashtag",
+                        {
+                          tag,
+                        }
+                      )}
                     >
                       ×
                     </button>
@@ -313,11 +326,9 @@ const EditPostModal = ({
           </div>
         </div>
 
-        {/* Image */}
-
         <div className="mt-5">
           <label className="mb-2 block text-sm font-medium text-gray-700">
-            Image
+            {t("edit_post.image")}
           </label>
 
           {(editImage ||
@@ -332,7 +343,9 @@ const EditPostModal = ({
                     : editingPost.image ??
                       ""
                 }
-                alt="Post image"
+                alt={t(
+                  "accessibility.post_image"
+                )}
                 className="max-h-48 max-w-full rounded-lg object-cover"
               />
 
@@ -353,7 +366,9 @@ const EditPostModal = ({
                   }
                 }}
                 className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-red-600 text-lg font-bold text-white shadow hover:bg-red-700"
-                aria-label="Remove image"
+                aria-label={t(
+                  "edit_post.remove_image"
+                )}
               >
                 ×
               </button>
@@ -379,25 +394,32 @@ const EditPostModal = ({
           {!editImage &&
             !editingPost.image && (
               <p className="mt-2 text-sm text-red-600">
-                No file chosen
+                {t(
+                  "edit_post.no_file_chosen"
+                )}
               </p>
             )}
 
           {editImage && (
             <p className="mt-2 text-sm text-gray-500">
-              Selected:{" "}
-              {editImage.name}
+              {t(
+                "edit_post.selected_file",
+                {
+                  fileName:
+                    editImage.name,
+                }
+              )}
             </p>
           )}
         </div>
-
-        {/* Project fields */}
 
         {editingPost.postType ===
           "project" && (
           <div className="mt-5 rounded-lg border p-4">
             <h3 className="mb-4 font-semibold">
-              Project Showcase
+              {t(
+                "edit_post.project_showcase"
+              )}
             </h3>
 
             <input
@@ -413,7 +435,9 @@ const EditPostModal = ({
               onClick={(event) =>
                 event.stopPropagation()
               }
-              placeholder="Project title"
+              placeholder={t(
+                "edit_post.project_title"
+              )}
               className="mb-3 w-full rounded-md border px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
             />
 
@@ -430,19 +454,21 @@ const EditPostModal = ({
               onClick={(event) =>
                 event.stopPropagation()
               }
-              placeholder="Project link"
+              placeholder={t(
+                "edit_post.project_link"
+              )}
               className="w-full rounded-md border px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
         )}
 
-        {/* Achievement fields */}
-
         {editingPost.postType ===
           "achievement" && (
           <div className="mt-5 rounded-lg border p-4">
             <h3 className="mb-4 font-semibold">
-              Learning Achievement
+              {t(
+                "edit_post.learning_achievement"
+              )}
             </h3>
 
             <input
@@ -458,7 +484,9 @@ const EditPostModal = ({
               onClick={(event) =>
                 event.stopPropagation()
               }
-              placeholder="Achievement title"
+              placeholder={t(
+                "edit_post.achievement_title"
+              )}
               className="mb-3 w-full rounded-md border px-3 py-2 outline-none focus:ring-2 focus:ring-blue-500"
             />
 
@@ -474,19 +502,21 @@ const EditPostModal = ({
               onClick={(event) =>
                 event.stopPropagation()
               }
-              placeholder="Achievement description"
+              placeholder={t(
+                "edit_post.achievement_description"
+              )}
               className="min-h-100px w-full rounded-md border p-3 outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
         )}
 
-        {/* Code fields */}
-
         {editingPost.postType ===
           "code" && (
           <div className="mt-5">
             <label className="mb-2 block text-sm font-medium text-gray-700">
-              Code Snippet
+              {t(
+                "edit_post.code_snippet"
+              )}
             </label>
 
             <textarea
@@ -501,13 +531,13 @@ const EditPostModal = ({
               onClick={(event) =>
                 event.stopPropagation()
               }
-              placeholder="Edit your code..."
+              placeholder={t(
+                "edit_post.edit_code"
+              )}
               className="min-h-180px w-full rounded-md border bg-gray-50 p-3 font-mono text-sm outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
         )}
-
-        {/* Modal actions */}
 
         <div className="mt-6 flex justify-end gap-3 border-t pt-4">
           <button
@@ -515,7 +545,7 @@ const EditPostModal = ({
             onClick={handleClose}
             className="rounded-md border px-4 py-2 text-gray-700 hover:bg-gray-50"
           >
-            Cancel
+            {t("actions.cancel")}
           </button>
 
           <button
@@ -525,7 +555,9 @@ const EditPostModal = ({
             }
             className="rounded-md bg-blue-600 px-5 py-2 text-white hover:bg-blue-700"
           >
-            Save Changes
+            {t(
+              "edit_post.save_changes"
+            )}
           </button>
         </div>
       </div>

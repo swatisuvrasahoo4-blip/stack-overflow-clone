@@ -3,8 +3,9 @@
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { voteAnswer } from "./services/answerVoteService";
 import { useTranslation } from "react-i18next";
+
+import { voteAnswer } from "./services/answerVoteService";
 
 interface AnswerVoteProps {
   questionId: string;
@@ -41,7 +42,7 @@ const AnswerVote = ({
   answerUserId,
   onVoteSuccess,
 }: AnswerVoteProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("answers");
 
   const hasUpvoted = currentUserId
     ? upvotes.includes(currentUserId)
@@ -51,19 +52,27 @@ const AnswerVote = ({
     ? downvotes.includes(currentUserId)
     : false;
 
-  const score = upvotes.length - downvotes.length;
+  const score =
+    upvotes.length - downvotes.length;
 
   const handleVote = async (
     voteType: "upvote" | "downvote"
   ): Promise<void> => {
     if (!currentUserId) {
-      toast.error(t("toast.please_login_to_vote"));
+      toast.error(
+        t("messages.please_login_to_vote")
+      );
       return;
     }
 
-    if (String(currentUserId) === String(answerUserId)) {
+    if (
+      String(currentUserId) ===
+      String(answerUserId)
+    ) {
       toast.error(
-        t("toast.you_cannot_vote_on_your_own_answer")
+        t(
+          "messages.cannot_vote_on_own_answer"
+        )
       );
       return;
     }
@@ -75,10 +84,12 @@ const AnswerVote = ({
         voteType
       )) as VoteResponse;
 
-      const updatedAnswer = response.data.answer.find(
-        (answer) =>
-          String(answer._id) === String(answerId)
-      );
+      const updatedAnswer =
+        response.data.answer.find(
+          (answer) =>
+            String(answer._id) ===
+            String(answerId)
+        );
 
       if (updatedAnswer) {
         onVoteSuccess(
@@ -89,15 +100,22 @@ const AnswerVote = ({
       }
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        toast.error(
-          error.response?.data?.message ||
-            t("toast.failed_to_vote_on_answer")
+        console.error(
+          "Failed to vote on answer:",
+          error.response?.data?.message
         );
       } else {
-        toast.error(
-          t("toast.failed_to_vote_on_answer")
+        console.error(
+          "Failed to vote on answer:",
+          error
         );
       }
+
+      toast.error(
+        t(
+          "messages.failed_to_vote_on_answer"
+        )
+      );
     }
   };
 
@@ -105,13 +123,17 @@ const AnswerVote = ({
     <div className="flex items-center justify-center gap-2 p-4 sm:flex-col sm:px-5">
       <button
         type="button"
-        onClick={() => handleVote("upvote")}
+        onClick={() =>
+          void handleVote("upvote")
+        }
         className={`rounded-full p-2 transition-colors ${
           hasUpvoted
             ? "bg-orange-100 text-orange-600"
             : "text-gray-500 hover:bg-gray-100"
         }`}
-        aria-label="Upvote answer"
+        aria-label={t(
+          "accessibility.upvote_answer"
+        )}
       >
         <ChevronUp className="h-6 w-6" />
       </button>
@@ -122,13 +144,17 @@ const AnswerVote = ({
 
       <button
         type="button"
-        onClick={() => handleVote("downvote")}
+        onClick={() =>
+          void handleVote("downvote")
+        }
         className={`rounded-full p-2 transition-colors ${
           hasDownvoted
             ? "bg-blue-100 text-blue-600"
             : "text-gray-500 hover:bg-gray-100"
         }`}
-        aria-label="Downvote answer"
+        aria-label={t(
+          "accessibility.downvote_answer"
+        )}
       >
         <ChevronDown className="h-6 w-6" />
       </button>

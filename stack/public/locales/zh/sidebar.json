@@ -1,0 +1,21 @@
+{
+  "links": {
+    "home": "首页",
+    "questions": "问题",
+    "ai_assist": "AI 助手",
+    "labs": "实验室",
+    "tags": "标签",
+    "users": "用户",
+    "community": "社区",
+    "saves": "已保存",
+    "challenges": "挑战",
+    "chat": "聊天",
+    "articles": "文章",
+    "companies": "公司",
+    "subscription": "订阅",
+    "admin": "管理员"
+  },
+  "badges": {
+    "new": "新"
+  }
+}

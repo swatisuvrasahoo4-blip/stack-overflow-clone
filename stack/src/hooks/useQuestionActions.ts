@@ -1,5 +1,10 @@
 "use client";
 
+import type {
+  Dispatch,
+  SetStateAction,
+} from "react";
+
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
@@ -23,8 +28,9 @@ interface UseQuestionActionsProps {
   question: Question;
   user: User | null;
   currentUserId?: string;
-  setQuestion: React.Dispatch<
-    React.SetStateAction<Question | null>
+
+  setQuestion: Dispatch<
+    SetStateAction<Question | null>
   >;
 }
 
@@ -35,17 +41,21 @@ const useQuestionActions = ({
   setQuestion,
 }: UseQuestionActionsProps) => {
   const router = useRouter();
-  const { t } = useTranslation();
+
+  const { t } =
+    useTranslation("questions");
 
   const handleVote = async (
     vote: "upvote" | "downvote"
-  ) => {
+  ): Promise<void> => {
     if (!user) {
       toast.info(
-        t("toast.please_login_to_continue")
+        t(
+          "messages.please_login_to_continue"
+        )
       );
 
-      router.push("/auth");
+      void router.push("/auth");
       return;
     }
 
@@ -56,7 +66,7 @@ const useQuestionActions = ({
     if (isOwnQuestion) {
       toast.info(
         t(
-          "toast.you_cannot_vote_on_your_own_question"
+          "messages.cannot_vote_on_own_question"
         )
       );
 
@@ -64,125 +74,131 @@ const useQuestionActions = ({
     }
 
     try {
-      const response = await voteQuestion(
-        String(question._id),
-        vote,
-        String(currentUserId)
-      );
+      const response =
+        await voteQuestion(
+          String(question._id),
+          vote,
+          String(currentUserId)
+        );
 
       setQuestion(response.data);
 
       toast.success(
-        t("toast.vote_updated")
+        t(
+          "messages.vote_updated"
+        )
       );
     } catch (error: unknown) {
-      console.error(error);
+      console.error(
+        "Vote question error:",
+        error
+      );
 
       toast.error(
-        t("toast.failed_to_vote_question")
+        t(
+          "messages.failed_to_vote_question"
+        )
       );
     }
   };
 
-  const handleBookmark = async () => {
-    const userId =
-      user?._id || user?.id;
+  const handleBookmark =
+    async (): Promise<void> => {
+      const userId =
+        user?._id || user?.id;
 
-    if (!userId) {
-      toast.info(
-        t(
-          "toast.please_login_to_save_questions"
-        )
-      );
-
-      router.push("/auth");
-      return;
-    }
-
-    const currentQuestionId =
-      question._id;
-
-    if (!currentQuestionId) {
-      toast.error(
-        t("toast.question_id_not_found")
-      );
-
-      return;
-    }
-
-    try {
-      const result =
-        await toggleQuestionBookmark(
-          String(userId),
-          String(currentQuestionId)
+      if (!userId) {
+        toast.info(
+          t(
+            "messages.please_login_to_save_questions"
+          )
         );
 
-      const updatedBookmarks =
-        result.questionBookmarks || [];
+        void router.push("/auth");
+        return;
+      }
 
-      const isNowBookmarked =
-        updatedBookmarks.some(
-          (id: string) =>
-            String(id) ===
-            String(currentQuestionId)
-        );
+      const currentQuestionId =
+        question._id;
 
-      setQuestion((prev) =>
-        prev
-          ? {
-              ...prev,
-              isBookmarked:
-                isNowBookmarked,
-            }
-          : prev
-      );
-
-      toast.success(result.message);
-    } catch (error: unknown) {
-      if (
-        error &&
-        typeof error === "object" &&
-        "response" in error
-      ) {
-        const axiosError = error as {
-          response?: {
-            data?: {
-              message?: string;
-            };
-          };
-        };
-
-        toast.error(
-          axiosError.response?.data
-            ?.message ||
-            t(
-              "toast.unable_to_update_bookmark"
-            )
-        );
-      } else {
+      if (!currentQuestionId) {
         toast.error(
           t(
-            "toast.unable_to_update_bookmark"
+            "messages.question_id_not_found"
+          )
+        );
+
+        return;
+      }
+
+      try {
+        const result =
+          await toggleQuestionBookmark(
+            String(userId),
+            String(currentQuestionId)
+          );
+
+        const updatedBookmarks =
+          result.questionBookmarks || [];
+
+        const isNowBookmarked =
+          updatedBookmarks.some(
+            (id: string) =>
+              String(id) ===
+              String(
+                currentQuestionId
+              )
+          );
+
+        setQuestion((prev) =>
+          prev
+            ? {
+                ...prev,
+                isBookmarked:
+                  isNowBookmarked,
+              }
+            : prev
+        );
+
+        toast.success(
+          isNowBookmarked
+            ? t(
+                "messages.question_bookmarked"
+              )
+            : t(
+                "messages.question_bookmark_removed"
+              )
+        );
+      } catch (error: unknown) {
+        console.error(
+          "Question bookmark error:",
+          error
+        );
+
+        toast.error(
+          t(
+            "messages.unable_to_update_bookmark"
           )
         );
       }
-    }
-  };
+    };
 
-  const handleDelete = () => {
+  const handleDelete = (): void => {
     if (!user) {
       toast.info(
-        t("toast.please_login_to_continue")
+        t(
+          "messages.please_login_to_continue"
+        )
       );
 
-      router.push("/");
+      void router.push("/");
       return;
     }
 
     const confirmed =
       window.confirm(
         t(
-          "window.are_you_sure_you_want_to_delete_this_question"
+          "messages.confirm_delete_question"
         )
       );
 
@@ -191,50 +207,63 @@ const useQuestionActions = ({
     }
 
     toast.success(
-      t("toast.question_deleted")
+      t(
+        "messages.question_deleted"
+      )
     );
 
-    router.push("/");
+    void router.push("/");
   };
 
-  const handleShare = async () => {
-    if (!user) {
-      toast.info(
-        t("toast.please_login_to_continue")
-      );
-
-      router.push("/auth");
-      return;
-    }
-
-    const shareUrl =
-      window.location.href;
-
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title:
-            question.questiontitle ||
-            "Question",
-          text:
-            "Check out this question on CodeQuest",
-          url: shareUrl,
-        });
-      } else {
-        await navigator.clipboard.writeText(
-          shareUrl
-        );
-
-        toast.success(
+  const handleShare =
+    async (): Promise<void> => {
+      if (!user) {
+        toast.info(
           t(
-            "toast.question_link_copied"
+            "messages.please_login_to_continue"
           )
         );
+
+        void router.push("/auth");
+        return;
       }
-    } catch (error: unknown) {
-      console.log(error);
-    }
-  };
+
+      const shareUrl =
+        window.location.href;
+
+      try {
+        if (navigator.share) {
+          await navigator.share({
+            title:
+              question.questiontitle ||
+              t(
+                "share.default_title"
+              ),
+
+            text: t(
+              "share.text"
+            ),
+
+            url: shareUrl,
+          });
+        } else {
+          await navigator.clipboard.writeText(
+            shareUrl
+          );
+
+          toast.success(
+            t(
+              "messages.question_link_copied"
+            )
+          );
+        }
+      } catch (error: unknown) {
+        console.error(
+          "Share question error:",
+          error
+        );
+      }
+    };
 
   return {
     handleVote,

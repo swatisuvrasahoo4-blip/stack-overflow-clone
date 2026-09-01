@@ -1,11 +1,9 @@
 import { useRouter } from "next/router";
-
 import { useTranslation } from "react-i18next";
 
 interface CreatePostFeaturedOptionProps {
   isGoldUser: boolean;
   isFeatured: boolean;
-
   onFeaturedChange: (
     isFeatured: boolean
   ) => void;
@@ -17,11 +15,12 @@ const CreatePostFeaturedOption = ({
   onFeaturedChange,
 }: CreatePostFeaturedOptionProps) => {
   const router = useRouter();
-  const { t } = useTranslation();
+
+  const { t } =
+    useTranslation("create_post");
 
   return (
     <>
-      {/* Gold featured option */}
       {isGoldUser ? (
         <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-yellow-300 bg-yellow-50 p-3">
           <input
@@ -38,13 +37,13 @@ const CreatePostFeaturedOption = ({
           <div>
             <p className="font-medium text-yellow-800">
               {t(
-                "createpost.feature_this_post"
+                "featured.feature_this_post"
               )}
             </p>
 
             <p className="text-sm text-yellow-700">
               {t(
-                "createpost.give_this_post_premium_visibility_in_the_community"
+                "featured.premium_visibility"
               )}
             </p>
           </div>
@@ -68,13 +67,13 @@ const CreatePostFeaturedOption = ({
           <div>
             <p className="font-medium text-gray-700">
               {t(
-                "createpost.feature_this_post"
+                "featured.feature_this_post"
               )}
             </p>
 
             <p className="text-sm text-gray-500">
               {t(
-                "createpost.gold_feature_-_upgrade_to_gold_to_feature_your_posts"
+                "featured.gold_upgrade_required"
               )}
             </p>
           </div>

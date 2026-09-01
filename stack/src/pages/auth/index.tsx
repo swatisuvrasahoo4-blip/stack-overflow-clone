@@ -8,9 +8,11 @@ import type {
 } from "react";
 
 import Link from "next/link";
+
 import { useRouter } from "next/router";
 
 import { useTranslation } from "react-i18next";
+
 import { toast } from "react-toastify";
 
 import SocialLoginButtons from "./SocialLoginButtons";
@@ -26,6 +28,7 @@ import {
 } from "@/components/ui/card";
 
 import { Input } from "@/components/ui/input";
+
 import { Label } from "@/components/ui/label";
 
 import { useAuth } from "@/lib/AuthContext";
@@ -38,7 +41,8 @@ interface LoginForm {
 const LoginPage = () => {
   const router = useRouter();
 
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("auth");
 
   const {
     Login,
@@ -54,6 +58,7 @@ const LoginPage = () => {
   });
 
   // Update login form
+
   const handleChange = (
     event: ChangeEvent<HTMLInputElement>
   ): void => {
@@ -71,6 +76,7 @@ const LoginPage = () => {
   };
 
   // Submit login
+
   const handleSubmit = async (
     event: FormEvent<HTMLFormElement>
   ): Promise<void> => {
@@ -82,7 +88,7 @@ const LoginPage = () => {
     ) {
       toast.error(
         t(
-          "toast.all_fields_are_required"
+          "messages.all_fields_required"
         )
       );
 
@@ -161,13 +167,13 @@ const LoginPage = () => {
             <CardHeader className="space-y-1 text-center">
               <CardTitle className="text-xl lg:text-2xl">
                 {t(
-                  "login.login_to_your_account"
+                  "login.title"
                 )}
               </CardTitle>
 
               <CardDescription>
                 {t(
-                  "login.enter_your_email_and_password_to_access_stack_overflow"
+                  "login.description"
                 )}
               </CardDescription>
             </CardHeader>
@@ -183,14 +189,16 @@ const LoginPage = () => {
                   className="text-sm"
                 >
                   {t(
-                    "login.email"
+                    "labels.email"
                   )}
                 </Label>
 
                 <Input
                   id="email"
                   type="email"
-                  placeholder="m@example.com"
+                  placeholder={t(
+                    "placeholders.email_example"
+                  )}
                   onChange={
                     handleChange
                   }
@@ -207,7 +215,7 @@ const LoginPage = () => {
                   className="text-sm"
                 >
                   {t(
-                    "login.password"
+                    "labels.password"
                   )}
                 </Label>
 
@@ -231,10 +239,10 @@ const LoginPage = () => {
               >
                 {loading
                   ? t(
-                      "login.loading"
+                      "status.logging_in"
                     )
                   : t(
-                      "login.log_in"
+                      "actions.log_in"
                     )}
               </Button>
 
@@ -245,7 +253,7 @@ const LoginPage = () => {
                   className="text-blue-600 hover:underline"
                 >
                   {t(
-                    "login.forgot_your_password"
+                    "login.forgot_password"
                   )}
                 </Link>
               </div>
@@ -253,7 +261,7 @@ const LoginPage = () => {
               {/* Sign up */}
               <div className="text-center text-sm">
                 {t(
-                  "login.dont_have_an_account"
+                  "login.dont_have_account"
                 )}{" "}
 
                 <Link
@@ -261,7 +269,7 @@ const LoginPage = () => {
                   className="text-blue-600 hover:underline"
                 >
                   {t(
-                    "login.sign_up"
+                    "actions.sign_up"
                   )}
                 </Link>
               </div>

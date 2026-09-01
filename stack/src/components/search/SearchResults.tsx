@@ -1,8 +1,11 @@
 import PostFeed from "@/components/feed/PostFeed";
+
 import type { Post } from "@/types/community";
 import type { Question } from "@/types/questions";
+
 import QuestionSearchCard from "./QuestionSearchCard";
 import SearchEmptyState from "./SearchEmptyState";
+
 import { useTranslation } from "react-i18next";
 
 type SearchType =
@@ -30,13 +33,11 @@ const SearchResults = ({
   query,
   selectedType,
 }: SearchResultsProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("search");
 
   if (searchType === "Posts") {
     if (results.length === 0) {
-      return (
-        <SearchEmptyState type="posts" />
-      );
+      return <SearchEmptyState type="posts" />;
     }
 
     return (
@@ -49,9 +50,7 @@ const SearchResults = ({
 
   if (searchType === "Questions") {
     if (questionResults.length === 0) {
-      return (
-        <SearchEmptyState type="questions" />
-      );
+      return <SearchEmptyState type="questions" />;
     }
 
     return (
@@ -71,7 +70,7 @@ const SearchResults = ({
       {results.length > 0 && (
         <>
           <h2 className="mb-3 text-lg font-semibold">
-            {t("search.posts")}
+            {t("labels.posts")}
           </h2>
 
           <PostFeed
@@ -84,18 +83,16 @@ const SearchResults = ({
       {questionResults.length > 0 && (
         <div className="mt-8">
           <h2 className="mb-3 text-lg font-semibold">
-            {t("search.questions")}
+            {t("labels.questions")}
           </h2>
 
           <div className="space-y-4">
-            {questionResults.map(
-              (question) => (
-                <QuestionSearchCard
-                  key={question._id}
-                  question={question}
-                />
-              )
-            )}
+            {questionResults.map((question) => (
+              <QuestionSearchCard
+                key={question._id}
+                question={question}
+              />
+            ))}
           </div>
         </div>
       )}

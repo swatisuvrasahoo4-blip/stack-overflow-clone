@@ -15,14 +15,14 @@ const CreatePostHashtags = ({
   tags,
   setTags,
 }: CreatePostHashtagsProps) => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("create_post");
 
   const [
     tagInput,
     setTagInput,
   ] = useState("");
 
-  // Add hashtag
   const addTag = (): void => {
     const tag =
       tagInput.trim();
@@ -41,7 +41,6 @@ const CreatePostHashtags = ({
     setTagInput("");
   };
 
-  // Remove hashtag
   const removeTag = (
     tag: string
   ): void => {
@@ -55,19 +54,17 @@ const CreatePostHashtags = ({
 
   return (
     <div className="space-y-2">
-      {/* Label */}
       <label className="block text-sm font-medium">
         {t(
-          "createpost.hashtags"
+          "hashtags.label"
         )}
       </label>
 
-      {/* Hashtag input */}
       <div className="grid w-full grid-cols-[minmax(0,1fr)_44px] gap-2">
         <input
           type="text"
           placeholder={t(
-            "createpost.eg_react"
+            "hashtags.placeholder"
           )}
           value={tagInput}
           onChange={(event) =>
@@ -82,12 +79,14 @@ const CreatePostHashtags = ({
           type="button"
           onClick={addTag}
           className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-blue-600 text-white hover:bg-blue-700"
+          aria-label={t(
+            "hashtags.add_hashtag"
+          )}
         >
           +
         </button>
       </div>
 
-      {/* Selected hashtags */}
       {tags.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {tags.map((tag) => (
@@ -103,7 +102,12 @@ const CreatePostHashtags = ({
                   removeTag(tag)
                 }
                 className="ml-1 font-bold text-blue-600 hover:text-red-600"
-                aria-label={`Remove ${tag} hashtag`}
+                aria-label={t(
+                  "hashtags.remove_hashtag",
+                  {
+                    tag,
+                  }
+                )}
               >
                 ×
               </button>

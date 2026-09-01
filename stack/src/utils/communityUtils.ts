@@ -50,8 +50,12 @@ export const shareCommunityPost = async (
   if (navigator.share) {
     try {
       await navigator.share({
-        title: "Community Post",
-        text: "Check out this community post!",
+        title: t(
+          "share.community_post"
+        ),
+        text: t(
+          "share.check_out_community_post"
+        ),
         url: shareUrl,
       });
     } catch (error: unknown) {
@@ -71,7 +75,7 @@ export const shareCommunityPost = async (
 
     alert(
       t(
-        "alert.link_copied_to_clipboard"
+        "messages.link_copied_to_clipboard"
       )
     );
   } catch (error: unknown) {

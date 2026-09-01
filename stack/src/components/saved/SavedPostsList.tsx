@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslation } from "react-i18next";
+
 import PostCard from "../community/PostCard/PostCard";
 
 import type { PostCardProps } from "@/types/community";
@@ -18,10 +20,12 @@ const SavedPostsList = ({
   posts,
   postCardProps,
 }: SavedPostsListProps) => {
+  const { t } = useTranslation("community");
+
   if (posts.length === 0) {
     return (
       <div className="text-gray-600">
-        No saved community posts.
+        {t("messages.no_saved_community_posts")}
       </div>
     );
   }

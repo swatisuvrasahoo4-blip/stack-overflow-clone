@@ -1,12 +1,20 @@
 import { Button } from "@/components/ui/button";
+
 import { Check } from "lucide-react";
+
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
+
 import { useAuth } from "@/lib/AuthContext";
+
 import { toast } from "react-toastify";
+
 import type { PlanName } from "@/constants/subscriptionPlans";
 
-type PaidPlan = "Bronze" | "Silver" | "Gold";
+type PaidPlan =
+  | "Bronze"
+  | "Silver"
+  | "Gold";
 
 interface PlanCardProps {
   name: PlanName;
@@ -33,38 +41,56 @@ const PlanCard = ({
 }: PlanCardProps) => {
   const router = useRouter();
   const { user } = useAuth();
-  const { t } = useTranslation();
 
-  const planOrder: Record<PlanName, number> = {
+  const { t } =
+    useTranslation("subscription");
+
+  const planOrder: Record<
+    PlanName,
+    number
+  > = {
     Free: 0,
     Bronze: 1,
     Silver: 2,
     Gold: 3,
   };
 
-  const currentPlanLevel = currentPlan
-    ? planOrder[currentPlan]
-    : -1;
+  const currentPlanLevel =
+    currentPlan
+      ? planOrder[currentPlan]
+      : -1;
 
   const canUpgrade =
-    planOrder[name] > currentPlanLevel;
+    planOrder[name] >
+    currentPlanLevel;
 
-  const handleUpgradeClick = () => {
-    if (!user) {
-      toast.info(
-        t("toast.please_login_to_continue")
+  const handleUpgradeClick =
+    () => {
+      if (!user) {
+        toast.info(
+          t(
+            "messages.please_login_to_continue"
+          )
+        );
+
+        void router.push(
+          "/auth"
+        );
+
+        return;
+      }
+
+      if (
+        !canUpgrade ||
+        name === "Free"
+      ) {
+        return;
+      }
+
+      void onUpgrade?.(
+        name
       );
-
-      void router.push("/auth");
-      return;
-    }
-
-    if (!canUpgrade || name === "Free") {
-      return;
-    }
-
-    void onUpgrade?.(name);
-  };
+    };
 
   return (
     <div
@@ -74,78 +100,89 @@ const PlanCard = ({
           : "border-gray-200 shadow-md"
       }`}
     >
-      {/* Popular plan badge */}
       {isPopular && (
         <span className="absolute right-4 top-4 rounded-full bg-yellow-500 px-3 py-1 text-xs font-semibold text-white">
-          {t("subscription.most_popular")}
+          {t(
+            "plans.most_popular"
+          )}
         </span>
       )}
 
-      {/* Plan name */}
       <h2
         className={`text-3xl font-bold ${
           name === "Free"
             ? "text-gray-900"
-            : name === "Bronze"
+            : name ===
+                "Bronze"
               ? "text-amber-700"
-              : name === "Silver"
+              : name ===
+                  "Silver"
                 ? "text-slate-600"
                 : "text-yellow-600"
         }`}
       >
-        {t(`subscription.${name.toLowerCase()}`)}
+        {t(
+          `plans.names.${name.toLowerCase()}`
+        )}
       </h2>
 
-      {/* Plan price */}
       <p
         className={`mb-3 mt-4 text-5xl font-extrabold ${
           name === "Free"
             ? "text-purple-600"
-            : name === "Bronze"
+            : name ===
+                "Bronze"
               ? "text-amber-700"
-              : name === "Silver"
+              : name ===
+                  "Silver"
                 ? "text-slate-600"
                 : "text-yellow-500"
         }`}
       >
         {price.replace(
           "month",
-          t("subscription.month")
+          t("plans.month")
         )}
       </p>
 
-      {/* Plan description */}
       <p className="mt-4 text-base text-gray-600">
-        {t(`subscription.${description}`)}
+        {t(
+          `plans.descriptions.${description}`
+        )}
       </p>
 
-      {/* Plan features */}
       <div className="mt-8 space-y-4">
-        {features.map((feature) => (
-          <div
-            key={feature}
-            className="flex items-center gap-2"
-          >
-            <Check
-              className={`h-5 w-5 ${
-                name === "Free"
-                  ? "text-purple-600"
-                  : name === "Bronze"
-                    ? "text-amber-600"
-                    : name === "Silver"
-                      ? "text-slate-500"
-                      : "text-yellow-500"
-              }`}
-            />
+        {features.map(
+          (feature) => (
+            <div
+              key={feature}
+              className="flex items-center gap-2"
+            >
+              <Check
+                className={`h-5 w-5 ${
+                  name ===
+                  "Free"
+                    ? "text-purple-600"
+                    : name ===
+                        "Bronze"
+                      ? "text-amber-600"
+                      : name ===
+                          "Silver"
+                        ? "text-slate-500"
+                        : "text-yellow-500"
+                }`}
+              />
 
-            <span className="text-sm font-medium text-gray-700">
-              {t(`subscription.${feature}`)}
-            </span>
-          </div>
-        ))}
+              <span className="text-sm font-medium text-gray-700">
+                {t(
+                  `plans.features.${feature}`
+                )}
+              </span>
+            </div>
+          )
+        )}
       </div>
 
-      {/* Plan action */}
       <div className="mt-8">
         {isCurrent ? (
           <Button
@@ -154,35 +191,49 @@ const PlanCard = ({
             className={`w-full font-semibold text-white ${
               name === "Free"
                 ? "bg-purple-600 hover:bg-purple-600"
-                : name === "Bronze"
+                : name ===
+                    "Bronze"
                   ? "bg-amber-700 hover:bg-amber-700"
-                  : name === "Silver"
+                  : name ===
+                      "Silver"
                     ? "bg-slate-600 hover:bg-slate-600"
                     : "bg-yellow-500 hover:bg-yellow-500"
             }`}
           >
-            {t("subscription.current_plan")}
+            {t(
+              "actions.current_plan"
+            )}
           </Button>
         ) : (
           <Button
             type="button"
-            onClick={handleUpgradeClick}
+            onClick={
+              handleUpgradeClick
+            }
             disabled={
-              Boolean(user) && !canUpgrade
+              Boolean(user) &&
+              !canUpgrade
             }
             className={`w-full font-semibold text-white transition-all duration-300 ${
               name === "Bronze"
                 ? "bg-amber-700 hover:bg-amber-800"
-                : name === "Silver"
+                : name ===
+                    "Silver"
                   ? "bg-slate-600 hover:bg-slate-700"
-                  : name === "Gold"
+                  : name ===
+                      "Gold"
                     ? "bg-yellow-500 text-black hover:bg-yellow-600"
                     : "bg-purple-600 hover:bg-purple-700"
             }`}
           >
-            {!user || canUpgrade
-              ? t("subscription.upgrade")
-              : t("subscription.lower_plan")}
+            {!user ||
+            canUpgrade
+              ? t(
+                  "actions.upgrade"
+                )
+              : t(
+                  "actions.lower_plan"
+                )}
           </Button>
         )}
       </div>

@@ -3,17 +3,26 @@ import {
   useState,
 } from "react";
 
+import { useTranslation } from "react-i18next";
+
 import CommunityHeader from "@/components/community/CommunityHeader";
+
 import PostFeedList from "@/components/community/PostFeedList";
 
 import DeleteCommentModal from "@/components/community/modals/DeleteCommentModal";
+
 import DeletePostModal from "@/components/community/modals/DeletePostModal";
+
 import DeleteReplyModal from "@/components/community/modals/DeleteReplyModal";
+
 import EditPostModal from "@/components/community/modals/EditPostModal";
 
 import useEditPostState from "@/hooks/useEditPostState";
+
 import usePostActions from "@/hooks/usePostActions";
+
 import usePostDelete from "@/hooks/usePostDelete";
+
 import usePostFeed from "@/hooks/usePostFeed";
 
 import Mainlayout from "@/layout/Mainlayout";
@@ -21,12 +30,16 @@ import Mainlayout from "@/layout/Mainlayout";
 import { useAuth } from "@/lib/AuthContext";
 
 const CommunityPage = () => {
+  const { t } =
+    useTranslation("community");
+
   const {
     user,
     updateUser,
   } = useAuth();
 
   // Community feed
+
   const {
     posts,
     setPosts,
@@ -39,39 +52,32 @@ const CommunityPage = () => {
   });
 
   // Edit post state
+
   const {
     editingPost,
     setEditingPost,
-
     editContent,
     setEditContent,
-
     editHashtags,
     setEditHashtags,
-
     editTagInput,
     setEditTagInput,
-
     editImage,
     setEditImage,
-
     editProjectTitle,
     setEditProjectTitle,
-
     editProjectLink,
     setEditProjectLink,
-
     editAchievementTitle,
     setEditAchievementTitle,
-
     editAchievementDescription,
     setEditAchievementDescription,
-
     editCodeSnippet,
     setEditCodeSnippet,
   } = useEditPostState();
 
   // Comment state
+
   const [
     commentText,
     setCommentText,
@@ -90,6 +96,7 @@ const CommunityPage = () => {
   ] = useState<string[]>([]);
 
   // Reply state
+
   const [
     replyText,
     setReplyText,
@@ -103,6 +110,7 @@ const CommunityPage = () => {
   );
 
   // Post actions
+
   const {
     handleLike,
     handleBookmark,
@@ -117,63 +125,48 @@ const CommunityPage = () => {
     setPosts,
     user,
     updateUser,
-
     commentText,
     setCommentText,
     setActiveCommentPost,
-
     editingPost,
     setEditingPost,
-
     editContent,
     setEditContent,
-
     editHashtags,
     setEditHashtags,
-
     setEditTagInput,
-
     editImage,
     setEditImage,
-
     editProjectTitle,
     setEditProjectTitle,
-
     editProjectLink,
     setEditProjectLink,
-
     editAchievementTitle,
     setEditAchievementTitle,
-
     editAchievementDescription,
     setEditAchievementDescription,
-
     editCodeSnippet,
     setEditCodeSnippet,
-
     replyText,
     setReplyText,
     setActiveReplyComment,
   });
 
   // Delete state and actions
+
   const {
     setSelectedPostId,
     showDeleteModal,
     setShowDeleteModal,
-
     setSelectedReply,
     showDeleteReplyModal,
     setShowDeleteReplyModal,
-
     setSelectedComment,
     showDeleteCommentModal,
     setShowDeleteCommentModal,
-
     closeDeletePostModal,
     closeDeleteReplyModal,
     closeDeleteCommentModal,
-
     confirmDeletePost,
     confirmDeleteReply,
     confirmDeleteComment,
@@ -184,6 +177,7 @@ const CommunityPage = () => {
   });
 
   // Restore scroll position
+
   useEffect(() => {
     if (posts.length === 0) {
       return;
@@ -216,16 +210,21 @@ const CommunityPage = () => {
     <Mainlayout>
       <main className="min-w-0 p-4 lg:p-6">
         {/* Community header */}
+
         <CommunityHeader />
 
         {/* Initial loading */}
+
         {loading && (
           <p className="py-6 text-center text-sm text-gray-500">
-            Loading posts...
+            {t(
+              "feed.loading_posts"
+            )}
           </p>
         )}
 
         {/* Community posts */}
+
         {!loading && (
           <PostFeedList
             posts={posts}
@@ -303,19 +302,23 @@ const CommunityPage = () => {
         )}
 
         {/* Infinite scroll trigger */}
+
         <div
           ref={loadMoreRef}
           className="flex h-10 items-center justify-center"
         >
           {loadingMore && (
             <p className="text-sm text-gray-500">
-              Loading more...
+              {t(
+                "feed.loading_more_posts"
+              )}
             </p>
           )}
         </div>
       </main>
 
       {/* Delete post modal */}
+
       <DeletePostModal
         open={showDeleteModal}
         onClose={
@@ -327,6 +330,7 @@ const CommunityPage = () => {
       />
 
       {/* Delete comment modal */}
+
       <DeleteCommentModal
         open={
           showDeleteCommentModal
@@ -340,6 +344,7 @@ const CommunityPage = () => {
       />
 
       {/* Delete reply modal */}
+
       <DeleteReplyModal
         open={
           showDeleteReplyModal
@@ -353,6 +358,7 @@ const CommunityPage = () => {
       />
 
       {/* Edit post modal */}
+
       <EditPostModal
         editingPost={
           editingPost
@@ -360,70 +366,60 @@ const CommunityPage = () => {
         setEditingPost={
           setEditingPost
         }
-
         editContent={
           editContent
         }
         setEditContent={
           setEditContent
         }
-
         editHashtags={
           editHashtags
         }
         setEditHashtags={
           setEditHashtags
         }
-
         editTagInput={
           editTagInput
         }
         setEditTagInput={
           setEditTagInput
         }
-
         editImage={
           editImage
         }
         setEditImage={
           setEditImage
         }
-
         editProjectTitle={
           editProjectTitle
         }
         setEditProjectTitle={
           setEditProjectTitle
         }
-
         editProjectLink={
           editProjectLink
         }
         setEditProjectLink={
           setEditProjectLink
         }
-
         editAchievementTitle={
           editAchievementTitle
         }
         setEditAchievementTitle={
           setEditAchievementTitle
         }
-
         editAchievementDescription={
           editAchievementDescription
         }
         setEditAchievementDescription={
           setEditAchievementDescription
         }
-
         editCodeSnippet={
           editCodeSnippet
         }
         setEditCodeSnippet={
           setEditCodeSnippet
         }
-
         handleSaveEdit={
           handleSaveEdit
         }

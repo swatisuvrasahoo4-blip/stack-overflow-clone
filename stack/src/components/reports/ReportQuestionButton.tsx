@@ -8,8 +8,14 @@ import { toast } from "react-toastify";
 
 import { useAuth } from "@/lib/AuthContext";
 
-import { checkQuestionReportStatus } from "../services/questionService";
-import { createQuestionReport } from "../services/reportService";
+import {
+  checkQuestionReportStatus,
+} from "../services/questionService";
+
+import {
+  createQuestionReport,
+} from "../services/reportService";
+
 import ReportQuestionModal from "./ReportQuestionModal";
 
 interface ReportQuestionButtonProps {
@@ -22,10 +28,16 @@ const ReportQuestionButton = ({
   reputation,
 }: ReportQuestionButtonProps) => {
   const router = useRouter();
-  const { user } = useAuth();
-  const { t } = useTranslation();
 
-  const [isOpen, setIsOpen] = useState(false);
+  const { user } = useAuth();
+
+  const { t } = useTranslation([
+    "reports",
+    "community",
+  ]);
+
+  const [isOpen, setIsOpen] =
+    useState(false);
 
   const handleReportClick = async (
     event: React.MouseEvent<HTMLButtonElement>
@@ -35,7 +47,12 @@ const ReportQuestionButton = ({
 
     if (!user) {
       toast.info(
-        t("toast.please_login_to_continue")
+        t(
+          "messages.please_login_to_continue",
+          {
+            ns: "community",
+          }
+        )
       );
 
       void router.push("/auth");
@@ -46,8 +63,9 @@ const ReportQuestionButton = ({
     if (reputation < 500) {
       alert(
         t(
-          "alert.you_need_at_least_500_reputation_points_to_report_inappropriate_content_your_current_reputation_is",
+          "messages.question_report_reputation_required",
           {
+            ns: "reports",
             reputation,
           }
         )
@@ -65,7 +83,10 @@ const ReportQuestionButton = ({
       if (data.alreadyReported) {
         alert(
           t(
-            "alert.you_have_already_reported_this_question"
+            "messages.question_already_reported",
+            {
+              ns: "reports",
+            }
           )
         );
 
@@ -81,7 +102,10 @@ const ReportQuestionButton = ({
 
       alert(
         t(
-          "alert.failed_to_check_report_status"
+          "messages.failed_to_check_report_status",
+          {
+            ns: "reports",
+          }
         )
       );
     }
@@ -104,26 +128,28 @@ const ReportQuestionButton = ({
 
       alert(
         t(
-          "alert.question_reported_successfully"
+          "messages.question_reported_successfully",
+          {
+            ns: "reports",
+          }
         )
       );
 
       setIsOpen(false);
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        alert(
-          error.response?.data?.message ||
-            t(
-              "alert.failed_to_report_question"
-            )
+        console.error(
+          "Failed to report question:",
+          error.response?.data
         );
-
-        return;
       }
 
       alert(
         t(
-          "alert.failed_to_report_question"
+          "messages.failed_to_report_question",
+          {
+            ns: "reports",
+          }
         )
       );
     }
@@ -142,7 +168,9 @@ const ReportQuestionButton = ({
       >
         <Flag className="h-5 w-5" />
 
-        {t("community.flag")}
+        {t("actions.flag", {
+          ns: "community",
+        })}
       </button>
 
       {/* Report question modal */}

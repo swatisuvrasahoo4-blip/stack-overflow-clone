@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 
 import QuestionReportCard from "./QuestionReportCard";
-import QuestionReportStats from "./QuestionReportStats";
+import QuestionReportStats from "@/pages/admin/reports/question/QuestionReportStats";
 
 type ReportStatus =
   | "pending"
@@ -38,7 +38,6 @@ interface QuestionReport {
 
 interface QuestionReportsProps {
   reports: QuestionReport[];
-
   updatingId: string | null;
 
   onStatusChange: (
@@ -62,7 +61,8 @@ const QuestionReports = ({
   handleSuspend,
   handleUnsuspend,
 }: QuestionReportsProps) => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("reports");
 
   const questionReports =
     reports.filter(
@@ -74,22 +74,19 @@ const QuestionReports = ({
     pending:
       questionReports.filter(
         (report) =>
-          report.status ===
-          "pending"
+          report.status === "pending"
       ).length,
 
     reviewed:
       questionReports.filter(
         (report) =>
-          report.status ===
-          "reviewed"
+          report.status === "reviewed"
       ).length,
 
     dismissed:
       questionReports.filter(
         (report) =>
-          report.status ===
-          "dismissed"
+          report.status === "dismissed"
       ).length,
 
     actionTaken:
@@ -102,7 +99,6 @@ const QuestionReports = ({
 
   return (
     <div className="space-y-6">
-      {/* Report statistics */}
       <QuestionReportStats
         pending={
           reportStats.pending
@@ -118,13 +114,12 @@ const QuestionReports = ({
         }
       />
 
-      {/* Reports */}
       <div className="rounded-xl border border-gray-200 bg-white p-6">
         {questionReports.length ===
         0 ? (
           <p className="text-gray-600">
             {t(
-              "report.noQuestionReportsFound"
+              "admin.question.no_reports_found"
             )}
           </p>
         ) : (
@@ -132,12 +127,8 @@ const QuestionReports = ({
             {questionReports.map(
               (report) => (
                 <QuestionReportCard
-                  key={
-                    report._id
-                  }
-                  report={
-                    report
-                  }
+                  key={report._id}
+                  report={report}
                   updatingId={
                     updatingId
                   }

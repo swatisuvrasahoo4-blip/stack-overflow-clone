@@ -111,9 +111,9 @@ const usePostEditActions = ({
   editCodeSnippet,
   setEditCodeSnippet,
 }: UsePostEditActionsProps) => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("community");
 
-  // Open edit modal
   const handleEdit = (
     post: Post
   ): void => {
@@ -122,7 +122,7 @@ const usePostEditActions = ({
     ) {
       alert(
         t(
-          "alert.you_need_atleast_100_reputation_points_to_edit_community_posts"
+          "messages.edit_reputation_required"
         )
       );
 
@@ -142,7 +142,6 @@ const usePostEditActions = ({
     );
 
     setEditTagInput("");
-
     setEditImage(null);
 
     setEditProjectTitle(
@@ -167,32 +166,22 @@ const usePostEditActions = ({
     );
   };
 
-  // Reset edit state
-  const resetEditState = (): void => {
-    setEditingPost(null);
+  const resetEditState =
+    (): void => {
+      setEditingPost(null);
+      setEditContent("");
+      setEditHashtags("");
+      setEditTagInput("");
+      setEditImage(null);
+      setEditProjectTitle("");
+      setEditProjectLink("");
+      setEditAchievementTitle("");
+      setEditAchievementDescription(
+        ""
+      );
+      setEditCodeSnippet("");
+    };
 
-    setEditContent("");
-
-    setEditHashtags("");
-
-    setEditTagInput("");
-
-    setEditImage(null);
-
-    setEditProjectTitle("");
-
-    setEditProjectLink("");
-
-    setEditAchievementTitle("");
-
-    setEditAchievementDescription(
-      ""
-    );
-
-    setEditCodeSnippet("");
-  };
-
-  // Save edited post
   const handleSaveEdit =
     async (): Promise<void> => {
       if (!editingPost) {
@@ -202,7 +191,7 @@ const usePostEditActions = ({
       if (!editContent.trim()) {
         alert(
           t(
-            "alert.post_content_cannot_be_empty"
+            "messages.post_content_cannot_be_empty"
           )
         );
 
@@ -284,7 +273,8 @@ const usePostEditActions = ({
 
         console.error(
           "Edit Post Error:",
-          error
+          apiError.response?.data
+            ?.message || error
         );
 
         if (
@@ -293,7 +283,7 @@ const usePostEditActions = ({
         ) {
           alert(
             t(
-              "alert.your_session_has_expired_please_log_in_again"
+              "messages.session_expired"
             )
           );
 
@@ -305,22 +295,18 @@ const usePostEditActions = ({
           403
         ) {
           alert(
-            apiError.response?.data
-              ?.message ||
-              t(
-                "alert.you_can_only_edit_your_own_post"
-              )
+            t(
+              "messages.can_only_edit_own_post"
+            )
           );
 
           return;
         }
 
         alert(
-          apiError.response?.data
-            ?.message ||
-            t(
-              "alert.something_went_wrong_while_updating_the_post"
-            )
+          t(
+            "messages.failed_to_update_post"
+          )
         );
       }
     };

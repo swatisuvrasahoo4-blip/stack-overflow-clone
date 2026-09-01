@@ -9,7 +9,6 @@ import { useTranslation } from "react-i18next";
 import CommunityPostDetailCard from "./CommunityPostDetailCard";
 
 import axiosInstance from "@/lib/axiosinstance";
-
 import MainLayout from "@/layout/Mainlayout";
 
 import type { Post } from "@/types/community";
@@ -21,9 +20,11 @@ interface PostResponse {
 const CommunityPostDetail = () => {
   const router = useRouter();
 
-  const { id } = router.query;
+  const { id } =
+    router.query;
 
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("community");
 
   const [
     post,
@@ -72,7 +73,9 @@ const CommunityPostDetail = () => {
               responseData as Post
             );
           }
-        } catch (error: unknown) {
+        } catch (
+          error: unknown
+        ) {
           console.error(
             "Failed to load post:",
             error
@@ -117,7 +120,7 @@ const CommunityPostDetail = () => {
         <main className="min-w-0 p-4 lg:p-6">
           <div className="p-6">
             {t(
-              "community.post_not_found"
+              "messages.post_not_found"
             )}
           </div>
         </main>
@@ -129,6 +132,7 @@ const CommunityPostDetail = () => {
     <MainLayout>
       <main className="min-w-0 p-4 lg:p-6">
         {/* Post details */}
+
         <CommunityPostDetailCard
           post={post}
         />

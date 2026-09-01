@@ -63,9 +63,9 @@ const usePostCommentActions = ({
   setReplyText,
   setActiveReplyComment,
 }: UsePostCommentActionsProps) => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("community");
 
-  // Add comment
   const handleComment = async (
     postId: string
   ): Promise<void> => {
@@ -103,7 +103,6 @@ const usePostCommentActions = ({
       }
 
       setCommentText("");
-
       setActiveCommentPost(null);
     } catch (error: unknown) {
       console.error(
@@ -113,7 +112,6 @@ const usePostCommentActions = ({
     }
   };
 
-  // Add reply
   const handleReply = async (
     postId: string,
     commentId: string
@@ -125,7 +123,10 @@ const usePostCommentActions = ({
     if (reputation < 50) {
       alert(
         t(
-          `alert.you_need_atleast_50_reputation_points_to_reply_your_current_reputation_is ${reputation}`
+          "messages.reply_reputation_required",
+          {
+            reputation,
+          }
         )
       );
 
@@ -167,7 +168,6 @@ const usePostCommentActions = ({
       }
 
       setReplyText("");
-
       setActiveReplyComment(null);
     } catch (error: unknown) {
       console.error(
@@ -177,58 +177,55 @@ const usePostCommentActions = ({
     }
   };
 
-  // Delete comment
-  const handleDeleteComment =
-    async (
-      postId: string,
-      commentId: string
-    ): Promise<void> => {
-      try {
-        const response =
-          await deleteComment(
-            postId,
-            commentId
-          );
-
-        const updatedPost =
-          response?.data;
-
-        if (!updatedPost) {
-          console.error(
-            "Updated post missing from delete comment response:",
-            response
-          );
-
-          return;
-        }
-
-        setPosts(
-          (previousPosts) =>
-            previousPosts.map(
-              (post) =>
-                post._id === postId
-                  ? updatedPost
-                  : post
-            )
+  const handleDeleteComment = async (
+    postId: string,
+    commentId: string
+  ): Promise<void> => {
+    try {
+      const response =
+        await deleteComment(
+          postId,
+          commentId
         );
-      } catch (error: unknown) {
-        const apiError =
-          error as ApiError;
 
+      const updatedPost =
+        response?.data;
+
+      if (!updatedPost) {
         console.error(
-          "Delete comment error:",
-          error
+          "Updated post missing from delete comment response:",
+          response
         );
 
-        alert(
-          apiError.response?.data
-            ?.message ||
-            t(
-              "alert.unable_to_delete_comment"
-            )
-        );
+        return;
       }
-    };
+
+      setPosts(
+        (previousPosts) =>
+          previousPosts.map(
+            (post) =>
+              post._id === postId
+                ? updatedPost
+                : post
+          )
+      );
+    } catch (error: unknown) {
+      const apiError =
+        error as ApiError;
+
+      console.error(
+        "Delete comment error:",
+        apiError.response?.data
+          ?.message || error
+      );
+
+      alert(
+        t(
+          "messages.unable_to_delete_comment"
+        )
+      );
+    }
+  };
 
   return {
     handleComment,

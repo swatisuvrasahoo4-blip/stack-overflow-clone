@@ -1,0 +1,145 @@
+{
+  "actions": {
+    "ask_question": "Poser une question",
+    "vote_to_close": "Voter pour la fermeture",
+    "vote_to_close_question": "Voter pour la fermeture de la question",
+    "filter": "Filtrer",
+    "more": "Plus",
+    "show_less": "Voir moins",
+    "view_all": "Voir tout"
+  },
+  "labels": {
+    "views": "Vues",
+    "votes": "Votes",
+    "asked": "Demandé",
+    "questions": "Questions",
+    "all_questions": "Toutes les questions",
+     "you": "Vous",
+       "unknown_user": "Utilisateur inconnu"
+  },
+  "filters": {
+    "newest": "Plus récents",
+    "active": "Actifs",
+    "bountied": "Avec prime",
+    "unanswered": "Sans réponse"
+  },
+  "status": {
+    "question_closed": "Question fermée",
+    "loading_questions": "Chargement des questions...",
+    "loading_more_questions": "Chargement de plus de questions...",
+    "loading_question": "Chargement de la question..."
+  },
+  "messages": {
+    "browse_the_latest_questions_from_the_community": "Parcourez les dernières questions de la communauté.",
+     "no_title": "(sans titre)",
+    "no_more_questions": "Il n’y a plus de questions.",
+     "date_unavailable": "Date indisponible",
+     "unknown_date": "Date inconnue",
+      "close_vote_reputation_required": "Vous devez avoir au moins 250 points de réputation pour voter pour la fermeture d’une question.",
+       "failed_to_delete_question": "Impossible de supprimer la question.",
+    "failed_to_edit_question": "Impossible de modifier la question.",
+    "cannot_vote_to_close_own_question": "Vous ne pouvez pas voter pour fermer votre propre question.",
+"already_voted_to_close_question": "Vous avez déjà voté pour fermer cette question.",
+"close_vote_submitted_successfully": "Votre vote pour la fermeture a été envoyé avec succès.",
+"question_closed_successfully": "La question a été fermée avec succès.",
+"failed_to_vote_to_close_question": "Impossible de voter pour fermer cette question.",
+"no_saved_questions": "Vous n’avez aucune question enregistrée.",
+  "no_question_found": "Aucune question trouvée.",
+   "please_login_to_continue": "Veuillez vous connecter pour continuer.",
+    "cannot_vote_on_own_question": "Vous ne pouvez pas voter pour votre propre question.",
+    "vote_updated": "Votre vote a été mis à jour.",
+    "failed_to_vote_question": "Impossible de voter pour cette question.",
+    "please_login_to_save_questions": "Veuillez vous connecter pour enregistrer des questions.",
+    "question_id_not_found": "L’identifiant de la question est introuvable.",
+    "question_bookmarked": "Question enregistrée.",
+    "question_bookmark_removed": "Question retirée des enregistrements.",
+    "unable_to_update_bookmark": "Impossible de mettre à jour l’enregistrement. Veuillez réessayer.",
+    "confirm_delete_question": "Êtes-vous sûr de vouloir supprimer cette question ?",
+    "question_deleted": "Question supprimée.",
+    "question_link_copied": "Lien de la question copié."
+  },
+  "time": {
+    "just_now": "à l’instant",
+    "minute_ago": "il y a {{count}} minute",
+    "minutes_ago": "il y a {{count}} minutes",
+    "hour_ago": "il y a {{count}} heure",
+    "hours_ago": "il y a {{count}} heures",
+    "day_ago": "il y a {{count}} jour",
+    "days_ago": "il y a {{count}} jours"
+  },
+  "accessibility": {
+  "upvote_question": "Voter positivement pour la question",
+  "downvote_question": "Voter négativement pour la question",
+  "bookmark_question": "Enregistrer la question",
+"remove_bookmark": "Retirer la question des enregistrements",
+"question_history": "Historique de la question"
+},
+"close_vote": {
+    "title": "Voter pour la fermeture de la question",
+    "select_reason": "Sélectionnez la raison de la fermeture.",
+    "reasons": {
+      "duplicate_question": "Question en double",
+      "off_topic": "Hors sujet",
+      "unclear": "Peu clair",
+      "needs_more_details": "Nécessite plus de détails",
+      "other": "Autre"
+    },
+    "cancel": "Annuler",
+    "submitting": "Envoi...",
+    "submit_vote": "Envoyer le vote"
+  },
+  "delete_question": {
+  "title": "Supprimer la question",
+  "confirmation": "Êtes-vous sûr de vouloir supprimer cette question ?",
+  "no": "Non",
+  "yes_delete": "Oui, supprimer"
+},
+"edit_question": {
+  "title": "Modifier la question",
+  "labels": {
+    "title": "Titre",
+    "question": "Question",
+    "tags_maximum_5": "Tags (maximum 5)"
+  },
+  "placeholders": {
+    "enter_tag": "Entrez un tag"
+  },
+  "actions": {
+    "cancel": "Annuler",
+    "save_changes": "Enregistrer les modifications"
+  },
+  "accessibility": {
+    "add_tag": "Ajouter le tag",
+    "remove_tag": "Supprimer le tag {{tag}}"
+  }
+},
+  "share": {
+    "default_title": "Question",
+    "text": "Découvrez cette question sur CodeQuest"
+  },
+   "ask_question": {
+  "title": "Titre",
+  "summarize_your_problem_in_a_single_sentence": "Résumez votre problème en une seule phrase.",
+  "be_specific_and_imagine_asking_the_question_to_another_person": "Soyez précis et imaginez que vous posez la question à une autre personne.",
+  "what_are_the_details_of_your_problem": "Quels sont les détails de votre problème ?",
+  "explain_what_you_are_trying_to_do_and_include_any_errors_or_output": "Expliquez ce que vous essayez de faire et incluez les erreurs ou les résultats obtenus.",
+  "include_code_expected_behaviour_and_steps_to_reproduce_the_issue": "Incluez le code, le comportement attendu et les étapes pour reproduire le problème.",
+  "tags": "Tags",
+  "add_up_to_5_tags_to_describe_what_your_question_is_about": "Ajoutez jusqu’à 5 tags pour décrire le sujet de votre question.",
+  "type_a_tag_press_enter_e_g_javascript": "Saisissez un tag et appuyez sur Entrée, par exemple javascript.",
+  "review_your_question": "Vérifier votre question",
+  "cancel": "Annuler",
+  "preview": "Aperçu",
+  "no_title": "Aucun titre",
+  "no_details_provided": "Aucun détail fourni",
+  "post_question": "Publier la question",
+  "edit": "Modifier",
+  "ask_a_public_question": "Poser une question publique",
+  "other_users_will_be_able_to_see_and_answer_your_question": "Les autres utilisateurs pourront voir votre question et y répondre.",
+  "something_went_wrong": "Une erreur s’est produite. Veuillez réessayer.",
+  "accessibility": {
+    "add_tag": "Ajouter un tag",
+    "remove_tag": "Supprimer le tag {{tag}}"
+  }
+}
+}

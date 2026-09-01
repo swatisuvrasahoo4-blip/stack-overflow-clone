@@ -4,11 +4,10 @@ import {
 } from "react";
 
 import { useRouter } from "next/router";
-
 import { useTranslation } from "react-i18next";
 
-import QuestionReports from "./question/QuestionReports";
-import PostReports from "./post/PostReports";
+import QuestionReports from "../../../components/admin/reports/question/QuestionReports";
+import PostReports from "../../../components/admin/reports/post/PostReports";
 
 import {
   getAdminReports,
@@ -84,7 +83,9 @@ const AdminReportsPage = () => {
   const router = useRouter();
 
   const { user } = useAuth();
-  const { t } = useTranslation();
+
+  const { t } =
+    useTranslation("reports");
 
   const [
     reports,
@@ -110,7 +111,6 @@ const AdminReportsPage = () => {
     "posts"
   );
 
-  // Fetch admin reports
   const fetchReports =
     async (): Promise<void> => {
       try {
@@ -138,7 +138,7 @@ const AdminReportsPage = () => {
         ) {
           alert(
             t(
-              "alert.admin_access_required"
+              "admin.messages.admin_access_required"
             )
           );
 
@@ -149,13 +149,12 @@ const AdminReportsPage = () => {
       }
     };
 
-  // Suspend user
   const handleSuspend = async (
     userId: string
   ): Promise<void> => {
     const reason = prompt(
       t(
-        "prompt.reason_for_suspension"
+        "admin.prompts.reason_for_suspension"
       )
     );
 
@@ -171,7 +170,7 @@ const AdminReportsPage = () => {
 
       alert(
         t(
-          "alert.user_suspended_successfully"
+          "admin.messages.user_suspended_successfully"
         )
       );
 
@@ -184,13 +183,12 @@ const AdminReportsPage = () => {
 
       alert(
         t(
-          "alert.failed_to_suspend_user"
+          "admin.messages.failed_to_suspend_user"
         )
       );
     }
   };
 
-  // Unsuspend user
   const handleUnsuspend = async (
     userId: string
   ): Promise<void> => {
@@ -201,7 +199,7 @@ const AdminReportsPage = () => {
 
       alert(
         t(
-          "alert.user_unsuspend_successfully"
+          "admin.messages.user_unsuspended_successfully"
         )
       );
 
@@ -214,13 +212,12 @@ const AdminReportsPage = () => {
 
       alert(
         t(
-          "alert.failed_to_unsuspend_user"
+          "admin.messages.failed_to_unsuspend_user"
         )
       );
     }
   };
 
-  // Update report status
   const handleStatusChange =
     async (
       reportId: string,
@@ -256,20 +253,15 @@ const AdminReportsPage = () => {
           status
         );
       } catch (error: unknown) {
-        const apiError =
-          error as ApiError;
-
         console.error(
           "Failed to update report:",
           error
         );
 
         alert(
-          apiError.response
-            ?.data?.message ||
-            t(
-              "alert.failed_to_update_report"
-            )
+          t(
+            "admin.messages.failed_to_update_report"
+          )
         );
 
         await fetchReports();
@@ -289,7 +281,9 @@ const AdminReportsPage = () => {
   if (loading) {
     return (
       <div className="p-8 text-center text-gray-500">
-        Loading reports...
+        {t(
+          "admin.status.loading_reports"
+        )}
       </div>
     );
   }
@@ -333,21 +327,19 @@ const AdminReportsPage = () => {
   return (
     <main className="min-h-screen bg-gray-50 px-4 py-8">
       <div className="mx-auto max-w-6xl">
-        {/* Page header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">
             {t(
-              "admin.reports"
+              "admin.page.reports"
             )}
           </h1>
 
           <p className="mt-2 text-sm text-gray-600">
             {t(
-              "admin.reviewReportsModerateContentManageSuspendedUsers"
+              "admin.page.review_reports_moderate_content_manage_suspended_users"
             )}
           </p>
 
-          {/* Report tabs */}
           <div className="my-6 flex gap-2">
             <button
               type="button"
@@ -364,7 +356,7 @@ const AdminReportsPage = () => {
               }`}
             >
               {t(
-                "admin.postReports"
+                "admin.page.post_reports"
               )}
             </button>
 
@@ -383,18 +375,15 @@ const AdminReportsPage = () => {
               }`}
             >
               {t(
-                "admin.questionReports"
+                "admin.page.question_reports"
               )}
             </button>
           </div>
 
-          {/* Question reports */}
           {activeReportTab ===
             "questions" && (
             <QuestionReports
-              reports={
-                reports
-              }
+              reports={reports}
               updatingId={
                 updatingId
               }
@@ -410,13 +399,10 @@ const AdminReportsPage = () => {
             />
           )}
 
-          {/* Post reports */}
           {activeReportTab ===
             "posts" && (
             <PostReports
-              reports={
-                reports
-              }
+              reports={reports}
               reportStats={
                 reportStats
               }

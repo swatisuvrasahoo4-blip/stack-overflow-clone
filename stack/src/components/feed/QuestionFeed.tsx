@@ -63,7 +63,9 @@ type QuestionResponse = {
 };
 
 interface QuestionFeedProps {
-  activeFeed: "trending" | "following";
+  activeFeed:
+    | "trending"
+    | "following";
   followingIds: string[];
 }
 
@@ -71,7 +73,10 @@ const QuestionFeed = ({
   activeFeed,
   followingIds,
 }: QuestionFeedProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation([
+    "questions",
+    "answers",
+  ]);
 
   const [items, setItems] =
     useState<Question[]>([]);
@@ -94,160 +99,233 @@ const QuestionFeed = ({
   const loadingMoreRef =
     useRef(false);
 
-  const normalizeQuestion = (
-    question: RawQuestion
-  ): Question => {
-    const id =
-      question._id ||
-      question.id ||
-      String(Date.now());
+  const normalizeQuestion =
+    useCallback(
+      (
+        question: RawQuestion
+      ): Question => {
+        const id =
+          question._id ||
+          question.id ||
+          String(Date.now());
 
-    const title =
-      question.questiontitle ||
-      question.title ||
-      question.questionTitle ||
-      "(no title)";
+        const title =
+          question.questiontitle ||
+          question.title ||
+          question.questionTitle ||
+          t("messages.no_title", {
+            ns: "questions",
+          });
 
-    const content =
-      question.questionbody ||
-      question.content ||
-      question.body ||
-      "";
+        const content =
+          question.questionbody ||
+          question.content ||
+          question.body ||
+          "";
 
-    const tags =
-      question.questiontags ||
-      question.tags ||
-      [];
+        const tags =
+          question.questiontags ||
+          question.tags ||
+          [];
 
-    const author =
-      question.userposted ||
-      question.author ||
-      "You";
+        const author =
+          question.userposted ||
+          question.author ||
+          t("labels.you", {
+            ns: "questions",
+          });
 
-    const authorId =
-      question.userid ||
-      question.authorId ||
-      "local";
+        const authorId =
+          question.userid ||
+          question.authorId ||
+          "local";
 
-    const timeAgo = (() => {
-      try {
-        const date = new Date(
-          question.askedon ||
-            question.askedOn ||
-            question.asked ||
-            Date.now()
-        );
+        const timeAgo = (() => {
+          try {
+            const date = new Date(
+              question.askedon ||
+                question.askedOn ||
+                question.asked ||
+                Date.now()
+            );
 
-        const diff =
-          Date.now() -
-          date.getTime();
+            const diff =
+              Date.now() -
+              date.getTime();
 
-        const minutes =
-          Math.floor(diff / 60000);
+            const minutes =
+              Math.floor(
+                diff / 60000
+              );
 
-        if (minutes <= 0) {
-          return "just now";
-        }
+            if (minutes <= 0) {
+              return t(
+                "time.just_now",
+                {
+                  ns: "questions",
+                }
+              );
+            }
 
-        if (minutes < 60) {
-          return `${minutes} mins ago`;
-        }
+            if (minutes < 60) {
+              return minutes === 1
+                ? t(
+                    "time.minute_ago",
+                    {
+                      ns: "questions",
+                      count:
+                        minutes,
+                    }
+                  )
+                : t(
+                    "time.minutes_ago",
+                    {
+                      ns: "questions",
+                      count:
+                        minutes,
+                    }
+                  );
+            }
 
-        const hours =
-          Math.floor(minutes / 60);
+            const hours =
+              Math.floor(
+                minutes / 60
+              );
 
-        if (hours < 24) {
-          return `${hours} hours ago`;
-        }
+            if (hours < 24) {
+              return hours === 1
+                ? t(
+                    "time.hour_ago",
+                    {
+                      ns: "questions",
+                      count: hours,
+                    }
+                  )
+                : t(
+                    "time.hours_ago",
+                    {
+                      ns: "questions",
+                      count: hours,
+                    }
+                  );
+            }
 
-        const days =
-          Math.floor(hours / 24);
+            const days =
+              Math.floor(
+                hours / 24
+              );
 
-        return `${days} days ago`;
-      } catch {
-        return "just now";
-      }
-    })();
+            return days === 1
+              ? t(
+                  "time.day_ago",
+                  {
+                    ns: "questions",
+                    count: days,
+                  }
+                )
+              : t(
+                  "time.days_ago",
+                  {
+                    ns: "questions",
+                    count: days,
+                  }
+                );
+          } catch {
+            return t(
+              "time.just_now",
+              {
+                ns: "questions",
+              }
+            );
+          }
+        })();
 
-    const votes =
-      (question.upvote?.length ??
-        question.upvotes ??
-        0) -
-      (question.downvote?.length ??
-        question.downvotes ??
-        0);
+        const votes =
+          (question.upvote?.length ??
+            question.upvotes ??
+            0) -
+          (question.downvote
+            ?.length ??
+            question.downvotes ??
+            0);
 
-    const answers =
-      question.noofanswer ??
-      question.answers ??
-      question.answer?.length ??
-      0;
+        const answers =
+          question.noofanswer ??
+          question.answers ??
+          question.answer?.length ??
+          0;
 
-    const views =
-      question.views ?? 0;
+        const views =
+          question.views ?? 0;
 
-    return {
-      id,
-      title,
-      content,
-      tags,
-      author,
-      authorId,
-      timeAgo,
-      votes,
-      answers,
-      views,
-    };
-  };
+        return {
+          id,
+          title,
+          content,
+          tags,
+          author,
+          authorId,
+          timeAgo,
+          votes,
+          answers,
+          views,
+        };
+      },
+      [t]
+    );
 
-  const fetchQuestions = useCallback(
-    async (
-      cursor: string | null = null
-    ) => {
-      const params =
-        new URLSearchParams();
+  const fetchQuestions =
+    useCallback(
+      async (
+        cursor: string | null = null
+      ) => {
+        const params =
+          new URLSearchParams();
 
-      params.set("limit", "10");
-
-      if (cursor) {
         params.set(
-          "cursor",
-          cursor
-        );
-      }
-
-      const response =
-        await axiosInstance.get<QuestionResponse>(
-          `/question/getallquestion?${params.toString()}`
+          "limit",
+          "10"
         );
 
-      const rawQuestions =
-        response.data.data ?? [];
+        if (cursor) {
+          params.set(
+            "cursor",
+            cursor
+          );
+        }
 
-      const questions =
-        rawQuestions.map(
-          normalizeQuestion
-        );
+        const response =
+          await axiosInstance.get<QuestionResponse>(
+            `/question/getallquestion?${params.toString()}`
+          );
 
-      const pagination =
-        response.data.pagination;
+        const rawQuestions =
+          response.data.data ??
+          [];
 
-      return {
-        questions,
-        nextCursor:
-          pagination?.nextCursor ??
-          null,
-        hasMore:
-          pagination?.hasMore ??
-          false,
-      };
-    },
-    []
-  );
+        const questions =
+          rawQuestions.map(
+            normalizeQuestion
+          );
 
-  /*
-   * Initial question loading
-   */
+        const pagination =
+          response.data
+            .pagination;
+
+        return {
+          questions,
+          nextCursor:
+            pagination
+              ?.nextCursor ??
+            null,
+          hasMore:
+            pagination?.hasMore ??
+            false,
+        };
+      },
+      [normalizeQuestion]
+    );
+
   useEffect(() => {
     let cancelled = false;
 
@@ -289,7 +367,9 @@ const QuestionFeed = ({
           }
         } finally {
           if (!cancelled) {
-            setLoading(false);
+            setLoading(
+              false
+            );
           }
         }
       };
@@ -301,9 +381,6 @@ const QuestionFeed = ({
     };
   }, [fetchQuestions]);
 
-  /*
-   * Load more questions
-   */
   const loadMoreQuestions =
     useCallback(
       async (): Promise<void> => {
@@ -327,24 +404,18 @@ const QuestionFeed = ({
             );
 
           setItems(
-            (
-              previousItems
-            ) => {
+            (previousItems) => {
               const existingIds =
                 new Set(
                   previousItems.map(
-                    (
-                      question
-                    ) =>
+                    (question) =>
                       question.id
                   )
                 );
 
               const newQuestions =
                 result.questions.filter(
-                  (
-                    question
-                  ) =>
+                  (question) =>
                     !existingIds.has(
                       question.id
                     )
@@ -376,7 +447,9 @@ const QuestionFeed = ({
             loadingMoreRef.current =
               false;
 
-            setLoadingMore(false);
+            setLoadingMore(
+              false
+            );
           }, 500);
         }
       },
@@ -387,19 +460,12 @@ const QuestionFeed = ({
       ]
     );
 
-  /*
-   * Infinite scroll
-   */
   useEffect(() => {
-    if (loading) {
-      return;
-    }
-
-    if (!hasMore) {
-      return;
-    }
-
-    if (!nextCursor) {
+    if (
+      loading ||
+      !hasMore ||
+      !nextCursor
+    ) {
       return;
     }
 
@@ -444,9 +510,6 @@ const QuestionFeed = ({
     loadMoreQuestions,
   ]);
 
-  /*
-   * Restore scroll position
-   */
   useEffect(() => {
     const savedScroll =
       sessionStorage.getItem(
@@ -503,24 +566,21 @@ const QuestionFeed = ({
     items.length,
   ]);
 
-  /*
-   * Loading
-   */
   if (loading) {
     return (
       <div className="flex items-center justify-center py-10">
         <p className="text-sm text-gray-500">
           {t(
-            "feed.loading_questions"
+            "status.loading_questions",
+            {
+              ns: "questions",
+            }
           )}
         </p>
       </div>
     );
   }
 
-  /*
-   * Filter and sort questions
-   */
   const displayedQuestions =
     (
       activeFeed ===
@@ -530,11 +590,15 @@ const QuestionFeed = ({
               first,
               second
             ) =>
-              second.votes * 3 +
-              second.answers * 5 +
+              second.votes *
+                3 +
+              second.answers *
+                5 +
               second.views -
-              (first.votes * 3 +
-                first.answers * 5 +
+              (first.votes *
+                3 +
+                first.answers *
+                  5 +
                 first.views)
           )
         : items
@@ -555,12 +619,12 @@ const QuestionFeed = ({
         {displayedQuestions.map(
           (question) => (
             <div
-              key={question.id}
+              key={
+                question.id
+              }
               className="border-b border-gray-200 pb-4"
             >
               <div className="flex flex-col gap-4 sm:flex-row">
-
-                {/* Stats */}
                 <div className="flex items-center gap-4 text-sm text-gray-600 sm:w-16 sm:flex-col sm:items-center sm:gap-2 lg:w-20">
                   <div className="text-center">
                     <div className="font-medium">
@@ -571,7 +635,10 @@ const QuestionFeed = ({
 
                     <div className="text-xs">
                       {t(
-                        "community.votes"
+                        "labels.votes",
+                        {
+                          ns: "questions",
+                        }
                       )}
                     </div>
                   </div>
@@ -594,18 +661,22 @@ const QuestionFeed = ({
                       {question.answers ===
                       1
                         ? t(
-                            "community.answer"
+                            "labels.answer",
+                            {
+                              ns: "answers",
+                            }
                           )
                         : t(
-                            "community.answers"
+                            "labels.answers",
+                            {
+                              ns: "answers",
+                            }
                           )}
                     </div>
                   </div>
                 </div>
 
-                {/* Question content */}
                 <div className="min-w-0 flex-1">
-
                   <Link
                     href={`/questions/${question.id}`}
                     onClick={() => {
@@ -635,25 +706,25 @@ const QuestionFeed = ({
                   </p>
 
                   <div className="flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center">
-
-                    {/* Tags */}
                     <div className="flex flex-wrap gap-1">
                       {question.tags.map(
                         (tag) => (
                           <Badge
-                            key={tag}
+                            key={
+                              tag
+                            }
                             variant="secondary"
                             className="cursor-pointer bg-blue-100 text-xs text-blue-800 hover:bg-blue-200"
                           >
-                            {tag}
+                            {
+                              tag
+                            }
                           </Badge>
                         )
                       )}
                     </div>
 
-                    {/* Author */}
                     <div className="flex flex-shrink-0 items-center text-xs text-gray-600">
-
                       <Link
                         href={`/questions/${question.id}`}
                         onClick={() => {
@@ -689,13 +760,15 @@ const QuestionFeed = ({
 
                       <span>
                         {t(
-                          "community.asked"
+                          "labels.asked",
+                          {
+                            ns: "questions",
+                          }
                         )}{" "}
                         {
                           question.timeAgo
                         }
                       </span>
-
                     </div>
                   </div>
                 </div>
@@ -705,25 +778,31 @@ const QuestionFeed = ({
         )}
       </div>
 
-      {/* Infinite scroll sentinel */}
       <div
         ref={loadMoreRef}
         className="h-20 w-full"
       />
 
-      {/* Loading more */}
       {loadingMore && (
         <div className="py-6 text-center text-gray-500">
-          Loading more
-          questions...
+          {t(
+            "status.loading_more_questions",
+            {
+              ns: "questions",
+            }
+          )}
         </div>
       )}
 
-      {/* No more questions */}
       {!hasMore &&
         items.length > 0 && (
           <div className="py-6 text-center text-gray-400">
-            No more questions.
+            {t(
+              "messages.no_more_questions",
+              {
+                ns: "questions",
+              }
+            )}
           </div>
         )}
     </>

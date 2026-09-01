@@ -13,13 +13,14 @@ const VoteToCloseButton = ({
   isClosed,
   onClick,
 }: VoteToCloseButtonProps) => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("questions");
 
   const handleClick = () => {
     if (reputation < 250) {
       alert(
         t(
-          "alert.you_need_at_least_250_reputation_points_to_vote_to_close_questions"
+          "messages.close_vote_reputation_required"
         )
       );
 
@@ -36,7 +37,7 @@ const VoteToCloseButton = ({
         disabled
         className="cursor-not-allowed rounded-md bg-red-100 px-4 py-2 text-red-600"
       >
-        {t("community.question_closed")}
+        {t("status.question_closed")}
       </button>
     );
   }
@@ -45,9 +46,9 @@ const VoteToCloseButton = ({
     <button
       type="button"
       onClick={handleClick}
-      className="w-28 wrap-break-words rounded border border-red-400 px-2 py-1 text-red-500 transition hover:bg-red-50"
+      className="w-28 break-words rounded border border-red-400 px-2 py-1 text-red-500 transition hover:bg-red-50"
     >
-      {t("community.voteToClose")}
+      {t("actions.vote_to_close")}
     </button>
   );
 };

@@ -3,7 +3,8 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 
 const SocialLoginButtons = () => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("auth");
 
   return (
     <>

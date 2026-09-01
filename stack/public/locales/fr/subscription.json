@@ -1,0 +1,102 @@
+{
+  "billing": {
+    "title": "Détails de facturation",
+    "name": "Nom",
+    "email": "E-mail",
+    "plan": "Forfait",
+    "amount": "Montant"
+  },
+    "invoice": {
+    "title": "Détails de la facture",
+    "pdf_title": "FACTURE DE PAIEMENT",
+    "invoice": "Facture",
+    "invoice_number": "Numéro de facture :",
+    "date": "Date :",
+    "status": "Statut :",
+    "payment_details": "Détails du paiement",
+    "plan": "Forfait :",
+    "amount": "Montant :",
+    "payment_id": "ID de paiement :",
+    "order_id": "ID de commande :",
+    "thank_you": "Merci d’avoir choisi CodeQuest Premium !"
+  },
+  "actions": {
+    "download_invoice": "Télécharger la facture",
+     "view_invoice": "Voir la facture",
+      "current_plan": "Forfait actuel",
+    "upgrade": "Mettre à niveau",
+    "lower_plan": "Forfait inférieur",
+      "upgrade_plan": "Mettre à niveau le forfait",
+       "back": "Retour"
+  },
+  "payment_history": {
+    "title": "Historique des paiements",
+    "invoice": "Facture",
+    "plan": "Forfait",
+    "amount": "Montant",
+    "status": "Statut",
+    "date": "Date",
+    "action": "Action"
+  },
+  "plans": {
+    "most_popular": "Le plus populaire",
+    "month": "mois",
+    "names": {
+      "free": "Gratuit",
+      "bronze": "Bronze",
+      "silver": "Argent",
+      "gold": "Or"
+    }
+  },
+  "messages": {
+    "please_login_to_continue": "Veuillez vous connecter pour continuer.",
+        "subscription_activated_successfully": "Abonnement activé avec succès.",
+    "payment_verification_failed": "La vérification du paiement a échoué.",
+    "payment_service_not_loaded": "Le service de paiement n’est pas encore chargé.",
+    "payment_order_failed": "Une erreur s’est produite lors de la création du paiement."
+  },
+  "dashboard": {
+    "title": "Abonnement",
+    "current_plan": "Forfait actuel",
+    "status": "Statut",
+    "amount": "Montant",
+    "start_date": "Date de début",
+    "renewal_date": "Date de renouvellement"
+  },
+  "status": {
+    "active": "Actif",
+    "expired": "Expiré",
+    "cancelled": "Annulé"
+  },
+  "why_upgrade": {
+    "title": "Pourquoi passer à un forfait supérieur ?",
+    "benefits": {
+      "more_questions": {
+        "title": "Plus de questions",
+        "description": "Augmentez votre limite quotidienne de questions."
+      },
+      "premium_badges": {
+        "title": "Badges Premium",
+        "description": "Démarquez-vous avec des badges de profil exclusifs."
+      },
+      "advanced_search": {
+        "title": "Recherche avancée",
+        "description": "Trouvez des réponses plus rapidement grâce à des filtres puissants."
+      },
+      "unlimited_bookmarks": {
+        "title": "Enregistrements illimités",
+        "description": "Enregistrez autant de questions et de publications que vous le souhaitez."
+      }
+    }
+  },
+    "page": {
+    "subscription_plans": "Forfaits d’abonnement",
+    "upgrade_membership_title": "Choisissez le forfait qui correspond le mieux à vos besoins."
+  },
+  "payment": {
+    "subscription_description": "Abonnement {{plan}}"
+  },
+  "accessibility": {
+    "go_back": "Retour"
+  }
+}

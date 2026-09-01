@@ -1,0 +1,17 @@
+{
+  "links": {
+    "about": "À propos",
+    "products": "Produits",
+    "for_teams": "Pour les équipes"
+  },
+
+  "actions": {
+    "login": "Se connecter",
+    "signup": "S'inscrire",
+    "logout": "Se déconnecter"
+  },
+
+  "placeholders": {
+    "search": "Rechercher..."
+  }
+}

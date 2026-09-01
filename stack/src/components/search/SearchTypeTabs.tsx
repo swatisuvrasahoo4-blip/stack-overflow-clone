@@ -2,6 +2,7 @@ import type {
   Dispatch,
   SetStateAction,
 } from "react";
+
 import { useTranslation } from "react-i18next";
 
 type SearchType =
@@ -30,7 +31,8 @@ const SearchTypeTabs = ({
   setSearchType,
   setSelectedType,
 }: SearchTypeTabsProps) => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("search");
 
   const searchTypes: SearchType[] = [
     "All",
@@ -55,7 +57,9 @@ const SearchTypeTabs = ({
           key={type}
           type="button"
           onClick={() =>
-            handleSearchTypeChange(type)
+            handleSearchTypeChange(
+              type
+            )
           }
           className={`rounded-md px-4 py-2 text-sm font-medium transition ${
             searchType === type
@@ -64,7 +68,7 @@ const SearchTypeTabs = ({
           }`}
         >
           {t(
-            `search.${type.toLowerCase()}`
+            `tabs.${type.toLowerCase()}`
           )}
         </button>
       ))}

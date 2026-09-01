@@ -14,14 +14,16 @@ interface PostReportStatsProps {
 const PostReportStats = ({
   reportStats,
 }: PostReportStatsProps) => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("reports");
 
   return (
     <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
-      {/* Pending reports */}
       <div className="rounded-xl border bg-white p-5 shadow-sm">
         <p className="text-sm text-gray-500">
-          {t("report.pending")}
+          {t(
+            "admin.stats.pending"
+          )}
         </p>
 
         <h2 className="mt-2 text-3xl font-bold text-yellow-600">
@@ -29,10 +31,11 @@ const PostReportStats = ({
         </h2>
       </div>
 
-      {/* Reviewed reports */}
       <div className="rounded-xl border bg-white p-5 shadow-sm">
         <p className="text-sm text-gray-500">
-          {t("report.reviewed")}
+          {t(
+            "admin.stats.reviewed"
+          )}
         </p>
 
         <h2 className="mt-2 text-3xl font-bold text-blue-600">
@@ -40,10 +43,11 @@ const PostReportStats = ({
         </h2>
       </div>
 
-      {/* Dismissed reports */}
       <div className="rounded-xl border bg-white p-5 shadow-sm">
         <p className="text-sm text-gray-500">
-          {t("report.dismissed")}
+          {t(
+            "admin.stats.dismissed"
+          )}
         </p>
 
         <h2 className="mt-2 text-3xl font-bold text-gray-700">
@@ -51,10 +55,11 @@ const PostReportStats = ({
         </h2>
       </div>
 
-      {/* Action taken */}
       <div className="rounded-xl border bg-white p-5 shadow-sm">
         <p className="text-sm text-gray-500">
-          {t("report.actionTaken")}
+          {t(
+            "admin.stats.action_taken"
+          )}
         </p>
 
         <h2 className="mt-2 text-3xl font-bold text-red-600">

@@ -1,0 +1,15 @@
+{
+  "links": {
+    "about": "हमारे बारे में",
+    "products": "उत्पाद",
+    "for_teams": "टीमों के लिए"
+  },
+  "actions": {
+    "login": "लॉग इन करें",
+    "signup": "साइन अप करें",
+    "logout": "लॉग आउट करें"
+  },
+  "placeholders": {
+    "search": "खोजें..."
+  }
+}

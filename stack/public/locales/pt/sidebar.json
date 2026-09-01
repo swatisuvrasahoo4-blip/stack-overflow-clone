@@ -1,0 +1,21 @@
+{
+  "links": {
+    "home": "Início",
+    "questions": "Perguntas",
+    "ai_assist": "Assistente de IA",
+    "labs": "Laboratórios",
+    "tags": "Tags",
+    "users": "Usuários",
+    "community": "Comunidade",
+    "saves": "Salvos",
+    "challenges": "Desafios",
+    "chat": "Chat",
+    "articles": "Artigos",
+    "companies": "Empresas",
+    "subscription": "Assinatura",
+    "admin": "Administrador"
+  },
+  "badges": {
+    "new": "NOVO"
+  }
+}

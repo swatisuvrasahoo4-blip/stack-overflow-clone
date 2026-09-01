@@ -98,7 +98,8 @@ interface SubscriptionData {
 }
 
 const UserProfilePage = () => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("profile");
 
   const {
     user,
@@ -308,7 +309,9 @@ const UserProfilePage = () => {
     return (
       <Mainlayout>
         <div className="mt-4 text-center text-gray-500">
-          No user found.
+          {t(
+            "messages.no_user_found"
+          )}
         </div>
       </Mainlayout>
     );
@@ -395,7 +398,7 @@ const UserProfilePage = () => {
 
         toast.success(
           t(
-            "toast.profile_updated_successfully"
+            "messages.profile_updated_successfully"
           )
         );
 
@@ -491,7 +494,7 @@ const UserProfilePage = () => {
 
         toast.success(
           t(
-            "toast.profile_updated"
+            "messages.profile_updated_successfully"
           )
         );
       }
@@ -553,7 +556,12 @@ const UserProfilePage = () => {
                 src={getImageUrl(
                   users.profilePhoto
                 )}
-                alt={`${users.name} profile`}
+                alt={t(
+                  "accessibility.user_profile_photo",
+                  {
+                    name: users.name,
+                  }
+                )}
               />
             ) : (
               <AvatarFallback className="text-2xl lg:text-3xl">
@@ -694,7 +702,7 @@ const UserProfilePage = () => {
                       }
                     >
                       {t(
-                        "user.loginSessions"
+                        "actions.login_sessions"
                       )}
                     </Button>
 
@@ -711,7 +719,7 @@ const UserProfilePage = () => {
                       <Lock className="h-4 w-4" />
 
                       {t(
-                        "user.changePassword"
+                        "actions.change_password"
                       )}
                     </Button>
                   </div>
@@ -738,7 +746,7 @@ const UserProfilePage = () => {
                 <Calendar className="mr-1 h-4 w-4" />
 
                 {t(
-                  "user.memberSince"
+                  "labels.member_since"
                 )}{" "}
 
                 {users.joinDate
@@ -764,7 +772,7 @@ const UserProfilePage = () => {
 
                 <span className="ml-1 text-gray-600">
                   {t(
-                    "user.goldBadges"
+                    "labels.gold_badges"
                   )}
                 </span>
               </div>
@@ -779,7 +787,7 @@ const UserProfilePage = () => {
 
                 <span className="ml-1 text-gray-600">
                   {t(
-                    "user.silverBadges"
+                    "labels.silver_badges"
                   )}
                 </span>
               </div>
@@ -794,7 +802,7 @@ const UserProfilePage = () => {
 
                 <span className="ml-1 text-gray-600">
                   {t(
-                    "user.bronzeBadges"
+                    "labels.bronze_badges"
                   )}
                 </span>
               </div>
@@ -812,7 +820,7 @@ const UserProfilePage = () => {
               <CardHeader>
                 <CardTitle>
                   {t(
-                    "user.about"
+                    "sections.about"
                   )}
                 </CardTitle>
               </CardHeader>
@@ -836,7 +844,7 @@ const UserProfilePage = () => {
               <CardHeader>
                 <CardTitle>
                   {t(
-                    "user.topTags"
+                    "sections.top_tags"
                   )}
                 </CardTitle>
               </CardHeader>

@@ -154,9 +154,10 @@ const usePostActions = ({
   setActiveReplyComment,
 }: UsePostActionsProps) => {
   const router = useRouter();
-  const { t } = useTranslation();
 
-  // Post edit actions
+  const { t } =
+    useTranslation("community");
+
   const {
     handleEdit,
     handleSaveEdit,
@@ -184,7 +185,6 @@ const usePostActions = ({
     setEditCodeSnippet,
   });
 
-  // Comment and reply actions
   const {
     handleComment,
     handleReply,
@@ -200,19 +200,17 @@ const usePostActions = ({
     setActiveReplyComment,
   });
 
-  // Like post
   const handleLike = async (
     postId: string
   ): Promise<void> => {
     if (!user) {
       toast.info(
         t(
-          "toast.please_login_to_continue"
+          "messages.please_login_to_continue"
         )
       );
 
       void router.push("/auth");
-
       return;
     }
 
@@ -235,19 +233,17 @@ const usePostActions = ({
     }
   };
 
-  // Bookmark post
   const handleBookmark = async (
     post: Post
   ): Promise<boolean | null> => {
     if (!user) {
       toast.info(
         t(
-          "toast.please_login_to_continue"
+          "messages.please_login_to_continue"
         )
       );
 
       void router.push("/auth");
-
       return null;
     }
 
@@ -291,31 +287,33 @@ const usePostActions = ({
       const apiError =
         error as ApiError;
 
-      alert(
+      console.error(
+        "Bookmark post error:",
         apiError.response?.data
-          ?.message ||
-          t(
-            "alert.unable_to_update_bookmark_please_try_again"
-          )
+          ?.message || error
+      );
+
+      alert(
+        t(
+          "messages.unable_to_update_bookmark"
+        )
       );
 
       return null;
     }
   };
 
-  // Share post
   const handleShare = async (
     postId: string
   ): Promise<void> => {
     if (!user) {
       toast.info(
         t(
-          "toast.please_login_to_continue"
+          "messages.please_login_to_continue"
         )
       );
 
       void router.push("/auth");
-
       return;
     }
 
@@ -332,7 +330,6 @@ const usePostActions = ({
     }
   };
 
-  // Delete post
   const handleDelete = async (
     postId: string
   ): Promise<void> => {
@@ -349,7 +346,7 @@ const usePostActions = ({
 
       alert(
         t(
-          "alert.post_deleted_successfully"
+          "messages.post_deleted_successfully"
         )
       );
     } catch (error: unknown) {
@@ -358,15 +355,14 @@ const usePostActions = ({
 
       console.error(
         "Delete post error:",
-        error
+        apiError.response?.data
+          ?.message || error
       );
 
       alert(
-        apiError.response?.data
-          ?.message ||
-          t(
-            "alert.unable_to_delete_the_post"
-          )
+        t(
+          "messages.unable_to_delete_post"
+        )
       );
     }
   };

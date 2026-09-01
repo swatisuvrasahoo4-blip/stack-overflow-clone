@@ -9,7 +9,6 @@ interface CreatePostImageUploadProps {
   postType: string;
   image: File | null;
   imageInputRef: RefObject<HTMLInputElement | null>;
-
   onImageChange: (
     image: File | null
   ) => void;
@@ -21,9 +20,9 @@ const CreatePostImageUpload = ({
   imageInputRef,
   onImageChange,
 }: CreatePostImageUploadProps) => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("create_post");
 
-  // Select image
   const handleImageChange = (
     event: ChangeEvent<HTMLInputElement>
   ): void => {
@@ -34,7 +33,6 @@ const CreatePostImageUpload = ({
     onImageChange(file);
   };
 
-  // Remove selected image
   const handleRemoveImage =
     (): void => {
       onImageChange(null);
@@ -47,7 +45,6 @@ const CreatePostImageUpload = ({
 
   return (
     <div className="space-y-2">
-      {/* Hidden file input */}
       <input
         ref={imageInputRef}
         type="file"
@@ -56,7 +53,6 @@ const CreatePostImageUpload = ({
         onChange={handleImageChange}
       />
 
-      {/* Image selector */}
       {postType !==
         "Code Snippet" && (
         <div className="flex items-center rounded border p-2">
@@ -68,7 +64,7 @@ const CreatePostImageUpload = ({
             }
           >
             {t(
-              "createpost.choose_file"
+              "image_upload.choose_file"
             )}
           </button>
 
@@ -82,16 +78,17 @@ const CreatePostImageUpload = ({
             {image
               ? image.name
               : t(
-                  "createpost.no_file_choosen"
+                  "image_upload.no_file_chosen"
                 )}
           </span>
 
-          {/* Remove image */}
           {image && (
             <button
               type="button"
               className="cursor-pointer px-2 text-xl font-bold text-red-600 hover:text-red-800"
-              aria-label="Remove selected image"
+              aria-label={t(
+                "image_upload.remove_selected_image"
+              )}
               onClick={
                 handleRemoveImage
               }

@@ -36,7 +36,8 @@ type StatusFilter =
   | "revoked";
 
 const LoginActivityPage = () => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("login_activity");
 
   const [
     activities,
@@ -90,7 +91,7 @@ const LoginActivityPage = () => {
     return (
       <div className="rounded-xl border bg-white p-8 text-center text-gray-500">
         {t(
-          "logactivity.loading_login_activity"
+          "loading_login_activity"
         )}
       </div>
     );
@@ -169,27 +170,25 @@ const LoginActivityPage = () => {
 
   return (
     <div className="space-y-6">
-      {/* Page header */}
       <div>
         <h2 className="text-2xl font-bold text-gray-900">
           {t(
-            "admin.loginActivity"
+            "title"
           )}
         </h2>
 
         <p className="mt-1 text-sm text-gray-600">
           {t(
-            "logactivity.monitor_user_login_sessions_and_device_activity"
+            "monitor_user_login_sessions_and_device_activity"
           )}
         </p>
       </div>
 
-      {/* Session statistics */}
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="rounded-xl border bg-white p-5 shadow-sm">
           <p className="text-sm font-medium text-gray-500">
             {t(
-              "logactivity.total_sessions"
+              "total_sessions"
             )}
           </p>
 
@@ -201,7 +200,7 @@ const LoginActivityPage = () => {
         <div className="rounded-xl border bg-white p-5 shadow-sm">
           <p className="text-sm font-medium text-gray-500">
             {t(
-              "logactivity.active_sessions"
+              "active_sessions"
             )}
           </p>
 
@@ -213,7 +212,7 @@ const LoginActivityPage = () => {
         <div className="rounded-xl border bg-white p-5 shadow-sm">
           <p className="text-sm font-medium text-gray-500">
             {t(
-              "logactivity.revoked_sessions"
+              "revoked_sessions"
             )}
           </p>
 
@@ -223,7 +222,6 @@ const LoginActivityPage = () => {
         </div>
       </div>
 
-      {/* Search and filters */}
       <div className="flex flex-col gap-3 rounded-xl border bg-white p-4 shadow-sm sm:flex-row">
         <input
           type="text"
@@ -234,7 +232,7 @@ const LoginActivityPage = () => {
             )
           }
           placeholder={t(
-            "logactivity.search_by_name_username_email_or_ip_address"
+            "search_by_name_username_email_or_ip_address"
           )}
           className="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-black outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
         />
@@ -251,19 +249,19 @@ const LoginActivityPage = () => {
         >
           <option value="all">
             {t(
-              "logactivity.all_status"
+              "all_status"
             )}
           </option>
 
           <option value="active">
             {t(
-              "logactivity.active"
+              "active"
             )}
           </option>
 
           <option value="revoked">
             {t(
-              "logactivity.revoked"
+              "revoked"
             )}
           </option>
         </select>
@@ -279,43 +277,42 @@ const LoginActivityPage = () => {
         >
           <option value="all">
             {t(
-              "logactivity.all_devices"
+              "all_devices"
             )}
           </option>
 
           <option value="desktop">
             {t(
-              "logactivity.desktop"
+              "desktop"
             )}
           </option>
 
           <option value="mobile">
             {t(
-              "logactivity.mobile"
+              "mobile"
             )}
           </option>
 
           <option value="tablet">
             {t(
-              "logactivity.tablet"
+              "tablet"
             )}
           </option>
 
           <option value="unknown">
             {t(
-              "logactivity.unknown"
+              "unknown"
             )}
           </option>
         </select>
       </div>
 
-      {/* Login activity list */}
       <div className="rounded-xl border bg-white">
         {filteredActivities.length ===
         0 ? (
           <div className="p-8 text-center text-gray-500">
             {t(
-              "logactivity.no_login_activity_found"
+              "no_login_activity_found"
             )}
           </div>
         ) : (
@@ -328,19 +325,22 @@ const LoginActivityPage = () => {
                   }
                   className="p-5"
                 >
-                  {/* User and status */}
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div>
                       <h3 className="font-semibold text-gray-900">
                         {activity.user
                           ?.name ||
-                          "Unknown User"}
+                          t(
+                            "unknown_user"
+                          )}
                       </h3>
 
                       <p className="text-sm text-gray-500">
                         {activity.user
                           ?.email ||
-                          "No email"}
+                          t(
+                            "no_email"
+                          )}
                       </p>
                     </div>
 
@@ -353,20 +353,19 @@ const LoginActivityPage = () => {
                     >
                       {activity.isRevoked
                         ? t(
-                            "logactivity.revoked"
+                            "revoked"
                           )
                         : t(
-                            "logactivity.active"
+                            "active"
                           )}
                     </span>
                   </div>
 
-                  {/* Session information */}
                   <div className="mt-4 grid gap-3 text-sm text-gray-600 sm:grid-cols-2 lg:grid-cols-4">
                     <p>
                       <span className="font-medium text-gray-900">
                         {t(
-                          "logactivity.device"
+                          "device"
                         )}
                         :
                       </span>{" "}
@@ -378,7 +377,7 @@ const LoginActivityPage = () => {
                     <p>
                       <span className="font-medium text-gray-900">
                         {t(
-                          "logactivity.browser"
+                          "browser"
                         )}
                         :
                       </span>{" "}
@@ -390,7 +389,7 @@ const LoginActivityPage = () => {
                     <p>
                       <span className="font-medium text-gray-900">
                         {t(
-                          "logactivity.os"
+                          "os"
                         )}
                         :
                       </span>{" "}
@@ -402,7 +401,7 @@ const LoginActivityPage = () => {
                     <p>
                       <span className="font-medium text-gray-900">
                         {t(
-                          "logactivity.ip"
+                          "ip"
                         )}
                         :
                       </span>{" "}
@@ -414,23 +413,23 @@ const LoginActivityPage = () => {
                     <p>
                       <span className="font-medium text-gray-900">
                         {t(
-                          "logactivity.trusted"
+                          "trusted"
                         )}
                         :
                       </span>{" "}
                       {activity.isTrustedDevice
                         ? t(
-                            "logactivity.yes"
+                            "yes"
                           )
                         : t(
-                            "logactivity.no"
+                            "no"
                           )}
                     </p>
 
                     <p>
                       <span className="font-medium text-gray-900">
                         {t(
-                          "logactivity.expires"
+                          "expires"
                         )}
                         :
                       </span>{" "}
@@ -440,10 +439,9 @@ const LoginActivityPage = () => {
                     </p>
                   </div>
 
-                  {/* Session dates */}
                   <div className="mt-3 text-xs text-gray-500">
                     {t(
-                      "logactivity.login"
+                      "login"
                     )}
                     :{" "}
                     {new Date(
@@ -451,7 +449,7 @@ const LoginActivityPage = () => {
                     ).toLocaleString()}
                     {" · "}
                     {t(
-                      "logactivity.last_active"
+                      "last_active"
                     )}
                     :{" "}
                     {new Date(

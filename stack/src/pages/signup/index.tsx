@@ -8,6 +8,7 @@ import type {
 } from "react";
 
 import Link from "next/link";
+
 import { useRouter } from "next/router";
 
 import {
@@ -23,16 +24,20 @@ import SignUpForm, {
 } from "@/components/auth/SignUpForm";
 
 import SocialLoginButtons from "../auth/SocialLoginButtons";
+
 import useUsernameCheck from "@/hooks/useUsernameCheck";
 
 import { useAuth } from "@/lib/AuthContext";
 
 import { toast } from "react-toastify";
+
 import { useTranslation } from "react-i18next";
 
 const SignUpPage = () => {
   const router = useRouter();
-  const { t } = useTranslation();
+
+  const { t } =
+    useTranslation("auth");
 
   const {
     Signup,
@@ -40,6 +45,7 @@ const SignUpPage = () => {
   } = useAuth();
 
   // Signup form
+
   const [
     form,
     setForm,
@@ -52,6 +58,7 @@ const SignUpPage = () => {
   });
 
   // Username availability
+
   const {
     usernameStatus,
     usernameMessage,
@@ -61,6 +68,7 @@ const SignUpPage = () => {
   );
 
   // Update form fields
+
   const handleChange = (
     event: ChangeEvent<HTMLInputElement>
   ): void => {
@@ -78,6 +86,7 @@ const SignUpPage = () => {
   };
 
   // Select username suggestion
+
   const handleUsernameSelect = (
     username: string
   ): void => {
@@ -90,6 +99,7 @@ const SignUpPage = () => {
   };
 
   // Submit signup form
+
   const handleSubmit = async (
     event: FormEvent<HTMLFormElement>
   ): Promise<void> => {
@@ -104,7 +114,7 @@ const SignUpPage = () => {
     ) {
       toast.error(
         t(
-          "toast.all_fields_are_required"
+          "messages.all_fields_required"
         )
       );
 
@@ -121,7 +131,7 @@ const SignUpPage = () => {
     ) {
       toast.error(
         t(
-          "toast.mobile_number_must_contain_exactly_10_digits"
+          "signup.messages.mobile_must_be_10_digits"
         )
       );
 
@@ -140,7 +150,7 @@ const SignUpPage = () => {
     if (!validPassword) {
       toast.error(
         t(
-          "toast.password_must_contain_at_least_8_characters_including_atleast_1_letter_and_1_number"
+          "messages.password_requirements"
         )
       );
 
@@ -153,7 +163,7 @@ const SignUpPage = () => {
     ) {
       toast.error(
         t(
-          "toast.please_choose_an_available_username"
+          "signup.messages.choose_available_username"
         )
       );
 
@@ -178,6 +188,7 @@ const SignUpPage = () => {
     <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
+
         <div className="mb-6 text-center lg:mb-8">
           <Link
             href="/"
@@ -199,23 +210,29 @@ const SignUpPage = () => {
         </div>
 
         {/* Signup card */}
+
         <Card>
           <CardHeader className="space-y-1 text-center">
             <CardTitle className="text-xl lg:text-2xl">
-              Create your account
+              {t(
+                "signup.title"
+              )}
             </CardTitle>
 
             <CardDescription>
-              Join the Stack Overflow
-              community
+              {t(
+                "signup.description"
+              )}
             </CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-4">
             {/* Social signup */}
+
             <SocialLoginButtons />
 
             {/* Signup form */}
+
             <SignUpForm
               form={form}
               usernameStatus={

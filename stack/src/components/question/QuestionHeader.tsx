@@ -12,23 +12,28 @@ const QuestionHeader = ({
   title,
   askedOn,
 }: QuestionHeaderProps) => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("questions");
 
   return (
     <div className="mb-6">
-      <h1 className="text-xl lg:text-2xl font-semibold mb-4 text-gray-900">
+      <h1 className="mb-4 text-xl font-semibold text-gray-900 lg:text-2xl">
         {title}
       </h1>
 
-      <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
+      <div className="mb-4 flex flex-wrap items-center gap-4 text-sm text-gray-600">
         <div className="flex items-center gap-1">
-          <Clock className="w-4 h-4" />
+          <Clock className="h-4 w-4" />
 
           <span>
-            {t("community.asked")}{" "}
+            {t("labels.asked")}{" "}
             {askedOn
-              ? new Date(askedOn).toLocaleDateString()
-              : "Unknown date"}
+              ? new Date(
+                  askedOn
+                ).toLocaleDateString()
+              : t(
+                  "messages.unknown_date"
+                )}
           </span>
         </div>
       </div>

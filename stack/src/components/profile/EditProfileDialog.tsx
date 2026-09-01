@@ -86,9 +86,9 @@ const EditProfileDialog = ({
   handleRemoveTag,
   handleSaveProfile,
 }: EditProfileDialogProps) => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("profile");
 
-  // Select profile photo
   const handleProfilePhotoChange = (
     event: ChangeEvent<HTMLInputElement>
   ) => {
@@ -109,7 +109,6 @@ const EditProfileDialog = ({
     );
   };
 
-  // Clear selected profile photo
   const handleClearSelectedPhoto =
     () => {
       setProfilePhotoFile(null);
@@ -126,7 +125,6 @@ const EditProfileDialog = ({
       }
     };
 
-  // Remove profile photo
   const handleRemoveProfilePhoto =
     () => {
       setProfilePhotoPreview("");
@@ -159,7 +157,7 @@ const EditProfileDialog = ({
         <Edit className="h-4 w-4" />
 
         {t(
-          "user.editProfile"
+          "actions.edit_profile"
         )}
       </DialogTrigger>
 
@@ -167,17 +165,16 @@ const EditProfileDialog = ({
         <DialogHeader>
           <DialogTitle>
             {t(
-              "profile.edit_profile"
+              "actions.edit_profile"
             )}
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6 py-4">
-          {/* Basic information */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">
               {t(
-                "profile.basic_information"
+                "sections.basic_information"
               )}
             </h3>
 
@@ -185,7 +182,7 @@ const EditProfileDialog = ({
               <div>
                 <Label htmlFor="username">
                   {t(
-                    "profile.username"
+                    "labels.username"
                   )}
                 </Label>
 
@@ -202,7 +199,7 @@ const EditProfileDialog = ({
               <div>
                 <Label htmlFor="name">
                   {t(
-                    "profile.display_name"
+                    "labels.display_name"
                   )}
                 </Label>
 
@@ -226,7 +223,7 @@ const EditProfileDialog = ({
                     )
                   }
                   placeholder={t(
-                    "profile.your_display_name"
+                    "placeholders.display_name"
                   )}
                   className="border-gray-300 bg-white"
                 />
@@ -234,18 +231,17 @@ const EditProfileDialog = ({
             </div>
           </div>
 
-          {/* Profile photo */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">
               {t(
-                "profile.profile_photo"
+                "sections.profile_photo"
               )}
             </h3>
 
             <div>
               <Label htmlFor="profilePhoto">
                 {t(
-                  "profile.upload_photo"
+                  "labels.upload_photo"
                 )}
               </Label>
 
@@ -271,7 +267,7 @@ const EditProfileDialog = ({
                   className="rounded bg-gray-100 px-4 py-2 hover:bg-gray-200"
                 >
                   {t(
-                    "profile.choose_file"
+                    "actions.choose_file"
                   )}
                 </button>
 
@@ -284,10 +280,10 @@ const EditProfileDialog = ({
                 >
                   {profilePhotoFile
                     ? t(
-                        "profile.file_selected"
+                        "status.file_selected"
                       )
                     : t(
-                        "profile.no_file_chosen"
+                        "status.no_file_chosen"
                       )}
                 </span>
 
@@ -298,6 +294,9 @@ const EditProfileDialog = ({
                       handleClearSelectedPhoto
                     }
                     className="ml-auto text-xl font-bold text-red-600 hover:text-red-800"
+                    aria-label={t(
+                      "accessibility.clear_selected_photo"
+                    )}
                   >
                     <X className="h-3 w-3" />
                   </button>
@@ -309,7 +308,9 @@ const EditProfileDialog = ({
                   src={
                     profilePhotoPreview
                   }
-                  alt="Profile preview"
+                  alt={t(
+                    "accessibility.profile_preview"
+                  )}
                   className="mt-3 h-24 w-24 rounded-full border object-cover"
                 />
               )}
@@ -323,18 +324,17 @@ const EditProfileDialog = ({
                   className="mt-3 rounded-md bg-red-500 px-4 py-2 text-white hover:bg-red-600"
                 >
                   {t(
-                    "profile.delete_profile_photo"
+                    "actions.delete_profile_photo"
                   )}
                 </button>
               )}
             </div>
           </div>
 
-          {/* About */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">
               {t(
-                "profile.about"
+                "sections.about"
               )}
             </h3>
 
@@ -358,17 +358,16 @@ const EditProfileDialog = ({
                 )
               }
               placeholder={t(
-                "profile.tell_us_about_yourself"
+                "placeholders.about"
               )}
               className="min-h-32 border-gray-300 bg-white"
             />
           </div>
 
-          {/* Skills and technologies */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">
               {t(
-                "profile.skills_and_technologies"
+                "sections.skills_and_technologies"
               )}
             </h3>
 
@@ -387,7 +386,7 @@ const EditProfileDialog = ({
                     )
                   }
                   placeholder={t(
-                    "profile.add_a_skill_or_technology"
+                    "placeholders.add_skill_or_technology"
                   )}
                   onKeyDown={(
                     event
@@ -411,6 +410,9 @@ const EditProfileDialog = ({
                   variant="outline"
                   size="sm"
                   className="bg-orange-600 text-white"
+                  aria-label={t(
+                    "accessibility.add_skill"
+                  )}
                 >
                   <Plus className="h-4 w-4" />
                 </Button>
@@ -434,6 +436,12 @@ const EditProfileDialog = ({
                           )
                         }
                         className="ml-1 hover:text-red-600"
+                        aria-label={t(
+                          "accessibility.remove_skill",
+                          {
+                            tag,
+                          }
+                        )}
                       >
                         <X className="h-3 w-3" />
                       </button>
@@ -444,7 +452,6 @@ const EditProfileDialog = ({
             </div>
           </div>
 
-          {/* Actions */}
           <div className="flex justify-end gap-3 border-t pt-4">
             <Button
               type="button"
@@ -457,7 +464,7 @@ const EditProfileDialog = ({
               className="bg-white text-gray-800 hover:text-gray-900"
             >
               {t(
-                "profile.cancel"
+                "actions.cancel"
               )}
             </Button>
 
@@ -469,7 +476,7 @@ const EditProfileDialog = ({
               className="bg-blue-600 hover:bg-blue-700"
             >
               {t(
-                "profile.save_changes"
+                "actions.save_changes"
               )}
             </Button>
           </div>

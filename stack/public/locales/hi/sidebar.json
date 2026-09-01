@@ -1,0 +1,21 @@
+{
+  "links": {
+    "home": "होम",
+    "questions": "प्रश्न",
+    "ai_assist": "एआई सहायक",
+    "labs": "लैब्स",
+    "tags": "टैग",
+    "users": "उपयोगकर्ता",
+    "community": "समुदाय",
+    "saves": "सहेजे गए",
+    "challenges": "चुनौतियाँ",
+    "chat": "चैट",
+    "articles": "लेख",
+    "companies": "कंपनियाँ",
+    "subscription": "सदस्यता",
+    "admin": "एडमिन"
+  },
+  "badges": {
+    "new": "नया"
+  }
+}

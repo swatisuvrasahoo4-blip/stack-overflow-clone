@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import type { Question as BaseQuestion } from "@/types/questions";
 
 import { voteToCloseQuestion } from "../../services/closeVoteService";
+
 import CloseVoteModal from "./CloseVoteModal";
 import VoteToCloseButton from "./VoteToCloseButton";
 
@@ -32,7 +33,9 @@ interface User {
 interface VoteToCloseProps {
   question: VoteCloseQuestion;
   user: User;
-  onQuestionUpdate: (question: VoteCloseQuestion) => void;
+  onQuestionUpdate: (
+    question: VoteCloseQuestion
+  ) => void;
 }
 
 const VoteToClose = ({
@@ -40,37 +43,53 @@ const VoteToClose = ({
   user,
   onQuestionUpdate,
 }: VoteToCloseProps) => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("questions");
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [reason, setReason] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [
+    isOpen,
+    setIsOpen,
+  ] = useState(false);
+
+  const [
+    reason,
+    setReason,
+  ] = useState("");
+
+  const [
+    loading,
+    setLoading,
+  ] = useState(false);
 
   const handleOpenModal = () => {
-    const currentUserId = user._id || user.id;
+    const currentUserId =
+      user._id || user.id;
 
     const isOwnQuestion =
-      String(question.userid) === String(currentUserId);
+      String(question.userid) ===
+      String(currentUserId);
 
     if (isOwnQuestion) {
       toast.info(
         t(
-          "toast.you_cannot_vote_to_close_your_own_question"
+          "messages.cannot_vote_to_close_own_question"
         )
       );
 
       return;
     }
 
-    const alreadyVoted = question.closeVotes?.some(
-      (vote) =>
-        String(vote.userId) === String(currentUserId)
-    );
+    const alreadyVoted =
+      question.closeVotes?.some(
+        (vote) =>
+          String(vote.userId) ===
+          String(currentUserId)
+      );
 
     if (alreadyVoted) {
       toast.info(
         t(
-          "alert.you_have_already_voted_to_close_this_question"
+          "messages.already_voted_to_close_question"
         )
       );
 
@@ -85,52 +104,67 @@ const VoteToClose = ({
     setReason("");
   };
 
-  const handleSubmit = async (): Promise<void> => {
-    if (!reason) {
-      return;
-    }
+  const handleSubmit =
+    async (): Promise<void> => {
+      if (!reason) {
+        return;
+      }
 
-    try {
-      setLoading(true);
+      try {
+        setLoading(true);
 
-      const data = await voteToCloseQuestion(
-        question._id,
-        reason
-      );
+        const data =
+          await voteToCloseQuestion(
+            question._id,
+            reason
+          );
 
-      toast.success(
-        t(`message.${data.message}`)
-      );
-
-      onQuestionUpdate({
-        ...question,
-        isClosed: data.isClosed,
-      });
-
-      setReason("");
-      setIsOpen(false);
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        const message = error.response?.data?.message;
-
-        toast.error(
-          message
-            ? t(`message.${message}`)
+        toast.success(
+          data.isClosed
+            ? t(
+                "messages.question_closed_successfully"
+              )
             : t(
-                "message.failed_to_vote_to_close_question"
+                "messages.close_vote_submitted_successfully"
               )
         );
-      } else {
+
+        onQuestionUpdate({
+          ...question,
+          isClosed: data.isClosed,
+        });
+
+        setReason("");
+        setIsOpen(false);
+      } catch (
+        error: unknown
+      ) {
+        if (
+          axios.isAxiosError(
+            error
+          )
+        ) {
+          console.error(
+            "Vote to close failed:",
+            error.response?.data ||
+              error
+          );
+        } else {
+          console.error(
+            "Vote to close failed:",
+            error
+          );
+        }
+
         toast.error(
           t(
-            "message.failed_to_vote_to_close_question"
+            "messages.failed_to_vote_to_close_question"
           )
         );
+      } finally {
+        setLoading(false);
       }
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
   if (!user || !question) {
     return null;
@@ -138,23 +172,32 @@ const VoteToClose = ({
 
   return (
     <>
-      {/* Vote to close button */}
-
       <VoteToCloseButton
-        reputation={user.reputation || 0}
-        isClosed={question.isClosed || false}
-        onClick={handleOpenModal}
+        reputation={
+          user.reputation || 0
+        }
+        isClosed={
+          question.isClosed ||
+          false
+        }
+        onClick={
+          handleOpenModal
+        }
       />
-
-      {/* Close vote modal */}
 
       <CloseVoteModal
         isOpen={isOpen}
         reason={reason}
         loading={loading}
-        onReasonChange={setReason}
-        onClose={handleCloseModal}
-        onSubmit={() => void handleSubmit()}
+        onReasonChange={
+          setReason
+        }
+        onClose={
+          handleCloseModal
+        }
+        onSubmit={() =>
+          void handleSubmit()
+        }
       />
     </>
   );

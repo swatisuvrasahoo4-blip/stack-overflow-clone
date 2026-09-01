@@ -21,8 +21,7 @@ const FeedTabs = ({
   activeFeed,
   setActiveFeed,
 }: FeedTabsProps) => {
-  const { t } =
-    useTranslation();
+  const { t } = useTranslation("community");
 
   const handleFeedChange = (
     feed: FeedType
@@ -37,8 +36,6 @@ const FeedTabs = ({
 
   return (
     <div className="mb-6 flex gap-2">
-      {/* Trending feed */}
-
       <button
         type="button"
         onClick={() =>
@@ -53,12 +50,8 @@ const FeedTabs = ({
             : "bg-gray-200"
         }`}
       >
-        {t(
-          "community.trending"
-        )}
+        {t("feed.trending")}
       </button>
-
-      {/* Following feed */}
 
       <button
         type="button"
@@ -74,9 +67,7 @@ const FeedTabs = ({
             : "bg-gray-200"
         }`}
       >
-        {t(
-          "community.following"
-        )}
+        {t("feed.following")}
       </button>
     </div>
   );

@@ -21,11 +21,13 @@ interface AnswerListProps {
   currentUserId?: string;
   hasMounted: boolean;
   isQuestionOwner: boolean;
+
   onAnswerVoteSuccess: (
     answerId: string,
     upvotes: string[],
     downvotes: string[]
   ) => void;
+
   onDeleteAnswer: (answerId: string) => void;
   onAcceptAnswer: (answerId: string) => void;
 }
@@ -41,7 +43,7 @@ const AnswerList = ({
   onDeleteAnswer,
   onAcceptAnswer,
 }: AnswerListProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("answers");
 
   const hasAcceptedAnswer = answers.some(
     (answer) => answer.isAccepted
@@ -51,9 +53,9 @@ const AnswerList = ({
     <div className="mb-8">
       <h2 className="text-xl font-semibold mb-6 text-gray-900">
         {answers.length}{" "}
-        {answers.length > 1
-          ? t("community.answers")
-          : t("community.answer")}
+        {answers.length === 1
+          ? t("labels.answer")
+          : t("labels.answers")}
       </h2>
 
       <div className="space-y-6">

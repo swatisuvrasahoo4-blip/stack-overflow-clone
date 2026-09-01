@@ -6,7 +6,9 @@ interface MentionTextProps {
   value: string;
   matches: string[];
   onChange: (value: string) => void;
-  onSelectMention: (username: string) => void;
+  onSelectMention: (
+    username: string
+  ) => void;
   onClearSuggestions: () => void;
 }
 
@@ -17,7 +19,8 @@ const MentionText = ({
   onSelectMention,
   onClearSuggestions,
 }: MentionTextProps) => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("create_post");
 
   const replaceMention = (
     username: string
@@ -27,7 +30,9 @@ const MentionText = ({
         /(?:^|\s)@([a-zA-Z0-9_]{0,20})$/,
         (matchedText) => {
           const leadingSpace =
-            matchedText.startsWith(" ")
+            matchedText.startsWith(
+              " "
+            )
               ? " "
               : "";
 
@@ -42,23 +47,21 @@ const MentionText = ({
 
   return (
     <div className="relative">
-      {/* Mention text */}
-
       <textarea
         name="content"
         rows={5}
         placeholder={t(
-          "createpost.share_something_with_the_community"
+          "content.share_something_with_the_community"
         )}
         value={value}
         onChange={(event) =>
-          onChange(event.target.value)
+          onChange(
+            event.target.value
+          )
         }
         className="w-full rounded border p-3"
         required
       />
-
-      {/* Mention suggestions */}
 
       <MentionSuggestions
         matches={matches}

@@ -1,0 +1,62 @@
+{
+    "accessibility": {
+    "help_and_support": "Aide et assistance"
+  },
+  "title": {
+    "help_and_support": "Aide et assistance"
+  },
+  "status": {
+    "checking_your_plan": "Vérification de votre forfait...",
+    "submitting": "Envoi..."
+  },
+  "priority": {
+    "priority_support": "Assistance prioritaire",
+    "highest_priority_support": "Assistance de priorité maximale",
+    "available_for_silver_and_gold": "L’assistance prioritaire est disponible pour les membres Silver et Gold.",
+    "upgrade_to_contact_team": "Mettez à niveau votre forfait pour contacter notre équipe d’assistance prioritaire."
+  },
+  "members": {
+    "gold_member": "Membre Gold",
+    "silver_member": "Membre Silver"
+  },
+  "placeholders": {
+    "subject": "Sujet",
+    "describe_your_issue": "Décrivez votre problème"
+  },
+  "actions": {
+    "upgrade_plan": "Mettre à niveau le forfait",
+    "submit_request": "Envoyer la demande"
+  },
+  "messages": {
+    "please_enter_subject_and_message": "Veuillez saisir un sujet et un message.",
+    "support_request_submitted_successfully": "Votre demande d’assistance a été envoyée avec succès.",
+    "failed_to_submit_support_request": "Impossible d’envoyer la demande d’assistance.",
+      "please_login_to_continue": "Veuillez vous connecter pour continuer."
+  },
+   "admin": {
+    "title": {
+      "support_requests": "Demandes d’assistance"
+    },
+    "status": {
+      "loading_support_requests": "Chargement des demandes d’assistance...",
+      "resolved": "Résolue",
+      "pending": "En attente"
+    },
+    "labels": {
+      "user": "Utilisateur",
+      "status": "Statut"
+    },
+    "priority": {
+      "highest_priority": "Priorité maximale",
+      "priority": "Prioritaire"
+    },
+    "actions": {
+      "resolve": "Résoudre"
+    },
+    "messages": {
+      "manage_priority_customer_support_requests": "Gérez les demandes d’assistance prioritaires des clients.",
+      "no_support_requests_yet": "Aucune demande d’assistance pour le moment.",
+      "failed_to_resolve_support_request": "Impossible de résoudre la demande d’assistance."
+    }
+  }
+}

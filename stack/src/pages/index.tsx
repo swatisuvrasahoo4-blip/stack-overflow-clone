@@ -4,10 +4,9 @@ import {
 } from "react";
 
 import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
 
 import { useAuth } from "@/lib/AuthContext";
-
-import { useTranslation } from "react-i18next";
 
 import Mainlayout from "@/layout/Mainlayout";
 
@@ -16,7 +15,6 @@ import ContentTabs from "@/components/feed/ContentTabs";
 import QuestionFilters from "@/components/feed/QuestionFilters";
 import QuestionFeed from "@/components/feed/QuestionFeed";
 import PostFeed from "@/components/feed/PostFeed";
-
 import SavedList from "@/components/saved/SavedList";
 
 import {
@@ -41,14 +39,14 @@ type FollowingRelationship = {
 };
 
 export default function Home() {
-  const { t } =
-    useTranslation();
+  const { t } = useTranslation([
+    "community",
+    "questions",
+  ]);
 
-  const router =
-    useRouter();
+  const router = useRouter();
 
-  const { user } =
-    useAuth();
+  const { user } = useAuth();
 
   const { panel } =
     router.query;
@@ -269,7 +267,10 @@ export default function Home() {
           <div className="flex items-center justify-center py-10">
             <p className="text-sm text-gray-500">
               {t(
-                "feed.loading"
+                "status.loading",
+                {
+                  ns: "community",
+                }
               )}
             </p>
           </div>
@@ -315,7 +316,10 @@ export default function Home() {
                 <QuestionFilters>
                   <span className="text-gray-600">
                     {t(
-                      "community.questions"
+                      "labels.questions",
+                      {
+                        ns: "questions",
+                      }
                     )}
                   </span>
 
@@ -324,7 +328,10 @@ export default function Home() {
                     className="rounded bg-gray-200 px-2 py-1 text-xs text-gray-700 sm:px-3 sm:text-sm"
                   >
                     {t(
-                      "community.newest"
+                      "filters.newest",
+                      {
+                        ns: "questions",
+                      }
                     )}
                   </button>
 
@@ -333,7 +340,10 @@ export default function Home() {
                     className="rounded px-2 py-1 text-xs text-gray-600 hover:bg-gray-100 sm:px-3 sm:text-sm"
                   >
                     {t(
-                      "community.active"
+                      "filters.active",
+                      {
+                        ns: "questions",
+                      }
                     )}
                   </button>
 
@@ -342,7 +352,10 @@ export default function Home() {
                     className="flex items-center rounded px-2 py-1 text-xs text-gray-600 hover:bg-gray-100 sm:px-3 sm:text-sm"
                   >
                     {t(
-                      "community.bountied"
+                      "filters.bountied",
+                      {
+                        ns: "questions",
+                      }
                     )}
 
                     <span className="ml-1 rounded bg-gray-200 px-1.5 py-0.5 text-xs">
@@ -355,7 +368,10 @@ export default function Home() {
                     className="rounded px-2 py-1 text-xs text-gray-600 hover:bg-gray-100 sm:px-3 sm:text-sm"
                   >
                     {t(
-                      "community.unanswered"
+                      "filters.unanswered",
+                      {
+                        ns: "questions",
+                      }
                     )}
                   </button>
 
@@ -364,7 +380,10 @@ export default function Home() {
                     className="rounded px-2 py-1 text-xs text-gray-600 hover:bg-gray-100 sm:px-3 sm:text-sm"
                   >
                     {t(
-                      "community.more"
+                      "actions.more",
+                      {
+                        ns: "questions",
+                      }
                     )}{" "}
                     ▼
                   </button>
@@ -375,7 +394,10 @@ export default function Home() {
                   >
                     🔍{" "}
                     {t(
-                      "community.filter"
+                      "actions.filter",
+                      {
+                        ns: "questions",
+                      }
                     )}
                   </button>
                 </QuestionFilters>

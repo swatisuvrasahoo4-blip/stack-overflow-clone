@@ -1,0 +1,15 @@
+{
+  "links": {
+    "about": "Acerca de",
+    "products": "Productos",
+    "for_teams": "Para equipos"
+  },
+  "actions": {
+    "login": "Iniciar sesión",
+    "signup": "Registrarse",
+    "logout": "Cerrar sesión"
+  },
+  "placeholders": {
+    "search": "Buscar..."
+  }
+}

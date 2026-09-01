@@ -1,12 +1,19 @@
 "use client";
 
 import { useState } from "react";
+
 import { toast } from "react-toastify";
+
 import axiosInstance from "@/lib/axiosinstance";
+
 import { useRouter } from "next/router";
+
 import { useTranslation } from "react-i18next";
 
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+} from "@/components/ui/card";
 
 import AnswerList from "./AnswerList";
 import SubmitAnswer from "./SubmitAnswer";
@@ -45,13 +52,21 @@ const AnswerSection = ({
   onQuestionUpdate,
 }: AnswerSectionProps) => {
   const router = useRouter();
-  const { t } = useTranslation();
 
-  const [newAnswer, setNewAnswer] =
-    useState("");
+  const { t } = useTranslation([
+    "answers",
+    "community",
+  ]);
 
-  const [isSubmitting, setIsSubmitting] =
-    useState(false);
+  const [
+    newAnswer,
+    setNewAnswer,
+  ] = useState("");
+
+  const [
+    isSubmitting,
+    setIsSubmitting,
+  ] = useState(false);
 
   const onAnswerVoteSuccess = (
     answerId: string,
@@ -76,171 +91,190 @@ const AnswerSection = ({
     onQuestionUpdate(updatedQuestion);
   };
 
-  const handleSubmitAnswer = async () => {
-    if (!user) {
-      toast.info(
-        t("toast.please_login_to_continue")
-      );
-
-      router.push("/auth");
-      return;
-    }
-
-    if (!newAnswer.trim()) {
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      const result =
-        await submitAnswer(
-          String(question._id),
-          {
-            answerbody: newAnswer,
-            useranswered:
-              user.name || "",
-            userid:
-              String(currentUserId),
-          }
+  const handleSubmitAnswer =
+    async () => {
+      if (!user) {
+        toast.info(
+          t(
+            "messages.please_login_to_continue",
+            {
+              ns: "community",
+            }
+          )
         );
 
-      onQuestionUpdate(result.data);
+        router.push("/auth");
 
-      toast.success(
-        t(
-          "toast.answer_uploaded_successfully"
-        )
-      );
-    } catch (error: unknown) {
-      console.error(error);
+        return;
+      }
 
-      toast.error(
-        t("toast.failed_to_answer")
-      );
-    } finally {
-      setNewAnswer("");
-      setIsSubmitting(false);
-    }
-  };
+      if (!newAnswer.trim()) {
+        return;
+      }
 
-  const handleAcceptAnswer = async (
-    answerId: string
-  ) => {
-    try {
-      await acceptAnswer(
-        String(question._id),
-        answerId
-      );
+      setIsSubmitting(true);
 
-      toast.success(
-        t(
-          "toast.answer_accepted_successfully"
-        )
-      );
+      try {
+        const result =
+          await submitAnswer(
+            String(question._id),
+            {
+              answerbody: newAnswer,
+              useranswered:
+                user.name || "",
+              userid: String(
+                currentUserId
+              ),
+            }
+          );
 
-      const response =
-        await getQuestionById(
-          String(question._id)
+        onQuestionUpdate(result.data);
+
+        toast.success(
+          t(
+            "messages.answer_uploaded_successfully",
+            {
+              ns: "answers",
+            }
+          )
         );
+      } catch (error: unknown) {
+        console.error(error);
 
-      const updatedQuestion: Question =
-        response?.data?.question ||
-        response?.question ||
-        response?.data ||
-        response;
-
-      onQuestionUpdate(
-        updatedQuestion
-      );
-    } catch (error: unknown) {
-      console.error(error);
-
-      if (
-        error &&
-        typeof error === "object" &&
-        "response" in error
-      ) {
-        const axiosError = error as {
-          response?: {
-            data?: {
-              message?: string;
-            };
-          };
-        };
-
-        toast.error(
-          axiosError.response?.data
-            ?.message ||
-            t(
-              "toast.failed_to_accept_answer"
-            )
-        );
-      } else {
         toast.error(
           t(
-            "toast.failed_to_accept_answer"
+            "messages.failed_to_answer",
+            {
+              ns: "answers",
+            }
+          )
+        );
+      } finally {
+        setNewAnswer("");
+        setIsSubmitting(false);
+      }
+    };
+
+  const handleAcceptAnswer =
+    async (
+      answerId: string
+    ) => {
+      try {
+        await acceptAnswer(
+          String(question._id),
+          answerId
+        );
+
+        toast.success(
+          t(
+            "messages.answer_accepted_successfully",
+            {
+              ns: "answers",
+            }
+          )
+        );
+
+        const response =
+          await getQuestionById(
+            String(question._id)
+          );
+
+        const updatedQuestion: Question =
+          response?.data?.question ||
+          response?.question ||
+          response?.data ||
+          response;
+
+        onQuestionUpdate(
+          updatedQuestion
+        );
+      } catch (error: unknown) {
+        console.error(error);
+
+        toast.error(
+          t(
+            "messages.failed_to_accept_answer",
+            {
+              ns: "answers",
+            }
           )
         );
       }
-    }
-  };
+    };
 
-  const handleDeleteAnswer = async (
-    answerId: string
-  ) => {
-    if (!user) {
-      toast.info(
-        t("toast.please_login_to_continue")
-      );
-
-      router.push("/");
-      return;
-    }
-
-    const confirmed =
-      window.confirm(
-        t(
-          "window.are_you_sure_you_want_to_delete_this_answer"
-        )
-      );
-
-    if (!confirmed) {
-      return;
-    }
-
-    try {
-      await axiosInstance.delete(
-        `/answer/delete/${question._id}/${answerId}`
-      );
-
-      const updatedAnswer =
-        question.answer.filter(
-          (answer) =>
-            String(answer._id) !==
-            String(answerId)
+  const handleDeleteAnswer =
+    async (
+      answerId: string
+    ) => {
+      if (!user) {
+        toast.info(
+          t(
+            "messages.please_login_to_continue",
+            {
+              ns: "community",
+            }
+          )
         );
 
-      onQuestionUpdate({
-        ...question,
-        noofanswer:
-          updatedAnswer.length,
-        answer: updatedAnswer,
-      });
+        router.push("/");
 
-      toast.success(
-        t("toast.answer_deleted")
-      );
-    } catch (error: unknown) {
-      console.error(error);
+        return;
+      }
 
-      toast.error(
-        t(
-          "toast.failed_to_delete_answer"
-        )
-      );
-    }
-  };
+      const confirmed =
+        window.confirm(
+          t(
+            "messages.confirm_delete_answer",
+            {
+              ns: "answers",
+            }
+          )
+        );
+
+      if (!confirmed) {
+        return;
+      }
+
+      try {
+        await axiosInstance.delete(
+          `/answer/delete/${question._id}/${answerId}`
+        );
+
+        const updatedAnswer =
+          question.answer.filter(
+            (answer) =>
+              String(answer._id) !==
+              String(answerId)
+          );
+
+        onQuestionUpdate({
+          ...question,
+          noofanswer:
+            updatedAnswer.length,
+          answer: updatedAnswer,
+        });
+
+        toast.success(
+          t(
+            "messages.answer_deleted",
+            {
+              ns: "answers",
+            }
+          )
+        );
+      } catch (error: unknown) {
+        console.error(error);
+
+        toast.error(
+          t(
+            "messages.failed_to_delete_answer",
+            {
+              ns: "answers",
+            }
+          )
+        );
+      }
+    };
 
   return (
     <>

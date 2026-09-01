@@ -46,13 +46,13 @@ const EditQuestionModal = ({
   onClose,
   onSave,
 }: EditQuestionModalProps) => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("questions");
 
   if (!open) {
     return null;
   }
 
-  // Add a tag
   const addEditTag = (): void => {
     const newTag =
       editTagInput.trim();
@@ -85,7 +85,6 @@ const EditQuestionModal = ({
     setEditTagInput("");
   };
 
-  // Remove a tag
   const removeEditTag = (
     tagToRemove: string
   ): void => {
@@ -93,12 +92,12 @@ const EditQuestionModal = ({
       (previousTags) =>
         previousTags.filter(
           (tag) =>
-            tag !== tagToRemove
+            tag !==
+            tagToRemove
         )
     );
   };
 
-  // Add tag with Enter
   const handleTagKeyDown = (
     event: KeyboardEvent<HTMLInputElement>
   ): void => {
@@ -106,29 +105,26 @@ const EditQuestionModal = ({
       event.key === "Enter"
     ) {
       event.preventDefault();
-
       addEditTag();
     }
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-      {/* Edit question modal */}
       <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl">
         <h2 className="text-lg font-semibold">
           {t(
-            "editquestion.edit_question"
+            "edit_question.title"
           )}
         </h2>
 
-        {/* Title */}
         <div className="mt-4">
           <label
             htmlFor="edit-question-title"
             className="text-sm font-medium"
           >
             {t(
-              "editquestion.title"
+              "edit_question.labels.title"
             )}
           </label>
 
@@ -145,14 +141,13 @@ const EditQuestionModal = ({
           />
         </div>
 
-        {/* Question */}
         <div className="mt-4">
           <label
             htmlFor="edit-question-content"
             className="text-sm font-medium"
           >
             {t(
-              "editquestion.question"
+              "edit_question.labels.question"
             )}
           </label>
 
@@ -169,14 +164,13 @@ const EditQuestionModal = ({
           />
         </div>
 
-        {/* Tags */}
         <div className="mb-3 mt-4">
           <label
             htmlFor="edit-question-tag"
             className="mb-2 block text-sm font-medium"
           >
             {t(
-              "editquestion.tags_maximum_5"
+              "edit_question.labels.tags_maximum_5"
             )}
           </label>
 
@@ -194,7 +188,7 @@ const EditQuestionModal = ({
                 handleTagKeyDown
               }
               placeholder={t(
-                "editquestion.enter_a_tag"
+                "edit_question.placeholders.enter_tag"
               )}
               className="flex-1 rounded-lg border px-3 py-2"
             />
@@ -205,12 +199,14 @@ const EditQuestionModal = ({
                 addEditTag
               }
               className="rounded-lg bg-blue-600 px-4 text-white hover:bg-blue-700"
+              aria-label={t(
+                "edit_question.accessibility.add_tag"
+              )}
             >
               +
             </button>
           </div>
 
-          {/* Selected tags */}
           <div className="mt-3 flex flex-wrap gap-2">
             {editTags.map(
               (tag) => (
@@ -228,6 +224,12 @@ const EditQuestionModal = ({
                       )
                     }
                     className="ml-2 text-red-500 hover:text-red-700"
+                    aria-label={t(
+                      "edit_question.accessibility.remove_tag",
+                      {
+                        tag,
+                      }
+                    )}
                   >
                     ×
                   </button>
@@ -237,7 +239,6 @@ const EditQuestionModal = ({
           </div>
         </div>
 
-        {/* Actions */}
         <div className="mt-6 flex justify-end gap-3">
           <button
             type="button"
@@ -245,7 +246,7 @@ const EditQuestionModal = ({
             className="rounded-lg border px-4 py-2 hover:bg-gray-100"
           >
             {t(
-              "editquestion.cancel"
+              "edit_question.actions.cancel"
             )}
           </button>
 
@@ -257,7 +258,7 @@ const EditQuestionModal = ({
             className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
           >
             {t(
-              "editquestion.save_changes"
+              "edit_question.actions.save_changes"
             )}
           </button>
         </div>

@@ -1,0 +1,15 @@
+{
+  "links": {
+    "about": "关于",
+    "products": "产品",
+    "for_teams": "团队版"
+  },
+  "actions": {
+    "login": "登录",
+    "signup": "注册",
+    "logout": "退出登录"
+  },
+  "placeholders": {
+    "search": "搜索..."
+  }
+}

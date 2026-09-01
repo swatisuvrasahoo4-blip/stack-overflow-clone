@@ -5,71 +5,120 @@ import { useTranslation } from "react-i18next";
 interface LanguageMenuProps {
   open: boolean;
   onClose: () => void;
-  onSelect: (code: string, name: string) => void;
+  onSelect: (
+    code: string,
+    name: string
+  ) => void;
 }
 
 const languages = [
-  { code: "en", name: "English" },
-  { code: "es", name: "Spanish" },
-  { code: "hi", name: "Hindi" },
-  { code: "pt", name: "Portuguese" },
-  { code: "zh", name: "Chinese" },
-  { code: "fr", name: "French" },
+  {
+    code: "en",
+    key: "english",
+    name: "English",
+  },
+  {
+    code: "es",
+    key: "spanish",
+    name: "Spanish",
+  },
+  {
+    code: "hi",
+    key: "hindi",
+    name: "Hindi",
+  },
+  {
+    code: "pt",
+    key: "portuguese",
+    name: "Portuguese",
+  },
+  {
+    code: "zh",
+    key: "chinese",
+    name: "Chinese",
+  },
+  {
+    code: "fr",
+    key: "french",
+    name: "French",
+  },
 ];
 
-const LanguageMenu = ({ open, onClose, onSelect, }: LanguageMenuProps) => {
-  const {t} = useTranslation();
-  if (!open) return null;
+const LanguageMenu = ({
+  open,
+  onClose,
+  onSelect,
+}: LanguageMenuProps) => {
+  const { t } =
+    useTranslation("language");
 
- return (
-  <div
-    className="
-      fixed bottom-24 right-24 z-50
-      w-56
-      rounded-xl
-      bg-white
-      border border-gray-200
-      shadow-xl
-      overflow-hidden
-    "
-  >
-    <div className="flex items-center justify-between px-4 py-3 border-b">
-      <p className="font-semibold text-gray-800">
-        {t("language.choose_language")}
-      </p>
+  if (!open) {
+    return null;
+  }
 
-      <button
-        type="button"
-        onClick={onClose}
-        className="text-gray-400 hover:text-gray-700 text-lg"
-      >
-        ✕
-      </button>
-    </div>
+  return (
+    <div
+      className="
+        fixed bottom-24 right-24 z-50
+        w-56
+        overflow-hidden
+        rounded-xl
+        border border-gray-200
+        bg-white
+        shadow-xl
+      "
+    >
+      <div className="flex items-center justify-between border-b px-4 py-3">
+        <p className="font-semibold text-gray-800">
+          {t(
+            "menu.choose_language"
+          )}
+        </p>
 
-    <div className="p-2">
-      {languages.map((language) => (
         <button
-          key={language.code}
-          onClick={() => onSelect(language.code, language.name)}
           type="button"
-          className="
-            w-full
-            px-3 py-2
-            text-left text-sm
-            text-gray-700
-            rounded-lg
-            hover:bg-orange-50
-            hover:text-orange-600
-            transition
-          "
+          onClick={onClose}
+          className="text-lg text-gray-400 hover:text-gray-700"
+          aria-label={t(
+            "accessibility.close_language_menu"
+          )}
         >
-          {language.name}
+          ✕
         </button>
-      ))}
+      </div>
+
+      <div className="p-2">
+        {languages.map(
+          (language) => (
+            <button
+              key={language.code}
+              onClick={() =>
+                onSelect(
+                  language.code,
+                  language.name
+                )
+              }
+              type="button"
+              className="
+                w-full
+                rounded-lg
+                px-3 py-2
+                text-left text-sm
+                text-gray-700
+                transition
+                hover:bg-orange-50
+                hover:text-orange-600
+              "
+            >
+              {t(
+                `languages.${language.key}`
+              )}
+            </button>
+          )
+        )}
+      </div>
     </div>
-  </div>
-);
+  );
 };
 
 export default LanguageMenu;

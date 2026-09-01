@@ -3,20 +3,13 @@ import {
   useState,
 } from "react";
 
+import { useTranslation } from "react-i18next";
+
 import axiosInstance from "@/lib/axiosinstance";
 
 interface UsernameCheckResponse {
   available: boolean;
   suggestions?: string[];
-  message?: string;
-}
-
-interface ApiError {
-  response?: {
-    data?: {
-      message?: string;
-    };
-  };
   message?: string;
 }
 
@@ -36,13 +29,15 @@ interface UseUsernameCheckResult {
 const useUsernameCheck = (
   usernameValue: string
 ): UseUsernameCheckResult => {
+  const { t } =
+    useTranslation("auth");
+
   const [
     usernameStatus,
     setUsernameStatus,
-  ] =
-    useState<UsernameStatus>(
-      "idle"
-    );
+  ] = useState<UsernameStatus>(
+    "idle"
+  );
 
   const [
     usernameMessage,
@@ -54,7 +49,6 @@ const useUsernameCheck = (
     setUsernameSuggestions,
   ] = useState<string[]>([]);
 
-  // Check username availability
   useEffect(() => {
     const username =
       usernameValue
@@ -81,10 +75,13 @@ const useUsernameCheck = (
       );
 
       setUsernameMessage(
-        "Use 3–20 letters, numbers, or underscores only"
+        t(
+          "username_check.invalid_format"
+        )
       );
 
       setUsernameSuggestions([]);
+
       return;
     }
 
@@ -93,7 +90,9 @@ const useUsernameCheck = (
     );
 
     setUsernameMessage(
-      "Checking username..."
+      t(
+        "username_check.checking"
+      )
     );
 
     setUsernameSuggestions([]);
@@ -121,7 +120,9 @@ const useUsernameCheck = (
               );
 
               setUsernameMessage(
-                "Username is available"
+                t(
+                  "username_check.available"
+                )
               );
 
               setUsernameSuggestions(
@@ -136,7 +137,9 @@ const useUsernameCheck = (
             );
 
             setUsernameMessage(
-              "Username is already taken"
+              t(
+                "username_check.taken"
+              )
             );
 
             setUsernameSuggestions(
@@ -147,18 +150,19 @@ const useUsernameCheck = (
           } catch (
             error: unknown
           ) {
-            const apiError =
-              error as ApiError;
+            console.error(
+              "Username check error:",
+              error
+            );
 
             setUsernameStatus(
               "invalid"
             );
 
             setUsernameMessage(
-              apiError.response
-                ?.data
-                ?.message ||
-                "Could not check username"
+              t(
+                "username_check.failed"
+              )
             );
 
             setUsernameSuggestions(
@@ -174,7 +178,10 @@ const useUsernameCheck = (
         timer
       );
     };
-  }, [usernameValue]);
+  }, [
+    usernameValue,
+    t,
+  ]);
 
   return {
     usernameStatus,

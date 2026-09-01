@@ -1,11 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
 import { useTranslation } from "react-i18next";
 
 interface VerifyLoginDeviceFormProps {
@@ -21,7 +23,8 @@ const VerifyLoginDeviceForm = ({
   loading,
   onVerify,
 }: VerifyLoginDeviceFormProps) => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("auth");
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
@@ -66,7 +69,9 @@ const VerifyLoginDeviceForm = ({
             className="w-full bg-blue-600 hover:bg-blue-700"
           >
             {loading
-              ? t("login_device.verifying")
+              ? t(
+                  "login_device.verifying"
+                )
               : t(
                   "login_device.verify_device"
                 )}

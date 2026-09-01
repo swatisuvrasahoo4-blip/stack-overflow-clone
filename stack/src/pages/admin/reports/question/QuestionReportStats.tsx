@@ -13,14 +13,16 @@ const QuestionReportStats = ({
   dismissed,
   actionTaken,
 }: QuestionReportStatsProps) => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("reports");
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {/* Pending reports */}
       <div className="rounded-xl border border-gray-200 bg-white p-6">
         <p className="text-sm text-gray-500">
-          {t("report.pending")}
+          {t(
+            "admin.stats.pending"
+          )}
         </p>
 
         <p className="mt-2 text-3xl font-semibold text-yellow-600">
@@ -28,10 +30,11 @@ const QuestionReportStats = ({
         </p>
       </div>
 
-      {/* Reviewed reports */}
       <div className="rounded-xl border border-gray-200 bg-white p-6">
         <p className="text-sm text-gray-500">
-          {t("report.reviewed")}
+          {t(
+            "admin.stats.reviewed"
+          )}
         </p>
 
         <p className="mt-2 text-3xl font-semibold text-blue-600">
@@ -39,10 +42,11 @@ const QuestionReportStats = ({
         </p>
       </div>
 
-      {/* Dismissed reports */}
       <div className="rounded-xl border border-gray-200 bg-white p-6">
         <p className="text-sm text-gray-500">
-          {t("report.dismissed")}
+          {t(
+            "admin.stats.dismissed"
+          )}
         </p>
 
         <p className="mt-2 text-3xl font-semibold text-gray-700">
@@ -50,10 +54,11 @@ const QuestionReportStats = ({
         </p>
       </div>
 
-      {/* Action taken */}
       <div className="rounded-xl border border-gray-200 bg-white p-6">
         <p className="text-sm text-gray-500">
-          {t("report.actionTaken")}
+          {t(
+            "admin.stats.action_taken"
+          )}
         </p>
 
         <p className="mt-2 text-3xl font-semibold text-red-600">

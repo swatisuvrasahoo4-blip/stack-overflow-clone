@@ -7,28 +7,13 @@ import { useTranslation } from "react-i18next";
 
 import PostActions from "../PostActions";
 import ReportPostButton from "../../reports/ReportPostButton";
+
 import type { Post, User } from "@/types/community";
-
-interface SelectedComment {
-  postId: string;
-  commentId: string;
-}
-
-interface SelectedReply {
-  postId: string;
-  commentId: string;
-  replyId: string;
-}
 
 interface PostHeaderProps {
   post: Post;
   user: User | null;
-
   currentUserId?: string;
-
-  handleDelete: (
-    postId: string
-  ) => Promise<void>;
 
   handleEdit: (
     post: Post
@@ -49,17 +34,17 @@ const PostHeader = ({
   post,
   user,
   currentUserId,
-  handleDelete,
   handleEdit,
   setSelectedPostId,
   setShowDeleteModal,
   handleReportClick,
 }: PostHeaderProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("community");
 
   return (
     <div className="flex items-start justify-between">
       {/* Author information */}
+
       <div>
         <Link
           href={`/users/${post.authorId}`}
@@ -79,7 +64,8 @@ const PostHeader = ({
           {post.isFeatured && (
             <span className="inline-flex items-center gap-1 rounded-full bg-yellow-100 px-2 py-1 text-xs font-semibold text-yellow-800">
               <Star className="h-3 w-3 fill-yellow-500 text-yellow-500" />
-              Featured
+
+              {t("badges.featured")}
             </span>
           )}
         </div>
@@ -91,13 +77,14 @@ const PostHeader = ({
 
           {post.isEdited && (
             <span className="ml-2 italic text-gray-400">
-              {t("community.edited")}
+              {t("status.edited")}
             </span>
           )}
         </p>
       </div>
 
       {/* Post actions */}
+
       <div className="flex items-center gap-2">
         {String(currentUserId) !==
           String(post.authorId) && (
@@ -109,10 +96,13 @@ const PostHeader = ({
         <PostActions
           post={post}
           user={user}
-          onDelete={handleDelete}
           onEdit={handleEdit}
-          setSelectedPostId={setSelectedPostId}
-          setShowDeleteModal={setShowDeleteModal}
+          setSelectedPostId={
+            setSelectedPostId
+          }
+          setShowDeleteModal={
+            setShowDeleteModal
+          }
         />
       </div>
     </div>

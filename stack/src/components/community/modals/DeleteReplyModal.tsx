@@ -11,7 +11,7 @@ const DeleteReplyModal = ({
   onClose,
   onConfirm,
 }: DeleteReplyModalProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("community");
 
   if (!open) {
     return null;
@@ -23,11 +23,11 @@ const DeleteReplyModal = ({
         {/* Modal content */}
 
         <h2 className="text-lg font-semibold">
-          Delete reply
+          {t("delete_reply.title")}
         </h2>
 
         <p className="mt-2 text-sm text-gray-600">
-          Are you sure you want to delete this reply?
+          {t("delete_reply.confirmation")}
         </p>
 
         {/* Modal actions */}
@@ -38,7 +38,7 @@ const DeleteReplyModal = ({
             onClick={onClose}
             className="rounded-lg border px-4 py-2 text-sm"
           >
-            Cancel
+            {t("actions.cancel")}
           </button>
 
           <button
@@ -48,7 +48,7 @@ const DeleteReplyModal = ({
             }}
             className="rounded-lg bg-red-600 px-4 py-2 text-sm text-white hover:bg-red-700"
           >
-            {t("community.delete")}
+            {t("actions.delete")}
           </button>
         </div>
       </div>

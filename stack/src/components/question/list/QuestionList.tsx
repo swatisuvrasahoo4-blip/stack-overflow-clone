@@ -17,7 +17,9 @@ interface QuestionListProps {
   user: User | null;
 
   setSelectedQuestion: Dispatch<
-    SetStateAction<NormalizedQuestion | null>
+    SetStateAction<
+      NormalizedQuestion | null
+    >
   >;
 
   setEditTitle: Dispatch<
@@ -57,9 +59,13 @@ const QuestionList = ({
   setShowDeleteModal,
 }: QuestionListProps) => {
   const router = useRouter();
-  const { t } = useTranslation();
 
-  // Open question
+  const { t } = useTranslation([
+    "questions",
+    "answers",
+    "community",
+  ]);
+
   const handleOpenQuestion = (
     questionId: string
   ): void => {
@@ -73,7 +79,6 @@ const QuestionList = ({
     );
   };
 
-  // Open edit modal
   const handleOpenEdit = (
     question: NormalizedQuestion
   ): void => {
@@ -93,10 +98,11 @@ const QuestionList = ({
       question.tags
     );
 
-    setShowEditModal(true);
+    setShowEditModal(
+      true
+    );
   };
 
-  // Open delete modal
   const handleOpenDelete = (
     questionId: string
   ): void => {
@@ -104,110 +110,153 @@ const QuestionList = ({
       questionId
     );
 
-    setShowDeleteModal(true);
+    setShowDeleteModal(
+      true
+    );
   };
 
   return (
     <div className="space-y-4">
-      {items.map((question) => (
-        <div
-          key={question.id}
-          id={`question-${question.id}`}
-          onClick={() =>
-            handleOpenQuestion(
-              question.id
-            )
-          }
-          className="cursor-pointer rounded-lg border bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
-        >
-          {/* Question header */}
-          <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
-            <Link
-              href={`/questions/${question.id}`}
-              onClick={(event) => {
-                event.stopPropagation();
+      {items.map(
+        (question) => (
+          <div
+            key={question.id}
+            id={`question-${question.id}`}
+            onClick={() =>
+              handleOpenQuestion(
+                question.id
+              )
+            }
+            className="cursor-pointer rounded-lg border bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
+          >
+            {/* Question header */}
 
-                sessionStorage.setItem(
-                  "questionSelectedId",
-                  question.id
-                );
-              }}
-              className="text-blue-600 hover:underline"
-            >
-              {question.title}
-            </Link>
-
-            <div className="text-sm text-gray-600">
-              {question.answers}{" "}
-              {t(
-                "community.answers"
-              )}{" "}
-              · {question.views}{" "}
-              {t(
-                "community.views"
-              )}
-            </div>
-          </div>
-
-          {/* Question content */}
-          <p className="mt-2 line-clamp-2 text-gray-700">
-            {question.content}
-          </p>
-
-          {/* Owner actions */}
-          {question.authorId ===
-            user?._id && (
-            <div className="mt-3 flex gap-2">
-              <button
-                type="button"
-                onClick={(event) => {
+            <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
+              <Link
+                href={`/questions/${question.id}`}
+                onClick={(
+                  event
+                ) => {
                   event.stopPropagation();
 
-                  handleOpenEdit(
-                    question
-                  );
-                }}
-                className="text-sm text-blue-600 transition hover:underline"
-              >
-                {t(
-                  "community.edit"
-                )}
-              </button>
-
-              <button
-                type="button"
-                onClick={(event) => {
-                  event.stopPropagation();
-
-                  handleOpenDelete(
+                  sessionStorage.setItem(
+                    "questionSelectedId",
                     question.id
                   );
                 }}
-                className="text-sm text-red-600 transition hover:underline"
+                className="text-blue-600 hover:underline"
               >
-                {t(
-                  "community.delete"
-                )}
-              </button>
-            </div>
-          )}
+                {
+                  question.title
+                }
+              </Link>
 
-          {/* Question tags */}
-          <div className="mt-3 flex flex-wrap gap-2">
-            {question.tags.map(
-              (tag) => (
-                <Badge
-                  key={tag}
-                  variant="secondary"
-                  className="bg-blue-100 text-blue-800"
+              <div className="text-sm text-gray-600">
+                {
+                  question.answers
+                }{" "}
+                {question.answers ===
+                1
+                  ? t(
+                      "labels.answer",
+                      {
+                        ns: "answers",
+                      }
+                    )
+                  : t(
+                      "labels.answers",
+                      {
+                        ns: "answers",
+                      }
+                    )}{" "}
+                ·{" "}
+                {
+                  question.views
+                }{" "}
+                {t(
+                  "labels.views",
+                  {
+                    ns: "questions",
+                  }
+                )}
+              </div>
+            </div>
+
+            {/* Question content */}
+
+            <p className="mt-2 line-clamp-2 text-gray-700">
+              {
+                question.content
+              }
+            </p>
+
+            {/* Owner actions */}
+
+            {question.authorId ===
+              user?._id && (
+              <div className="mt-3 flex gap-2">
+                <button
+                  type="button"
+                  onClick={(
+                    event
+                  ) => {
+                    event.stopPropagation();
+
+                    handleOpenEdit(
+                      question
+                    );
+                  }}
+                  className="text-sm text-blue-600 transition hover:underline"
                 >
-                  {tag}
-                </Badge>
-              )
+                  {t(
+                    "actions.edit",
+                    {
+                      ns: "community",
+                    }
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={(
+                    event
+                  ) => {
+                    event.stopPropagation();
+
+                    handleOpenDelete(
+                      question.id
+                    );
+                  }}
+                  className="text-sm text-red-600 transition hover:underline"
+                >
+                  {t(
+                    "actions.delete",
+                    {
+                      ns: "community",
+                    }
+                  )}
+                </button>
+              </div>
             )}
+
+            {/* Question tags */}
+
+            <div className="mt-3 flex flex-wrap gap-2">
+              {question.tags.map(
+                (tag) => (
+                  <Badge
+                    key={tag}
+                    variant="secondary"
+                    className="bg-blue-100 text-blue-800"
+                  >
+                    {tag}
+                  </Badge>
+                )
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        )
+      )}
     </div>
   );
 };

@@ -58,11 +58,21 @@ const QuestionReportCard = ({
   handleSuspend,
   handleUnsuspend,
 }: QuestionReportCardProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("reports");
+
+  const statusKey: Record<
+    ReportStatus,
+    string
+  > = {
+    pending: "admin.stats.pending",
+    reviewed: "admin.stats.reviewed",
+    dismissed: "admin.stats.dismissed",
+    action_taken:
+      "admin.stats.action_taken",
+  };
 
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md">
-      {/* Report header */}
       <div className="mb-5 flex flex-wrap items-center gap-2">
         <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
           {report.reason}
@@ -70,22 +80,16 @@ const QuestionReportCard = ({
 
         <span
           className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${
-            report.status ===
-            "pending"
+            report.status === "pending"
               ? "bg-yellow-100 text-yellow-700"
-              : report.status ===
-                  "reviewed"
+              : report.status === "reviewed"
                 ? "bg-blue-100 text-blue-700"
-                : report.status ===
-                    "dismissed"
+                : report.status === "dismissed"
                   ? "bg-gray-100 text-gray-700"
                   : "bg-green-100 text-green-700"
           }`}
         >
-          {report.status.replace(
-            "_",
-            " "
-          )}
+          {t(statusKey[report.status])}
         </span>
 
         <span className="ml-auto text-xs text-gray-400">
@@ -95,18 +99,19 @@ const QuestionReportCard = ({
         </span>
       </div>
 
-      {/* Reported question */}
       <div className="rounded-xl border border-gray-100 bg-gray-50 p-5">
         <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
           {t(
-            "report.reportedQuestion"
+            "admin.question.reported_question"
           )}
         </p>
 
         <p className="text-base font-medium leading-7 text-gray-900">
           {report.questionId
             ?.questiontitle ||
-            "Reported question unavailable."}
+            t(
+              "admin.question.reported_question_unavailable"
+            )}
         </p>
 
         {report.questionId
@@ -120,12 +125,11 @@ const QuestionReportCard = ({
         )}
       </div>
 
-      {/* Additional details */}
       {report.details && (
         <div className="mt-4 rounded-lg border border-orange-100 bg-orange-50 p-4">
           <p className="text-xs font-semibold uppercase tracking-wide text-orange-700">
             {t(
-              "report.additionalDetails"
+              "admin.common.additional_details"
             )}
           </p>
 
@@ -135,13 +139,11 @@ const QuestionReportCard = ({
         </div>
       )}
 
-      {/* Reporter and question author */}
       <div className="mt-5 grid gap-4 rounded-xl border border-gray-100 bg-gray-50 p-4 sm:grid-cols-2">
-        {/* Reporter */}
         <div>
           <p className="mb-2 text-xs font-medium uppercase text-gray-400">
             {t(
-              "report.reporter"
+              "admin.common.reporter"
             )}
           </p>
 
@@ -154,7 +156,9 @@ const QuestionReportCard = ({
                     .reporterId
                     .profilePhoto
                 }
-                alt="Reporter"
+                alt={t(
+                  "admin.accessibility.reporter"
+                )}
                 className="h-10 w-10 rounded-full object-cover"
               />
             ) : (
@@ -174,16 +178,17 @@ const QuestionReportCard = ({
                 ?.name ||
                 report.reporterId
                   ?.username ||
-                "Unknown User"}
+                t(
+                  "admin.common.unknown_user"
+                )}
             </span>
           </div>
         </div>
 
-        {/* Question author */}
         <div>
           <p className="mb-2 text-xs font-medium uppercase text-gray-400">
             {t(
-              "report.questionAuthor"
+              "admin.question.question_author"
             )}
           </p>
 
@@ -197,7 +202,9 @@ const QuestionReportCard = ({
                     .questionAuthorId
                     .profilePhoto
                 }
-                alt="Question Author"
+                alt={t(
+                  "admin.accessibility.question_author"
+                )}
                 className="h-10 w-10 rounded-full object-cover"
               />
             ) : (
@@ -221,11 +228,12 @@ const QuestionReportCard = ({
                 report
                   .questionAuthorId
                   ?.username ||
-                "Unknown User"}
+                t(
+                  "admin.common.unknown_user"
+                )}
             </span>
           </div>
 
-          {/* Violation information */}
           {report.violationCount >
             0 && (
             <div className="ml-2 mt-2 flex flex-wrap items-center gap-2">
@@ -237,28 +245,31 @@ const QuestionReportCard = ({
                 }`}
               >
                 {report.isRepeatOffender
-                  ? "⚠️ Repeat Offender"
-                  : "⚠️ Previous Violation"}
+                  ? t(
+                      "admin.violations.repeat_offender"
+                    )
+                  : t(
+                      "admin.violations.previous_violation"
+                    )}
               </span>
 
               <span className="text-xs text-gray-500">
-                {
-                  report.violationCount
-                }{" "}
-                confirmed{" "}
-                {report.violationCount ===
-                1
-                  ? "violation"
-                  : "violations"}
+                {t(
+                  report.violationCount === 1
+                    ? "admin.violations.confirmed_violation"
+                    : "admin.violations.confirmed_violations",
+                  {
+                    count:
+                      report.violationCount,
+                  }
+                )}
               </span>
             </div>
           )}
         </div>
       </div>
 
-      {/* Report actions */}
       <div className="mt-5 flex flex-row flex-wrap items-center gap-3 border-t border-gray-200 pt-4">
-        {/* Mark reviewed */}
         <button
           type="button"
           disabled={
@@ -278,14 +289,13 @@ const QuestionReportCard = ({
           {report.status ===
           "reviewed"
             ? t(
-                "report.reviewed"
+                "admin.stats.reviewed"
               )
             : t(
-                "report.markReviewed"
+                "admin.actions.mark_reviewed"
               )}
         </button>
 
-        {/* Dismiss */}
         <button
           type="button"
           disabled={
@@ -305,14 +315,13 @@ const QuestionReportCard = ({
           {report.status ===
           "dismissed"
             ? t(
-                "report.dismissed"
+                "admin.stats.dismissed"
               )
             : t(
-                "report.dismiss"
+                "admin.actions.dismiss"
               )}
         </button>
 
-        {/* Action taken */}
         <button
           type="button"
           disabled={
@@ -330,11 +339,10 @@ const QuestionReportCard = ({
           className="rounded-lg bg-orange-600 px-4 py-2 text-sm font-medium text-white hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-40"
         >
           {t(
-            "report.actionTaken"
+            "admin.stats.action_taken"
           )}
         </button>
 
-        {/* Suspend or unsuspend */}
         {report.questionAuthorId &&
           (report.questionAuthorId
             .isSuspended ? (
@@ -350,7 +358,7 @@ const QuestionReportCard = ({
               className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"
             >
               {t(
-                "report.unsuspendUser"
+                "admin.actions.unsuspend_user"
               )}
             </button>
           ) : (
@@ -366,7 +374,7 @@ const QuestionReportCard = ({
               className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
             >
               {t(
-                "report.suspendUser"
+                "admin.actions.suspend_user"
               )}
             </button>
           ))}

@@ -15,7 +15,8 @@ const AnswerShareButton = ({
   answerId,
   questionTitle,
 }: AnswerShareButtonProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["answers", "community"]);
+
   const [isSharing, setIsSharing] = useState(false);
 
   const handleShare = async () => {
@@ -28,19 +29,28 @@ const AnswerShareButton = ({
 
       if (navigator.share) {
         await navigator.share({
-          title: questionTitle || "Answer",
-          text: "Check out this answer on CodeQuest",
+          title: questionTitle || t("share.title", { ns: "answers" }),
+          text: t("share.text", { ns: "answers" }),
           url: shareUrl,
         });
       } else {
         await navigator.clipboard.writeText(shareUrl);
-        toast.success(t("toast.answer_link_copied"));
+
+        toast.success(
+          t("messages.link_copied", {
+            ns: "answers",
+          })
+        );
       }
     } catch (error: any) {
-      // User closing the share dialog is not an actual error
       if (error?.name !== "AbortError") {
         console.error("Failed to share answer:", error);
-        toast.error(t("toast.failed_to_share_answer"));
+
+        toast.error(
+          t("messages.failed_to_share", {
+            ns: "answers",
+          })
+        );
       }
     } finally {
       setIsSharing(false);
@@ -59,7 +69,10 @@ const AnswerShareButton = ({
       className="text-gray-600 hover:text-gray-800"
     >
       <Share className="w-4 h-4 mr-1" />
-      {isSharing ? "Sharing..." : t("community.share")}
+
+      {isSharing
+        ? t("share.sharing", { ns: "answers" })
+        : t("actions.share", { ns: "community" })}
     </Button>
   );
 };

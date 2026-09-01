@@ -15,13 +15,16 @@ interface ReputationActivityListProps {
 const ReputationActivityList = ({
   activities,
 }: ReputationActivityListProps) => {
-  const { t } = useTranslation();
+  const { t } =
+    useTranslation("reputation");
 
   if (activities.length === 0) {
     return (
       <div className="mt-6 rounded-xl border bg-white p-6">
         <p className="text-center text-gray-500">
-          {t("reputation.no_reputation_activity_yet")}
+          {t(
+            "messages.no_activity_yet"
+          )}
         </p>
       </div>
     );
@@ -29,45 +32,66 @@ const ReputationActivityList = ({
 
   return (
     <div className="mt-6 rounded-xl border bg-white p-6">
-      {/* Reputation activity heading */}
       <h2 className="mb-5 text-xl font-semibold">
-        {t("reputation.reputation_activity")}
+        {t(
+          "title.reputation_activity"
+        )}
       </h2>
 
-      {/* Reputation activities */}
       <div className="space-y-3">
-        {activities.map((activity) => (
-          <div
-            key={activity._id}
-            className="flex items-center justify-between border-b pb-3"
-          >
-            <div>
-              <p className="font-medium">{activity.reason}</p>
-
-              {activity.transferReason && (
-                <p className="mt-1 text-sm text-gray-600">
-                  {t("reputation.reason")}: {activity.transferReason}
+        {activities.map(
+          (activity) => (
+            <div
+              key={
+                activity._id
+              }
+              className="flex items-center justify-between border-b pb-3"
+            >
+              <div>
+                <p className="font-medium">
+                  {
+                    activity.reason
+                  }
                 </p>
-              )}
 
-              <p className="mt-1 text-sm text-gray-500">
-                {new Date(activity.createdAt).toLocaleString()}
+                {activity.transferReason && (
+                  <p className="mt-1 text-sm text-gray-600">
+                    {t(
+                      "labels.reason"
+                    )}
+                    :{" "}
+                    {
+                      activity.transferReason
+                    }
+                  </p>
+                )}
+
+                <p className="mt-1 text-sm text-gray-500">
+                  {new Date(
+                    activity.createdAt
+                  ).toLocaleString()}
+                </p>
+              </div>
+
+              <p
+                className={`font-bold ${
+                  activity.points >
+                  0
+                    ? "text-green-600"
+                    : "text-red-600"
+                }`}
+              >
+                {activity.points >
+                0
+                  ? "+"
+                  : ""}
+                {
+                  activity.points
+                }
               </p>
             </div>
-
-            {/* Reputation points */}
-            <p
-              className={`font-bold ${
-                activity.points > 0
-                  ? "text-green-600"
-                  : "text-red-600"
-              }`}
-            >
-              {activity.points > 0 ? "+" : ""}
-              {activity.points}
-            </p>
-          </div>
-        ))}
+          )
+        )}
       </div>
     </div>
   );
