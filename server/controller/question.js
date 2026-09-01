@@ -1,581 +1,171 @@
-import mongoose from "mongoose";
-import question from "../models/question.js";
-import auth from "../models/auth.js"
-import { updateReputation } from "../services/reputationServices.js";
+import {
+  getAllQuestionsService,
+  getQuestionByIdService,
+  searchQuestionsService,
+} from "../services/question/questionQueryService.js";
 
+import {
+  createQuestionService,
+  editQuestionService,
+  deleteQuestionService,
+} from "../services/question/questionMutationService.js";
+
+import { voteQuestionService } from "../services/question/questionVoteService.js";
+
+// Get error status
+const getErrorStatus = (error) => {
+  if (error instanceof Error && "status" in error) {
+    return error.status;
+  }
+
+  return 500;
+};
+
+// Get error message
+const getErrorMessage = (error) => {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return "Something went wrong";
+};
+
+// Ask question
 export const Askquestion = async (req, res) => {
-  const { postquestiondata } = req.body;
-  const user = await auth.findById(req.userid);
-  const postques = new question({ 
-    ...postquestiondata,
-    userid: req.userid,
-    userposted: user.name,
-  });
   try {
-    await postques.save();
-    res.status(200).json({ data: postques });
+    const questionData = await createQuestionService({
+      postquestiondata: req.body.postquestiondata,
+      userId: req.userid,
+    });
+
+    return res.status(200).json({
+      data: questionData,
+    });
   } catch (error) {
-    console.log(error);
-    res.status(500).json("something went wrong..");
-    return;
+    console.error("Ask question error:", error);
+
+    return res.status(getErrorStatus(error)).json({
+      message: getErrorMessage(error),
+    });
   }
 };
 
+// Get all questions
 export const getallquestion = async (req, res) => {
   try {
-    const limit = Math.min(
-      parseInt(req.query.limit) || 10,
-      50
-    );
-
-    const cursor = req.query.cursor || null;
-
-    let query = {};
-
-    if (cursor) {
-      try {
-        const decodedCursor = JSON.parse(
-          Buffer.from(cursor, "base64").toString("utf-8")
-        );
-
-        const cursorDate = new Date(
-          decodedCursor.askedon
-        );
-
-        const cursorId =
-          decodedCursor.id;
-
-        if (
-          !cursorDate ||
-          !cursorId ||
-          !mongoose.Types.ObjectId.isValid(cursorId)
-        ) {
-          return res.status(400).json({
-            message: "Invalid cursor",
-          });
-        }
-
-        query = {
-          $or: [
-            {
-              askedon: {
-                $lt: cursorDate,
-              },
-            },
-            {
-              askedon: cursorDate,
-              _id: {
-                $lt: new mongoose.Types.ObjectId(
-                  cursorId
-                ),
-              },
-            },
-          ],
-        };
-      } catch (error) {
-        return res.status(400).json({
-          message: "Invalid cursor",
-        });
-      }
-    }
-
-    const questions = await question
-      .find(query)
-      .sort({
-        askedon: -1,
-        _id: -1,
-      })
-      .limit(limit + 1);
-
-    const hasMore =
-      questions.length > limit;
-
-    const data = hasMore
-      ? questions.slice(0, limit)
-      : questions;
-
-    let nextCursor = null;
-
-    if (hasMore && data.length > 0) {
-      const lastQuestion =
-        data[data.length - 1];
-
-      const cursorData = {
-        askedon:
-          lastQuestion.askedon,
-        id:
-          lastQuestion._id.toString(),
-      };
-
-      nextCursor = Buffer.from(
-        JSON.stringify(cursorData)
-      ).toString("base64");
-    }
-
-    return res.status(200).json({
-      data,
-      pagination: {
-        limit,
-        hasMore,
-        nextCursor,
-      },
+    const result = await getAllQuestionsService({
+      limit: req.query.limit,
+      cursor: req.query.cursor,
     });
-  } catch (error) {
-    console.error(
-      "Get all questions error:",
-      error
-    );
 
-    return res.status(500).json({
-      message: "Something went wrong..",
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error("Get all questions error:", error);
+
+    return res.status(getErrorStatus(error)).json({
+      message: getErrorMessage(error),
     });
   }
 };
-export const deletequestion = async (req, res) => {
-  const { id: _id } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(_id)) {
-    return res.status(400).json({ message: "question unavailable" });
-  }
-  try {
-    await question.findByIdAndDelete(_id);
-    res.status(200).json({ message: "question deleted" });
-  } catch (error) {
-    res.status(500).json("something went wrong..");
-    return;
-  }
-};
-export const votequestion = async (req, res) => {
-  const { id: _id } = req.params;
-  const { value ,userid} = req.body;
-  if (!mongoose.Types.ObjectId.isValid(_id)) {
-    return res.status(400).json({ message: "question unavailable" });
-  }
-  try {
-    const questionDoc = await question.findById(_id);
-    const upindex = questionDoc.upvote.findIndex((id) => id === String(userid));
-    const downindex = questionDoc.downvote.findIndex(
-      (id) => id === String(userid)
-    );
-    if (value === "upvote") {
-      if (downindex !== -1) {
-  questionDoc.downvote = questionDoc.downvote.filter(
-    (id) => id !== String(userid)
-  );
-
-  await updateReputation({
-    userId: questionDoc.userid,
-    points: 2,
-    type: "downvote",
-    reason: "Question downvote removed",
-    relatedId: questionDoc._id,
-  });
-}
-      if (upindex === -1) {
-        questionDoc.upvote.push(userid);
-      } else {
-        questionDoc.upvote = questionDoc.upvote.filter((id) => id !== String(userid));
-      }
-    } else if (value === "downvote") {
-      if (upindex !== -1) {
-        questionDoc.upvote = questionDoc.upvote.filter((id) => id !== String(userid));
-      }
-      if (downindex === -1) {
-  questionDoc.downvote.push(userid);
-
-  await updateReputation({
-    userId: questionDoc.userid,
-    points: -2,
-    type: "downvote",
-    reason: "Question received a downvote",
-    relatedId: questionDoc._id,
-  });
-} else {
-  questionDoc.downvote = questionDoc.downvote.filter(
-    (id) => id !== String(userid)
-  );
-
-  await updateReputation({
-    userId: questionDoc.userid,
-    points: 2,
-    type: "downvote",
-    reason: "Question downvote removed",
-    relatedId: questionDoc._id,
-  });
-}
-    }
-    // Give +2 reputation once when question reaches 10 upvotes
-if (
-  questionDoc.upvote.length >= 10 &&
-  !questionDoc.tenUpvotesRewarded
-) {
-  await updateReputation({
-    userId: questionDoc.userid,
-    points: 2,
-    type: "question_upvotes",
-    reason: "Question received 10 upvotes",
-    relatedId: questionDoc._id,
-  });
-
-  questionDoc.tenUpvotesRewarded = true;
-}
-
-    const questionvote = await question.findByIdAndUpdate(_id, questionDoc, { new: true });
-
-    res.status(200).json({ data: questionvote });
-  } catch (error) {
-    res.status(500).json("something went wrong..");
-    return;
-  }
-};
-
+// Get question by ID
 export const getQuestionById = async (req, res) => {
-  const { id } = req.params;
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({
-      message: "Question unavailable",
-    });
-  }
-
   try {
- const questionData = await question.findByIdAndUpdate(
-   id,
-   { $inc: { views: 1 } },
-   { new: true }
- );
-
-if (!questionData) {
-  return res.status(404).json({
-    message: "Question not found",
-  });
-}
-
-    if (!questionData) {
-      return res.status(404).json({
-        message: "Question not found",
-      });
-    }
+    const questionData = await getQuestionByIdService(req.params.id);
 
     return res.status(200).json({
       data: questionData,
     });
   } catch (error) {
-    return res.status(500).json({
-      message: "Something went wrong",
+    console.error("Get question error:", error);
+
+    return res.status(getErrorStatus(error)).json({
+      message: getErrorMessage(error),
     });
   }
 };
 
-export const answerQuestion = async (req, res) => {
-  const { id } = req.params;
-  const { answerbody, useranswered, userid } = req.body;
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({
-      message: "Question unavailable",
-    });
-  }
-
-  try {
-    const questionData = await question.findById(id);
-
-    if (!questionData) {
-      return res.status(404).json({
-        message: "Question not found",
-      });
-    }
-
-    questionData.answer.push({
-      answerbody,
-      useranswered,
-      userid,
-    });
-
-    questionData.noofanswer = questionData.answer.length;
-
-    await questionData.save();
-
-    await updateReputation({
-  userId: userid,
-  points: 5,
-  type: "answer_posted",
-  reason: "Posted an answer",
-  relatedId: id,
-});
-
-    return res.status(200).json({
-      data: questionData,
-      message: "Answer added successfully",
-    });
-  } catch (error) {
-    return res.status(500).json({
-      message: "Something went wrong",
-    });
-  }
-};
-export const deleteAnswer = async (req, res) => {
-  const { questionId, answerId } = req.params;
-
-  try {
-    const questionData = await question.findById(questionId);
-
-    if (!questionData) {
-      return res.status(404).json({
-        message: "Question not found",
-      });
-    }
-
-    questionData.answer = questionData.answer.filter(
-      (answer) => String(answer._id) !== String(answerId)
-    );
-
-    questionData.noofanswer = questionData.answer.length;
-
-    await questionData.save();
-
-    return res.status(200).json({
-      message: "Answer deleted successfully",
-      question: questionData,
-    });
-  } catch (error) {
-    console.error(error);
-
-    return res.status(500).json({
-      message: "Failed to delete answer",
-    });
-  }
-};
+// Edit question
 export const editQuestion = async (req, res) => {
-  const { id } = req.params;
-
   try {
     const { questiontitle, questionbody, questiontags } = req.body;
 
-    const updatedQuestion = await question.findByIdAndUpdate(
-      id,
-      {
-        questiontitle,
-        questionbody,
-        questiontags,
-      },
-      { new: true }
-    );
+    const updatedQuestion = await editQuestionService({
+      questionId: req.params.id,
+      questiontitle,
+      questionbody,
+      questiontags,
+    });
 
-    if (!updatedQuestion) {
-      return res.status(404).json({
-        message: "Question not found",
-      });
-    }
-
-    res.status(200).json({
+    return res.status(200).json({
       message: "Question updated successfully",
       question: updatedQuestion,
     });
   } catch (error) {
-    res.status(500).json({
-      message: "Something went wrong",
+    console.error("Edit question error:", error);
+
+    return res.status(getErrorStatus(error)).json({
+      message: getErrorMessage(error),
     });
   }
 };
 
+// Delete question
 export const deleteQuestion = async (req, res) => {
-  const { id } = req.params;
-
   try {
-    const questionData = await question.findById(id);
+    await deleteQuestionService({
+      questionId: req.params.id,
+      userId: req.userid,
+    });
 
-    if (!questionData) {
-      return res.status(404).json({
-        message: "Question not found",
-      });
-    }
-
-    if (questionData.userid !== req.userid) {
-      return res.status(403).json({
-        message: "You can only delete your own question",
-      });
-    }
-
-    await question.findByIdAndDelete(id);
-
-    res.status(200).json({
+    return res.status(200).json({
       message: "Question deleted successfully",
     });
   } catch (error) {
-    console.log(error);
+    console.error("Delete question error:", error);
 
-    res.status(500).json({
-      message: "Something went wrong",
+    return res.status(getErrorStatus(error)).json({
+      message: getErrorMessage(error),
     });
   }
 };
 
-export const searchQuestions = async (req, res) => {
+// Vote question
+export const votequestion = async (req, res) => {
   try {
-    const {
-      q,
-      cursor,
-    } = req.query;
-
-    const limit = Math.min(
-      Number(req.query.limit) || 10,
-      50
-    );
-
-    if (!q || !String(q).trim()) {
-      return res.status(200).json({
-        data: [],
-        pagination: {
-          hasMore: false,
-          nextCursor: null,
-        },
-      });
-    }
-
-    const searchQuery =
-      String(q).trim();
-
-    const searchConditions = [
-      {
-        questiontitle: {
-          $regex: searchQuery,
-          $options: "i",
-        },
-      },
-      {
-        questionbody: {
-          $regex: searchQuery,
-          $options: "i",
-        },
-      },
-      {
-        questiontags: {
-          $regex: searchQuery,
-          $options: "i",
-        },
-      },
-    ];
-
-    const query = {
-      $or: searchConditions,
-    };
-
-    // Decode cursor
-    if (cursor) {
-      try {
-        const decodedCursor =
-          JSON.parse(
-            Buffer.from(
-              cursor,
-              "base64"
-            ).toString("utf-8")
-          );
-
-        const cursorDate =
-          new Date(
-            decodedCursor.askedon
-          );
-
-        const cursorId =
-          decodedCursor.id;
-
-        if (
-          Number.isNaN(
-            cursorDate.getTime()
-          ) ||
-          !cursorId ||
-          !mongoose.Types.ObjectId.isValid(
-            cursorId
-          )
-        ) {
-          return res.status(400).json({
-            message: "Invalid cursor",
-          });
-        }
-
-        query.$and = [
-          {
-            $or: searchConditions,
-          },
-          {
-            $or: [
-              {
-                askedon: {
-                  $lt: cursorDate,
-                },
-              },
-              {
-                askedon: cursorDate,
-                _id: {
-                  $lt:
-                    new mongoose.Types.ObjectId(
-                      cursorId
-                    ),
-                },
-              },
-            ],
-          },
-        ];
-
-        delete query.$or;
-      } catch (error) {
-        return res.status(400).json({
-          message: "Invalid cursor",
-        });
-      }
-    }
-
-    const questions =
-      await question
-        .find(query)
-        .sort({
-          askedon: -1,
-          _id: -1,
-        })
-        .limit(limit + 1);
-
-    const hasMore =
-      questions.length > limit;
-
-    const data = hasMore
-      ? questions.slice(0, limit)
-      : questions;
-
-    let nextCursor = null;
-
-    if (
-      hasMore &&
-      data.length > 0
-    ) {
-      const lastQuestion =
-        data[data.length - 1];
-
-      nextCursor = Buffer.from(
-        JSON.stringify({
-          askedon:
-            lastQuestion.askedon,
-          id: lastQuestion._id.toString(),
-        })
-      ).toString("base64");
-    }
+    const questionData = await voteQuestionService({
+      questionId: req.params.id,
+      value: req.body.value,
+      userId: req.body.userid,
+    });
 
     return res.status(200).json({
-      data,
-      pagination: {
-        limit,
-        hasMore,
-        nextCursor,
-      },
+      data: questionData,
     });
   } catch (error) {
-    console.error(
-      "Question search error:",
-      error
-    );
+    console.error("Question vote error:", error);
 
-    return res.status(500).json({
-      message:
-        "Something went wrong",
+    return res.status(getErrorStatus(error)).json({
+      message: getErrorMessage(error),
+    });
+  }
+};
+
+// Search questions
+export const searchQuestions = async (req, res) => {
+  try {
+    const result = await searchQuestionsService({
+      search: req.query.q,
+      cursor: req.query.cursor,
+      limit: req.query.limit,
+    });
+
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error("Question search error:", error);
+
+    return res.status(getErrorStatus(error)).json({
+      message: getErrorMessage(error),
     });
   }
 };

@@ -17,30 +17,31 @@ const reportSchema = new mongoose.Schema(
     postAuthorId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
-     default: null,
+      default: null,
     },
-    questionId: {
-  type: mongoose.Schema.Types.ObjectId,
-  ref: "question",
-  default: null,
-},
 
-questionAuthorId: {
-  type: mongoose.Schema.Types.ObjectId,
-  ref: "user",
-  default: null,
-},
+    questionId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "question",
+      default: null,
+    },
+
+    questionAuthorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+      default: null,
+    },
 
     reason: {
       type: String,
       enum: [
-        "Spam",
-        "Harassment or Hate",
-        "Violence",
-        "Nudity or Sexual Content",
-        "Misinformation",
-        "Copyright",
-        "Other",
+        "spam",
+        "harassment_or_hate",
+        "violence",
+        "nudity_or_sexual_content",
+        "misinformation",
+        "copyright",
+        "other",
       ],
       required: true,
     },
@@ -53,7 +54,12 @@ questionAuthorId: {
 
     status: {
       type: String,
-      enum: ["pending", "reviewed", "dismissed", "action_taken"],
+      enum: [
+        "pending",
+        "reviewed",
+        "dismissed",
+        "action_taken",
+      ],
       default: "pending",
     },
 
@@ -67,34 +73,54 @@ questionAuthorId: {
       type: Date,
       default: null,
     },
+
     adminReputationDeducted: {
-  type: Boolean,
-  default: false,
-},
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-// One report per user per community post
+/* One report per user per community post */
+
 reportSchema.index(
-  { reporterId: 1, postId: 1 },
+  {
+    reporterId: 1,
+    postId: 1,
+  },
   {
     unique: true,
-    partialFilterExpression: { postId: { $type: "objectId" } },
+    partialFilterExpression: {
+      postId: {
+        $type: "objectId",
+      },
+    },
   }
 );
 
-// One report per user per question
+/* One report per user per question */
+
 reportSchema.index(
-  { reporterId: 1, questionId: 1 },
+  {
+    reporterId: 1,
+    questionId: 1,
+  },
   {
     unique: true,
-    partialFilterExpression: { questionId: { $type: "objectId" } },
+    partialFilterExpression: {
+      questionId: {
+        $type: "objectId",
+      },
+    },
   }
 );
 
-const Report = mongoose.model("Report", reportSchema);
+const Report = mongoose.model(
+  "Report",
+  reportSchema
+);
 
 export default Report;

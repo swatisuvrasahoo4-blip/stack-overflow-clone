@@ -12,10 +12,10 @@ export const submitAnswer = async (
   questionId: string,
   answerData: AnswerData
 ) => {
-  const response = await axiosInstance.post(
-    `/question/answer/${questionId}`,
-    answerData
-  );
+ const response = await axiosInstance.post(
+  `/answer/postanswer/${questionId}`,
+  answerData
+);
 
   return response.data;
 };

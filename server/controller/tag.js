@@ -1,53 +1,77 @@
 import question from "../models/question.js";
 import Post from "../models/post.js";
 
+// Get all tags
 export const getAllTags = async (req, res) => {
   try {
-    const [questionTags, postTags] = await Promise.all([
+    const [
+      questionTags,
+      postTags,
+    ] = await Promise.all([
       question.aggregate([
-        { $unwind: "$questiontags" },
+        {
+          $unwind:
+            "$questiontags",
+        },
         {
           $project: {
             tag: {
               $toLower: {
-                $trim: { input: "$questiontags" },
+                $trim: {
+                  input:
+                    "$questiontags",
+                },
               },
             },
           },
         },
         {
           $match: {
-            tag: { $ne: "" },
+            tag: {
+              $ne: "",
+            },
           },
         },
         {
           $group: {
             _id: "$tag",
-            count: { $sum: 1 },
+            count: {
+              $sum: 1,
+            },
           },
         },
       ]),
 
       Post.aggregate([
-        { $unwind: "$hashtags" },
+        {
+          $unwind:
+            "$hashtags",
+        },
         {
           $project: {
             tag: {
               $toLower: {
-                $trim: { input: "$hashtags" },
+                $trim: {
+                  input:
+                    "$hashtags",
+                },
               },
             },
           },
         },
         {
           $match: {
-            tag: { $ne: "" },
+            tag: {
+              $ne: "",
+            },
           },
         },
         {
           $group: {
             _id: "$tag",
-            count: { $sum: 1 },
+            count: {
+              $sum: 1,
+            },
           },
         },
       ]),
@@ -55,75 +79,173 @@ export const getAllTags = async (req, res) => {
 
     const tagCountMap = {};
 
-    [...questionTags, ...postTags].forEach(({ _id, count }) => {
-      const tag = String(_id).replace(/^#/, "").trim();
+    [
+      ...questionTags,
+      ...postTags,
+    ].forEach(
+      ({ _id, count }) => {
+        const tag = String(_id)
+          .replace(/^#/, "")
+          .trim();
 
-      if (!tag) return;
+        if (!tag) {
+          return;
+        }
 
-      tagCountMap[tag] = (tagCountMap[tag] || 0) + count;
-    });
+        tagCountMap[tag] =
+          (tagCountMap[tag] ||
+            0) + count;
+      }
+    );
 
-    const tags = Object.entries(tagCountMap)
-      .sort((a, b) => b[1] - a[1])
-      .map(([name, count]) => ({
-        name,
-        count,
-      }));
+    const tags =
+      Object.entries(
+        tagCountMap
+      )
+        .sort(
+          (a, b) =>
+            b[1] - a[1]
+        )
+        .map(
+          ([name, count]) => ({
+            name,
+            count,
+          })
+        );
 
-    res.status(200).json({
+    return res.status(200).json({
       data: tags,
     });
   } catch (error) {
-    console.error("Failed to fetch tags:", error);
+    console.error(
+      "Failed to fetch tags:",
+      error
+    );
 
-    res.status(500).json({
-      message: "Failed to fetch tags",
+    return res.status(500).json({
+      message:
+        "Failed to fetch tags",
     });
   }
 };
 
-export const getTagContent = async (req, res) => {
+// Get content for a specific tag
+export const getTagContent = async (
+  req,
+  res
+) => {
   try {
     const { tag } = req.params;
 
-    const normalizedTag = decodeURIComponent(tag)
-      .replace(/^#/, "")
-      .trim()
-      .toLowerCase();
+    const normalizedTag =
+      decodeURIComponent(tag)
+        .replace(/^#/, "")
+        .trim()
+        .toLowerCase();
 
     if (!normalizedTag) {
       return res.status(400).json({
-        message: "Tag is required",
+        message:
+          "Tag is required",
       });
     }
 
-    const [questions, posts] = await Promise.all([
-      question.find({
-        questiontags: {
-          $regex: `^${normalizedTag}$`,
-          $options: "i",
-        },
-      }),
+    // Question pagination
+    const page = Math.max(
+      Number.parseInt(
+        req.query.page,
+        10
+      ) || 1,
+      1
+    );
 
-      Post.find({
-        hashtags: {
-          $regex: `^${normalizedTag}$`,
-          $options: "i",
-        },
+    const limit = Math.min(
+      Math.max(
+        Number.parseInt(
+          req.query.limit,
+          10
+        ) || 5,
+        1
+      ),
+      50
+    );
+
+    const skip =
+      (page - 1) * limit;
+
+    // Tag filters
+    const questionFilter = {
+      questiontags: {
+        $regex: `^${normalizedTag}$`,
+        $options: "i",
+      },
+    };
+
+    const postFilter = {
+      hashtags: {
+        $regex: `^${normalizedTag}$`,
+        $options: "i",
+      },
+    };
+
+    const [
+      questions,
+      totalQuestions,
+      posts,
+    ] = await Promise.all([
+      // Current question page
+      question
+        .find(questionFilter)
+        .sort({
+          _id: -1,
+        })
+        .skip(skip)
+        .limit(limit),
+
+      // Total question count
+      question.countDocuments(
+        questionFilter
+      ),
+
+      // Community posts
+      Post.find(postFilter).sort({
+        _id: -1,
       }),
     ]);
 
-    res.status(200).json({
+    const totalPages =
+      Math.ceil(
+        totalQuestions / limit
+      );
+
+    return res.status(200).json({
       data: {
         questions,
         posts,
+
+        pagination: {
+          currentPage: page,
+          totalPages,
+          totalQuestions,
+          limit,
+
+          hasNextPage:
+            page < totalPages,
+
+          hasPreviousPage:
+            page > 1,
+        },
       },
     });
   } catch (error) {
-    console.error("Failed to fetch tag content:", error);
+    console.error(
+      "Failed to fetch tag content:",
+      error
+    );
 
-    res.status(500).json({
-      message: "Failed to fetch tag content",
+    return res.status(500).json({
+      message:
+        "Failed to fetch tag content",
     });
   }
 };

@@ -244,8 +244,8 @@ await transporter.sendMail({
 });
 console.log("Subscription confirmation sent");
 
-}catch{
-  console.error("Confirmation email failed",email);
+}catch(error){
+  console.error("Confirmation email failed",error);
   
 }
 
