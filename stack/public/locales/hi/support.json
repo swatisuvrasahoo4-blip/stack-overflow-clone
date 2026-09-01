@@ -1,0 +1,62 @@
+{
+  "accessibility": {
+    "help_and_support": "सहायता और समर्थन"
+  },
+  "title": {
+    "help_and_support": "सहायता और समर्थन"
+  },
+  "status": {
+    "checking_your_plan": "आपका प्लान जाँचा जा रहा है...",
+    "submitting": "भेजा जा रहा है..."
+  },
+  "priority": {
+    "priority_support": "प्राथमिकता सहायता",
+    "highest_priority_support": "सर्वोच्च प्राथमिकता सहायता",
+    "available_for_silver_and_gold": "प्राथमिकता सहायता Silver और Gold सदस्यों के लिए उपलब्ध है।",
+    "upgrade_to_contact_team": "हमारी प्राथमिकता सहायता टीम से संपर्क करने के लिए अपना प्लान अपग्रेड करें।"
+  },
+  "members": {
+    "gold_member": "Gold सदस्य",
+    "silver_member": "Silver सदस्य"
+  },
+  "placeholders": {
+    "subject": "विषय",
+    "describe_your_issue": "अपनी समस्या का वर्णन करें"
+  },
+  "actions": {
+    "upgrade_plan": "प्लान अपग्रेड करें",
+    "submit_request": "अनुरोध भेजें"
+  },
+  "messages": {
+    "please_enter_subject_and_message": "कृपया विषय और संदेश दर्ज करें।",
+    "support_request_submitted_successfully": "आपका सहायता अनुरोध सफलतापूर्वक भेज दिया गया है।",
+    "failed_to_submit_support_request": "सहायता अनुरोध भेजा नहीं जा सका।",
+    "please_login_to_continue": "जारी रखने के लिए कृपया लॉगिन करें।"
+  },
+  "admin": {
+    "title": {
+      "support_requests": "सहायता अनुरोध"
+    },
+    "status": {
+      "loading_support_requests": "सहायता अनुरोध लोड हो रहे हैं...",
+      "resolved": "समाधान किया गया",
+      "pending": "लंबित"
+    },
+    "labels": {
+      "user": "उपयोगकर्ता",
+      "status": "स्थिति"
+    },
+    "priority": {
+      "highest_priority": "सर्वोच्च प्राथमिकता",
+      "priority": "प्राथमिकता"
+    },
+    "actions": {
+      "resolve": "समाधान करें"
+    },
+    "messages": {
+      "manage_priority_customer_support_requests": "ग्राहकों के प्राथमिकता सहायता अनुरोधों को प्रबंधित करें।",
+      "no_support_requests_yet": "अभी कोई सहायता अनुरोध नहीं है।",
+      "failed_to_resolve_support_request": "सहायता अनुरोध का समाधान नहीं किया जा सका।"
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "filters": {
+    "filter_by_post_type": "पोस्ट प्रकार के अनुसार फ़िल्टर करें"
+  },
+  "post_types": {
+    "all_types": "सभी प्रकार",
+    "technical_update": "तकनीकी अपडेट",
+    "project_showcase": "प्रोजेक्ट प्रदर्शन",
+    "learning_achievement": "सीखने की उपलब्धि",
+    "code_snippet": "कोड स्निपेट"
+  },
+  "labels": {
+    "answers": "उत्तर",
+    "views": "व्यू",
+    "posts": "पोस्ट",
+    "questions": "प्रश्न"
+  },
+  "messages": {
+    "no_title": "(कोई शीर्षक नहीं)",
+    "no_posts_matched": "आपकी खोज से कोई पोस्ट मेल नहीं खाती।",
+    "no_questions_matched": "आपकी खोज से कोई प्रश्न मेल नहीं खाता।",
+    "no_posts_or_questions_matched": "आपकी खोज से कोई पोस्ट या प्रश्न मेल नहीं खाता।",
+    "results_for": "“{{query}}” के लिए परिणाम।",
+    "no_more_results": "अब और परिणाम नहीं हैं।"
+  },
+  "status": {
+    "loading_more_results": "और परिणाम लोड हो रहे हैं...",
+    "searching": "खोज की जा रही है..."
+  },
+  "title": {
+    "search_results": "खोज परिणाम"
+  },
+  "tabs": {
+    "all": "सभी",
+    "posts": "पोस्ट",
+    "questions": "प्रश्न"
+  }
+}

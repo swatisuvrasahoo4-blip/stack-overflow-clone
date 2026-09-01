@@ -1,0 +1,121 @@
+{
+  "actions": {
+    "like": "点赞",
+    "reply": "回复",
+    "comment": "评论",
+    "share": "分享",
+    "bookmark": "保存",
+    "flag": "举报",
+    "edit": "编辑",
+    "delete": "删除",
+    "cancel": "取消",
+    "save": "保存",
+    "post_reply": "发布回复",
+    "delete_reply": "删除回复",
+    "copy": "复制",
+    "show_less": "收起",
+    "view_all": "查看全部",
+    "no": "否",
+    "yes_delete": "是，删除",
+    "view_project": "查看项目"
+  },
+  "status": {
+    "edited": "已编辑",
+    "copied": "已复制",
+    "posting": "正在发布...",
+    "loading": "正在加载..."
+  },
+  "feed": {
+    "trending": "热门",
+    "following": "关注",
+    "create_post": "创建帖子",
+    "posts": "帖子",
+    "community_posts": "社区帖子",
+    "community_feed": "社区动态",
+    "loading_more_posts": "正在加载更多帖子...",
+    "no_more_posts": "没有更多帖子了。",
+    "loading_posts": "正在加载帖子..."
+  },
+  "messages": {
+    "post_not_found": "未找到帖子。",
+    "share_updates_projects_code_snippets_and_learning_achievements": "分享更新、项目、代码片段和学习成果。",
+    "please_login_to_continue": "请登录后继续。",
+    "comment_reputation_required": "你至少需要 50 点声望才能发表评论。你当前的声望为 {{reputation}}。",
+    "please_log_in_to_follow_users": "请登录后关注用户。",
+    "no_saved_community_posts": "没有已保存的社区帖子。",
+    "unable_to_update_bookmark": "无法更新保存状态。请重试。",
+    "post_deleted_successfully": "帖子删除成功。",
+    "unable_to_delete_post": "无法删除帖子。",
+    "reply_reputation_required": "你至少需要 50 点声望才能回复。你当前的声望为 {{reputation}}。",
+    "unable_to_delete_comment": "无法删除评论。",
+    "edit_reputation_required": "你至少需要 100 点声望才能编辑社区帖子。",
+    "post_content_cannot_be_empty": "帖子内容不能为空。",
+    "session_expired": "你的会话已过期。请重新登录。",
+    "can_only_edit_own_post": "你只能编辑自己的帖子。",
+    "failed_to_update_post": "更新帖子时发生错误。",
+    "link_copied_to_clipboard": "链接已复制到剪贴板。"
+  },
+  "mentioned_users": "提到的用户",
+  "labels": {
+    "comment": "评论",
+    "comments": "评论",
+    "unknown_user": "未知用户",
+    "community_post": "社区帖子",
+    "saves": "已保存"
+  },
+  "placeholders": {
+    "write_reply": "写下回复...",
+    "write_comment": "写下评论..."
+  },
+  "delete_reply": {
+    "title": "删除回复",
+    "confirmation": "确定要删除此回复吗？"
+  },
+  "badges": {
+    "featured": "精选"
+  },
+  "accessibility": {
+    "view_mentioned_users": "查看提到的用户",
+    "post_image": "帖子图片"
+  },
+  "delete_comment": {
+    "title": "删除评论",
+    "confirmation": "确定要删除此评论吗？"
+  },
+  "delete_post": {
+    "title": "删除帖子",
+    "confirmation": "确定要删除此帖子吗？"
+  },
+  "edit_post": {
+    "title": "编辑帖子",
+    "close_modal": "关闭编辑窗口",
+    "content": "内容",
+    "edit_post_placeholder": "编辑你的帖子...",
+    "hashtags": "话题标签",
+    "add_hashtag": "添加话题标签",
+    "remove_hashtag": "移除话题标签 {{tag}}",
+    "image": "图片",
+    "remove_image": "移除图片",
+    "no_file_chosen": "未选择文件",
+    "selected_file": "已选择：{{fileName}}",
+    "project_showcase": "项目展示",
+    "project_title": "项目标题",
+    "project_link": "项目链接",
+    "learning_achievement": "学习成果",
+    "achievement_title": "成果标题",
+    "achievement_description": "成果描述",
+    "code_snippet": "代码片段",
+    "edit_code": "编辑你的代码...",
+    "save_changes": "保存更改"
+  },
+  "follow": {
+    "checking": "正在检查...",
+    "follow": "关注",
+    "following": "正在关注",
+    "followers": "关注者"
+  },
+  "share": {
+    "community_post": "社区帖子",
+    "check_out_community_post": "查看这篇社区帖子！"
+  }
+}

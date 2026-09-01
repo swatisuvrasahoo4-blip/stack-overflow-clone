@@ -1,0 +1,110 @@
+{
+  "messages": {
+    "question_report_reputation_required": "Você precisa ter pelo menos 500 pontos de reputação para denunciar conteúdo inadequado. Sua reputação atual é {{reputation}}.",
+    "question_already_reported": "Você já denunciou esta pergunta.",
+    "failed_to_check_report_status": "Não foi possível verificar o status da denúncia.",
+    "question_reported_successfully": "Pergunta denunciada com sucesso.",
+    "failed_to_report_question": "Não foi possível denunciar a pergunta.",
+    "post_report_reputation_required": "Você precisa ter pelo menos 500 pontos de reputação para denunciar conteúdo inadequado. Sua reputação atual é {{reputation}}.",
+    "post_already_reported": "Você já denunciou esta publicação.",
+    "post_reported_successfully": "Publicação denunciada com sucesso.",
+    "failed_to_report_post": "Não foi possível denunciar a publicação."
+  },
+  "post": {
+    "title": "Denunciar publicação",
+    "select_reason": "Selecione o motivo pelo qual você está denunciando esta publicação.",
+    "explain_issue": "Explique o problema"
+  },
+  "reasons": {
+    "spam": "Spam",
+    "harassment_or_hate": "Assédio ou conteúdo de ódio",
+    "violence": "Violência",
+    "nudity_or_sexual_content": "Nudez ou conteúdo sexual",
+    "misinformation": "Desinformação",
+    "copyright": "Violação de direitos autorais",
+    "other": "Outro"
+  },
+  "actions": {
+    "cancel": "Cancelar",
+    "submit_report": "Enviar denúncia"
+  },
+  "accessibility": {
+    "report_post": "Denunciar publicação"
+  },
+  "question": {
+    "title": "Denunciar pergunta",
+    "select_reason": "Selecione o motivo pelo qual você está denunciando esta pergunta.",
+    "explain_issue": "Explique o problema"
+  },
+  "admin": {
+    "post": {
+      "no_reports_found": "Nenhuma denúncia de publicação encontrada.",
+      "new_reported_posts_will_appear_here": "Novas publicações denunciadas aparecerão aqui.",
+      "reported_post": "Publicação denunciada",
+      "reported_post_unavailable": "A publicação denunciada não está disponível.",
+      "post_author": "Autor da publicação",
+      "user_suspended": "Usuário suspenso"
+    },
+    "page": {
+      "reports": "Denúncias",
+      "review_reports_moderate_content_manage_suspended_users": "Revise denúncias, modere conteúdo e gerencie usuários suspensos.",
+      "post_reports": "Denúncias de publicações",
+      "question_reports": "Denúncias de perguntas"
+    },
+    "status": {
+      "loading_reports": "Carregando denúncias..."
+    },
+    "prompts": {
+      "reason_for_suspension": "Informe o motivo da suspensão:"
+    },
+    "messages": {
+      "admin_access_required": "É necessário acesso de administrador.",
+      "user_suspended_successfully": "Usuário suspenso com sucesso.",
+      "failed_to_suspend_user": "Não foi possível suspender o usuário.",
+      "user_unsuspended_successfully": "Usuário reativado com sucesso.",
+      "failed_to_unsuspend_user": "Não foi possível reativar o usuário.",
+      "failed_to_update_report": "Não foi possível atualizar a denúncia."
+    },
+    "stats": {
+      "pending": "Pendentes",
+      "reviewed": "Revisadas",
+      "dismissed": "Descartadas",
+      "action_taken": "Ação realizada"
+    },
+    "question": {
+      "reported_question": "Pergunta denunciada",
+      "reported_question_unavailable": "A pergunta denunciada não está disponível.",
+      "question_author": "Autor da pergunta",
+      "no_reports_found": "Nenhuma denúncia de pergunta encontrada."
+    },
+    "common": {
+      "additional_details": "Detalhes adicionais",
+      "reporter": "Denunciante",
+      "unknown_user": "Usuário desconhecido"
+    },
+    "violations": {
+      "repeat_offender": "⚠️ Infrator reincidente",
+      "previous_violation": "⚠️ Violação anterior",
+      "confirmed_violation": "{{count}} violação confirmada",
+      "confirmed_violations": "{{count}} violações confirmadas"
+    },
+    "actions": {
+      "mark_reviewed": "Marcar como revisada",
+      "dismiss": "Descartar",
+      "suspend_user": "Suspender usuário",
+      "unsuspend_user": "Reativar usuário"
+    },
+    "accessibility": {
+      "reporter": "Denunciante",
+      "question_author": "Autor da pergunta",
+      "reported_post": "Publicação denunciada",
+      "post_author": "Autor da publicação"
+    },
+    "dashboard": {
+      "title": "Painel do administrador",
+      "description": "Gerencie denúncias, suporte e atividade de login.",
+      "reports": "Denúncias",
+      "back": "Voltar"
+    }
+  }
+}

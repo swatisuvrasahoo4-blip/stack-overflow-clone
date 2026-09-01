@@ -1,0 +1,45 @@
+{
+  "title": {
+    "reputation_activity": "Actividad de reputación",
+    "reputation": "Reputación"
+  },
+  "labels": {
+    "reason": "Motivo",
+    "total_reputation": "Reputación total",
+    "community_privileges": "Privilegios de la comunidad",
+    "points": "{{count}} pts",
+    "current_reputation": "Reputación actual",
+    "reputation_activities": "{{count}} actividad de reputación",
+    "reputation_activities_plural": "{{count}} actividades de reputación"
+  },
+  "messages": {
+    "no_activity_yet": "Aún no hay actividad de reputación.",
+    "enter_valid_amount": "Introduce una cantidad válida de puntos de reputación.",
+    "maximum_50_points": "Puedes transferir un máximo de 50 puntos de reputación por transacción.",
+    "enter_transfer_reason": "Introduce un motivo para la transferencia.",
+    "transfer_success": "Reputación transferida correctamente.",
+    "transfer_failed": "No se pudo transferir la reputación."
+  },
+  "actions": {
+    "view_reputation_activity": "Ver actividad de reputación",
+    "transfer_reputation": "Transferir reputación"
+  },
+  "privileges": {
+    "unrestricted_commenting": "Comentarios sin restricciones",
+    "edit_community_posts": "Editar publicaciones de la comunidad",
+    "vote_to_close_questions": "Votar para cerrar preguntas",
+    "report_inappropriate_content": "Denunciar contenido inapropiado"
+  },
+  "transfer": {
+    "title": "Transferir reputación",
+    "transfer_to": "Transferir a",
+    "reputation_points": "Puntos de reputación",
+    "points_placeholder": "Introduce puntos (máximo 50)",
+    "maximum_points": "Máximo 50 puntos por transacción.",
+    "reason_placeholder": "¿Por qué transfieres reputación?"
+  },
+  "status": {
+    "transferring": "Transfiriendo...",
+    "loading_reputation": "Cargando reputación..."
+  }
+}

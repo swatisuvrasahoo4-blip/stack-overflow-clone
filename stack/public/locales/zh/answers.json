@@ -1,0 +1,49 @@
+{
+  "labels": {
+    "answer": "回答",
+    "answers": "回答",
+    "your_answer": "你的回答",
+    "answered": "已回答"
+  },
+  "actions": {
+    "accept": "接受回答",
+    "post_answer": "发布你的回答"
+  },
+  "status": {
+    "accepted": "已接受的回答",
+    "posting": "正在发布..."
+  },
+  "messages": {
+    "unknown_date": "未知日期",
+    "link_copied": "回答链接已复制",
+    "failed_to_share": "分享回答失败",
+    "answer_uploaded_successfully": "回答发布成功。",
+    "failed_to_answer": "无法发布回答。",
+    "answer_accepted_successfully": "回答接受成功。",
+    "failed_to_accept_answer": "无法接受回答。",
+    "confirm_delete_answer": "确定要删除此回答吗？",
+    "answer_deleted": "回答删除成功。",
+    "failed_to_delete_answer": "无法删除回答。",
+    "please_login_to_vote": "请登录后投票。",
+    "cannot_vote_on_own_answer": "你不能为自己的回答投票。",
+    "failed_to_vote_on_answer": "无法对此回答投票。"
+  },
+  "share": {
+    "title": "回答",
+    "text": "在 CodeQuest 上查看此回答",
+    "sharing": "正在分享..."
+  },
+  "placeholders": {
+    "write_answer": "写下你的回答..."
+  },
+  "legal": {
+    "by_posting_answer": "发布回答即表示你同意我们的",
+    "privacy_policy": "隐私政策",
+    "and": "以及我们的",
+    "terms_of_service": "服务条款"
+  },
+  "accessibility": {
+    "upvote_answer": "赞成此回答",
+    "downvote_answer": "反对此回答"
+  }
+}

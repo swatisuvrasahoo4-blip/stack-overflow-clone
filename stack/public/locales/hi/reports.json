@@ -1,0 +1,110 @@
+{
+  "messages": {
+    "question_report_reputation_required": "अनुचित सामग्री की रिपोर्ट करने के लिए आपके पास कम से कम 500 प्रतिष्ठा अंक होने चाहिए। आपकी वर्तमान प्रतिष्ठा {{reputation}} है।",
+    "question_already_reported": "आप इस प्रश्न की पहले ही रिपोर्ट कर चुके हैं।",
+    "failed_to_check_report_status": "रिपोर्ट की स्थिति जाँची नहीं जा सकी।",
+    "question_reported_successfully": "प्रश्न की सफलतापूर्वक रिपोर्ट की गई।",
+    "failed_to_report_question": "प्रश्न की रिपोर्ट नहीं की जा सकी।",
+    "post_report_reputation_required": "अनुचित सामग्री की रिपोर्ट करने के लिए आपके पास कम से कम 500 प्रतिष्ठा अंक होने चाहिए। आपकी वर्तमान प्रतिष्ठा {{reputation}} है।",
+    "post_already_reported": "आप इस पोस्ट की पहले ही रिपोर्ट कर चुके हैं।",
+    "post_reported_successfully": "पोस्ट की सफलतापूर्वक रिपोर्ट की गई।",
+    "failed_to_report_post": "पोस्ट की रिपोर्ट नहीं की जा सकी।"
+  },
+  "post": {
+    "title": "पोस्ट की रिपोर्ट करें",
+    "select_reason": "इस पोस्ट की रिपोर्ट करने का कारण चुनें।",
+    "explain_issue": "समस्या समझाएँ"
+  },
+  "reasons": {
+    "spam": "स्पैम",
+    "harassment_or_hate": "उत्पीड़न या घृणास्पद सामग्री",
+    "violence": "हिंसा",
+    "nudity_or_sexual_content": "नग्नता या यौन सामग्री",
+    "misinformation": "गलत जानकारी",
+    "copyright": "कॉपीराइट उल्लंघन",
+    "other": "अन्य"
+  },
+  "actions": {
+    "cancel": "रद्द करें",
+    "submit_report": "रिपोर्ट भेजें"
+  },
+  "accessibility": {
+    "report_post": "पोस्ट की रिपोर्ट करें"
+  },
+  "question": {
+    "title": "प्रश्न की रिपोर्ट करें",
+    "select_reason": "इस प्रश्न की रिपोर्ट करने का कारण चुनें।",
+    "explain_issue": "समस्या समझाएँ"
+  },
+  "admin": {
+    "post": {
+      "no_reports_found": "कोई पोस्ट रिपोर्ट नहीं मिली।",
+      "new_reported_posts_will_appear_here": "नई रिपोर्ट की गई पोस्ट यहाँ दिखाई देंगी।",
+      "reported_post": "रिपोर्ट की गई पोस्ट",
+      "reported_post_unavailable": "रिपोर्ट की गई पोस्ट उपलब्ध नहीं है।",
+      "post_author": "पोस्ट लेखक",
+      "user_suspended": "उपयोगकर्ता निलंबित"
+    },
+    "page": {
+      "reports": "रिपोर्ट",
+      "review_reports_moderate_content_manage_suspended_users": "रिपोर्ट की समीक्षा करें, सामग्री को मॉडरेट करें और निलंबित उपयोगकर्ताओं को प्रबंधित करें।",
+      "post_reports": "पोस्ट रिपोर्ट",
+      "question_reports": "प्रश्न रिपोर्ट"
+    },
+    "status": {
+      "loading_reports": "रिपोर्ट लोड हो रही हैं..."
+    },
+    "prompts": {
+      "reason_for_suspension": "निलंबन का कारण दर्ज करें:"
+    },
+    "messages": {
+      "admin_access_required": "एडमिन एक्सेस आवश्यक है।",
+      "user_suspended_successfully": "उपयोगकर्ता सफलतापूर्वक निलंबित किया गया।",
+      "failed_to_suspend_user": "उपयोगकर्ता को निलंबित नहीं किया जा सका।",
+      "user_unsuspended_successfully": "उपयोगकर्ता सफलतापूर्वक पुनः सक्रिय किया गया।",
+      "failed_to_unsuspend_user": "उपयोगकर्ता को पुनः सक्रिय नहीं किया जा सका।",
+      "failed_to_update_report": "रिपोर्ट अपडेट नहीं की जा सकी।"
+    },
+    "stats": {
+      "pending": "लंबित",
+      "reviewed": "समीक्षित",
+      "dismissed": "खारिज",
+      "action_taken": "कार्रवाई की गई"
+    },
+    "question": {
+      "reported_question": "रिपोर्ट किया गया प्रश्न",
+      "reported_question_unavailable": "रिपोर्ट किया गया प्रश्न उपलब्ध नहीं है।",
+      "question_author": "प्रश्न लेखक",
+      "no_reports_found": "कोई प्रश्न रिपोर्ट नहीं मिली।"
+    },
+    "common": {
+      "additional_details": "अतिरिक्त विवरण",
+      "reporter": "रिपोर्ट करने वाला",
+      "unknown_user": "अज्ञात उपयोगकर्ता"
+    },
+    "violations": {
+      "repeat_offender": "⚠️ बार-बार उल्लंघन करने वाला",
+      "previous_violation": "⚠️ पिछला उल्लंघन",
+      "confirmed_violation": "{{count}} पुष्ट उल्लंघन",
+      "confirmed_violations": "{{count}} पुष्ट उल्लंघन"
+    },
+    "actions": {
+      "mark_reviewed": "समीक्षित के रूप में चिह्नित करें",
+      "dismiss": "खारिज करें",
+      "suspend_user": "उपयोगकर्ता को निलंबित करें",
+      "unsuspend_user": "उपयोगकर्ता को पुनः सक्रिय करें"
+    },
+    "accessibility": {
+      "reporter": "रिपोर्ट करने वाला",
+      "question_author": "प्रश्न लेखक",
+      "reported_post": "रिपोर्ट की गई पोस्ट",
+      "post_author": "पोस्ट लेखक"
+    },
+    "dashboard": {
+      "title": "एडमिन डैशबोर्ड",
+      "description": "रिपोर्ट, सहायता और लॉगिन गतिविधि प्रबंधित करें।",
+      "reports": "रिपोर्ट",
+      "back": "वापस"
+    }
+  }
+}

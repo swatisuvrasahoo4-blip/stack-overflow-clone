@@ -1,0 +1,64 @@
+{
+  "actions": {
+    "edit_profile": "Editar perfil",
+    "choose_file": "Elegir archivo",
+    "delete_profile_photo": "Eliminar foto de perfil",
+    "cancel": "Cancelar",
+    "save_changes": "Guardar cambios",
+    "back": "Volver",
+    "view_profile": "Ver perfil",
+    "login_sessions": "Sesiones de inicio de sesión",
+    "change_password": "Cambiar contraseña"
+  },
+  "sections": {
+    "basic_information": "Información básica",
+    "profile_photo": "Foto de perfil",
+    "about": "Acerca de",
+    "skills_and_technologies": "Habilidades y tecnologías",
+    "top_tags": "Etiquetas principales"
+  },
+  "labels": {
+    "username": "Nombre de usuario",
+    "display_name": "Nombre para mostrar",
+    "upload_photo": "Subir foto",
+    "unknown_user": "Usuario desconocido",
+    "member_since": "Miembro desde",
+    "gold_badges": "insignias de oro",
+    "silver_badges": "insignias de plata",
+    "bronze_badges": "insignias de bronce",
+    "users": "Usuarios",
+    "joined": "Se unió en"
+  },
+  "placeholders": {
+    "display_name": "Tu nombre para mostrar",
+    "about": "Cuéntanos sobre ti",
+    "add_skill_or_technology": "Añadir una habilidad o tecnología",
+    "filter_by_user": "Filtrar por usuario"
+  },
+  "status": {
+    "file_selected": "Archivo seleccionado",
+    "no_file_chosen": "Ningún archivo seleccionado",
+    "loading_connections": "Cargando conexiones..."
+  },
+  "accessibility": {
+    "profile_preview": "Vista previa de la foto de perfil",
+    "clear_selected_photo": "Eliminar foto seleccionada",
+    "add_skill": "Añadir habilidad",
+    "remove_skill": "Eliminar habilidad {{tag}}",
+    "user_profile_photo": "Foto de perfil de {{name}}",
+    "featured_gold_user": "Usuario Gold destacado"
+  },
+  "messages": {
+    "profile_updated_successfully": "Perfil actualizado correctamente.",
+    "no_user_found": "No se encontró ningún usuario.",
+    "no_users_found": "No se encontraron usuarios."
+  },
+  "connections": {
+    "followers": "Seguidores",
+    "following": "Siguiendo",
+    "no_followers_found": "No se encontraron seguidores",
+    "no_following_found": "No se encontraron usuarios seguidos",
+    "no_followers_to_display": "No hay seguidores para mostrar en este momento.",
+    "no_following_to_display": "No hay usuarios seguidos para mostrar en este momento."
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "title": {
+    "reputation_activity": "声望活动",
+    "reputation": "声望"
+  },
+  "labels": {
+    "reason": "原因",
+    "total_reputation": "总声望",
+    "community_privileges": "社区权限",
+    "points": "{{count}} 点",
+    "current_reputation": "当前声望",
+    "reputation_activities": "{{count}} 条声望活动",
+    "reputation_activities_plural": "{{count}} 条声望活动"
+  },
+  "messages": {
+    "no_activity_yet": "暂无声望活动。",
+    "enter_valid_amount": "请输入有效的声望点数。",
+    "maximum_50_points": "每次交易最多可以转移 50 点声望。",
+    "enter_transfer_reason": "请输入转移原因。",
+    "transfer_success": "声望转移成功。",
+    "transfer_failed": "无法转移声望。"
+  },
+  "actions": {
+    "view_reputation_activity": "查看声望活动",
+    "transfer_reputation": "转移声望"
+  },
+  "privileges": {
+    "unrestricted_commenting": "无限制评论",
+    "edit_community_posts": "编辑社区发布内容",
+    "vote_to_close_questions": "投票关闭问题",
+    "report_inappropriate_content": "举报不当内容"
+  },
+  "transfer": {
+    "title": "转移声望",
+    "transfer_to": "转移给",
+    "reputation_points": "声望点数",
+    "points_placeholder": "输入点数（最多 50）",
+    "maximum_points": "每次交易最多 50 点。",
+    "reason_placeholder": "为什么要转移声望？"
+  },
+  "status": {
+    "transferring": "正在转移...",
+    "loading_reputation": "正在加载声望..."
+  }
+}

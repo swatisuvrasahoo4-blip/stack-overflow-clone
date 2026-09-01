@@ -1,0 +1,26 @@
+{
+  "messages": {
+    "no_hashtags_available": "暂无可用的标签",
+    "real_hashtags_from_community_posts_will_appear_here": "社区发布内容中的真实标签将显示在这里。",
+    "explore_popular_hashtags_and_community_topics": "探索热门标签和社区话题",
+    "explore_community_posts_about_tag": "探索有关 {{tag}} 的社区发布内容。",
+    "questions_and_community_posts_tagged_with": "带有 #{{tag}} 标签的问题和社区发布内容。",
+    "no_questions_or_posts_found_for_tag": "未找到与此标签相关的问题或发布内容。",
+    "no_more_questions": "没有更多问题了。"
+  },
+  "labels": {
+    "tags": "标签",
+    "post": "发布内容",
+    "posts": "发布内容",
+    "community_posts": "社区发布内容",
+    "questions": "问题",
+    "question": "问题",
+    "questions_lowercase": "问题"
+  },
+  "status": {
+    "loading": "正在加载..."
+  },
+  "actions": {
+    "load_more": "加载更多"
+  }
+}

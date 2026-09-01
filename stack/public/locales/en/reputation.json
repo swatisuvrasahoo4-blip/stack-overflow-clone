@@ -1,0 +1,45 @@
+{
+  "title": {
+    "reputation_activity": "Reputation activity",
+    "reputation": "Reputation"
+  },
+  "labels": {
+    "reason": "Reason",
+    "total_reputation": "Total reputation",
+    "community_privileges": "Community privileges",
+    "points": "{{count}} pts",
+    "current_reputation": "Current reputation",
+    "reputation_activities": "{{count}} reputation activity",
+    "reputation_activities_plural": "{{count}} reputation activities"
+  },
+  "messages": {
+    "no_activity_yet": "No reputation activity yet.",
+    "enter_valid_amount": "Please enter a valid number of reputation points.",
+    "maximum_50_points": "You can transfer a maximum of 50 reputation points per transaction.",
+    "enter_transfer_reason": "Please enter a reason for the transfer.",
+    "transfer_success": "Reputation transferred successfully.",
+    "transfer_failed": "Failed to transfer reputation."
+  },
+  "actions": {
+    "view_reputation_activity": "View reputation activity",
+    "transfer_reputation": "Transfer reputation"
+  },
+  "privileges": {
+    "unrestricted_commenting": "Unrestricted commenting",
+    "edit_community_posts": "Edit community posts",
+    "vote_to_close_questions": "Vote to close questions",
+    "report_inappropriate_content": "Report inappropriate content"
+  },
+  "transfer": {
+    "title": "Transfer reputation",
+    "transfer_to": "Transfer to",
+    "reputation_points": "Reputation points",
+    "points_placeholder": "Enter points (maximum 50)",
+    "maximum_points": "Maximum 50 points per transaction.",
+    "reason_placeholder": "Why are you transferring reputation?"
+  },
+  "status": {
+    "transferring": "Transferring...",
+    "loading_reputation": "Loading reputation..."
+  }
+}

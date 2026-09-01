@@ -1,0 +1,26 @@
+{
+  "messages": {
+    "no_hashtags_available": "No hashtags available",
+    "real_hashtags_from_community_posts_will_appear_here": "Real hashtags from community posts will appear here.",
+    "explore_popular_hashtags_and_community_topics": "Explore popular hashtags and community topics",
+    "explore_community_posts_about_tag": "Explore community posts about {{tag}}.",
+    "questions_and_community_posts_tagged_with": "Questions and community posts tagged with #{{tag}}.",
+    "no_questions_or_posts_found_for_tag": "No questions or posts found for this hashtag.",
+    "no_more_questions": "There are no more questions."
+  },
+  "labels": {
+    "tags": "Tags",
+    "post": "post",
+    "posts": "posts",
+    "community_posts": "Community posts",
+    "questions": "Questions",
+    "question": "question",
+    "questions_lowercase": "questions"
+  },
+  "status": {
+    "loading": "Loading..."
+  },
+  "actions": {
+    "load_more": "Load more"
+  }
+}

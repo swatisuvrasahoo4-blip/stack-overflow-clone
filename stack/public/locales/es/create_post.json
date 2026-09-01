@@ -1,0 +1,56 @@
+{
+  "featured": {
+    "feature_this_post": "Destacar esta publicación",
+    "premium_visibility": "Dale a esta publicación visibilidad premium en la comunidad.",
+    "gold_upgrade_required": "Función Gold — actualiza al plan Gold para destacar tus publicaciones."
+  },
+  "hashtags": {
+    "label": "Hashtags",
+    "placeholder": "Ej. react",
+    "add_hashtag": "Añadir hashtag",
+    "remove_hashtag": "Eliminar hashtag {{tag}}"
+  },
+  "image_upload": {
+    "choose_file": "Elegir archivo",
+    "no_file_chosen": "Ningún archivo seleccionado",
+    "remove_selected_image": "Eliminar imagen seleccionada"
+  },
+  "mentions": {
+    "mention_users": "Mencionar usuarios",
+    "type_username": "Escribe un nombre de usuario",
+    "user_not_found": "Usuario no encontrado.",
+    "add_user": "Añadir usuario"
+  },
+  "type_fields": {
+    "project_title": "Título del proyecto",
+    "github_or_live_demo_url": "URL de GitHub o de la demo en vivo",
+    "achievement_title": "Título del logro",
+    "describe_achievement": "Describe tu logro",
+    "paste_code_snippet": "Pega tu fragmento de código"
+  },
+  "content": {
+    "share_something_with_the_community": "Comparte algo con la comunidad..."
+  },
+  "title": {
+    "create_community_post": "Crear publicación de la comunidad"
+  },
+  "post_types": {
+    "technical_update": "Actualización técnica",
+    "project_showcase": "Presentación de proyecto",
+    "learning_achievement": "Logro de aprendizaje",
+    "code_snippet": "Fragmento de código"
+  },
+  "actions": {
+    "create_post": "Crear publicación"
+  },
+  "status": {
+    "posting": "Publicando..."
+  },
+  "messages": {
+    "post_created_successfully": "Publicación creada correctamente.",
+    "failed_to_create_post": "No se pudo crear la publicación. Inténtalo de nuevo."
+  },
+  "accessibility": {
+    "remove_mention": "Eliminar mención @{{username}}"
+  }
+}

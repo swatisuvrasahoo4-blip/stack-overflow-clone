@@ -1,0 +1,102 @@
+{
+  "billing": {
+    "title": "Detalles de facturación",
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "plan": "Plan",
+    "amount": "Importe"
+  },
+  "invoice": {
+    "title": "Detalles de la factura",
+    "pdf_title": "FACTURA DE PAGO",
+    "invoice": "Factura",
+    "invoice_number": "Número de factura:",
+    "date": "Fecha:",
+    "status": "Estado:",
+    "payment_details": "Detalles del pago",
+    "plan": "Plan:",
+    "amount": "Importe:",
+    "payment_id": "ID de pago:",
+    "order_id": "ID del pedido:",
+    "thank_you": "¡Gracias por elegir CodeQuest Premium!"
+  },
+  "actions": {
+    "download_invoice": "Descargar factura",
+    "view_invoice": "Ver factura",
+    "current_plan": "Plan actual",
+    "upgrade": "Mejorar",
+    "lower_plan": "Plan inferior",
+    "upgrade_plan": "Mejorar plan",
+    "back": "Volver"
+  },
+  "payment_history": {
+    "title": "Historial de pagos",
+    "invoice": "Factura",
+    "plan": "Plan",
+    "amount": "Importe",
+    "status": "Estado",
+    "date": "Fecha",
+    "action": "Acción"
+  },
+  "plans": {
+    "most_popular": "Más popular",
+    "month": "mes",
+    "names": {
+      "free": "Gratis",
+      "bronze": "Bronce",
+      "silver": "Plata",
+      "gold": "Oro"
+    }
+  },
+  "messages": {
+    "please_login_to_continue": "Inicia sesión para continuar.",
+    "subscription_activated_successfully": "Suscripción activada correctamente.",
+    "payment_verification_failed": "La verificación del pago falló.",
+    "payment_service_not_loaded": "El servicio de pago aún no se ha cargado.",
+    "payment_order_failed": "Se produjo un error al crear el pago."
+  },
+  "dashboard": {
+    "title": "Suscripción",
+    "current_plan": "Plan actual",
+    "status": "Estado",
+    "amount": "Importe",
+    "start_date": "Fecha de inicio",
+    "renewal_date": "Fecha de renovación"
+  },
+  "status": {
+    "active": "Activa",
+    "expired": "Expirada",
+    "cancelled": "Cancelada"
+  },
+  "why_upgrade": {
+    "title": "¿Por qué mejorar tu plan?",
+    "benefits": {
+      "more_questions": {
+        "title": "Más preguntas",
+        "description": "Aumenta tu límite diario de preguntas."
+      },
+      "premium_badges": {
+        "title": "Insignias Premium",
+        "description": "Destaca con insignias de perfil exclusivas."
+      },
+      "advanced_search": {
+        "title": "Búsqueda avanzada",
+        "description": "Encuentra respuestas más rápido con filtros potentes."
+      },
+      "unlimited_bookmarks": {
+        "title": "Guardados ilimitados",
+        "description": "Guarda tantas preguntas y publicaciones como quieras."
+      }
+    }
+  },
+  "page": {
+    "subscription_plans": "Planes de suscripción",
+    "upgrade_membership_title": "Elige el plan que mejor se adapte a tus necesidades."
+  },
+  "payment": {
+    "subscription_description": "Suscripción {{plan}}"
+  },
+  "accessibility": {
+    "go_back": "Volver"
+  }
+}

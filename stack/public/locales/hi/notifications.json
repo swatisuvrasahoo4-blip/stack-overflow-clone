@@ -1,0 +1,21 @@
+{
+  "title": {
+    "notifications": "सूचनाएँ"
+  },
+  "actions": {
+    "mark_all_as_read": "सभी को पढ़ा हुआ चिह्नित करें"
+  },
+  "status": {
+    "loading_notifications": "सूचनाएँ लोड हो रही हैं..."
+  },
+  "messages": {
+    "no_notifications_yet": "अभी कोई सूचना नहीं है।"
+  },
+  "labels": {
+    "someone": "कोई व्यक्ति"
+  },
+  "accessibility": {
+    "notifications": "सूचनाएँ",
+    "delete_notification": "सूचना हटाएँ"
+  }
+}

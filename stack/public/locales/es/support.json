@@ -1,0 +1,62 @@
+{
+  "accessibility": {
+    "help_and_support": "Ayuda y soporte"
+  },
+  "title": {
+    "help_and_support": "Ayuda y soporte"
+  },
+  "status": {
+    "checking_your_plan": "Comprobando tu plan...",
+    "submitting": "Enviando..."
+  },
+  "priority": {
+    "priority_support": "Soporte prioritario",
+    "highest_priority_support": "Soporte de máxima prioridad",
+    "available_for_silver_and_gold": "El soporte prioritario está disponible para los miembros Silver y Gold.",
+    "upgrade_to_contact_team": "Mejora tu plan para contactar con nuestro equipo de soporte prioritario."
+  },
+  "members": {
+    "gold_member": "Miembro Gold",
+    "silver_member": "Miembro Silver"
+  },
+  "placeholders": {
+    "subject": "Asunto",
+    "describe_your_issue": "Describe tu problema"
+  },
+  "actions": {
+    "upgrade_plan": "Mejorar plan",
+    "submit_request": "Enviar solicitud"
+  },
+  "messages": {
+    "please_enter_subject_and_message": "Introduce un asunto y un mensaje.",
+    "support_request_submitted_successfully": "Tu solicitud de soporte se envió correctamente.",
+    "failed_to_submit_support_request": "No se pudo enviar la solicitud de soporte.",
+    "please_login_to_continue": "Inicia sesión para continuar."
+  },
+  "admin": {
+    "title": {
+      "support_requests": "Solicitudes de soporte"
+    },
+    "status": {
+      "loading_support_requests": "Cargando solicitudes de soporte...",
+      "resolved": "Resuelta",
+      "pending": "Pendiente"
+    },
+    "labels": {
+      "user": "Usuario",
+      "status": "Estado"
+    },
+    "priority": {
+      "highest_priority": "Máxima prioridad",
+      "priority": "Prioridad"
+    },
+    "actions": {
+      "resolve": "Resolver"
+    },
+    "messages": {
+      "manage_priority_customer_support_requests": "Gestiona las solicitudes prioritarias de soporte de los clientes.",
+      "no_support_requests_yet": "Aún no hay solicitudes de soporte.",
+      "failed_to_resolve_support_request": "No se pudo resolver la solicitud de soporte."
+    }
+  }
+}

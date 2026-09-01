@@ -1,0 +1,121 @@
+{
+  "actions": {
+    "like": "Curtir",
+    "reply": "Responder",
+    "comment": "Comentar",
+    "share": "Compartilhar",
+    "bookmark": "Salvar",
+    "flag": "Denunciar",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "post_reply": "Publicar resposta",
+    "delete_reply": "Excluir resposta",
+    "copy": "Copiar",
+    "show_less": "Ver menos",
+    "view_all": "Ver tudo",
+    "no": "Não",
+    "yes_delete": "Sim, excluir",
+    "view_project": "Ver projeto"
+  },
+  "status": {
+    "edited": "Editado",
+    "copied": "Copiado",
+    "posting": "Publicando...",
+    "loading": "Carregando..."
+  },
+  "feed": {
+    "trending": "Em alta",
+    "following": "Seguindo",
+    "create_post": "Criar publicação",
+    "posts": "Publicações",
+    "community_posts": "Publicações da comunidade",
+    "community_feed": "Feed da comunidade",
+    "loading_more_posts": "Carregando mais publicações...",
+    "no_more_posts": "Não há mais publicações.",
+    "loading_posts": "Carregando publicações..."
+  },
+  "messages": {
+    "post_not_found": "Publicação não encontrada.",
+    "share_updates_projects_code_snippets_and_learning_achievements": "Compartilhe atualizações, projetos, trechos de código e conquistas de aprendizado.",
+    "please_login_to_continue": "Faça login para continuar.",
+    "comment_reputation_required": "Você precisa de pelo menos 50 pontos de reputação para comentar. Sua reputação atual é {{reputation}}.",
+    "please_log_in_to_follow_users": "Faça login para seguir usuários.",
+    "no_saved_community_posts": "Nenhuma publicação da comunidade salva.",
+    "unable_to_update_bookmark": "Não foi possível atualizar o item salvo. Tente novamente.",
+    "post_deleted_successfully": "Publicação excluída com sucesso.",
+    "unable_to_delete_post": "Não foi possível excluir a publicação.",
+    "reply_reputation_required": "Você precisa de pelo menos 50 pontos de reputação para responder. Sua reputação atual é {{reputation}}.",
+    "unable_to_delete_comment": "Não foi possível excluir o comentário.",
+    "edit_reputation_required": "Você precisa de pelo menos 100 pontos de reputação para editar publicações da comunidade.",
+    "post_content_cannot_be_empty": "O conteúdo da publicação não pode estar vazio.",
+    "session_expired": "Sua sessão expirou. Faça login novamente.",
+    "can_only_edit_own_post": "Você só pode editar sua própria publicação.",
+    "failed_to_update_post": "Ocorreu um erro ao atualizar a publicação.",
+    "link_copied_to_clipboard": "Link copiado para a área de transferência."
+  },
+  "mentioned_users": "Usuários mencionados",
+  "labels": {
+    "comment": "comentário",
+    "comments": "comentários",
+    "unknown_user": "Usuário desconhecido",
+    "community_post": "Publicação da comunidade",
+    "saves": "Salvos"
+  },
+  "placeholders": {
+    "write_reply": "Escreva uma resposta...",
+    "write_comment": "Escreva um comentário..."
+  },
+  "delete_reply": {
+    "title": "Excluir resposta",
+    "confirmation": "Tem certeza de que deseja excluir esta resposta?"
+  },
+  "badges": {
+    "featured": "Destaque"
+  },
+  "accessibility": {
+    "view_mentioned_users": "Ver usuários mencionados",
+    "post_image": "Imagem da publicação"
+  },
+  "delete_comment": {
+    "title": "Excluir comentário",
+    "confirmation": "Tem certeza de que deseja excluir este comentário?"
+  },
+  "delete_post": {
+    "title": "Excluir publicação",
+    "confirmation": "Tem certeza de que deseja excluir esta publicação?"
+  },
+  "edit_post": {
+    "title": "Editar publicação",
+    "close_modal": "Fechar janela de edição",
+    "content": "Conteúdo",
+    "edit_post_placeholder": "Edite sua publicação...",
+    "hashtags": "Hashtags",
+    "add_hashtag": "Adicionar hashtag",
+    "remove_hashtag": "Remover hashtag {{tag}}",
+    "image": "Imagem",
+    "remove_image": "Remover imagem",
+    "no_file_chosen": "Nenhum arquivo selecionado",
+    "selected_file": "Selecionado: {{fileName}}",
+    "project_showcase": "Apresentação do projeto",
+    "project_title": "Título do projeto",
+    "project_link": "Link do projeto",
+    "learning_achievement": "Conquista de aprendizado",
+    "achievement_title": "Título da conquista",
+    "achievement_description": "Descrição da conquista",
+    "code_snippet": "Trecho de código",
+    "edit_code": "Edite seu código...",
+    "save_changes": "Salvar alterações"
+  },
+  "follow": {
+    "checking": "Verificando...",
+    "follow": "Seguir",
+    "following": "Seguindo",
+    "followers": "Seguidores"
+  },
+  "share": {
+    "community_post": "Publicação da comunidade",
+    "check_out_community_post": "Confira esta publicação da comunidade!"
+  }
+}

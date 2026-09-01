@@ -1,0 +1,102 @@
+{
+  "billing": {
+    "title": "Billing details",
+    "name": "Name",
+    "email": "Email",
+    "plan": "Plan",
+    "amount": "Amount"
+  },
+  "invoice": {
+    "title": "Invoice details",
+    "pdf_title": "PAYMENT INVOICE",
+    "invoice": "Invoice",
+    "invoice_number": "Invoice number:",
+    "date": "Date:",
+    "status": "Status:",
+    "payment_details": "Payment details",
+    "plan": "Plan:",
+    "amount": "Amount:",
+    "payment_id": "Payment ID:",
+    "order_id": "Order ID:",
+    "thank_you": "Thank you for choosing CodeQuest Premium!"
+  },
+  "actions": {
+    "download_invoice": "Download invoice",
+    "view_invoice": "View invoice",
+    "current_plan": "Current plan",
+    "upgrade": "Upgrade",
+    "lower_plan": "Lower plan",
+    "upgrade_plan": "Upgrade plan",
+    "back": "Back"
+  },
+  "payment_history": {
+    "title": "Payment history",
+    "invoice": "Invoice",
+    "plan": "Plan",
+    "amount": "Amount",
+    "status": "Status",
+    "date": "Date",
+    "action": "Action"
+  },
+  "plans": {
+    "most_popular": "Most popular",
+    "month": "month",
+    "names": {
+      "free": "Free",
+      "bronze": "Bronze",
+      "silver": "Silver",
+      "gold": "Gold"
+    }
+  },
+  "messages": {
+    "please_login_to_continue": "Please log in to continue.",
+    "subscription_activated_successfully": "Subscription activated successfully.",
+    "payment_verification_failed": "Payment verification failed.",
+    "payment_service_not_loaded": "The payment service has not loaded yet.",
+    "payment_order_failed": "An error occurred while creating the payment."
+  },
+  "dashboard": {
+    "title": "Subscription",
+    "current_plan": "Current plan",
+    "status": "Status",
+    "amount": "Amount",
+    "start_date": "Start date",
+    "renewal_date": "Renewal date"
+  },
+  "status": {
+    "active": "Active",
+    "expired": "Expired",
+    "cancelled": "Cancelled"
+  },
+  "why_upgrade": {
+    "title": "Why upgrade your plan?",
+    "benefits": {
+      "more_questions": {
+        "title": "More questions",
+        "description": "Increase your daily question limit."
+      },
+      "premium_badges": {
+        "title": "Premium badges",
+        "description": "Stand out with exclusive profile badges."
+      },
+      "advanced_search": {
+        "title": "Advanced search",
+        "description": "Find answers faster with powerful filters."
+      },
+      "unlimited_bookmarks": {
+        "title": "Unlimited bookmarks",
+        "description": "Save as many questions and posts as you want."
+      }
+    }
+  },
+  "page": {
+    "subscription_plans": "Subscription plans",
+    "upgrade_membership_title": "Choose the plan that best fits your needs."
+  },
+  "payment": {
+    "subscription_description": "{{plan}} subscription"
+  },
+  "accessibility": {
+    "go_back": "Go back"
+  }
+}

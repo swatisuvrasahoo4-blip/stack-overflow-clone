@@ -1,0 +1,121 @@
+{
+  "actions": {
+    "like": "पसंद करें",
+    "reply": "जवाब दें",
+    "comment": "टिप्पणी",
+    "share": "साझा करें",
+    "bookmark": "सहेजें",
+    "flag": "रिपोर्ट करें",
+    "edit": "संपादित करें",
+    "delete": "हटाएँ",
+    "cancel": "रद्द करें",
+    "save": "सहेजें",
+    "post_reply": "जवाब पोस्ट करें",
+    "delete_reply": "जवाब हटाएँ",
+    "copy": "कॉपी करें",
+    "show_less": "कम दिखाएँ",
+    "view_all": "सभी देखें",
+    "no": "नहीं",
+    "yes_delete": "हाँ, हटाएँ",
+    "view_project": "प्रोजेक्ट देखें"
+  },
+  "status": {
+    "edited": "संपादित",
+    "copied": "कॉपी किया गया",
+    "posting": "पोस्ट किया जा रहा है...",
+    "loading": "लोड हो रहा है..."
+  },
+  "feed": {
+    "trending": "ट्रेंडिंग",
+    "following": "फ़ॉलो किए गए",
+    "create_post": "पोस्ट बनाएँ",
+    "posts": "पोस्ट",
+    "community_posts": "समुदाय पोस्ट",
+    "community_feed": "समुदाय फ़ीड",
+    "loading_more_posts": "और पोस्ट लोड हो रही हैं...",
+    "no_more_posts": "अब और पोस्ट नहीं हैं।",
+    "loading_posts": "पोस्ट लोड हो रही हैं..."
+  },
+  "messages": {
+    "post_not_found": "पोस्ट नहीं मिली।",
+    "share_updates_projects_code_snippets_and_learning_achievements": "अपडेट, प्रोजेक्ट, कोड स्निपेट और सीखने की उपलब्धियाँ साझा करें।",
+    "please_login_to_continue": "जारी रखने के लिए कृपया लॉगिन करें।",
+    "comment_reputation_required": "टिप्पणी करने के लिए आपके पास कम से कम 50 प्रतिष्ठा अंक होने चाहिए। आपकी वर्तमान प्रतिष्ठा {{reputation}} है।",
+    "please_log_in_to_follow_users": "उपयोगकर्ताओं को फ़ॉलो करने के लिए कृपया लॉगिन करें।",
+    "no_saved_community_posts": "कोई सहेजी गई समुदाय पोस्ट नहीं है।",
+    "unable_to_update_bookmark": "सहेजे गए पोस्ट को अपडेट नहीं किया जा सका। कृपया फिर से प्रयास करें।",
+    "post_deleted_successfully": "पोस्ट सफलतापूर्वक हटा दी गई।",
+    "unable_to_delete_post": "पोस्ट हटाई नहीं जा सकी।",
+    "reply_reputation_required": "जवाब देने के लिए आपके पास कम से कम 50 प्रतिष्ठा अंक होने चाहिए। आपकी वर्तमान प्रतिष्ठा {{reputation}} है।",
+    "unable_to_delete_comment": "टिप्पणी हटाई नहीं जा सकी।",
+    "edit_reputation_required": "समुदाय पोस्ट संपादित करने के लिए आपके पास कम से कम 100 प्रतिष्ठा अंक होने चाहिए।",
+    "post_content_cannot_be_empty": "पोस्ट की सामग्री खाली नहीं हो सकती।",
+    "session_expired": "आपका सत्र समाप्त हो गया है। कृपया फिर से लॉगिन करें।",
+    "can_only_edit_own_post": "आप केवल अपनी पोस्ट संपादित कर सकते हैं।",
+    "failed_to_update_post": "पोस्ट अपडेट करते समय कोई त्रुटि हुई।",
+    "link_copied_to_clipboard": "लिंक क्लिपबोर्ड पर कॉपी किया गया।"
+  },
+  "mentioned_users": "उल्लेखित उपयोगकर्ता",
+  "labels": {
+    "comment": "टिप्पणी",
+    "comments": "टिप्पणियाँ",
+    "unknown_user": "अज्ञात उपयोगकर्ता",
+    "community_post": "समुदाय पोस्ट",
+    "saves": "सहेजे गए"
+  },
+  "placeholders": {
+    "write_reply": "जवाब लिखें...",
+    "write_comment": "टिप्पणी लिखें..."
+  },
+  "delete_reply": {
+    "title": "जवाब हटाएँ",
+    "confirmation": "क्या आप वाकई इस जवाब को हटाना चाहते हैं?"
+  },
+  "badges": {
+    "featured": "विशेष"
+  },
+  "accessibility": {
+    "view_mentioned_users": "उल्लेखित उपयोगकर्ता देखें",
+    "post_image": "पोस्ट की छवि"
+  },
+  "delete_comment": {
+    "title": "टिप्पणी हटाएँ",
+    "confirmation": "क्या आप वाकई इस टिप्पणी को हटाना चाहते हैं?"
+  },
+  "delete_post": {
+    "title": "पोस्ट हटाएँ",
+    "confirmation": "क्या आप वाकई इस पोस्ट को हटाना चाहते हैं?"
+  },
+  "edit_post": {
+    "title": "पोस्ट संपादित करें",
+    "close_modal": "संपादन विंडो बंद करें",
+    "content": "सामग्री",
+    "edit_post_placeholder": "अपनी पोस्ट संपादित करें...",
+    "hashtags": "हैशटैग",
+    "add_hashtag": "हैशटैग जोड़ें",
+    "remove_hashtag": "हैशटैग {{tag}} हटाएँ",
+    "image": "छवि",
+    "remove_image": "छवि हटाएँ",
+    "no_file_chosen": "कोई फ़ाइल नहीं चुनी गई",
+    "selected_file": "चयनित: {{fileName}}",
+    "project_showcase": "प्रोजेक्ट प्रदर्शन",
+    "project_title": "प्रोजेक्ट शीर्षक",
+    "project_link": "प्रोजेक्ट लिंक",
+    "learning_achievement": "सीखने की उपलब्धि",
+    "achievement_title": "उपलब्धि का शीर्षक",
+    "achievement_description": "उपलब्धि का विवरण",
+    "code_snippet": "कोड स्निपेट",
+    "edit_code": "अपना कोड संपादित करें...",
+    "save_changes": "बदलाव सहेजें"
+  },
+  "follow": {
+    "checking": "जाँच की जा रही है...",
+    "follow": "फ़ॉलो करें",
+    "following": "फ़ॉलो किए गए",
+    "followers": "फ़ॉलोअर्स"
+  },
+  "share": {
+    "community_post": "समुदाय पोस्ट",
+    "check_out_community_post": "इस समुदाय पोस्ट को देखें!"
+  }
+}

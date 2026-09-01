@@ -1,0 +1,21 @@
+{
+  "title": {
+    "notifications": "通知"
+  },
+  "actions": {
+    "mark_all_as_read": "全部标记为已读"
+  },
+  "status": {
+    "loading_notifications": "正在加载通知..."
+  },
+  "messages": {
+    "no_notifications_yet": "暂无通知。"
+  },
+  "labels": {
+    "someone": "某人"
+  },
+  "accessibility": {
+    "notifications": "通知",
+    "delete_notification": "删除通知"
+  }
+}

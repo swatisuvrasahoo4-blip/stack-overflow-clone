@@ -1,0 +1,24 @@
+{
+  "title": {
+    "active_sessions": "Sesiones activas",
+    "login_sessions": "Sesiones de inicio de sesión"
+  },
+  "status": {
+    "loading_sessions": "Cargando sesiones..."
+  },
+  "labels": {
+    "current_session": "Sesión actual",
+    "device": "Dispositivo",
+    "ip": "Dirección IP",
+    "login": "Inicio de sesión",
+    "last_active": "Última actividad"
+  },
+  "actions": {
+    "revoke": "Revocar"
+  },
+  "messages": {
+    "no_active_sessions": "No se encontraron sesiones activas.",
+    "failed_to_revoke_session": "No se pudo revocar la sesión.",
+    "manage_signed_in_devices": "Gestiona los dispositivos y navegadores en los que tu cuenta está actualmente conectada."
+  }
+}

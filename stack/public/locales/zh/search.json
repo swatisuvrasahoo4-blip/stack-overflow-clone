@@ -1,0 +1,38 @@
+{
+  "filters": {
+    "filter_by_post_type": "按发布类型筛选"
+  },
+  "post_types": {
+    "all_types": "所有类型",
+    "technical_update": "技术更新",
+    "project_showcase": "项目展示",
+    "learning_achievement": "学习成果",
+    "code_snippet": "代码片段"
+  },
+  "labels": {
+    "answers": "回答",
+    "views": "浏览量",
+    "posts": "发布内容",
+    "questions": "问题"
+  },
+  "messages": {
+    "no_title": "（无标题）",
+    "no_posts_matched": "没有符合你搜索条件的发布内容。",
+    "no_questions_matched": "没有符合你搜索条件的问题。",
+    "no_posts_or_questions_matched": "没有符合你搜索条件的发布内容或问题。",
+    "results_for": "“{{query}}”的搜索结果。",
+    "no_more_results": "没有更多结果了。"
+  },
+  "status": {
+    "loading_more_results": "正在加载更多结果...",
+    "searching": "正在搜索..."
+  },
+  "title": {
+    "search_results": "搜索结果"
+  },
+  "tabs": {
+    "all": "全部",
+    "posts": "发布内容",
+    "questions": "问题"
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "accessibility": {
+    "help_and_support": "帮助与支持"
+  },
+  "title": {
+    "help_and_support": "帮助与支持"
+  },
+  "status": {
+    "checking_your_plan": "正在检查你的套餐...",
+    "submitting": "正在提交..."
+  },
+  "priority": {
+    "priority_support": "优先支持",
+    "highest_priority_support": "最高优先级支持",
+    "available_for_silver_and_gold": "Silver 和 Gold 会员可享受优先支持。",
+    "upgrade_to_contact_team": "升级你的套餐以联系我们的优先支持团队。"
+  },
+  "members": {
+    "gold_member": "Gold 会员",
+    "silver_member": "Silver 会员"
+  },
+  "placeholders": {
+    "subject": "主题",
+    "describe_your_issue": "描述你的问题"
+  },
+  "actions": {
+    "upgrade_plan": "升级套餐",
+    "submit_request": "提交请求"
+  },
+  "messages": {
+    "please_enter_subject_and_message": "请输入主题和消息。",
+    "support_request_submitted_successfully": "你的支持请求已成功提交。",
+    "failed_to_submit_support_request": "无法提交支持请求。",
+    "please_login_to_continue": "请登录后继续。"
+  },
+  "admin": {
+    "title": {
+      "support_requests": "支持请求"
+    },
+    "status": {
+      "loading_support_requests": "正在加载支持请求...",
+      "resolved": "已解决",
+      "pending": "待处理"
+    },
+    "labels": {
+      "user": "用户",
+      "status": "状态"
+    },
+    "priority": {
+      "highest_priority": "最高优先级",
+      "priority": "优先"
+    },
+    "actions": {
+      "resolve": "解决"
+    },
+    "messages": {
+      "manage_priority_customer_support_requests": "管理客户的优先支持请求。",
+      "no_support_requests_yet": "目前没有支持请求。",
+      "failed_to_resolve_support_request": "无法解决支持请求。"
+    }
+  }
+}

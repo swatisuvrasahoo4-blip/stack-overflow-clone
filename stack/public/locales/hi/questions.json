@@ -1,0 +1,145 @@
+{
+  "actions": {
+    "ask_question": "प्रश्न पूछें",
+    "vote_to_close": "बंद करने के लिए वोट करें",
+    "vote_to_close_question": "प्रश्न बंद करने के लिए वोट करें",
+    "filter": "फ़िल्टर करें",
+    "more": "अधिक",
+    "show_less": "कम दिखाएँ",
+    "view_all": "सभी देखें"
+  },
+  "labels": {
+    "views": "व्यू",
+    "votes": "वोट",
+    "asked": "पूछा गया",
+    "questions": "प्रश्न",
+    "all_questions": "सभी प्रश्न",
+    "you": "आप",
+    "unknown_user": "अज्ञात उपयोगकर्ता"
+  },
+  "filters": {
+    "newest": "नवीनतम",
+    "active": "सक्रिय",
+    "bountied": "इनाम वाले",
+    "unanswered": "अनुत्तरित"
+  },
+  "status": {
+    "question_closed": "प्रश्न बंद है",
+    "loading_questions": "प्रश्न लोड हो रहे हैं...",
+    "loading_more_questions": "और प्रश्न लोड हो रहे हैं...",
+    "loading_question": "प्रश्न लोड हो रहा है..."
+  },
+  "messages": {
+    "browse_the_latest_questions_from_the_community": "समुदाय के नवीनतम प्रश्न देखें।",
+    "no_title": "(कोई शीर्षक नहीं)",
+    "no_more_questions": "अब और प्रश्न नहीं हैं।",
+    "date_unavailable": "तारीख उपलब्ध नहीं है",
+    "unknown_date": "अज्ञात तारीख",
+    "close_vote_reputation_required": "किसी प्रश्न को बंद करने के लिए वोट करने हेतु आपके पास कम से कम 250 प्रतिष्ठा अंक होने चाहिए।",
+    "failed_to_delete_question": "प्रश्न हटाया नहीं जा सका।",
+    "failed_to_edit_question": "प्रश्न संपादित नहीं किया जा सका।",
+    "cannot_vote_to_close_own_question": "आप अपने प्रश्न को बंद करने के लिए वोट नहीं कर सकते।",
+    "already_voted_to_close_question": "आप इस प्रश्न को बंद करने के लिए पहले ही वोट कर चुके हैं।",
+    "close_vote_submitted_successfully": "आपका बंद करने का वोट सफलतापूर्वक भेज दिया गया।",
+    "question_closed_successfully": "प्रश्न सफलतापूर्वक बंद कर दिया गया।",
+    "failed_to_vote_to_close_question": "इस प्रश्न को बंद करने के लिए वोट नहीं किया जा सका।",
+    "no_saved_questions": "आपके पास कोई सहेजा हुआ प्रश्न नहीं है।",
+    "no_question_found": "कोई प्रश्न नहीं मिला।",
+    "please_login_to_continue": "जारी रखने के लिए कृपया लॉगिन करें।",
+    "cannot_vote_on_own_question": "आप अपने प्रश्न पर वोट नहीं कर सकते।",
+    "vote_updated": "आपका वोट अपडेट कर दिया गया है।",
+    "failed_to_vote_question": "इस प्रश्न पर वोट नहीं किया जा सका।",
+    "please_login_to_save_questions": "प्रश्न सहेजने के लिए कृपया लॉगिन करें।",
+    "question_id_not_found": "प्रश्न ID नहीं मिली।",
+    "question_bookmarked": "प्रश्न सहेजा गया।",
+    "question_bookmark_removed": "प्रश्न सहेजे गए प्रश्नों से हटा दिया गया।",
+    "unable_to_update_bookmark": "सहेजे गए प्रश्न को अपडेट नहीं किया जा सका। कृपया फिर से प्रयास करें।",
+    "confirm_delete_question": "क्या आप वाकई इस प्रश्न को हटाना चाहते हैं?",
+    "question_deleted": "प्रश्न हटा दिया गया।",
+    "question_link_copied": "प्रश्न का लिंक कॉपी किया गया।"
+  },
+  "time": {
+    "just_now": "अभी",
+    "minute_ago": "{{count}} मिनट पहले",
+    "minutes_ago": "{{count}} मिनट पहले",
+    "hour_ago": "{{count}} घंटा पहले",
+    "hours_ago": "{{count}} घंटे पहले",
+    "day_ago": "{{count}} दिन पहले",
+    "days_ago": "{{count}} दिन पहले"
+  },
+  "accessibility": {
+    "upvote_question": "प्रश्न को अपवोट करें",
+    "downvote_question": "प्रश्न को डाउनवोट करें",
+    "bookmark_question": "प्रश्न सहेजें",
+    "remove_bookmark": "प्रश्न को सहेजे गए प्रश्नों से हटाएँ",
+    "question_history": "प्रश्न इतिहास"
+  },
+  "close_vote": {
+    "title": "प्रश्न बंद करने के लिए वोट करें",
+    "select_reason": "बंद करने का कारण चुनें।",
+    "reasons": {
+      "duplicate_question": "डुप्लिकेट प्रश्न",
+      "off_topic": "विषय से बाहर",
+      "unclear": "अस्पष्ट",
+      "needs_more_details": "अधिक विवरण चाहिए",
+      "other": "अन्य"
+    },
+    "cancel": "रद्द करें",
+    "submitting": "भेजा जा रहा है...",
+    "submit_vote": "वोट भेजें"
+  },
+  "delete_question": {
+    "title": "प्रश्न हटाएँ",
+    "confirmation": "क्या आप वाकई इस प्रश्न को हटाना चाहते हैं?",
+    "no": "नहीं",
+    "yes_delete": "हाँ, हटाएँ"
+  },
+  "edit_question": {
+    "title": "प्रश्न संपादित करें",
+    "labels": {
+      "title": "शीर्षक",
+      "question": "प्रश्न",
+      "tags_maximum_5": "टैग (अधिकतम 5)"
+    },
+    "placeholders": {
+      "enter_tag": "टैग दर्ज करें"
+    },
+    "actions": {
+      "cancel": "रद्द करें",
+      "save_changes": "बदलाव सहेजें"
+    },
+    "accessibility": {
+      "add_tag": "टैग जोड़ें",
+      "remove_tag": "टैग {{tag}} हटाएँ"
+    }
+  },
+  "share": {
+    "default_title": "प्रश्न",
+    "text": "CodeQuest पर यह प्रश्न देखें"
+  },
+  "ask_question": {
+    "title": "शीर्षक",
+    "summarize_your_problem_in_a_single_sentence": "अपनी समस्या को एक वाक्य में संक्षेप में बताएँ।",
+    "be_specific_and_imagine_asking_the_question_to_another_person": "स्पष्ट रहें और कल्पना करें कि आप यह प्रश्न किसी दूसरे व्यक्ति से पूछ रहे हैं।",
+    "what_are_the_details_of_your_problem": "आपकी समस्या का विवरण क्या है?",
+    "explain_what_you_are_trying_to_do_and_include_any_errors_or_output": "बताएँ कि आप क्या करने की कोशिश कर रहे हैं और किसी भी त्रुटि या आउटपुट को शामिल करें।",
+    "include_code_expected_behaviour_and_steps_to_reproduce_the_issue": "कोड, अपेक्षित व्यवहार और समस्या को दोहराने के चरण शामिल करें।",
+    "tags": "टैग",
+    "add_up_to_5_tags_to_describe_what_your_question_is_about": "अपने प्रश्न के विषय का वर्णन करने के लिए अधिकतम 5 टैग जोड़ें।",
+    "type_a_tag_press_enter_e_g_javascript": "एक टैग लिखें और Enter दबाएँ, उदाहरण के लिए javascript।",
+    "review_your_question": "अपने प्रश्न की समीक्षा करें",
+    "cancel": "रद्द करें",
+    "preview": "पूर्वावलोकन",
+    "no_title": "कोई शीर्षक नहीं",
+    "no_details_provided": "कोई विवरण नहीं दिया गया",
+    "post_question": "प्रश्न पोस्ट करें",
+    "edit": "संपादित करें",
+    "ask_a_public_question": "सार्वजनिक प्रश्न पूछें",
+    "other_users_will_be_able_to_see_and_answer_your_question": "अन्य उपयोगकर्ता आपके प्रश्न को देख और उसका उत्तर दे सकेंगे।",
+    "something_went_wrong": "कुछ गलत हो गया। कृपया फिर से प्रयास करें।",
+    "accessibility": {
+      "add_tag": "टैग जोड़ें",
+      "remove_tag": "टैग {{tag}} हटाएँ"
+    }
+  }
+}

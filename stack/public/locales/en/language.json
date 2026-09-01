@@ -1,0 +1,37 @@
+{
+  "accessibility": {
+    "change_language": "Change language",
+    "close_language_menu": "Close language menu",
+    "close_otp_modal": "Close OTP verification window"
+  },
+  "menu": {
+    "choose_language": "Choose a language"
+  },
+  "languages": {
+    "english": "English",
+    "spanish": "Spanish",
+    "hindi": "Hindi",
+    "portuguese": "Portuguese",
+    "chinese": "Chinese",
+    "french": "French"
+  },
+  "otp": {
+    "verify_language_change": "Verify language change",
+    "enter_6_digit_otp_sent_to_device": "Enter the 6-digit OTP sent to your device.",
+    "enter_6_digit_otp": "Enter the 6-digit OTP",
+    "verify_otp": "Verify OTP",
+    "sending_otp": "Sending OTP...",
+    "otp_expires_in": "OTP expires in",
+    "otp_expired": "OTP has expired"
+  },
+  "errors": {
+    "please_enter_6_digit_otp": "Please enter a 6-digit OTP.",
+    "language_not_selected": "No language has been selected.",
+    "invalid_or_expired_otp": "The OTP is invalid or has expired.",
+    "failed_to_send_otp": "Failed to send the OTP. Please try again.",
+    "failed_to_change_language": "Failed to change the language. Please try again."
+  },
+  "messages": {
+    "please_login_to_continue": "Please log in to continue."
+  }
+}

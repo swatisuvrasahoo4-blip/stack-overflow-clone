@@ -1,0 +1,56 @@
+{
+  "featured": {
+    "feature_this_post": "精选此帖子",
+    "premium_visibility": "让此帖子在社区中获得高级曝光。",
+    "gold_upgrade_required": "Gold 功能 — 升级到 Gold 套餐即可精选你的帖子。"
+  },
+  "hashtags": {
+    "label": "话题标签",
+    "placeholder": "例如 react",
+    "add_hashtag": "添加话题标签",
+    "remove_hashtag": "移除话题标签 {{tag}}"
+  },
+  "image_upload": {
+    "choose_file": "选择文件",
+    "no_file_chosen": "未选择文件",
+    "remove_selected_image": "移除已选择的图片"
+  },
+  "mentions": {
+    "mention_users": "提及用户",
+    "type_username": "输入用户名",
+    "user_not_found": "未找到用户。",
+    "add_user": "添加用户"
+  },
+  "type_fields": {
+    "project_title": "项目标题",
+    "github_or_live_demo_url": "GitHub 或在线演示 URL",
+    "achievement_title": "成果标题",
+    "describe_achievement": "描述你的成果",
+    "paste_code_snippet": "粘贴你的代码片段"
+  },
+  "content": {
+    "share_something_with_the_community": "与社区分享一些内容..."
+  },
+  "title": {
+    "create_community_post": "创建社区帖子"
+  },
+  "post_types": {
+    "technical_update": "技术更新",
+    "project_showcase": "项目展示",
+    "learning_achievement": "学习成果",
+    "code_snippet": "代码片段"
+  },
+  "actions": {
+    "create_post": "创建帖子"
+  },
+  "status": {
+    "posting": "正在发布..."
+  },
+  "messages": {
+    "post_created_successfully": "帖子创建成功。",
+    "failed_to_create_post": "无法创建帖子。请重试。"
+  },
+  "accessibility": {
+    "remove_mention": "移除 @{{username}} 的提及"
+  }
+}

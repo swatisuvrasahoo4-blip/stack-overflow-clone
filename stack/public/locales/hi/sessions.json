@@ -1,0 +1,24 @@
+{
+  "title": {
+    "active_sessions": "सक्रिय सत्र",
+    "login_sessions": "लॉगिन सत्र"
+  },
+  "status": {
+    "loading_sessions": "सत्र लोड हो रहे हैं..."
+  },
+  "labels": {
+    "current_session": "वर्तमान सत्र",
+    "device": "डिवाइस",
+    "ip": "IP पता",
+    "login": "लॉगिन",
+    "last_active": "अंतिम सक्रियता"
+  },
+  "actions": {
+    "revoke": "रद्द करें"
+  },
+  "messages": {
+    "no_active_sessions": "कोई सक्रिय सत्र नहीं मिला।",
+    "failed_to_revoke_session": "सत्र रद्द नहीं किया जा सका।",
+    "manage_signed_in_devices": "उन डिवाइस और ब्राउज़र को प्रबंधित करें जिन पर आपका खाता वर्तमान में लॉगिन है।"
+  }
+}

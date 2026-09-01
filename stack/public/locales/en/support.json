@@ -1,0 +1,62 @@
+{
+  "accessibility": {
+    "help_and_support": "Help and support"
+  },
+  "title": {
+    "help_and_support": "Help and support"
+  },
+  "status": {
+    "checking_your_plan": "Checking your plan...",
+    "submitting": "Submitting..."
+  },
+  "priority": {
+    "priority_support": "Priority support",
+    "highest_priority_support": "Highest priority support",
+    "available_for_silver_and_gold": "Priority support is available for Silver and Gold members.",
+    "upgrade_to_contact_team": "Upgrade your plan to contact our priority support team."
+  },
+  "members": {
+    "gold_member": "Gold member",
+    "silver_member": "Silver member"
+  },
+  "placeholders": {
+    "subject": "Subject",
+    "describe_your_issue": "Describe your issue"
+  },
+  "actions": {
+    "upgrade_plan": "Upgrade plan",
+    "submit_request": "Submit request"
+  },
+  "messages": {
+    "please_enter_subject_and_message": "Please enter a subject and message.",
+    "support_request_submitted_successfully": "Your support request was submitted successfully.",
+    "failed_to_submit_support_request": "Failed to submit the support request.",
+    "please_login_to_continue": "Please log in to continue."
+  },
+  "admin": {
+    "title": {
+      "support_requests": "Support requests"
+    },
+    "status": {
+      "loading_support_requests": "Loading support requests...",
+      "resolved": "Resolved",
+      "pending": "Pending"
+    },
+    "labels": {
+      "user": "User",
+      "status": "Status"
+    },
+    "priority": {
+      "highest_priority": "Highest priority",
+      "priority": "Priority"
+    },
+    "actions": {
+      "resolve": "Resolve"
+    },
+    "messages": {
+      "manage_priority_customer_support_requests": "Manage priority customer support requests.",
+      "no_support_requests_yet": "No support requests yet.",
+      "failed_to_resolve_support_request": "Failed to resolve the support request."
+    }
+  }
+}

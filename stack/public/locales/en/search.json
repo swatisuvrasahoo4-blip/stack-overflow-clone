@@ -1,0 +1,38 @@
+{
+  "filters": {
+    "filter_by_post_type": "Filter by post type"
+  },
+  "post_types": {
+    "all_types": "All types",
+    "technical_update": "Technical update",
+    "project_showcase": "Project showcase",
+    "learning_achievement": "Learning achievement",
+    "code_snippet": "Code snippet"
+  },
+  "labels": {
+    "answers": "answers",
+    "views": "views",
+    "posts": "Posts",
+    "questions": "Questions"
+  },
+  "messages": {
+    "no_title": "(no title)",
+    "no_posts_matched": "No posts matched your search.",
+    "no_questions_matched": "No questions matched your search.",
+    "no_posts_or_questions_matched": "No posts or questions matched your search.",
+    "results_for": "Results for “{{query}}”.",
+    "no_more_results": "There are no more results."
+  },
+  "status": {
+    "loading_more_results": "Loading more results...",
+    "searching": "Searching..."
+  },
+  "title": {
+    "search_results": "Search results"
+  },
+  "tabs": {
+    "all": "All",
+    "posts": "Posts",
+    "questions": "Questions"
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "billing": {
+    "title": "账单详情",
+    "name": "姓名",
+    "email": "电子邮箱",
+    "plan": "套餐",
+    "amount": "金额"
+  },
+  "invoice": {
+    "title": "发票详情",
+    "pdf_title": "付款发票",
+    "invoice": "发票",
+    "invoice_number": "发票编号：",
+    "date": "日期：",
+    "status": "状态：",
+    "payment_details": "付款详情",
+    "plan": "套餐：",
+    "amount": "金额：",
+    "payment_id": "付款 ID：",
+    "order_id": "订单 ID：",
+    "thank_you": "感谢你选择 CodeQuest Premium！"
+  },
+  "actions": {
+    "download_invoice": "下载发票",
+    "view_invoice": "查看发票",
+    "current_plan": "当前套餐",
+    "upgrade": "升级",
+    "lower_plan": "较低套餐",
+    "upgrade_plan": "升级套餐",
+    "back": "返回"
+  },
+  "payment_history": {
+    "title": "付款历史",
+    "invoice": "发票",
+    "plan": "套餐",
+    "amount": "金额",
+    "status": "状态",
+    "date": "日期",
+    "action": "操作"
+  },
+  "plans": {
+    "most_popular": "最受欢迎",
+    "month": "月",
+    "names": {
+      "free": "免费",
+      "bronze": "青铜",
+      "silver": "白银",
+      "gold": "黄金"
+    }
+  },
+  "messages": {
+    "please_login_to_continue": "请登录后继续。",
+    "subscription_activated_successfully": "订阅已成功激活。",
+    "payment_verification_failed": "付款验证失败。",
+    "payment_service_not_loaded": "付款服务尚未加载。",
+    "payment_order_failed": "创建付款时发生错误。"
+  },
+  "dashboard": {
+    "title": "订阅",
+    "current_plan": "当前套餐",
+    "status": "状态",
+    "amount": "金额",
+    "start_date": "开始日期",
+    "renewal_date": "续订日期"
+  },
+  "status": {
+    "active": "有效",
+    "expired": "已过期",
+    "cancelled": "已取消"
+  },
+  "why_upgrade": {
+    "title": "为什么要升级套餐？",
+    "benefits": {
+      "more_questions": {
+        "title": "更多问题",
+        "description": "提高你的每日提问上限。"
+      },
+      "premium_badges": {
+        "title": "Premium 徽章",
+        "description": "使用专属个人资料徽章彰显身份。"
+      },
+      "advanced_search": {
+        "title": "高级搜索",
+        "description": "使用强大的筛选功能更快找到答案。"
+      },
+      "unlimited_bookmarks": {
+        "title": "无限收藏",
+        "description": "根据需要保存任意数量的问题和发布内容。"
+      }
+    }
+  },
+  "page": {
+    "subscription_plans": "订阅套餐",
+    "upgrade_membership_title": "选择最适合你需求的套餐。"
+  },
+  "payment": {
+    "subscription_description": "{{plan}} 订阅"
+  },
+  "accessibility": {
+    "go_back": "返回"
+  }
+}

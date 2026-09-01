@@ -1,0 +1,37 @@
+{
+  "accessibility": {
+    "change_language": "Cambiar idioma",
+    "close_language_menu": "Cerrar menú de idiomas",
+    "close_otp_modal": "Cerrar ventana de verificación OTP"
+  },
+  "menu": {
+    "choose_language": "Elegir un idioma"
+  },
+  "languages": {
+    "english": "Inglés",
+    "spanish": "Español",
+    "hindi": "Hindi",
+    "portuguese": "Portugués",
+    "chinese": "Chino",
+    "french": "Francés"
+  },
+  "otp": {
+    "verify_language_change": "Verificar cambio de idioma",
+    "enter_6_digit_otp_sent_to_device": "Introduce el código OTP de 6 dígitos enviado a tu dispositivo.",
+    "enter_6_digit_otp": "Introduce el código OTP de 6 dígitos",
+    "verify_otp": "Verificar OTP",
+    "sending_otp": "Enviando OTP...",
+    "otp_expires_in": "El OTP caduca en",
+    "otp_expired": "El OTP ha caducado"
+  },
+  "errors": {
+    "please_enter_6_digit_otp": "Introduce un código OTP de 6 dígitos.",
+    "language_not_selected": "No se ha seleccionado ningún idioma.",
+    "invalid_or_expired_otp": "El OTP no es válido o ha caducado.",
+    "failed_to_send_otp": "No se pudo enviar el OTP. Inténtalo de nuevo.",
+    "failed_to_change_language": "No se pudo cambiar el idioma. Inténtalo de nuevo."
+  },
+  "messages": {
+    "please_login_to_continue": "Inicia sesión para continuar."
+  }
+}

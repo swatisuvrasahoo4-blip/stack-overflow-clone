@@ -1,0 +1,49 @@
+{
+  "labels": {
+    "answer": "Answer",
+    "answers": "Answers",
+    "your_answer": "Your Answer",
+    "answered": "Answered"
+  },
+  "actions": {
+    "accept": "Accept answer",
+    "post_answer": "Post your answer"
+  },
+  "status": {
+    "accepted": "Accepted answer",
+    "posting": "Posting..."
+  },
+  "messages": {
+    "unknown_date": "Unknown date",
+    "link_copied": "Answer link copied",
+    "failed_to_share": "Failed to share the answer",
+    "answer_uploaded_successfully": "Answer posted successfully.",
+    "failed_to_answer": "Failed to post the answer.",
+    "answer_accepted_successfully": "Answer accepted successfully.",
+    "failed_to_accept_answer": "Failed to accept the answer.",
+    "confirm_delete_answer": "Are you sure you want to delete this answer?",
+    "answer_deleted": "Answer deleted successfully.",
+    "failed_to_delete_answer": "Failed to delete the answer.",
+    "please_login_to_vote": "Please log in to vote.",
+    "cannot_vote_on_own_answer": "You cannot vote on your own answer.",
+    "failed_to_vote_on_answer": "Failed to vote on this answer."
+  },
+  "share": {
+    "title": "Answer",
+    "text": "Check out this answer on CodeQuest",
+    "sharing": "Sharing..."
+  },
+  "placeholders": {
+    "write_answer": "Write your answer..."
+  },
+  "legal": {
+    "by_posting_answer": "By posting your answer, you agree to our",
+    "privacy_policy": "Privacy Policy",
+    "and": "and our",
+    "terms_of_service": "Terms of Service"
+  },
+  "accessibility": {
+    "upvote_answer": "Upvote answer",
+    "downvote_answer": "Downvote answer"
+  }
+}

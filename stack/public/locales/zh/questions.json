@@ -1,0 +1,145 @@
+{
+  "actions": {
+    "ask_question": "提问",
+    "vote_to_close": "投票关闭",
+    "vote_to_close_question": "投票关闭问题",
+    "filter": "筛选",
+    "more": "更多",
+    "show_less": "收起",
+    "view_all": "查看全部"
+  },
+  "labels": {
+    "views": "浏览量",
+    "votes": "投票",
+    "asked": "提问时间",
+    "questions": "问题",
+    "all_questions": "所有问题",
+    "you": "你",
+    "unknown_user": "未知用户"
+  },
+  "filters": {
+    "newest": "最新",
+    "active": "活跃",
+    "bountied": "有悬赏",
+    "unanswered": "未回答"
+  },
+  "status": {
+    "question_closed": "问题已关闭",
+    "loading_questions": "正在加载问题...",
+    "loading_more_questions": "正在加载更多问题...",
+    "loading_question": "正在加载问题..."
+  },
+  "messages": {
+    "browse_the_latest_questions_from_the_community": "浏览社区中的最新问题。",
+    "no_title": "（无标题）",
+    "no_more_questions": "没有更多问题了。",
+    "date_unavailable": "日期不可用",
+    "unknown_date": "未知日期",
+    "close_vote_reputation_required": "你需要至少 250 点声望才能投票关闭问题。",
+    "failed_to_delete_question": "无法删除问题。",
+    "failed_to_edit_question": "无法编辑问题。",
+    "cannot_vote_to_close_own_question": "你不能投票关闭自己的问题。",
+    "already_voted_to_close_question": "你已经投票关闭过此问题。",
+    "close_vote_submitted_successfully": "你的关闭投票已成功提交。",
+    "question_closed_successfully": "问题已成功关闭。",
+    "failed_to_vote_to_close_question": "无法投票关闭此问题。",
+    "no_saved_questions": "你没有已保存的问题。",
+    "no_question_found": "未找到问题。",
+    "please_login_to_continue": "请登录后继续。",
+    "cannot_vote_on_own_question": "你不能对自己的问题投票。",
+    "vote_updated": "你的投票已更新。",
+    "failed_to_vote_question": "无法对此问题投票。",
+    "please_login_to_save_questions": "请登录后保存问题。",
+    "question_id_not_found": "找不到问题 ID。",
+    "question_bookmarked": "问题已保存。",
+    "question_bookmark_removed": "问题已从收藏中移除。",
+    "unable_to_update_bookmark": "无法更新收藏。请重试。",
+    "confirm_delete_question": "确定要删除此问题吗？",
+    "question_deleted": "问题已删除。",
+    "question_link_copied": "问题链接已复制。"
+  },
+  "time": {
+    "just_now": "刚刚",
+    "minute_ago": "{{count}} 分钟前",
+    "minutes_ago": "{{count}} 分钟前",
+    "hour_ago": "{{count}} 小时前",
+    "hours_ago": "{{count}} 小时前",
+    "day_ago": "{{count}} 天前",
+    "days_ago": "{{count}} 天前"
+  },
+  "accessibility": {
+    "upvote_question": "赞成此问题",
+    "downvote_question": "反对此问题",
+    "bookmark_question": "保存问题",
+    "remove_bookmark": "从收藏中移除问题",
+    "question_history": "问题历史"
+  },
+  "close_vote": {
+    "title": "投票关闭问题",
+    "select_reason": "选择关闭原因。",
+    "reasons": {
+      "duplicate_question": "重复问题",
+      "off_topic": "偏离主题",
+      "unclear": "不清楚",
+      "needs_more_details": "需要更多详细信息",
+      "other": "其他"
+    },
+    "cancel": "取消",
+    "submitting": "正在提交...",
+    "submit_vote": "提交投票"
+  },
+  "delete_question": {
+    "title": "删除问题",
+    "confirmation": "确定要删除此问题吗？",
+    "no": "否",
+    "yes_delete": "是，删除"
+  },
+  "edit_question": {
+    "title": "编辑问题",
+    "labels": {
+      "title": "标题",
+      "question": "问题",
+      "tags_maximum_5": "标签（最多 5 个）"
+    },
+    "placeholders": {
+      "enter_tag": "输入标签"
+    },
+    "actions": {
+      "cancel": "取消",
+      "save_changes": "保存更改"
+    },
+    "accessibility": {
+      "add_tag": "添加标签",
+      "remove_tag": "移除标签 {{tag}}"
+    }
+  },
+  "share": {
+    "default_title": "问题",
+    "text": "在 CodeQuest 上查看此问题"
+  },
+  "ask_question": {
+    "title": "标题",
+    "summarize_your_problem_in_a_single_sentence": "用一句话概括你的问题。",
+    "be_specific_and_imagine_asking_the_question_to_another_person": "请具体说明，并想象你正在向另一个人提问。",
+    "what_are_the_details_of_your_problem": "你的问题具体是什么？",
+    "explain_what_you_are_trying_to_do_and_include_any_errors_or_output": "说明你正在尝试做什么，并包含任何错误或输出结果。",
+    "include_code_expected_behaviour_and_steps_to_reproduce_the_issue": "包含代码、预期行为以及复现问题的步骤。",
+    "tags": "标签",
+    "add_up_to_5_tags_to_describe_what_your_question_is_about": "添加最多 5 个标签来描述你的问题主题。",
+    "type_a_tag_press_enter_e_g_javascript": "输入一个标签并按 Enter，例如 javascript。",
+    "review_your_question": "检查你的问题",
+    "cancel": "取消",
+    "preview": "预览",
+    "no_title": "无标题",
+    "no_details_provided": "未提供详细信息",
+    "post_question": "发布问题",
+    "edit": "编辑",
+    "ask_a_public_question": "提出公开问题",
+    "other_users_will_be_able_to_see_and_answer_your_question": "其他用户将能够查看并回答你的问题。",
+    "something_went_wrong": "出现错误。请重试。",
+    "accessibility": {
+      "add_tag": "添加标签",
+      "remove_tag": "移除标签 {{tag}}"
+    }
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "messages": {
+    "question_report_reputation_required": "你需要至少 500 点声望才能举报不当内容。你当前的声望为 {{reputation}}。",
+    "question_already_reported": "你已经举报过此问题。",
+    "failed_to_check_report_status": "无法检查举报状态。",
+    "question_reported_successfully": "问题举报成功。",
+    "failed_to_report_question": "无法举报问题。",
+    "post_report_reputation_required": "你需要至少 500 点声望才能举报不当内容。你当前的声望为 {{reputation}}。",
+    "post_already_reported": "你已经举报过此发布内容。",
+    "post_reported_successfully": "发布内容举报成功。",
+    "failed_to_report_post": "无法举报发布内容。"
+  },
+  "post": {
+    "title": "举报发布内容",
+    "select_reason": "请选择举报此发布内容的原因。",
+    "explain_issue": "说明问题"
+  },
+  "reasons": {
+    "spam": "垃圾内容",
+    "harassment_or_hate": "骚扰或仇恨内容",
+    "violence": "暴力",
+    "nudity_or_sexual_content": "裸露或色情内容",
+    "misinformation": "虚假信息",
+    "copyright": "侵犯版权",
+    "other": "其他"
+  },
+  "actions": {
+    "cancel": "取消",
+    "submit_report": "提交举报"
+  },
+  "accessibility": {
+    "report_post": "举报发布内容"
+  },
+  "question": {
+    "title": "举报问题",
+    "select_reason": "请选择举报此问题的原因。",
+    "explain_issue": "说明问题"
+  },
+  "admin": {
+    "post": {
+      "no_reports_found": "未找到发布内容举报。",
+      "new_reported_posts_will_appear_here": "新的被举报发布内容将显示在这里。",
+      "reported_post": "被举报的发布内容",
+      "reported_post_unavailable": "被举报的发布内容不可用。",
+      "post_author": "发布内容作者",
+      "user_suspended": "用户已暂停"
+    },
+    "page": {
+      "reports": "举报",
+      "review_reports_moderate_content_manage_suspended_users": "审核举报、管理内容并处理已暂停的用户。",
+      "post_reports": "发布内容举报",
+      "question_reports": "问题举报"
+    },
+    "status": {
+      "loading_reports": "正在加载举报..."
+    },
+    "prompts": {
+      "reason_for_suspension": "请输入暂停原因："
+    },
+    "messages": {
+      "admin_access_required": "需要管理员权限。",
+      "user_suspended_successfully": "用户已成功暂停。",
+      "failed_to_suspend_user": "无法暂停用户。",
+      "user_unsuspended_successfully": "用户已成功恢复。",
+      "failed_to_unsuspend_user": "无法恢复用户。",
+      "failed_to_update_report": "无法更新举报。"
+    },
+    "stats": {
+      "pending": "待处理",
+      "reviewed": "已审核",
+      "dismissed": "已驳回",
+      "action_taken": "已采取措施"
+    },
+    "question": {
+      "reported_question": "被举报的问题",
+      "reported_question_unavailable": "被举报的问题不可用。",
+      "question_author": "问题作者",
+      "no_reports_found": "未找到问题举报。"
+    },
+    "common": {
+      "additional_details": "其他详细信息",
+      "reporter": "举报者",
+      "unknown_user": "未知用户"
+    },
+    "violations": {
+      "repeat_offender": "⚠️ 多次违规者",
+      "previous_violation": "⚠️ 之前的违规记录",
+      "confirmed_violation": "{{count}} 次已确认违规",
+      "confirmed_violations": "{{count}} 次已确认违规"
+    },
+    "actions": {
+      "mark_reviewed": "标记为已审核",
+      "dismiss": "驳回",
+      "suspend_user": "暂停用户",
+      "unsuspend_user": "恢复用户"
+    },
+    "accessibility": {
+      "reporter": "举报者",
+      "question_author": "问题作者",
+      "reported_post": "被举报的发布内容",
+      "post_author": "发布内容作者"
+    },
+    "dashboard": {
+      "title": "管理员控制面板",
+      "description": "管理举报、支持和登录活动。",
+      "reports": "举报",
+      "back": "返回"
+    }
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "actions": {
+    "like": "Like",
+    "reply": "Reply",
+    "comment": "Comment",
+    "share": "Share",
+    "bookmark": "Save",
+    "flag": "Report",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "save": "Save",
+    "post_reply": "Post reply",
+    "delete_reply": "Delete reply",
+    "copy": "Copy",
+    "show_less": "Show less",
+    "view_all": "View all",
+    "no": "No",
+    "yes_delete": "Yes, delete",
+    "view_project": "View project"
+  },
+  "status": {
+    "edited": "Edited",
+    "copied": "Copied",
+    "posting": "Posting...",
+    "loading": "Loading..."
+  },
+  "feed": {
+    "trending": "Trending",
+    "following": "Following",
+    "create_post": "Create post",
+    "posts": "Posts",
+    "community_posts": "Community posts",
+    "community_feed": "Community feed",
+    "loading_more_posts": "Loading more posts...",
+    "no_more_posts": "No more posts.",
+    "loading_posts": "Loading posts..."
+  },
+  "messages": {
+    "post_not_found": "Post not found.",
+    "share_updates_projects_code_snippets_and_learning_achievements": "Share updates, projects, code snippets, and learning achievements.",
+    "please_login_to_continue": "Please log in to continue.",
+    "comment_reputation_required": "You need at least 50 reputation points to comment. Your current reputation is {{reputation}}.",
+    "please_log_in_to_follow_users": "Please log in to follow users.",
+    "no_saved_community_posts": "No saved community posts.",
+    "unable_to_update_bookmark": "Unable to update bookmark. Please try again.",
+    "post_deleted_successfully": "Post deleted successfully.",
+    "unable_to_delete_post": "Unable to delete the post.",
+    "reply_reputation_required": "You need at least 50 reputation points to reply. Your current reputation is {{reputation}}.",
+    "unable_to_delete_comment": "Unable to delete the comment.",
+    "edit_reputation_required": "You need at least 100 reputation points to edit community posts.",
+    "post_content_cannot_be_empty": "Post content cannot be empty.",
+    "session_expired": "Your session has expired. Please log in again.",
+    "can_only_edit_own_post": "You can only edit your own post.",
+    "failed_to_update_post": "Something went wrong while updating the post.",
+    "link_copied_to_clipboard": "Link copied to clipboard."
+  },
+  "mentioned_users": "Mentioned users",
+  "labels": {
+    "comment": "comment",
+    "comments": "comments",
+    "unknown_user": "Unknown user",
+    "community_post": "Community post",
+    "saves": "Saves"
+  },
+  "placeholders": {
+    "write_reply": "Write a reply...",
+    "write_comment": "Write a comment..."
+  },
+  "delete_reply": {
+    "title": "Delete reply",
+    "confirmation": "Are you sure you want to delete this reply?"
+  },
+  "badges": {
+    "featured": "Featured"
+  },
+  "accessibility": {
+    "view_mentioned_users": "View mentioned users",
+    "post_image": "Post image"
+  },
+  "delete_comment": {
+    "title": "Delete comment",
+    "confirmation": "Are you sure you want to delete this comment?"
+  },
+  "delete_post": {
+    "title": "Delete post",
+    "confirmation": "Are you sure you want to delete this post?"
+  },
+  "edit_post": {
+    "title": "Edit post",
+    "close_modal": "Close edit modal",
+    "content": "Content",
+    "edit_post_placeholder": "Edit your post...",
+    "hashtags": "Hashtags",
+    "add_hashtag": "Add hashtag",
+    "remove_hashtag": "Remove hashtag {{tag}}",
+    "image": "Image",
+    "remove_image": "Remove image",
+    "no_file_chosen": "No file chosen",
+    "selected_file": "Selected: {{fileName}}",
+    "project_showcase": "Project showcase",
+    "project_title": "Project title",
+    "project_link": "Project link",
+    "learning_achievement": "Learning achievement",
+    "achievement_title": "Achievement title",
+    "achievement_description": "Achievement description",
+    "code_snippet": "Code snippet",
+    "edit_code": "Edit your code...",
+    "save_changes": "Save changes"
+  },
+  "follow": {
+    "checking": "Checking...",
+    "follow": "Follow",
+    "following": "Following",
+    "followers": "Followers"
+  },
+  "share": {
+    "community_post": "Community post",
+    "check_out_community_post": "Check out this community post!"
+  }
+}

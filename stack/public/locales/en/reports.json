@@ -1,0 +1,110 @@
+{
+  "messages": {
+    "question_report_reputation_required": "You need at least 500 reputation points to report inappropriate content. Your current reputation is {{reputation}}.",
+    "question_already_reported": "You have already reported this question.",
+    "failed_to_check_report_status": "Failed to check the report status.",
+    "question_reported_successfully": "Question reported successfully.",
+    "failed_to_report_question": "Failed to report the question.",
+    "post_report_reputation_required": "You need at least 500 reputation points to report inappropriate content. Your current reputation is {{reputation}}.",
+    "post_already_reported": "You have already reported this post.",
+    "post_reported_successfully": "Post reported successfully.",
+    "failed_to_report_post": "Failed to report the post."
+  },
+  "post": {
+    "title": "Report post",
+    "select_reason": "Select the reason why you are reporting this post.",
+    "explain_issue": "Explain the issue"
+  },
+  "reasons": {
+    "spam": "Spam",
+    "harassment_or_hate": "Harassment or hate content",
+    "violence": "Violence",
+    "nudity_or_sexual_content": "Nudity or sexual content",
+    "misinformation": "Misinformation",
+    "copyright": "Copyright infringement",
+    "other": "Other"
+  },
+  "actions": {
+    "cancel": "Cancel",
+    "submit_report": "Submit report"
+  },
+  "accessibility": {
+    "report_post": "Report post"
+  },
+  "question": {
+    "title": "Report question",
+    "select_reason": "Select the reason why you are reporting this question.",
+    "explain_issue": "Explain the issue"
+  },
+  "admin": {
+    "post": {
+      "no_reports_found": "No post reports found.",
+      "new_reported_posts_will_appear_here": "New reported posts will appear here.",
+      "reported_post": "Reported post",
+      "reported_post_unavailable": "The reported post is unavailable.",
+      "post_author": "Post author",
+      "user_suspended": "User suspended"
+    },
+    "page": {
+      "reports": "Reports",
+      "review_reports_moderate_content_manage_suspended_users": "Review reports, moderate content, and manage suspended users.",
+      "post_reports": "Post reports",
+      "question_reports": "Question reports"
+    },
+    "status": {
+      "loading_reports": "Loading reports..."
+    },
+    "prompts": {
+      "reason_for_suspension": "Enter the reason for suspension:"
+    },
+    "messages": {
+      "admin_access_required": "Admin access is required.",
+      "user_suspended_successfully": "User suspended successfully.",
+      "failed_to_suspend_user": "Failed to suspend the user.",
+      "user_unsuspended_successfully": "User unsuspended successfully.",
+      "failed_to_unsuspend_user": "Failed to unsuspend the user.",
+      "failed_to_update_report": "Failed to update the report."
+    },
+    "stats": {
+      "pending": "Pending",
+      "reviewed": "Reviewed",
+      "dismissed": "Dismissed",
+      "action_taken": "Action taken"
+    },
+    "question": {
+      "reported_question": "Reported question",
+      "reported_question_unavailable": "The reported question is unavailable.",
+      "question_author": "Question author",
+      "no_reports_found": "No question reports found."
+    },
+    "common": {
+      "additional_details": "Additional details",
+      "reporter": "Reporter",
+      "unknown_user": "Unknown user"
+    },
+    "violations": {
+      "repeat_offender": "⚠️ Repeat offender",
+      "previous_violation": "⚠️ Previous violation",
+      "confirmed_violation": "{{count}} confirmed violation",
+      "confirmed_violations": "{{count}} confirmed violations"
+    },
+    "actions": {
+      "mark_reviewed": "Mark as reviewed",
+      "dismiss": "Dismiss",
+      "suspend_user": "Suspend user",
+      "unsuspend_user": "Unsuspend user"
+    },
+    "accessibility": {
+      "reporter": "Reporter",
+      "question_author": "Question author",
+      "reported_post": "Reported post",
+      "post_author": "Post author"
+    },
+    "dashboard": {
+      "title": "Admin dashboard",
+      "description": "Manage reports, support, and login activity.",
+      "reports": "Reports",
+      "back": "Back"
+    }
+  }
+}

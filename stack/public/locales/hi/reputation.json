@@ -1,0 +1,45 @@
+{
+  "title": {
+    "reputation_activity": "प्रतिष्ठा गतिविधि",
+    "reputation": "प्रतिष्ठा"
+  },
+  "labels": {
+    "reason": "कारण",
+    "total_reputation": "कुल प्रतिष्ठा",
+    "community_privileges": "समुदाय विशेषाधिकार",
+    "points": "{{count}} अंक",
+    "current_reputation": "वर्तमान प्रतिष्ठा",
+    "reputation_activities": "{{count}} प्रतिष्ठा गतिविधि",
+    "reputation_activities_plural": "{{count}} प्रतिष्ठा गतिविधियाँ"
+  },
+  "messages": {
+    "no_activity_yet": "अभी कोई प्रतिष्ठा गतिविधि नहीं है।",
+    "enter_valid_amount": "कृपया प्रतिष्ठा अंकों की मान्य संख्या दर्ज करें।",
+    "maximum_50_points": "आप प्रति लेन-देन अधिकतम 50 प्रतिष्ठा अंक स्थानांतरित कर सकते हैं।",
+    "enter_transfer_reason": "कृपया स्थानांतरण का कारण दर्ज करें।",
+    "transfer_success": "प्रतिष्ठा सफलतापूर्वक स्थानांतरित की गई।",
+    "transfer_failed": "प्रतिष्ठा स्थानांतरित नहीं की जा सकी।"
+  },
+  "actions": {
+    "view_reputation_activity": "प्रतिष्ठा गतिविधि देखें",
+    "transfer_reputation": "प्रतिष्ठा स्थानांतरित करें"
+  },
+  "privileges": {
+    "unrestricted_commenting": "बिना प्रतिबंध टिप्पणी",
+    "edit_community_posts": "समुदाय पोस्ट संपादित करें",
+    "vote_to_close_questions": "प्रश्न बंद करने के लिए वोट करें",
+    "report_inappropriate_content": "अनुचित सामग्री की रिपोर्ट करें"
+  },
+  "transfer": {
+    "title": "प्रतिष्ठा स्थानांतरित करें",
+    "transfer_to": "स्थानांतरित करें",
+    "reputation_points": "प्रतिष्ठा अंक",
+    "points_placeholder": "अंक दर्ज करें (अधिकतम 50)",
+    "maximum_points": "प्रति लेन-देन अधिकतम 50 अंक।",
+    "reason_placeholder": "आप प्रतिष्ठा क्यों स्थानांतरित कर रहे हैं?"
+  },
+  "status": {
+    "transferring": "स्थानांतरित किया जा रहा है...",
+    "loading_reputation": "प्रतिष्ठा लोड हो रही है..."
+  }
+}

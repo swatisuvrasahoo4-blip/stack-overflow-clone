@@ -1,0 +1,145 @@
+{
+  "actions": {
+    "ask_question": "Ask a question",
+    "vote_to_close": "Vote to close",
+    "vote_to_close_question": "Vote to close question",
+    "filter": "Filter",
+    "more": "More",
+    "show_less": "Show less",
+    "view_all": "View all"
+  },
+  "labels": {
+    "views": "Views",
+    "votes": "Votes",
+    "asked": "Asked",
+    "questions": "Questions",
+    "all_questions": "All questions",
+    "you": "You",
+    "unknown_user": "Unknown user"
+  },
+  "filters": {
+    "newest": "Newest",
+    "active": "Active",
+    "bountied": "Bountied",
+    "unanswered": "Unanswered"
+  },
+  "status": {
+    "question_closed": "Question closed",
+    "loading_questions": "Loading questions...",
+    "loading_more_questions": "Loading more questions...",
+    "loading_question": "Loading question..."
+  },
+  "messages": {
+    "browse_the_latest_questions_from_the_community": "Browse the latest questions from the community.",
+    "no_title": "(no title)",
+    "no_more_questions": "There are no more questions.",
+    "date_unavailable": "Date unavailable",
+    "unknown_date": "Unknown date",
+    "close_vote_reputation_required": "You need at least 250 reputation points to vote to close a question.",
+    "failed_to_delete_question": "Failed to delete the question.",
+    "failed_to_edit_question": "Failed to edit the question.",
+    "cannot_vote_to_close_own_question": "You cannot vote to close your own question.",
+    "already_voted_to_close_question": "You have already voted to close this question.",
+    "close_vote_submitted_successfully": "Your close vote was submitted successfully.",
+    "question_closed_successfully": "The question was closed successfully.",
+    "failed_to_vote_to_close_question": "Failed to vote to close this question.",
+    "no_saved_questions": "You have no saved questions.",
+    "no_question_found": "No question found.",
+    "please_login_to_continue": "Please log in to continue.",
+    "cannot_vote_on_own_question": "You cannot vote on your own question.",
+    "vote_updated": "Your vote has been updated.",
+    "failed_to_vote_question": "Failed to vote on this question.",
+    "please_login_to_save_questions": "Please log in to save questions.",
+    "question_id_not_found": "Question ID could not be found.",
+    "question_bookmarked": "Question bookmarked.",
+    "question_bookmark_removed": "Question removed from bookmarks.",
+    "unable_to_update_bookmark": "Unable to update the bookmark. Please try again.",
+    "confirm_delete_question": "Are you sure you want to delete this question?",
+    "question_deleted": "Question deleted.",
+    "question_link_copied": "Question link copied."
+  },
+  "time": {
+    "just_now": "just now",
+    "minute_ago": "{{count}} minute ago",
+    "minutes_ago": "{{count}} minutes ago",
+    "hour_ago": "{{count}} hour ago",
+    "hours_ago": "{{count}} hours ago",
+    "day_ago": "{{count}} day ago",
+    "days_ago": "{{count}} days ago"
+  },
+  "accessibility": {
+    "upvote_question": "Upvote question",
+    "downvote_question": "Downvote question",
+    "bookmark_question": "Bookmark question",
+    "remove_bookmark": "Remove question from bookmarks",
+    "question_history": "Question history"
+  },
+  "close_vote": {
+    "title": "Vote to close question",
+    "select_reason": "Select the reason for closing.",
+    "reasons": {
+      "duplicate_question": "Duplicate question",
+      "off_topic": "Off topic",
+      "unclear": "Unclear",
+      "needs_more_details": "Needs more details",
+      "other": "Other"
+    },
+    "cancel": "Cancel",
+    "submitting": "Submitting...",
+    "submit_vote": "Submit vote"
+  },
+  "delete_question": {
+    "title": "Delete question",
+    "confirmation": "Are you sure you want to delete this question?",
+    "no": "No",
+    "yes_delete": "Yes, delete"
+  },
+  "edit_question": {
+    "title": "Edit question",
+    "labels": {
+      "title": "Title",
+      "question": "Question",
+      "tags_maximum_5": "Tags (maximum 5)"
+    },
+    "placeholders": {
+      "enter_tag": "Enter a tag"
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "save_changes": "Save changes"
+    },
+    "accessibility": {
+      "add_tag": "Add tag",
+      "remove_tag": "Remove tag {{tag}}"
+    }
+  },
+  "share": {
+    "default_title": "Question",
+    "text": "Check out this question on CodeQuest"
+  },
+  "ask_question": {
+    "title": "Title",
+    "summarize_your_problem_in_a_single_sentence": "Summarize your problem in a single sentence.",
+    "be_specific_and_imagine_asking_the_question_to_another_person": "Be specific and imagine asking the question to another person.",
+    "what_are_the_details_of_your_problem": "What are the details of your problem?",
+    "explain_what_you_are_trying_to_do_and_include_any_errors_or_output": "Explain what you are trying to do and include any errors or output.",
+    "include_code_expected_behaviour_and_steps_to_reproduce_the_issue": "Include code, expected behaviour, and steps to reproduce the issue.",
+    "tags": "Tags",
+    "add_up_to_5_tags_to_describe_what_your_question_is_about": "Add up to 5 tags to describe what your question is about.",
+    "type_a_tag_press_enter_e_g_javascript": "Type a tag and press Enter, for example javascript.",
+    "review_your_question": "Review your question",
+    "cancel": "Cancel",
+    "preview": "Preview",
+    "no_title": "No title",
+    "no_details_provided": "No details provided",
+    "post_question": "Post question",
+    "edit": "Edit",
+    "ask_a_public_question": "Ask a public question",
+    "other_users_will_be_able_to_see_and_answer_your_question": "Other users will be able to see and answer your question.",
+    "something_went_wrong": "Something went wrong. Please try again.",
+    "accessibility": {
+      "add_tag": "Add tag",
+      "remove_tag": "Remove tag {{tag}}"
+    }
+  }
+}

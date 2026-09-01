@@ -1,0 +1,26 @@
+{
+  "messages": {
+    "no_hashtags_available": "No hay hashtags disponibles",
+    "real_hashtags_from_community_posts_will_appear_here": "Los hashtags reales de las publicaciones de la comunidad aparecerán aquí.",
+    "explore_popular_hashtags_and_community_topics": "Explora hashtags populares y temas de la comunidad",
+    "explore_community_posts_about_tag": "Explora publicaciones de la comunidad sobre {{tag}}.",
+    "questions_and_community_posts_tagged_with": "Preguntas y publicaciones de la comunidad etiquetadas con #{{tag}}.",
+    "no_questions_or_posts_found_for_tag": "No se encontraron preguntas ni publicaciones para este hashtag.",
+    "no_more_questions": "No hay más preguntas."
+  },
+  "labels": {
+    "tags": "Etiquetas",
+    "post": "publicación",
+    "posts": "publicaciones",
+    "community_posts": "Publicaciones de la comunidad",
+    "questions": "Preguntas",
+    "question": "pregunta",
+    "questions_lowercase": "preguntas"
+  },
+  "status": {
+    "loading": "Cargando..."
+  },
+  "actions": {
+    "load_more": "Cargar más"
+  }
+}

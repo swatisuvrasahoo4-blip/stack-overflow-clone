@@ -1,0 +1,145 @@
+{
+  "actions": {
+    "ask_question": "Hacer una pregunta",
+    "vote_to_close": "Votar para cerrar",
+    "vote_to_close_question": "Votar para cerrar la pregunta",
+    "filter": "Filtrar",
+    "more": "Más",
+    "show_less": "Ver menos",
+    "view_all": "Ver todo"
+  },
+  "labels": {
+    "views": "Vistas",
+    "votes": "Votos",
+    "asked": "Preguntado",
+    "questions": "Preguntas",
+    "all_questions": "Todas las preguntas",
+    "you": "Tú",
+    "unknown_user": "Usuario desconocido"
+  },
+  "filters": {
+    "newest": "Más recientes",
+    "active": "Activas",
+    "bountied": "Con recompensa",
+    "unanswered": "Sin respuesta"
+  },
+  "status": {
+    "question_closed": "Pregunta cerrada",
+    "loading_questions": "Cargando preguntas...",
+    "loading_more_questions": "Cargando más preguntas...",
+    "loading_question": "Cargando pregunta..."
+  },
+  "messages": {
+    "browse_the_latest_questions_from_the_community": "Explora las preguntas más recientes de la comunidad.",
+    "no_title": "(sin título)",
+    "no_more_questions": "No hay más preguntas.",
+    "date_unavailable": "Fecha no disponible",
+    "unknown_date": "Fecha desconocida",
+    "close_vote_reputation_required": "Necesitas al menos 250 puntos de reputación para votar por el cierre de una pregunta.",
+    "failed_to_delete_question": "No se pudo eliminar la pregunta.",
+    "failed_to_edit_question": "No se pudo editar la pregunta.",
+    "cannot_vote_to_close_own_question": "No puedes votar para cerrar tu propia pregunta.",
+    "already_voted_to_close_question": "Ya has votado para cerrar esta pregunta.",
+    "close_vote_submitted_successfully": "Tu voto para cerrar se envió correctamente.",
+    "question_closed_successfully": "La pregunta se cerró correctamente.",
+    "failed_to_vote_to_close_question": "No se pudo votar para cerrar esta pregunta.",
+    "no_saved_questions": "No tienes preguntas guardadas.",
+    "no_question_found": "No se encontró ninguna pregunta.",
+    "please_login_to_continue": "Inicia sesión para continuar.",
+    "cannot_vote_on_own_question": "No puedes votar en tu propia pregunta.",
+    "vote_updated": "Tu voto se ha actualizado.",
+    "failed_to_vote_question": "No se pudo votar en esta pregunta.",
+    "please_login_to_save_questions": "Inicia sesión para guardar preguntas.",
+    "question_id_not_found": "No se pudo encontrar el ID de la pregunta.",
+    "question_bookmarked": "Pregunta guardada.",
+    "question_bookmark_removed": "Pregunta eliminada de los guardados.",
+    "unable_to_update_bookmark": "No se pudo actualizar el guardado. Inténtalo de nuevo.",
+    "confirm_delete_question": "¿Seguro que quieres eliminar esta pregunta?",
+    "question_deleted": "Pregunta eliminada.",
+    "question_link_copied": "Enlace de la pregunta copiado."
+  },
+  "time": {
+    "just_now": "ahora mismo",
+    "minute_ago": "hace {{count}} minuto",
+    "minutes_ago": "hace {{count}} minutos",
+    "hour_ago": "hace {{count}} hora",
+    "hours_ago": "hace {{count}} horas",
+    "day_ago": "hace {{count}} día",
+    "days_ago": "hace {{count}} días"
+  },
+  "accessibility": {
+    "upvote_question": "Votar positivamente la pregunta",
+    "downvote_question": "Votar negativamente la pregunta",
+    "bookmark_question": "Guardar pregunta",
+    "remove_bookmark": "Eliminar la pregunta de los guardados",
+    "question_history": "Historial de la pregunta"
+  },
+  "close_vote": {
+    "title": "Votar para cerrar la pregunta",
+    "select_reason": "Selecciona el motivo del cierre.",
+    "reasons": {
+      "duplicate_question": "Pregunta duplicada",
+      "off_topic": "Fuera de tema",
+      "unclear": "Poco clara",
+      "needs_more_details": "Necesita más detalles",
+      "other": "Otro"
+    },
+    "cancel": "Cancelar",
+    "submitting": "Enviando...",
+    "submit_vote": "Enviar voto"
+  },
+  "delete_question": {
+    "title": "Eliminar pregunta",
+    "confirmation": "¿Seguro que quieres eliminar esta pregunta?",
+    "no": "No",
+    "yes_delete": "Sí, eliminar"
+  },
+  "edit_question": {
+    "title": "Editar pregunta",
+    "labels": {
+      "title": "Título",
+      "question": "Pregunta",
+      "tags_maximum_5": "Etiquetas (máximo 5)"
+    },
+    "placeholders": {
+      "enter_tag": "Introduce una etiqueta"
+    },
+    "actions": {
+      "cancel": "Cancelar",
+      "save_changes": "Guardar cambios"
+    },
+    "accessibility": {
+      "add_tag": "Añadir etiqueta",
+      "remove_tag": "Eliminar etiqueta {{tag}}"
+    }
+  },
+  "share": {
+    "default_title": "Pregunta",
+    "text": "Consulta esta pregunta en CodeQuest"
+  },
+  "ask_question": {
+    "title": "Título",
+    "summarize_your_problem_in_a_single_sentence": "Resume tu problema en una sola frase.",
+    "be_specific_and_imagine_asking_the_question_to_another_person": "Sé específico e imagina que le haces la pregunta a otra persona.",
+    "what_are_the_details_of_your_problem": "¿Cuáles son los detalles de tu problema?",
+    "explain_what_you_are_trying_to_do_and_include_any_errors_or_output": "Explica qué estás intentando hacer e incluye cualquier error o resultado.",
+    "include_code_expected_behaviour_and_steps_to_reproduce_the_issue": "Incluye el código, el comportamiento esperado y los pasos para reproducir el problema.",
+    "tags": "Etiquetas",
+    "add_up_to_5_tags_to_describe_what_your_question_is_about": "Añade hasta 5 etiquetas para describir de qué trata tu pregunta.",
+    "type_a_tag_press_enter_e_g_javascript": "Escribe una etiqueta y pulsa Enter, por ejemplo javascript.",
+    "review_your_question": "Revisar tu pregunta",
+    "cancel": "Cancelar",
+    "preview": "Vista previa",
+    "no_title": "Sin título",
+    "no_details_provided": "No se proporcionaron detalles",
+    "post_question": "Publicar pregunta",
+    "edit": "Editar",
+    "ask_a_public_question": "Hacer una pregunta pública",
+    "other_users_will_be_able_to_see_and_answer_your_question": "Otros usuarios podrán ver y responder tu pregunta.",
+    "something_went_wrong": "Algo salió mal. Inténtalo de nuevo.",
+    "accessibility": {
+      "add_tag": "Añadir etiqueta",
+      "remove_tag": "Eliminar etiqueta {{tag}}"
+    }
+  }
+}

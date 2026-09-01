@@ -1,0 +1,102 @@
+{
+  "billing": {
+    "title": "बिलिंग विवरण",
+    "name": "नाम",
+    "email": "ईमेल",
+    "plan": "प्लान",
+    "amount": "राशि"
+  },
+  "invoice": {
+    "title": "इनवॉइस विवरण",
+    "pdf_title": "भुगतान इनवॉइस",
+    "invoice": "इनवॉइस",
+    "invoice_number": "इनवॉइस नंबर:",
+    "date": "तारीख:",
+    "status": "स्थिति:",
+    "payment_details": "भुगतान विवरण",
+    "plan": "प्लान:",
+    "amount": "राशि:",
+    "payment_id": "भुगतान ID:",
+    "order_id": "ऑर्डर ID:",
+    "thank_you": "CodeQuest Premium चुनने के लिए धन्यवाद!"
+  },
+  "actions": {
+    "download_invoice": "इनवॉइस डाउनलोड करें",
+    "view_invoice": "इनवॉइस देखें",
+    "current_plan": "वर्तमान प्लान",
+    "upgrade": "अपग्रेड करें",
+    "lower_plan": "निचला प्लान",
+    "upgrade_plan": "प्लान अपग्रेड करें",
+    "back": "वापस"
+  },
+  "payment_history": {
+    "title": "भुगतान इतिहास",
+    "invoice": "इनवॉइस",
+    "plan": "प्लान",
+    "amount": "राशि",
+    "status": "स्थिति",
+    "date": "तारीख",
+    "action": "कार्रवाई"
+  },
+  "plans": {
+    "most_popular": "सबसे लोकप्रिय",
+    "month": "महीना",
+    "names": {
+      "free": "मुफ़्त",
+      "bronze": "ब्रॉन्ज़",
+      "silver": "सिल्वर",
+      "gold": "गोल्ड"
+    }
+  },
+  "messages": {
+    "please_login_to_continue": "जारी रखने के लिए कृपया लॉगिन करें।",
+    "subscription_activated_successfully": "सदस्यता सफलतापूर्वक सक्रिय की गई।",
+    "payment_verification_failed": "भुगतान सत्यापन विफल रहा।",
+    "payment_service_not_loaded": "भुगतान सेवा अभी लोड नहीं हुई है।",
+    "payment_order_failed": "भुगतान बनाते समय एक त्रुटि हुई।"
+  },
+  "dashboard": {
+    "title": "सदस्यता",
+    "current_plan": "वर्तमान प्लान",
+    "status": "स्थिति",
+    "amount": "राशि",
+    "start_date": "प्रारंभ तारीख",
+    "renewal_date": "नवीनीकरण तारीख"
+  },
+  "status": {
+    "active": "सक्रिय",
+    "expired": "समाप्त",
+    "cancelled": "रद्द"
+  },
+  "why_upgrade": {
+    "title": "प्लान अपग्रेड क्यों करें?",
+    "benefits": {
+      "more_questions": {
+        "title": "अधिक प्रश्न",
+        "description": "अपनी दैनिक प्रश्न सीमा बढ़ाएँ।"
+      },
+      "premium_badges": {
+        "title": "प्रीमियम बैज",
+        "description": "विशेष प्रोफ़ाइल बैज के साथ अलग पहचान बनाएँ।"
+      },
+      "advanced_search": {
+        "title": "उन्नत खोज",
+        "description": "शक्तिशाली फ़िल्टर के साथ उत्तर जल्दी खोजें।"
+      },
+      "unlimited_bookmarks": {
+        "title": "असीमित बुकमार्क",
+        "description": "जितने चाहें उतने प्रश्न और पोस्ट सहेजें।"
+      }
+    }
+  },
+  "page": {
+    "subscription_plans": "सदस्यता प्लान",
+    "upgrade_membership_title": "अपनी आवश्यकताओं के लिए सबसे उपयुक्त प्लान चुनें।"
+  },
+  "payment": {
+    "subscription_description": "{{plan}} सदस्यता"
+  },
+  "accessibility": {
+    "go_back": "वापस जाएँ"
+  }
+}

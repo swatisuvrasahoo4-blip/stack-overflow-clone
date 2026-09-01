@@ -1,0 +1,56 @@
+{
+  "featured": {
+    "feature_this_post": "इस पोस्ट को विशेष बनाएँ",
+    "premium_visibility": "इस पोस्ट को समुदाय में प्रीमियम दृश्यता दें।",
+    "gold_upgrade_required": "Gold सुविधा — अपनी पोस्ट को विशेष बनाने के लिए Gold प्लान में अपग्रेड करें।"
+  },
+  "hashtags": {
+    "label": "हैशटैग",
+    "placeholder": "उदा. react",
+    "add_hashtag": "हैशटैग जोड़ें",
+    "remove_hashtag": "हैशटैग {{tag}} हटाएँ"
+  },
+  "image_upload": {
+    "choose_file": "फ़ाइल चुनें",
+    "no_file_chosen": "कोई फ़ाइल नहीं चुनी गई",
+    "remove_selected_image": "चुनी गई छवि हटाएँ"
+  },
+  "mentions": {
+    "mention_users": "उपयोगकर्ताओं का उल्लेख करें",
+    "type_username": "उपयोगकर्ता नाम लिखें",
+    "user_not_found": "उपयोगकर्ता नहीं मिला।",
+    "add_user": "उपयोगकर्ता जोड़ें"
+  },
+  "type_fields": {
+    "project_title": "प्रोजेक्ट शीर्षक",
+    "github_or_live_demo_url": "GitHub या लाइव डेमो URL",
+    "achievement_title": "उपलब्धि का शीर्षक",
+    "describe_achievement": "अपनी उपलब्धि का वर्णन करें",
+    "paste_code_snippet": "अपना कोड स्निपेट पेस्ट करें"
+  },
+  "content": {
+    "share_something_with_the_community": "समुदाय के साथ कुछ साझा करें..."
+  },
+  "title": {
+    "create_community_post": "समुदाय पोस्ट बनाएँ"
+  },
+  "post_types": {
+    "technical_update": "तकनीकी अपडेट",
+    "project_showcase": "प्रोजेक्ट प्रदर्शन",
+    "learning_achievement": "सीखने की उपलब्धि",
+    "code_snippet": "कोड स्निपेट"
+  },
+  "actions": {
+    "create_post": "पोस्ट बनाएँ"
+  },
+  "status": {
+    "posting": "पोस्ट किया जा रहा है..."
+  },
+  "messages": {
+    "post_created_successfully": "पोस्ट सफलतापूर्वक बनाई गई।",
+    "failed_to_create_post": "पोस्ट नहीं बनाई जा सकी। कृपया फिर से प्रयास करें।"
+  },
+  "accessibility": {
+    "remove_mention": "@{{username}} उल्लेख हटाएँ"
+  }
+}

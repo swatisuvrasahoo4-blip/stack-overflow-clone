@@ -1,0 +1,56 @@
+{
+  "featured": {
+    "feature_this_post": "Feature this post",
+    "premium_visibility": "Give this post premium visibility in the community.",
+    "gold_upgrade_required": "Gold feature — upgrade to the Gold plan to feature your posts."
+  },
+  "hashtags": {
+    "label": "Hashtags",
+    "placeholder": "e.g. react",
+    "add_hashtag": "Add hashtag",
+    "remove_hashtag": "Remove hashtag {{tag}}"
+  },
+  "image_upload": {
+    "choose_file": "Choose file",
+    "no_file_chosen": "No file chosen",
+    "remove_selected_image": "Remove selected image"
+  },
+  "mentions": {
+    "mention_users": "Mention users",
+    "type_username": "Type a username",
+    "user_not_found": "User not found.",
+    "add_user": "Add user"
+  },
+  "type_fields": {
+    "project_title": "Project title",
+    "github_or_live_demo_url": "GitHub or live demo URL",
+    "achievement_title": "Achievement title",
+    "describe_achievement": "Describe your achievement",
+    "paste_code_snippet": "Paste your code snippet"
+  },
+  "content": {
+    "share_something_with_the_community": "Share something with the community..."
+  },
+  "title": {
+    "create_community_post": "Create community post"
+  },
+  "post_types": {
+    "technical_update": "Technical update",
+    "project_showcase": "Project showcase",
+    "learning_achievement": "Learning achievement",
+    "code_snippet": "Code snippet"
+  },
+  "actions": {
+    "create_post": "Create post"
+  },
+  "status": {
+    "posting": "Posting..."
+  },
+  "messages": {
+    "post_created_successfully": "Post created successfully.",
+    "failed_to_create_post": "Failed to create the post. Please try again."
+  },
+  "accessibility": {
+    "remove_mention": "Remove mention @{{username}}"
+  }
+}

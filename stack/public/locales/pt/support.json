@@ -1,0 +1,62 @@
+{
+  "accessibility": {
+    "help_and_support": "Ajuda e suporte"
+  },
+  "title": {
+    "help_and_support": "Ajuda e suporte"
+  },
+  "status": {
+    "checking_your_plan": "Verificando seu plano...",
+    "submitting": "Enviando..."
+  },
+  "priority": {
+    "priority_support": "Suporte prioritário",
+    "highest_priority_support": "Suporte de prioridade máxima",
+    "available_for_silver_and_gold": "O suporte prioritário está disponível para membros Silver e Gold.",
+    "upgrade_to_contact_team": "Faça upgrade do seu plano para entrar em contato com nossa equipe de suporte prioritário."
+  },
+  "members": {
+    "gold_member": "Membro Gold",
+    "silver_member": "Membro Silver"
+  },
+  "placeholders": {
+    "subject": "Assunto",
+    "describe_your_issue": "Descreva seu problema"
+  },
+  "actions": {
+    "upgrade_plan": "Fazer upgrade do plano",
+    "submit_request": "Enviar solicitação"
+  },
+  "messages": {
+    "please_enter_subject_and_message": "Insira um assunto e uma mensagem.",
+    "support_request_submitted_successfully": "Sua solicitação de suporte foi enviada com sucesso.",
+    "failed_to_submit_support_request": "Não foi possível enviar a solicitação de suporte.",
+    "please_login_to_continue": "Faça login para continuar."
+  },
+  "admin": {
+    "title": {
+      "support_requests": "Solicitações de suporte"
+    },
+    "status": {
+      "loading_support_requests": "Carregando solicitações de suporte...",
+      "resolved": "Resolvida",
+      "pending": "Pendente"
+    },
+    "labels": {
+      "user": "Usuário",
+      "status": "Status"
+    },
+    "priority": {
+      "highest_priority": "Prioridade máxima",
+      "priority": "Prioridade"
+    },
+    "actions": {
+      "resolve": "Resolver"
+    },
+    "messages": {
+      "manage_priority_customer_support_requests": "Gerencie as solicitações prioritárias de suporte dos clientes.",
+      "no_support_requests_yet": "Ainda não há solicitações de suporte.",
+      "failed_to_resolve_support_request": "Não foi possível resolver a solicitação de suporte."
+    }
+  }
+}

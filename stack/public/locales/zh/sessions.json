@@ -1,0 +1,24 @@
+{
+  "title": {
+    "active_sessions": "活动会话",
+    "login_sessions": "登录会话"
+  },
+  "status": {
+    "loading_sessions": "正在加载会话..."
+  },
+  "labels": {
+    "current_session": "当前会话",
+    "device": "设备",
+    "ip": "IP 地址",
+    "login": "登录",
+    "last_active": "最后活动时间"
+  },
+  "actions": {
+    "revoke": "撤销"
+  },
+  "messages": {
+    "no_active_sessions": "未找到活动会话。",
+    "failed_to_revoke_session": "无法撤销会话。",
+    "manage_signed_in_devices": "管理当前已登录你账户的设备和浏览器。"
+  }
+}

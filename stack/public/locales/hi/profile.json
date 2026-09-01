@@ -1,0 +1,64 @@
+{
+  "actions": {
+    "edit_profile": "प्रोफ़ाइल संपादित करें",
+    "choose_file": "फ़ाइल चुनें",
+    "delete_profile_photo": "प्रोफ़ाइल फ़ोटो हटाएँ",
+    "cancel": "रद्द करें",
+    "save_changes": "बदलाव सहेजें",
+    "back": "वापस",
+    "view_profile": "प्रोफ़ाइल देखें",
+    "login_sessions": "लॉगिन सत्र",
+    "change_password": "पासवर्ड बदलें"
+  },
+  "sections": {
+    "basic_information": "मूल जानकारी",
+    "profile_photo": "प्रोफ़ाइल फ़ोटो",
+    "about": "परिचय",
+    "skills_and_technologies": "कौशल और तकनीकें",
+    "top_tags": "प्रमुख टैग"
+  },
+  "labels": {
+    "username": "उपयोगकर्ता नाम",
+    "display_name": "प्रदर्शित नाम",
+    "upload_photo": "फ़ोटो अपलोड करें",
+    "unknown_user": "अज्ञात उपयोगकर्ता",
+    "member_since": "सदस्यता प्रारंभ",
+    "gold_badges": "गोल्ड बैज",
+    "silver_badges": "सिल्वर बैज",
+    "bronze_badges": "ब्रॉन्ज़ बैज",
+    "users": "उपयोगकर्ता",
+    "joined": "शामिल हुए"
+  },
+  "placeholders": {
+    "display_name": "आपका प्रदर्शित नाम",
+    "about": "अपने बारे में बताएँ",
+    "add_skill_or_technology": "कौशल या तकनीक जोड़ें",
+    "filter_by_user": "उपयोगकर्ता के अनुसार फ़िल्टर करें"
+  },
+  "status": {
+    "file_selected": "फ़ाइल चुनी गई",
+    "no_file_chosen": "कोई फ़ाइल नहीं चुनी गई",
+    "loading_connections": "कनेक्शन लोड हो रहे हैं..."
+  },
+  "accessibility": {
+    "profile_preview": "प्रोफ़ाइल फ़ोटो का पूर्वावलोकन",
+    "clear_selected_photo": "चुनी गई फ़ोटो हटाएँ",
+    "add_skill": "कौशल जोड़ें",
+    "remove_skill": "कौशल {{tag}} हटाएँ",
+    "user_profile_photo": "{{name}} की प्रोफ़ाइल फ़ोटो",
+    "featured_gold_user": "विशेष Gold उपयोगकर्ता"
+  },
+  "messages": {
+    "profile_updated_successfully": "प्रोफ़ाइल सफलतापूर्वक अपडेट की गई।",
+    "no_user_found": "कोई उपयोगकर्ता नहीं मिला।",
+    "no_users_found": "कोई उपयोगकर्ता नहीं मिला।"
+  },
+  "connections": {
+    "followers": "फ़ॉलोअर्स",
+    "following": "फ़ॉलो किए गए",
+    "no_followers_found": "कोई फ़ॉलोअर नहीं मिला",
+    "no_following_found": "कोई फ़ॉलो किया गया उपयोगकर्ता नहीं मिला",
+    "no_followers_to_display": "अभी दिखाने के लिए कोई फ़ॉलोअर नहीं है।",
+    "no_following_to_display": "अभी दिखाने के लिए कोई फ़ॉलो किया गया उपयोगकर्ता नहीं है।"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "title": {
+    "notifications": "Notifications"
+  },
+  "actions": {
+    "mark_all_as_read": "Mark all as read"
+  },
+  "status": {
+    "loading_notifications": "Loading notifications..."
+  },
+  "messages": {
+    "no_notifications_yet": "No notifications yet."
+  },
+  "labels": {
+    "someone": "Someone"
+  },
+  "accessibility": {
+    "notifications": "Notifications",
+    "delete_notification": "Delete notification"
+  }
+}

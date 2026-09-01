@@ -1,0 +1,37 @@
+{
+  "accessibility": {
+    "change_language": "भाषा बदलें",
+    "close_language_menu": "भाषा मेनू बंद करें",
+    "close_otp_modal": "OTP सत्यापन विंडो बंद करें"
+  },
+  "menu": {
+    "choose_language": "भाषा चुनें"
+  },
+  "languages": {
+    "english": "अंग्रेज़ी",
+    "spanish": "स्पेनिश",
+    "hindi": "हिंदी",
+    "portuguese": "पुर्तगाली",
+    "chinese": "चीनी",
+    "french": "फ़्रेंच"
+  },
+  "otp": {
+    "verify_language_change": "भाषा परिवर्तन सत्यापित करें",
+    "enter_6_digit_otp_sent_to_device": "अपने डिवाइस पर भेजा गया 6 अंकों का OTP दर्ज करें।",
+    "enter_6_digit_otp": "6 अंकों का OTP दर्ज करें",
+    "verify_otp": "OTP सत्यापित करें",
+    "sending_otp": "OTP भेजा जा रहा है...",
+    "otp_expires_in": "OTP समाप्त होगा",
+    "otp_expired": "OTP समाप्त हो गया है"
+  },
+  "errors": {
+    "please_enter_6_digit_otp": "कृपया 6 अंकों का OTP दर्ज करें।",
+    "language_not_selected": "कोई भाषा नहीं चुनी गई है।",
+    "invalid_or_expired_otp": "OTP अमान्य है या समाप्त हो गया है।",
+    "failed_to_send_otp": "OTP नहीं भेजा जा सका। कृपया फिर से प्रयास करें।",
+    "failed_to_change_language": "भाषा नहीं बदली जा सकी। कृपया फिर से प्रयास करें।"
+  },
+  "messages": {
+    "please_login_to_continue": "जारी रखने के लिए कृपया लॉगिन करें।"
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "actions": {
+    "edit_profile": "Edit profile",
+    "choose_file": "Choose file",
+    "delete_profile_photo": "Delete profile photo",
+    "cancel": "Cancel",
+    "save_changes": "Save changes",
+    "back": "Back",
+    "view_profile": "View profile",
+    "login_sessions": "Login sessions",
+    "change_password": "Change password"
+  },
+  "sections": {
+    "basic_information": "Basic information",
+    "profile_photo": "Profile photo",
+    "about": "About",
+    "skills_and_technologies": "Skills and technologies",
+    "top_tags": "Top tags"
+  },
+  "labels": {
+    "username": "Username",
+    "display_name": "Display name",
+    "upload_photo": "Upload photo",
+    "unknown_user": "Unknown user",
+    "member_since": "Member since",
+    "gold_badges": "gold badges",
+    "silver_badges": "silver badges",
+    "bronze_badges": "bronze badges",
+    "users": "Users",
+    "joined": "Joined"
+  },
+  "placeholders": {
+    "display_name": "Your display name",
+    "about": "Tell us about yourself",
+    "add_skill_or_technology": "Add a skill or technology",
+    "filter_by_user": "Filter by user"
+  },
+  "status": {
+    "file_selected": "File selected",
+    "no_file_chosen": "No file chosen",
+    "loading_connections": "Loading connections..."
+  },
+  "accessibility": {
+    "profile_preview": "Profile photo preview",
+    "clear_selected_photo": "Clear selected photo",
+    "add_skill": "Add skill",
+    "remove_skill": "Remove skill {{tag}}",
+    "user_profile_photo": "Profile photo of {{name}}",
+    "featured_gold_user": "Featured Gold user"
+  },
+  "messages": {
+    "profile_updated_successfully": "Profile updated successfully.",
+    "no_user_found": "No user found.",
+    "no_users_found": "No users found."
+  },
+  "connections": {
+    "followers": "Followers",
+    "following": "Following",
+    "no_followers_found": "No followers found",
+    "no_following_found": "No following found",
+    "no_followers_to_display": "There are no followers to display at the moment.",
+    "no_following_to_display": "There are no followed users to display at the moment."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "title": {
+    "notifications": "Notificaciones"
+  },
+  "actions": {
+    "mark_all_as_read": "Marcar todo como leído"
+  },
+  "status": {
+    "loading_notifications": "Cargando notificaciones..."
+  },
+  "messages": {
+    "no_notifications_yet": "Aún no hay notificaciones."
+  },
+  "labels": {
+    "someone": "Alguien"
+  },
+  "accessibility": {
+    "notifications": "Notificaciones",
+    "delete_notification": "Eliminar notificación"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "labels": {
+    "answer": "उत्तर",
+    "answers": "उत्तर",
+    "your_answer": "आपका उत्तर",
+    "answered": "उत्तर दिया गया"
+  },
+  "actions": {
+    "accept": "उत्तर स्वीकार करें",
+    "post_answer": "अपना उत्तर पोस्ट करें"
+  },
+  "status": {
+    "accepted": "उत्तर स्वीकार किया गया",
+    "posting": "पोस्ट किया जा रहा है..."
+  },
+  "messages": {
+    "unknown_date": "अज्ञात तिथि",
+    "link_copied": "उत्तर का लिंक कॉपी किया गया",
+    "failed_to_share": "उत्तर साझा नहीं किया जा सका",
+    "answer_uploaded_successfully": "उत्तर सफलतापूर्वक पोस्ट किया गया।",
+    "failed_to_answer": "उत्तर पोस्ट नहीं किया जा सका।",
+    "answer_accepted_successfully": "उत्तर सफलतापूर्वक स्वीकार किया गया।",
+    "failed_to_accept_answer": "उत्तर स्वीकार नहीं किया जा सका।",
+    "confirm_delete_answer": "क्या आप वाकई इस उत्तर को हटाना चाहते हैं?",
+    "answer_deleted": "उत्तर सफलतापूर्वक हटा दिया गया।",
+    "failed_to_delete_answer": "उत्तर हटाया नहीं जा सका।",
+    "please_login_to_vote": "वोट करने के लिए कृपया लॉग इन करें।",
+    "cannot_vote_on_own_answer": "आप अपने स्वयं के उत्तर पर वोट नहीं कर सकते।",
+    "failed_to_vote_on_answer": "इस उत्तर पर वोट नहीं किया जा सका।"
+  },
+  "share": {
+    "title": "उत्तर",
+    "text": "CodeQuest पर इस उत्तर को देखें",
+    "sharing": "साझा किया जा रहा है..."
+  },
+  "placeholders": {
+    "write_answer": "अपना उत्तर लिखें..."
+  },
+  "legal": {
+    "by_posting_answer": "अपना उत्तर पोस्ट करके, आप हमारी",
+    "privacy_policy": "गोपनीयता नीति",
+    "and": "और हमारी",
+    "terms_of_service": "सेवा की शर्तों से सहमत होते हैं"
+  },
+  "accessibility": {
+    "upvote_answer": "उत्तर को अपवोट करें",
+    "downvote_answer": "उत्तर को डाउनवोट करें"
+  }
+}

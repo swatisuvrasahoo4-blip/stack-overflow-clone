@@ -1,0 +1,24 @@
+{
+  "title": {
+    "active_sessions": "Active sessions",
+    "login_sessions": "Login sessions"
+  },
+  "status": {
+    "loading_sessions": "Loading sessions..."
+  },
+  "labels": {
+    "current_session": "Current session",
+    "device": "Device",
+    "ip": "IP address",
+    "login": "Login",
+    "last_active": "Last active"
+  },
+  "actions": {
+    "revoke": "Revoke"
+  },
+  "messages": {
+    "no_active_sessions": "No active sessions found.",
+    "failed_to_revoke_session": "Failed to revoke the session.",
+    "manage_signed_in_devices": "Manage the devices and browsers where your account is currently signed in."
+  }
+}

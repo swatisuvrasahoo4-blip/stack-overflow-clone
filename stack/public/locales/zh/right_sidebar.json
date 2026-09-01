@@ -1,0 +1,25 @@
+{
+  "blog": {
+    "title": "Overflow 博客",
+    "post_1": "Stack Overflow 的新时代",
+    "post_2": "你最喜欢的电影如何改变语言学习技术"
+  },
+  "meta": {
+    "title": "Meta 精选",
+    "post_1": "2025 年 6 月社区问题冲刺活动结果",
+    "post_2": "你愿意帮助我们打造新的视觉形象吗？",
+    "post_3": "政策：禁止使用生成式 AI（例如 ChatGPT）"
+  },
+  "filters": {
+    "title": "自定义筛选器",
+    "create": "创建自定义筛选器"
+  },
+  "watched_tags": {
+    "title": "关注的标签",
+    "description": "关注标签以个性化你的问题列表。",
+    "watch_tag": "关注标签"
+  },
+  "actions": {
+    "logout": "退出登录"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "labels": {
+    "answer": "Resposta",
+    "answers": "Respostas",
+    "your_answer": "Sua resposta",
+    "answered": "Respondido"
+  },
+  "actions": {
+    "accept": "Aceitar resposta",
+    "post_answer": "Publicar sua resposta"
+  },
+  "status": {
+    "accepted": "Resposta aceita",
+    "posting": "Publicando..."
+  },
+  "messages": {
+    "unknown_date": "Data desconhecida",
+    "link_copied": "Link da resposta copiado",
+    "failed_to_share": "Não foi possível compartilhar a resposta",
+    "answer_uploaded_successfully": "Resposta publicada com sucesso.",
+    "failed_to_answer": "Não foi possível publicar a resposta.",
+    "answer_accepted_successfully": "Resposta aceita com sucesso.",
+    "failed_to_accept_answer": "Não foi possível aceitar a resposta.",
+    "confirm_delete_answer": "Tem certeza de que deseja excluir esta resposta?",
+    "answer_deleted": "Resposta excluída com sucesso.",
+    "failed_to_delete_answer": "Não foi possível excluir a resposta.",
+    "please_login_to_vote": "Faça login para votar.",
+    "cannot_vote_on_own_answer": "Você não pode votar na sua própria resposta.",
+    "failed_to_vote_on_answer": "Não foi possível votar nesta resposta."
+  },
+  "share": {
+    "title": "Resposta",
+    "text": "Confira esta resposta no CodeQuest",
+    "sharing": "Compartilhando..."
+  },
+  "placeholders": {
+    "write_answer": "Escreva sua resposta..."
+  },
+  "legal": {
+    "by_posting_answer": "Ao publicar sua resposta, você concorda com nossa",
+    "privacy_policy": "Política de Privacidade",
+    "and": "e nossos",
+    "terms_of_service": "Termos de Serviço"
+  },
+  "accessibility": {
+    "upvote_answer": "Votar positivamente na resposta",
+    "downvote_answer": "Votar negativamente na resposta"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "messages": {
+    "no_hashtags_available": "कोई हैशटैग उपलब्ध नहीं है",
+    "real_hashtags_from_community_posts_will_appear_here": "समुदाय पोस्ट के वास्तविक हैशटैग यहाँ दिखाई देंगे।",
+    "explore_popular_hashtags_and_community_topics": "लोकप्रिय हैशटैग और समुदाय के विषयों को देखें",
+    "explore_community_posts_about_tag": "{{tag}} के बारे में समुदाय पोस्ट देखें।",
+    "questions_and_community_posts_tagged_with": "#{{tag}} टैग वाले प्रश्न और समुदाय पोस्ट।",
+    "no_questions_or_posts_found_for_tag": "इस हैशटैग के लिए कोई प्रश्न या पोस्ट नहीं मिली।",
+    "no_more_questions": "अब और प्रश्न नहीं हैं।"
+  },
+  "labels": {
+    "tags": "टैग",
+    "post": "पोस्ट",
+    "posts": "पोस्ट",
+    "community_posts": "समुदाय पोस्ट",
+    "questions": "प्रश्न",
+    "question": "प्रश्न",
+    "questions_lowercase": "प्रश्न"
+  },
+  "status": {
+    "loading": "लोड हो रहा है..."
+  },
+  "actions": {
+    "load_more": "और लोड करें"
+  }
+}
