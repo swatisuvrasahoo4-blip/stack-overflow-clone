@@ -34,7 +34,8 @@
     "community_feed": "社区动态",
     "loading_more_posts": "正在加载更多帖子...",
     "no_more_posts": "没有更多帖子了。",
-    "loading_posts": "正在加载帖子..."
+    "loading_posts": "正在加载帖子...",
+     "no_posts_yet": "暂无帖子。"
   },
   "messages": {
     "post_not_found": "未找到帖子。",

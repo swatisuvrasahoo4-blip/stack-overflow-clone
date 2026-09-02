@@ -34,7 +34,8 @@
     "community_feed": "Feed de la comunidad",
     "loading_more_posts": "Cargando más publicaciones...",
     "no_more_posts": "No hay más publicaciones.",
-    "loading_posts": "Cargando publicaciones..."
+    "loading_posts": "Cargando publicaciones...",
+    "no_posts_yet": "Aún no hay publicaciones."
   },
   "messages": {
     "post_not_found": "Publicación no encontrada.",

@@ -34,7 +34,8 @@
     "community_feed": "Fil d'actualité de la communauté",
     "loading_more_posts": "Chargement de plus de publications...",
 "no_more_posts": "Il n’y a plus de publications.",
-"loading_posts": "Chargement des publications..."
+"loading_posts": "Chargement des publications...",
+"no_posts_yet": "Aucune publication pour le moment."
   },
   "messages": {
     "post_not_found": "Publication introuvable.",

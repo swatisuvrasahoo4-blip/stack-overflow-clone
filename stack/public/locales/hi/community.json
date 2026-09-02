@@ -34,7 +34,8 @@
     "community_feed": "समुदाय फ़ीड",
     "loading_more_posts": "और पोस्ट लोड हो रही हैं...",
     "no_more_posts": "अब और पोस्ट नहीं हैं।",
-    "loading_posts": "पोस्ट लोड हो रही हैं..."
+    "loading_posts": "पोस्ट लोड हो रही हैं...",
+     "no_posts_yet": "अभी तक कोई पोस्ट नहीं है।"
   },
   "messages": {
     "post_not_found": "पोस्ट नहीं मिली।",

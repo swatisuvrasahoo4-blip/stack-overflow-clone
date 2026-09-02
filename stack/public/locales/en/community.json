@@ -34,7 +34,8 @@
     "community_feed": "Community feed",
     "loading_more_posts": "Loading more posts...",
     "no_more_posts": "No more posts.",
-    "loading_posts": "Loading posts..."
+    "loading_posts": "Loading posts...",
+     "no_posts_yet": "No posts yet."
   },
   "messages": {
     "post_not_found": "Post not found.",

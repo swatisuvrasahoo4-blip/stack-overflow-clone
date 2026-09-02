@@ -16,6 +16,15 @@ import LanguageButton from "./LanguageButton";
 import LanguageMenu from "./LanguageMenu";
 import LanguageOtpModal from "./LanguageOtpModal";
 
+const languageMap: Record<string, string> = {
+  English: "en",
+  Spanish: "es",
+  Hindi: "hi",
+  Portuguese: "pt",
+  Chinese: "zh",
+  French: "fr",
+};
+
 const LanguageSwitcher = () => {
   const { i18n, t } =
     useTranslation("language");
@@ -56,21 +65,41 @@ const LanguageSwitcher = () => {
   >(null);
 
   useEffect(() => {
-    const savedLanguage =
-      localStorage.getItem(
-        "language"
-      );
+    console.log("Logged in user language:", user?.preferredLanguage);
+  const savedLanguage =
+    localStorage.getItem("language");
 
+  if (savedLanguage) {
     if (
-      savedLanguage &&
       savedLanguage !==
-        i18n.language
+      i18n.language
     ) {
       void i18n.changeLanguage(
         savedLanguage
       );
     }
-  }, [i18n]);
+
+    return;
+  }
+
+  if (user?.preferredLanguage) {
+    const languageCode =
+      languageMap[
+        user.preferredLanguage
+      ];
+
+    if (languageCode) {
+      void i18n.changeLanguage(
+        languageCode
+      );
+
+      localStorage.setItem(
+        "language",
+        languageCode
+      );
+    }
+  }
+}, [user, i18n]);
 
   const handleLanguageButtonClick =
     () => {
