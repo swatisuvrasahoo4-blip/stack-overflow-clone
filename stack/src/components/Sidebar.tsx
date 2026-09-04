@@ -9,7 +9,7 @@ import {
   Home,
   MessageSquare,
   MessageSquareIcon,
-  ShieldAlert,
+  ShieldCheck,
   Tag,
   Trophy,
   Users,
@@ -244,7 +244,7 @@ const Sidebar = ({
                     onClick={handleLinkClick}
                     className={linkClass}
                   >
-                    <ShieldAlert className="mr-3 h-4 w-4 shrink-0 text-red-600" />
+                    <ShieldCheck className="mr-3 h-4 w-4 shrink-0 text-blue-600" />
                     {t("links.admin")}
                   </Link>
                 </li>

@@ -1,29 +1,48 @@
-import { useState, useEffect } from "react";
-import { createContext } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
+
+import {
+  createContext,
+  useContext,
+} from "react";
 
 import axiosInstance from "./axiosinstance";
 
 import { toast } from "react-toastify";
-import { useContext } from "react";
+
 import { useTranslation } from "react-i18next";
 
 const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-  const { t } = useTranslation("auth");
+export const AuthProvider = ({
+  children,
+}) => {
+  const { t } =
+    useTranslation("auth");
 
-  const [user, setUser] = useState(null);
+  const [user, setUser] =
+    useState(null);
+
+  const [loading, setloading] =
+    useState(false);
+
+  const [error, seterror] =
+    useState(null);
 
   useEffect(() => {
-    const stored = localStorage.getItem("user");
+    const stored =
+      localStorage.getItem(
+        "user"
+      );
 
     if (stored) {
-      setUser(JSON.parse(stored));
+      setUser(
+        JSON.parse(stored)
+      );
     }
   }, []);
-
-  const [loading, setloading] = useState(false);
-  const [error, seterror] = useState(null);
 
   const Signup = async ({
     name,
@@ -36,23 +55,38 @@ export const AuthProvider = ({ children }) => {
     seterror(null);
 
     try {
-      let deviceId = localStorage.getItem("deviceId");
+      let deviceId =
+        localStorage.getItem(
+          "deviceId"
+        );
 
       if (!deviceId) {
-        deviceId = crypto.randomUUID();
-        localStorage.setItem("deviceId", deviceId);
+        deviceId =
+          crypto.randomUUID();
+
+        localStorage.setItem(
+          "deviceId",
+          deviceId
+        );
       }
 
-      const res = await axiosInstance.post("/user/signup", {
-        name,
-        username,
-        email,
-        mobile,
-        password,
-        deviceId,
-      });
+      const res =
+        await axiosInstance.post(
+          "/user/signup",
+          {
+            name,
+            username,
+            email,
+            mobile,
+            password,
+            deviceId,
+          }
+        );
 
-      const { data, token } = res.data;
+      const {
+        data,
+        token,
+      } = res.data;
 
       localStorage.setItem(
         "user",
@@ -68,7 +102,9 @@ export const AuthProvider = ({ children }) => {
       });
 
       toast.success(
-        t("messages.signup_successful")
+        t(
+          "messages.signup_successful"
+        )
       );
     } catch (error) {
       console.error(
@@ -76,11 +112,11 @@ export const AuthProvider = ({ children }) => {
         error
       );
 
-      const msg =
-        t("messages.signup_failed");
+      const msg = t(
+        "messages.signup_failed"
+      );
 
       seterror(msg);
-
       toast.error(msg);
     } finally {
       setloading(false);
@@ -95,28 +131,49 @@ export const AuthProvider = ({ children }) => {
     seterror(null);
 
     try {
-      let deviceId = localStorage.getItem("deviceId");
+      let deviceId =
+        localStorage.getItem(
+          "deviceId"
+        );
 
       if (!deviceId) {
-        deviceId = crypto.randomUUID();
-        localStorage.setItem("deviceId", deviceId);
+        deviceId =
+          crypto.randomUUID();
+
+        localStorage.setItem(
+          "deviceId",
+          deviceId
+        );
       }
 
-      const res = await axiosInstance.post("/user/login", {
-        email,
-        password,
-        deviceId,
-      });
+      const res =
+        await axiosInstance.post(
+          "/user/login",
+          {
+            email,
+            password,
+            deviceId,
+          }
+        );
 
-      if (res.data.requiresDeviceVerification) {
+      if (
+        res.data
+          .requiresDeviceVerification
+      ) {
         return {
-          requiresDeviceVerification: true,
-          userId: res.data.userId,
-          deviceId: res.data.deviceId,
+          requiresDeviceVerification:
+            true,
+          userId:
+            res.data.userId,
+          deviceId:
+            res.data.deviceId,
         };
       }
 
-      const { data, token } = res.data;
+      const {
+        data,
+        token,
+      } = res.data;
 
       localStorage.setItem(
         "user",
@@ -132,7 +189,9 @@ export const AuthProvider = ({ children }) => {
       });
 
       toast.success(
-        t("messages.login_successful")
+        t(
+          "messages.login_successful"
+        )
       );
 
       return true;
@@ -142,11 +201,11 @@ export const AuthProvider = ({ children }) => {
         error
       );
 
-      const msg =
-        t("messages.login_failed");
+      const msg = t(
+        "messages.invalid_email_or_password"
+      );
 
       seterror(msg);
-
       toast.error(msg);
 
       return false;
@@ -166,21 +225,32 @@ export const AuthProvider = ({ children }) => {
 
     localStorage.setItem(
       "user",
-      JSON.stringify(loggedInUser)
+      JSON.stringify(
+        loggedInUser
+      )
     );
 
-    setUser(loggedInUser);
+    setUser(
+      loggedInUser
+    );
   };
 
-  const updateUser = (updatedUser) => {
+  const updateUser = (
+    updatedUser
+  ) => {
     const storedUser =
-      typeof window !== "undefined"
-        ? localStorage.getItem("user")
+      typeof window !==
+      "undefined"
+        ? localStorage.getItem(
+            "user"
+          )
         : null;
 
     const currentUser =
       storedUser
-        ? JSON.parse(storedUser)
+        ? JSON.parse(
+            storedUser
+          )
         : null;
 
     const nextUser =
@@ -191,40 +261,52 @@ export const AuthProvider = ({ children }) => {
           }
         : updatedUser;
 
-    if (typeof window !== "undefined") {
+    if (
+      typeof window !==
+      "undefined"
+    ) {
       localStorage.setItem(
         "user",
-        JSON.stringify(nextUser)
+        JSON.stringify(
+          nextUser
+        )
       );
     }
 
     setUser(nextUser);
   };
 
-  const Logout = async () => {
-    try {
-      await axiosInstance.patch(
-        "/user/sessions/logout"
-      );
+  const Logout =
+    async () => {
+      try {
+        await axiosInstance.patch(
+          "/user/sessions/logout"
+        );
 
-      setUser(null);
+        setUser(null);
 
-      localStorage.removeItem("user");
+        localStorage.removeItem(
+          "user"
+        );
 
-      toast.info(
-        t("messages.logged_out")
-      );
-    } catch (error) {
-      console.log(
-        "Logout failed",
-        error
-      );
+        toast.info(
+          t(
+            "messages.logged_out"
+          )
+        );
+      } catch (error) {
+        console.log(
+          "Logout failed",
+          error
+        );
 
-      toast.error(
-        t("messages.failed_to_logout")
-      );
-    }
-  };
+        toast.error(
+          t(
+            "messages.failed_to_logout"
+          )
+        );
+      }
+    };
 
   return (
     <AuthContext.Provider
