@@ -1,17 +1,12 @@
 import {
   useEffect,
   useState,
-} from "react";
-
-import {
   createContext,
   useContext,
 } from "react";
 
 import axiosInstance from "./axiosinstance";
-
 import { toast } from "react-toastify";
-
 import { useTranslation } from "react-i18next";
 
 const AuthContext = createContext();
@@ -38,9 +33,20 @@ export const AuthProvider = ({
       );
 
     if (stored) {
-      setUser(
-        JSON.parse(stored)
-      );
+      try {
+        setUser(
+          JSON.parse(stored)
+        );
+      } catch (error) {
+        console.error(
+          "Failed to parse stored user:",
+          error
+        );
+
+        localStorage.removeItem(
+          "user"
+        );
+      }
     }
   }, []);
 
@@ -201,9 +207,18 @@ export const AuthProvider = ({
         error
       );
 
-      const msg = t(
-        "messages.invalid_email_or_password"
-      );
+      const status =
+        error?.response
+          ?.status;
+
+      const msg =
+        status === 401
+          ? t(
+              "messages.invalid_email_or_password"
+            )
+          : t(
+              "messages.login_failed"
+            );
 
       seterror(msg);
       toast.error(msg);
@@ -246,12 +261,21 @@ export const AuthProvider = ({
           )
         : null;
 
-    const currentUser =
-      storedUser
-        ? JSON.parse(
+    let currentUser = null;
+
+    if (storedUser) {
+      try {
+        currentUser =
+          JSON.parse(
             storedUser
-          )
-        : null;
+          );
+      } catch (error) {
+        console.error(
+          "Failed to parse stored user:",
+          error
+        );
+      }
+    }
 
     const nextUser =
       currentUser
