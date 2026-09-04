@@ -56,7 +56,8 @@
     "unable_to_update_bookmark": "Impossible de mettre à jour l’enregistrement. Veuillez réessayer.",
     "confirm_delete_question": "Êtes-vous sûr de vouloir supprimer cette question ?",
     "question_deleted": "Question supprimée.",
-    "question_link_copied": "Lien de la question copié."
+    "question_link_copied": "Lien de la question copié.",
+    "no_questions_yet": "Aucune question pour le moment."
   },
   "time": {
     "just_now": "à l’instant",

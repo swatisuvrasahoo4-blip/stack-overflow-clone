@@ -1,23 +1,14 @@
 import Mainlayout from "@/layout/Mainlayout";
 
-import {
-  useState,
-} from "react";
-
-import type {
-  KeyboardEvent,
-} from "react";
+import { useState } from "react";
+import type { KeyboardEvent } from "react";
 
 import { useRouter } from "next/router";
-
 import axiosInstance from "@/lib/axiosinstance";
-
 import { toast } from "react-toastify";
-
 import { useTranslation } from "react-i18next";
 
 import AskQuestionForm from "./AskQuestionForm";
-
 import AskQuestionPreview from "./AskQuestionPreview";
 
 interface ApiError {
@@ -44,33 +35,22 @@ const AskQuestionPage = () => {
   const { t } =
     useTranslation("questions");
 
-  const [
-    title,
-    setTitle,
-  ] = useState("");
+  const [title, setTitle] =
+    useState("");
 
-  const [
-    body,
-    setBody,
-  ] = useState("");
+  const [body, setBody] =
+    useState("");
 
-  const [
-    tags,
-    setTags,
-  ] = useState<string[]>([]);
+  const [tags, setTags] =
+    useState<string[]>([]);
 
-  const [
-    tagInput,
-    setTagInput,
-  ] = useState("");
+  const [tagInput, setTagInput] =
+    useState("");
 
-  const [
-    showPreview,
-    setShowPreview,
-  ] = useState(false);
+  const [showPreview, setShowPreview] =
+    useState(false);
 
   // Add tag
-
   const addTag = (
     value: string
   ): void => {
@@ -81,15 +61,11 @@ const AskQuestionPage = () => {
       return;
     }
 
-    if (
-      tags.includes(tag)
-    ) {
+    if (tags.includes(tag)) {
       return;
     }
 
-    if (
-      tags.length >= 5
-    ) {
+    if (tags.length >= 5) {
       return;
     }
 
@@ -102,7 +78,6 @@ const AskQuestionPage = () => {
   };
 
   // Remove tag
-
   const removeTag = (
     tag: string
   ): void => {
@@ -116,13 +91,10 @@ const AskQuestionPage = () => {
   };
 
   // Handle tag keyboard input
-
   const handleKeyDown = (
     event: KeyboardEvent<HTMLInputElement>
   ): void => {
-    if (
-      event.key === "Enter"
-    ) {
+    if (event.key === "Enter") {
       event.preventDefault();
 
       if (
@@ -150,9 +122,7 @@ const AskQuestionPage = () => {
       setTagInput("");
     }
 
-    if (
-      event.key === ","
-    ) {
+    if (event.key === ",") {
       event.preventDefault();
 
       addTag(
@@ -167,7 +137,6 @@ const AskQuestionPage = () => {
   };
 
   // Post question
-
   const handlePost =
     async (): Promise<void> => {
       try {
@@ -221,6 +190,18 @@ const AskQuestionPage = () => {
           apiError
         );
 
+        const errorMessage =
+          apiError.response?.data
+            ?.message;
+
+        if (errorMessage) {
+          toast.error(
+            errorMessage
+          );
+
+          return;
+        }
+
         toast.error(
           t(
             "ask_question.something_went_wrong"
@@ -230,10 +211,10 @@ const AskQuestionPage = () => {
     };
 
   // Cancel question
-
-  const handleCancel = (): void => {
-    void router.push("/");
-  };
+  const handleCancel =
+    (): void => {
+      void router.push("/");
+    };
 
   return (
     <Mainlayout>
@@ -257,11 +238,17 @@ const AskQuestionPage = () => {
         {!showPreview ? (
           <AskQuestionForm
             title={title}
-            setTitle={setTitle}
+            setTitle={
+              setTitle
+            }
             body={body}
-            setBody={setBody}
+            setBody={
+              setBody
+            }
             tags={tags}
-            tagInput={tagInput}
+            tagInput={
+              tagInput
+            }
             setTagInput={
               setTagInput
             }

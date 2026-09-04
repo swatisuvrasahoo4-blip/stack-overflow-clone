@@ -56,7 +56,8 @@
     "unable_to_update_bookmark": "सहेजे गए प्रश्न को अपडेट नहीं किया जा सका। कृपया फिर से प्रयास करें।",
     "confirm_delete_question": "क्या आप वाकई इस प्रश्न को हटाना चाहते हैं?",
     "question_deleted": "प्रश्न हटा दिया गया।",
-    "question_link_copied": "प्रश्न का लिंक कॉपी किया गया।"
+    "question_link_copied": "प्रश्न का लिंक कॉपी किया गया।",
+    "no_questions_yet": "अभी कोई प्रश्न नहीं है।"
   },
   "time": {
     "just_now": "अभी",

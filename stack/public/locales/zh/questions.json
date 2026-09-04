@@ -56,7 +56,8 @@
     "unable_to_update_bookmark": "无法更新收藏。请重试。",
     "confirm_delete_question": "确定要删除此问题吗？",
     "question_deleted": "问题已删除。",
-    "question_link_copied": "问题链接已复制。"
+    "question_link_copied": "问题链接已复制。",
+    "no_questions_yet": "暂无问题。"
   },
   "time": {
     "just_now": "刚刚",

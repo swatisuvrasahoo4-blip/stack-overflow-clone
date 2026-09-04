@@ -56,7 +56,8 @@
     "unable_to_update_bookmark": "Não foi possível atualizar o salvamento. Tente novamente.",
     "confirm_delete_question": "Tem certeza de que deseja excluir esta pergunta?",
     "question_deleted": "Pergunta excluída.",
-    "question_link_copied": "Link da pergunta copiado."
+    "question_link_copied": "Link da pergunta copiado.",
+    "no_questions_yet": "Ainda não há perguntas."
   },
   "time": {
     "just_now": "agora mesmo",

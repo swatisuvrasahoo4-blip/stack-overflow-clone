@@ -56,7 +56,8 @@
     "unable_to_update_bookmark": "No se pudo actualizar el guardado. Inténtalo de nuevo.",
     "confirm_delete_question": "¿Seguro que quieres eliminar esta pregunta?",
     "question_deleted": "Pregunta eliminada.",
-    "question_link_copied": "Enlace de la pregunta copiado."
+    "question_link_copied": "Enlace de la pregunta copiado.",
+    "no_questions_yet": "Aún no hay preguntas."
   },
   "time": {
     "just_now": "ahora mismo",

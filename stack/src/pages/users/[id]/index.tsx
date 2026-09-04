@@ -57,9 +57,9 @@ import TransferReputationButton from "@/components/reputation/TransferReputation
 import EditProfileDialog from "@/components/profile/EditProfileDialog";
 
 interface SubscriptionBadges {
-  gold?: number;
-  silver?: number;
-  bronze?: number;
+  Gold?: number;
+  Silver?: number;
+  Bronze?: number;
 }
 
 interface ProfileUser {
@@ -767,7 +767,7 @@ const UserProfilePage = () => {
 
                 <span className="font-semibold">
                   {users.subscriptionBadges
-                    ?.gold || 0}
+                    ?.Gold || 0}
                 </span>
 
                 <span className="ml-1 text-gray-600">
@@ -782,7 +782,7 @@ const UserProfilePage = () => {
 
                 <span className="font-semibold">
                   {users.subscriptionBadges
-                    ?.silver || 0}
+                    ?.Silver || 0}
                 </span>
 
                 <span className="ml-1 text-gray-600">
@@ -797,7 +797,7 @@ const UserProfilePage = () => {
 
                 <span className="font-semibold">
                   {users.subscriptionBadges
-                    ?.bronze || 0}
+                    ?.Bronze || 0}
                 </span>
 
                 <span className="ml-1 text-gray-600">

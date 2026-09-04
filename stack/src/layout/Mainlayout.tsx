@@ -5,6 +5,7 @@ import SupportButton from "@/components/support/SupportButton";
 import SupportModal from "@/components/support/SupportModal";
 
 import {
+  useEffect,
   useState,
   type ReactNode,
 } from "react";
@@ -21,24 +22,24 @@ interface MainlayoutProps {
 const Mainlayout = ({
   children,
 }: MainlayoutProps) => {
-  // Desktop -> open initially
-  // Mobile -> closed initially
   const [sidebarOpen, setSidebarOpen] =
-    useState(() => {
-      if (typeof window === "undefined") {
-        return false;
-      }
-
-      return window.innerWidth >= 768;
-    });
+    useState(false);
 
   const [supportOpen, setSupportOpen] =
     useState(false);
 
   const router = useRouter();
+
   const { user } = useAuth();
 
   const { t } = useTranslation("support");
+
+  // Set sidebar state after hydration
+  useEffect(() => {
+    setSidebarOpen(
+      window.innerWidth >= 768
+    );
+  }, []);
 
   // Toggle sidebar from Navbar
   const handleSlideIn = () => {
@@ -56,10 +57,13 @@ const Mainlayout = ({
   const handleSupportClick = () => {
     if (!user) {
       toast.info(
-        t("messages.please_login_to_continue")
+        t(
+          "messages.please_login_to_continue"
+        )
       );
 
       void router.push("/auth");
+
       return;
     }
 

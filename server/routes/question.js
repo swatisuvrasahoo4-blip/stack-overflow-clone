@@ -10,8 +10,12 @@ import {
   searchQuestions,
 } from "../controller/question.js";
 
+import optionalAuth from "../middleware/optionalAuth.js";
+
 import auth from "../middleware/auth.js";
+
 import notSuspended from "../middleware/notSuspended.js";
+
 import questionLimit from "../middleware/questionLimit.js";
 
 const router = express.Router();
@@ -23,8 +27,7 @@ router.post("/ask", auth, notSuspended, questionLimit, Askquestion);
 router.get("/getallquestion", getallquestion);
 
 // Edit question
-router.patch("/edit/:id", auth, editQuestion
-);
+router.patch("/edit/:id", auth, editQuestion);
 
 // Delete question
 router.delete("/delete/:id", auth, deleteQuestion);
@@ -36,6 +39,6 @@ router.patch("/vote/:id", auth, votequestion);
 router.get("/search", searchQuestions);
 
 // Get question by ID
-router.get("/:id", getQuestionById);
+router.get("/:id", optionalAuth, getQuestionById);
 
 export default router;

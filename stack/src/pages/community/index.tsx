@@ -39,7 +39,6 @@ const CommunityPage = () => {
   } = useAuth();
 
   // Community feed
-
   const {
     posts,
     setPosts,
@@ -52,7 +51,6 @@ const CommunityPage = () => {
   });
 
   // Edit post state
-
   const {
     editingPost,
     setEditingPost,
@@ -77,7 +75,6 @@ const CommunityPage = () => {
   } = useEditPostState();
 
   // Comment state
-
   const [
     commentText,
     setCommentText,
@@ -96,7 +93,6 @@ const CommunityPage = () => {
   ] = useState<string[]>([]);
 
   // Reply state
-
   const [
     replyText,
     setReplyText,
@@ -110,7 +106,6 @@ const CommunityPage = () => {
   );
 
   // Post actions
-
   const {
     handleLike,
     handleBookmark,
@@ -153,7 +148,6 @@ const CommunityPage = () => {
   });
 
   // Delete state and actions
-
   const {
     setSelectedPostId,
     showDeleteModal,
@@ -177,7 +171,6 @@ const CommunityPage = () => {
   });
 
   // Restore scroll position
-
   useEffect(() => {
     if (posts.length === 0) {
       return;
@@ -210,11 +203,9 @@ const CommunityPage = () => {
     <Mainlayout>
       <main className="min-w-0 p-4 lg:p-6">
         {/* Community header */}
-
         <CommunityHeader />
 
         {/* Initial loading */}
-
         {loading && (
           <p className="py-6 text-center text-sm text-gray-500">
             {t(
@@ -224,7 +215,6 @@ const CommunityPage = () => {
         )}
 
         {/* Community posts */}
-
         {!loading && (
           <PostFeedList
             posts={posts}
@@ -302,23 +292,23 @@ const CommunityPage = () => {
         )}
 
         {/* Infinite scroll trigger */}
-
-        <div
-          ref={loadMoreRef}
-          className="flex h-10 items-center justify-center"
-        >
-          {loadingMore && (
-            <p className="text-sm text-gray-500">
-              {t(
-                "feed.loading_more_posts"
-              )}
-            </p>
-          )}
-        </div>
+        {!loading && (
+          <div
+            ref={loadMoreRef}
+            className="flex h-10 items-center justify-center"
+          >
+            {loadingMore && (
+              <p className="text-sm text-gray-500">
+                {t(
+                  "feed.loading_more_posts"
+                )}
+              </p>
+            )}
+          </div>
+        )}
       </main>
 
       {/* Delete post modal */}
-
       <DeletePostModal
         open={showDeleteModal}
         onClose={
@@ -330,7 +320,6 @@ const CommunityPage = () => {
       />
 
       {/* Delete comment modal */}
-
       <DeleteCommentModal
         open={
           showDeleteCommentModal
@@ -344,7 +333,6 @@ const CommunityPage = () => {
       />
 
       {/* Delete reply modal */}
-
       <DeleteReplyModal
         open={
           showDeleteReplyModal
@@ -358,7 +346,6 @@ const CommunityPage = () => {
       />
 
       {/* Edit post modal */}
-
       <EditPostModal
         editingPost={
           editingPost

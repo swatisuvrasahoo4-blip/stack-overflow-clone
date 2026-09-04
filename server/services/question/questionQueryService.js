@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 import question from "../../models/question.js";
 
 // Get all questions
@@ -37,7 +38,9 @@ export const getAllQuestionsService = async ({
       const error = new Error(
         "Invalid cursor"
       );
+
       error.status = 400;
+
       throw error;
     }
 
@@ -104,7 +107,10 @@ export const getAllQuestionsService = async ({
 
 // Get question by ID
 export const getQuestionByIdService =
-  async (questionId) => {
+  async (
+    questionId,
+    userId
+  ) => {
     if (
       !mongoose.Types.ObjectId.isValid(
         questionId
@@ -113,28 +119,60 @@ export const getQuestionByIdService =
       const error = new Error(
         "Question unavailable"
       );
+
       error.status = 400;
+
       throw error;
     }
 
-    const questionData =
-      await question.findByIdAndUpdate(
-        questionId,
-        {
-          $inc: {
-            views: 1,
+    let questionData = null;
+
+    if (userId) {
+      const viewerId =
+        String(userId);
+
+      questionData =
+        await question.findOneAndUpdate(
+          {
+            _id: questionId,
+            viewedBy: {
+              $ne: viewerId,
+            },
           },
-        },
-        {
-          new: true,
-        }
-      );
+          {
+            $addToSet: {
+              viewedBy: viewerId,
+            },
+            $inc: {
+              views: 1,
+            },
+          },
+          {
+            new: true,
+          }
+        );
+
+      // User has already viewed this question
+      if (!questionData) {
+        questionData =
+          await question.findById(
+            questionId
+          );
+      }
+    } else {
+      questionData =
+        await question.findById(
+          questionId
+        );
+    }
 
     if (!questionData) {
       const error = new Error(
         "Question not found"
       );
+
       error.status = 404;
+
       throw error;
     }
 
@@ -222,7 +260,9 @@ export const searchQuestionsService =
         const error = new Error(
           "Invalid cursor"
         );
+
         error.status = 400;
+
         throw error;
       }
 
