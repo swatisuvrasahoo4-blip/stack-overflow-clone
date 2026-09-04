@@ -10,13 +10,13 @@ import {
   searchQuestions,
 } from "../controller/question.js";
 
+import questionLimit, {
+  getQuestionLimitStatus,
+} from "../middleware/questionLimit.js";
+
 import optionalAuth from "../middleware/optionalAuth.js";
-
 import auth from "../middleware/auth.js";
-
 import notSuspended from "../middleware/notSuspended.js";
-
-import questionLimit from "../middleware/questionLimit.js";
 
 const router = express.Router();
 
@@ -37,6 +37,9 @@ router.patch("/vote/:id", auth, votequestion);
 
 // Search questions
 router.get("/search", searchQuestions);
+
+// Check question limit
+router.get("/limit/status", auth, getQuestionLimitStatus);
 
 // Get question by ID
 router.get("/:id", optionalAuth, getQuestionById);

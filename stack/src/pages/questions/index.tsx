@@ -1,9 +1,8 @@
-import {
-  useState,
-} from "react";
+import { useState } from "react";
 
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 import SavedList from "@/components/saved/SavedList";
 import DeleteQuestionModal from "@/components/question/list/DeleteQuestionModal";
@@ -29,19 +28,21 @@ interface EditQuestionResponse {
   [key: string]: unknown;
 }
 
+interface QuestionLimitResponse {
+  success: boolean;
+  allowed: boolean;
+  plan: string;
+  limit: number | null;
+  totalQuestions: number;
+}
+
 const QuestionsPage = () => {
   const router = useRouter();
-
   const { user } = useAuth();
+  const { t } = useTranslation("questions");
 
-  const { t } =
-    useTranslation("questions");
-
-  const { panel } =
-    router.query;
-
-  const showingSaved =
-    panel === "saves";
+  const { panel } = router.query;
+  const showingSaved = panel === "saves";
 
   // Questions feed
   const {
@@ -64,9 +65,7 @@ const QuestionsPage = () => {
   const [
     selectedQuestionId,
     setSelectedQuestionId,
-  ] = useState<string | null>(
-    null
-  );
+  ] = useState<string | null>(null);
 
   // Edit state
   const [
@@ -77,10 +76,9 @@ const QuestionsPage = () => {
   const [
     selectedQuestion,
     setSelectedQuestion,
-  ] =
-    useState<NormalizedQuestion | null>(
-      null
-    );
+  ] = useState<NormalizedQuestion | null>(
+    null
+  );
 
   const [
     editTitle,
@@ -113,25 +111,18 @@ const QuestionsPage = () => {
         `/question/delete/${questionId}`,
         {
           headers: {
-            Authorization:
-              `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
 
-      setItems(
-        (
-          previousItems
-        ) =>
-          previousItems.filter(
-            (question) =>
-              question.id !==
-              questionId
-          )
+      setItems((previousItems) =>
+        previousItems.filter(
+          (question) =>
+            question.id !== questionId
+        )
       );
-    } catch (
-      error: unknown
-    ) {
+    } catch (error: unknown) {
       console.error(
         "Failed to delete question:",
         error
@@ -148,9 +139,7 @@ const QuestionsPage = () => {
   // Confirm question deletion
   const confirmDelete =
     async (): Promise<void> => {
-      if (
-        !selectedQuestionId
-      ) {
+      if (!selectedQuestionId) {
         return;
       }
 
@@ -158,40 +147,26 @@ const QuestionsPage = () => {
         selectedQuestionId
       );
 
-      setShowDeleteModal(
-        false
-      );
-
-      setSelectedQuestionId(
-        null
-      );
+      setShowDeleteModal(false);
+      setSelectedQuestionId(null);
     };
 
   // Close delete modal
   const closeDeleteModal =
     (): void => {
-      setShowDeleteModal(
-        false
-      );
-
-      setSelectedQuestionId(
-        null
-      );
+      setShowDeleteModal(false);
+      setSelectedQuestionId(null);
     };
 
   // Edit question
   const handleEdit =
     async (): Promise<void> => {
-      if (
-        !selectedQuestion
-      ) {
+      if (!selectedQuestion) {
         return;
       }
 
       try {
-        const token =
-          user?.token;
-
+        const token = user?.token;
         const questionId =
           selectedQuestion.id;
 
@@ -201,23 +176,19 @@ const QuestionsPage = () => {
             {
               questiontitle:
                 editTitle,
-
               questionbody:
                 editContent,
-
               questiontags:
                 editTags,
             },
             {
               headers: {
-                Authorization:
-                  `Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
               },
             }
           );
 
-        const data =
-          response.data;
+        const data = response.data;
 
         const rawUpdatedQuestion =
           data.question
@@ -229,25 +200,18 @@ const QuestionsPage = () => {
             rawUpdatedQuestion
           );
 
-        setItems(
-          (
-            previousItems
-          ) =>
-            previousItems.map(
-              (
-                question
-              ) =>
-                question.id ===
-                questionId
-                  ? updatedQuestion
-                  : question
-            )
+        setItems((previousItems) =>
+          previousItems.map(
+            (question) =>
+              question.id ===
+              questionId
+                ? updatedQuestion
+                : question
+          )
         );
 
         closeEditModal();
-      } catch (
-        error: unknown
-      ) {
+      } catch (error: unknown) {
         console.error(
           "Failed to edit question:",
           error
@@ -264,31 +228,58 @@ const QuestionsPage = () => {
   // Close edit modal
   const closeEditModal =
     (): void => {
-      setShowEditModal(
-        false
-      );
-
-      setSelectedQuestion(
-        null
-      );
-
+      setShowEditModal(false);
+      setSelectedQuestion(null);
       setEditTagInput("");
     };
 
   // Open ask question page
   const handleAskQuestion =
-    (): void => {
-      if (user) {
-        void router.push(
-          "/ask"
-        );
-
+    async (): Promise<void> => {
+      if (!user) {
+        void router.push("/auth");
         return;
       }
 
-      void router.push(
-        "/auth"
-      );
+      try {
+        const response =
+          await axiosInstance.get<QuestionLimitResponse>(
+            "/question/limit/status"
+          );
+
+        const {
+          allowed,
+          plan,
+          limit,
+        } = response.data;
+
+        if (!allowed) {
+          toast.error(
+            t(
+              "messages.question_limit_reached",
+              {
+                plan,
+                limit,
+              }
+            )
+          );
+
+          return;
+        }
+
+        void router.push("/ask");
+      } catch (error: unknown) {
+        console.error(
+          "Failed to check question limit:",
+          error
+        );
+
+        toast.error(
+          t(
+            "ask_question.something_went_wrong"
+          )
+        );
+      }
     };
 
   return (
@@ -313,8 +304,8 @@ const QuestionsPage = () => {
           {!showingSaved && (
             <button
               type="button"
-              onClick={
-                handleAskQuestion
+              onClick={() =>
+                void handleAskQuestion()
               }
               className="whitespace-nowrap rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
             >
@@ -365,9 +356,7 @@ const QuestionsPage = () => {
 
             {/* Infinite scroll trigger */}
             <div
-              ref={
-                loadMoreRef
-              }
+              ref={loadMoreRef}
               className="h-20 w-full"
             />
 
@@ -382,8 +371,7 @@ const QuestionsPage = () => {
 
             {/* End of questions */}
             {!hasMore &&
-              items.length >
-                0 && (
+              items.length > 0 && (
                 <div className="py-6 text-center text-gray-400">
                   {t(
                     "messages.no_more_questions"
@@ -396,9 +384,7 @@ const QuestionsPage = () => {
 
       {/* Delete question modal */}
       <DeleteQuestionModal
-        open={
-          showDeleteModal
-        }
+        open={showDeleteModal}
         onClose={
           closeDeleteModal
         }
@@ -411,12 +397,9 @@ const QuestionsPage = () => {
       <EditQuestionModal
         open={
           showEditModal &&
-          selectedQuestion !==
-            null
+          selectedQuestion !== null
         }
-        editTitle={
-          editTitle
-        }
+        editTitle={editTitle}
         setEditTitle={
           setEditTitle
         }
@@ -426,9 +409,7 @@ const QuestionsPage = () => {
         setEditContent={
           setEditContent
         }
-        editTags={
-          editTags
-        }
+        editTags={editTags}
         setEditTags={
           setEditTags
         }
@@ -441,9 +422,7 @@ const QuestionsPage = () => {
         onClose={
           closeEditModal
         }
-        onSave={
-          handleEdit
-        }
+        onSave={handleEdit}
       />
     </Mainlayout>
   );

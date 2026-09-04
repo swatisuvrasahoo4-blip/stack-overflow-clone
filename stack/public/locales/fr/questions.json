@@ -57,7 +57,8 @@
     "confirm_delete_question": "Êtes-vous sûr de vouloir supprimer cette question ?",
     "question_deleted": "Question supprimée.",
     "question_link_copied": "Lien de la question copié.",
-    "no_questions_yet": "Aucune question pour le moment."
+    "no_questions_yet": "Aucune question pour le moment.",
+    "question_limit_reached": "Vous avez atteint la limite de questions d’aujourd’hui pour votre forfait {{plan}}. Veuillez réessayer demain ou mettre à niveau votre abonnement."
   },
   "time": {
     "just_now": "à l’instant",

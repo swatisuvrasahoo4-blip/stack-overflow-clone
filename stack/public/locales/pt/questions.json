@@ -57,7 +57,8 @@
     "confirm_delete_question": "Tem certeza de que deseja excluir esta pergunta?",
     "question_deleted": "Pergunta excluída.",
     "question_link_copied": "Link da pergunta copiado.",
-    "no_questions_yet": "Ainda não há perguntas."
+    "no_questions_yet": "Ainda não há perguntas.",
+    "question_limit_reached": "Você atingiu o limite de perguntas de hoje para o seu plano {{plan}}. Tente novamente amanhã ou atualize sua assinatura."
   },
   "time": {
     "just_now": "agora mesmo",
