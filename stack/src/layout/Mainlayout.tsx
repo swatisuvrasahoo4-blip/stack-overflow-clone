@@ -13,44 +13,77 @@ import {
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+
 import { useAuth } from "@/lib/AuthContext";
 
 interface MainlayoutProps {
   children: ReactNode;
 }
 
+// Preserve sidebar state during client-side navigation
+let savedSidebarOpen = false;
+let sidebarInitialized = false;
+
 const Mainlayout = ({
   children,
 }: MainlayoutProps) => {
-  const [sidebarOpen, setSidebarOpen] =
-    useState(false);
+  const [
+    sidebarOpen,
+    setSidebarOpen,
+  ] = useState(savedSidebarOpen);
 
-  const [supportOpen, setSupportOpen] =
-    useState(false);
+  const [
+    supportOpen,
+    setSupportOpen,
+  ] = useState(false);
 
   const router = useRouter();
 
   const { user } = useAuth();
 
-  const { t } = useTranslation("support");
+  const { t } =
+    useTranslation("support");
 
-  // Set sidebar state after hydration
+  // Set initial sidebar state once
   useEffect(() => {
-    setSidebarOpen(
-      window.innerWidth >= 768
-    );
+    if (!sidebarInitialized) {
+      const shouldOpen =
+        window.innerWidth >= 768;
+
+      savedSidebarOpen =
+        shouldOpen;
+
+      setSidebarOpen(
+        shouldOpen
+      );
+
+      sidebarInitialized =
+        true;
+    }
   }, []);
+
+  // Update sidebar state
+  const updateSidebarState = (
+    open: boolean
+  ) => {
+    savedSidebarOpen = open;
+
+    setSidebarOpen(open);
+  };
 
   // Toggle sidebar from Navbar
   const handleSlideIn = () => {
-    setSidebarOpen(
-      (previousState) => !previousState
+    const nextState =
+      !sidebarOpen;
+
+    updateSidebarState(
+      nextState
     );
   };
 
   // Close sidebar
   const handleSidebarClose = () => {
-    setSidebarOpen(false);
+    updateSidebarState(false);
   };
 
   // Open support modal
@@ -73,20 +106,26 @@ const Mainlayout = ({
   return (
     <div className="flex min-h-screen flex-col bg-[#f8f9fa] text-[#3a3a3a]">
       <Navbar
-        handleslidein={handleSlideIn}
-        sidebarOpen={sidebarOpen}
+        handleslidein={
+          handleSlideIn
+        }
+        sidebarOpen={
+          sidebarOpen
+        }
       />
 
       <div className="flex w-full flex-1 pt-[72px]">
         <Sidebar
-          isopen={sidebarOpen}
-          onClose={handleSidebarClose}
+          isopen={
+            sidebarOpen
+          }
+          onClose={
+            handleSidebarClose
+          }
         />
 
         {/* Sidebar space on desktop */}
-        {sidebarOpen && (
-          <div className="hidden shrink-0 md:block md:w-48 lg:w-64" />
-        )}
+        <div className="hidden shrink-0 md:block md:w-48 lg:w-64" />
 
         <main className="min-w-0 flex-1 bg-white">
           <div className="mx-auto w-full max-w-5xl px-4 py-4">
@@ -100,12 +139,18 @@ const Mainlayout = ({
       </div>
 
       <SupportButton
-        onClick={handleSupportClick}
+        onClick={
+          handleSupportClick
+        }
       />
 
       <SupportModal
-        open={supportOpen}
-        onOpenChange={setSupportOpen}
+        open={
+          supportOpen
+        }
+        onOpenChange={
+          setSupportOpen
+        }
       />
     </div>
   );

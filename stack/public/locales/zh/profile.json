@@ -51,7 +51,8 @@
   "messages": {
     "profile_updated_successfully": "个人资料更新成功。",
     "no_user_found": "未找到用户。",
-    "no_users_found": "未找到用户。"
+    "no_users_found": "未找到用户。",
+    "display_name_required": "显示名称为必填项。"
   },
   "connections": {
     "followers": "关注者",

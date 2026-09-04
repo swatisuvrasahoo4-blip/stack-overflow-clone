@@ -50,8 +50,9 @@
   },
   "messages": {
     "profile_updated_successfully": "Profil mis à jour avec succès.",
-        "no_user_found": "Aucun utilisateur trouvé.",
-            "no_users_found": "Aucun utilisateur trouvé."
+    "no_user_found": "Aucun utilisateur trouvé.",
+    "no_users_found": "Aucun utilisateur trouvé.",
+    "display_name_required": "Le nom d’affichage est obligatoire."
   },
   "connections": {
     "followers": "Abonnés",

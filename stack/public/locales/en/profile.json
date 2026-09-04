@@ -51,7 +51,8 @@
   "messages": {
     "profile_updated_successfully": "Profile updated successfully.",
     "no_user_found": "No user found.",
-    "no_users_found": "No users found."
+    "no_users_found": "No users found.",
+    "display_name_required": "Display name is required."
   },
   "connections": {
     "followers": "Followers",

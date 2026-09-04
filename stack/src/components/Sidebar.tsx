@@ -67,13 +67,12 @@ const Sidebar = ({
         className={cn(
           "fixed bottom-0 left-0 top-[72px] z-40",
           "w-64 border-r border-gray-200 bg-white",
-          "transition-transform duration-300 ease-in-out",
+          "transition-transform duration-300 ease-in-out md:transition-none",
 
           isopen
-            ? "translate-x-0"
-            : "-translate-x-full",
-
-          "md:w-48 lg:w-64"
+  ? "translate-x-0"
+  : "-translate-x-full",
+"md:w-48 lg:w-64"
         )}
       >
         {/* Scrollable sidebar without scrollbar */}

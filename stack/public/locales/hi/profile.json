@@ -51,7 +51,8 @@
   "messages": {
     "profile_updated_successfully": "प्रोफ़ाइल सफलतापूर्वक अपडेट की गई।",
     "no_user_found": "कोई उपयोगकर्ता नहीं मिला।",
-    "no_users_found": "कोई उपयोगकर्ता नहीं मिला।"
+    "no_users_found": "कोई उपयोगकर्ता नहीं मिला।",
+    "display_name_required": "डिस्प्ले नाम आवश्यक है।"
   },
   "connections": {
     "followers": "फ़ॉलोअर्स",

@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -138,6 +139,20 @@ const EditProfileDialog = ({
           "";
       }
     };
+
+  const handleSaveClick = async () => {
+    if (!editForm.name.trim()) {
+      toast.error(
+        t(
+          "messages.display_name_required"
+        )
+      );
+
+      return;
+    }
+
+    await handleSaveProfile();
+  };
 
   return (
     <Dialog
@@ -471,7 +486,7 @@ const EditProfileDialog = ({
             <Button
               type="button"
               onClick={() =>
-                void handleSaveProfile()
+                void handleSaveClick()
               }
               className="bg-blue-600 hover:bg-blue-700"
             >
